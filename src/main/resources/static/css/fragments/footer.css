@@ -1,0 +1,142 @@
+/* =========================
+   Footer Layout
+========================= */
+.footer {
+  background: var(--color-bg-muted);
+ 
+  
+}
+
+/* 공통 컨테이너 */
+.footer-inner {
+	width: 1200px;
+  padding: 64px 24px;
+  margin: 0 auto;
+  
+}
+
+/* =========================
+   Newsletter
+========================= */
+.footer-newsletter {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+ 
+}
+
+.footer-newsletter-inner {
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: 64px 24px;
+	width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+}
+
+.footer-newsletter h2 {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-text-base);
+}
+
+.footer-newsletter p {
+  margin-top: 8px;
+  color: var(--color-text-muted);
+}
+
+.footer-newsletter-form {
+  display: flex;
+  width: 420px;
+  height: 48px;
+}
+
+.footer-newsletter-form input {
+  flex: 1;
+  padding: 0 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px 0 0 999px;
+  outline: none;
+}
+
+.footer-newsletter-form button {
+  padding: 0 28px;
+  background: var(--color-primary);
+  color: var(--color-text-base);
+  font-weight: 700;
+  border-radius: 0 999px 999px 0;
+  cursor: pointer;
+}
+
+/* =========================
+   Quick Cards
+========================= */
+.footer-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+ 
+}
+
+.footer-card {
+   background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.footer-card-icon {
+  font-size: 24px;
+}
+
+.footer-card-title {
+  font-weight: 700;
+}
+
+.footer-card-desc {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+/* =========================
+   Footer Info
+========================= */
+.footer-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  font-size: 14px;
+  color: var(--color-text-base);
+}
+
+.footer-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 48px 0;
+}
+
+/* =========================
+   Bottom
+========================= */
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.footer-links a {
+  margin-right: 24px;
+  color: var(--color-text-muted);
+}
+
+.footer-links a.strong {
+  color: var(--color-text-base);
+  font-weight: 700;
+}

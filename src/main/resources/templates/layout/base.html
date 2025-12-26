@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(content)">
+
+<head>
+    <meta charset="UTF-8">
+
+    <!-- ==================================================
+         Page Title
+         - page 에서 pageTitle 선언 시 사용
+         - 없으면 기본값
+    ================================================== -->
+    <title th:text="${pageTitle} ?: 'RE:GO'">RE:GO</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ==================================================
+         Fonts
+         - 실제 화면에서 사용 중인 폰트만 로드
+         - variables.css 와 1:1 대응
+    ================================================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Manrope -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Noto Sans KR -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<!--	Material Symbols Font-->
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- ==================================================
+         Global CSS
+         - 순서 고정
+    ================================================== -->
+    <link rel="stylesheet" th:href="@{/css/variables.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
+    <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">
+<!--    <link rel="stylesheet" th:href="@{/css/modal.css}">-->
+
+    <!-- ==================================================
+         Page CSS Slot
+         🔥 page 에서 link 여러 개 써도 자동으로 전부 적용
+         - 없으면 그냥 무시
+    ================================================== -->
+    <th:block th:replace="~{::pageCss} ?: ~{}"/>
+
+</head>
+
+<body>
+
+<!-- ==================================================
+     Header (Global)
+================================================== -->
+<th:block th:replace="fragments/header :: header"></th:block>
+
+<!-- ==================================================
+     Main Content
+     - page 의 content fragment 가 여기로 들어옴
+================================================== -->
+<div layout:fragment="content">
+   </div>
+
+<!-- ==================================================
+     Footer (Global)
+================================================== -->
+<th:block th:replace="fragments/footer :: footer"></th:block>
+
+<!-- ==================================================
+     Global Modals
+================================================== -->
+<!--<th:block th:replace="fragments/login-modal :: loginModal"></th:block>-->
+<!--<th:block th:replace="fragments/category-modal :: categoryModal"></th:block>-->
+
+<!-- ==================================================
+     Global JS
+================================================== -->
+<script th:src="@{/js/common.js}"></script>
+
+<!-- ==================================================
+     Page JS Slot
+     🔥 page 에서 script 여러 개 써도 자동으로 전부 적용
+================================================== -->
+<th:block th:replace="~{::pageJs} ?: ~{}"/>
+
+</body>
+</html>

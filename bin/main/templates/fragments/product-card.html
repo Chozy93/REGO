@@ -1,0 +1,75 @@
+<!--
+  product-card fragment
+  =====================
+  사용 예:
+  <th:block th:replace="fragments/product-card :: productCard(${p})"></th:block>
+
+  p 객체 필드 예시:
+  - p.id
+  - p.title
+  - p.price
+  - p.imageUrl
+  - p.location
+  - p.timeAgo
+  - p.reserved (boolean)
+-->
+
+<th:block th:fragment="productCard(p)">
+
+  <a th:href="@{/product/{id}(id=${p.id})}"
+     class="product-card">
+
+    <!-- =====================
+         Image Area
+    ====================== -->
+    <div class="product-card__image">
+
+      <!-- 상태 뱃지 (예약중 등) -->
+      <span class="badge badge-primary product-card__badge"
+            th:if="${p.reserved}">
+        예약중
+      </span>
+
+      <!-- 찜 버튼 -->
+      <button type="button"
+              class="product-card__like-btn"
+              aria-label="찜하기"
+              th:onclick="|toggleLike(event, ${p.id})|">
+        <span class="material-symbols-outlined">favorite</span>
+      </button>
+
+      <!-- 상품 이미지 -->
+      <img th:src="${p.img}"
+           alt=""
+           loading="lazy">
+    </div>
+
+    <!-- =====================
+         Content Area
+    ====================== -->
+    <div class="product-card__body">
+
+      <!-- 제목 -->
+      <h4 class="product-card__title"
+          th:text="${p.title}">
+        상품 제목
+      </h4>
+
+      <!-- 가격 -->
+      <p class="product-card__price"
+         th:text="${#numbers.formatInteger(p.price, 3, 'COMMA')} + '원'">
+        100,000원
+      </p>
+
+      <!-- 메타 정보 -->
+      <div class="product-card__meta">
+        <span th:text="${p.loc}">지역</span>
+        <span class="meta-dot">·</span>
+        <span th:text="${p.time}">시간</span>
+      </div>
+
+    </div>
+
+  </a>
+
+</th:block>
