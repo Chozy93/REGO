@@ -32,3 +32,7 @@ bin/
 # ===== OS =====
 .DS_Store
 Thumbs.db
+
+
+# Spring Boot local config
+src/main/resources/application.properties
