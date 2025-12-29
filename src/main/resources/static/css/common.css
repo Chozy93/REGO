@@ -188,7 +188,7 @@ select {
    - 크기/용도별 변형은 컴포넌트 CSS에서 확장
    ========================================================================== */
 
-.	 {
+.btn{
   display: inline-flex;
   align-items: center;
   justify-content: center;

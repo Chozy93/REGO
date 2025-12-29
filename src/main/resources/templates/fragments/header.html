@@ -1,4 +1,4 @@
-<th:block th:fragment="header"  th:with="isLogin=${isLogin} ?: true">
+<th:block th:fragment="header"  th:with="isLogin=${isLogin} ?: false, isAdmin=${isAdmin} ?: false">
 
 <header class="site-header">
 
@@ -16,9 +16,16 @@
 
       <!-- 로그인 -->
       <th:block th:if="${isLogin == true}">
-        <a href="/mypage" class="util-link">마이페이지</a>
-        <span class="util-divider"></span>
-        <a href="/logout" class="util-link">로그아웃</a>
+		
+	  <!-- 관리자 로그인 (role = admin) -->
+		<a th:if="${isAdmin == true}" href="/admin/dashboard" class="util-link">관리자 페이지</a>
+		
+	  <!-- 관리자 로그인 (role = admin) -->
+		<a th:unless="${isAdmin == true}" href="/mypage" class="util-link">마이페이지</a>
+	
+	  <!-- 로그인 = true 공통 -->
+		<span class="util-divider"></span>
+		<a href="/logout" class="util-link">로그아웃</a>
       </th:block>
     </div>
   </div>
@@ -53,8 +60,8 @@
 			    <div class="header-right">
 
 
-			      <!-- 채팅 (상태 아이템, 버튼 아님) -->
-			      <a href="/chat" class="chat-status">
+			      <!-- 채팅 (상태 아이템, 버튼 아님) / 로그인 했을때만 보임-->
+			      <a th:if="${isLogin}" href="/chat" class="chat-status">
 			        <span class="material-symbols-outlined chat-icon">
 			          chat_bubble_outline
 			        </span>
@@ -66,10 +73,11 @@
 			      </a>
 
 			      <!-- 구분선 -->
-			      <span class="header-divider"></span>
+			      <span th:if="${isLogin and !isAdmin}" class="header-divider"></span>
 
 			      <!-- 판매하기 -->
-			      <a href="/product/write" class="btn btn-primary sell-btn">
+				  <!--관리자 계정이거나 비로그인 상태인 경우 판매하기 버튼 숨기기 (일반 회원만 보임)-->
+			      <a th:if="${isLogin and !isAdmin}" href="/product/write" class="btn btn-primary sell-btn">
 			        <span class="material-symbols-outlined">add</span>
 			        판매하기
 			      </a>
