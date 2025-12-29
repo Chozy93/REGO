@@ -1,0 +1,244 @@
+
+/* --- 기본 설정 --- */
+.policy-wrapper {
+    background-color: #f6f8f6; /* 배경색 */
+    min-height: 100vh;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #333;
+}
+
+.policy-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 16px;
+    display: flex;
+    gap: 24px; /* 사이드바와 본문 사이 간격 */
+}
+
+/* --- 좌측 사이드바 --- */
+.sidebar {
+    width: 240px;
+    flex-shrink: 0;
+}
+
+.sidebar-box {
+    background-color: white;
+    border: 1px solid #eee;
+    border-radius: 16px;
+    overflow: hidden;
+    position: sticky; /* 스크롤 따라오기 */
+    top: 24px;
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    gap: 4px;
+}
+
+.nav-link {
+    display: block;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #666;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.nav-link:hover {
+    background-color: #f5f5f5;
+}
+
+/* 활성화된 메뉴 (청소년 보호정책) */
+.nav-link.active {
+    background-color: #e6fcf0; /* 연한 초록 배경 */
+    color: #00c73c; /* 진한 초록 글씨 */
+    font-weight: 700;
+}
+
+.nav-divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 8px 8px;
+}
+
+/* --- 우측 본문 영역 --- */
+.main-content {
+    flex: 1;
+    min-width: 0; /* Flexbox 넘침 방지 */
+}
+
+/* 상단 헤더 (뒤로가기 + 제목) */
+.page-header {
+    margin-bottom: 24px;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #999;
+    font-size: 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+.back-btn:hover {
+    color: #666;
+}
+
+.page-title h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+}
+
+.page-desc {
+    font-size: 14px;
+    color: #888;
+    margin: 0;
+}
+
+/* 정책 카드 박스 */
+.policy-card {
+    background-color: white;
+    border: 1px solid #eee;
+    border-radius: 16px;
+    overflow: hidden; /* 자식 요소가 둥근 모서리 넘치지 않게 */
+}
+
+.card-header {
+    padding: 32px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.header-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: #13ec5b; /* RE:GO 시그니처 컬러 */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.header-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* 드롭다운 스타일 */
+.version-select {
+    padding: 10px 16px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+    min-width: 220px;
+    cursor: pointer;
+    outline: none;
+}
+.version-select:focus {
+    border-color: #13ec5b;
+}
+
+/* 카드 본문 텍스트 */
+.card-body {
+    padding: 32px;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.7;
+}
+
+.card-body section {
+    margin-bottom: 40px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 12px;
+    display: block;
+}
+
+/* 리스트 스타일 */
+.styled-list {
+    padding-left: 20px;
+    margin: 8px 0;
+}
+
+.styled-list li {
+    margin-bottom: 8px;
+}
+
+.sub-text {
+    display: block;
+    color: #888;
+    margin-top: 4px;
+    font-size: 13px;
+}
+
+/* 책임자 정보 박스 (회색) */
+.info-box {
+    background-color: #f8f9fa;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.info-row {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.info-label {
+    font-weight: 700;
+    color: #333;
+    width: 80px; /* 라벨 너비 고정 */
+}
+
+/* 부칙 */
+.appendix {
+    border-top: 1px solid #eee;
+    padding-top: 32px;
+    margin-top: 10px;
+}
+
+/* 모바일 반응형 (화면 좁을 때) */
+@media (max-width: 768px) {
+    .policy-container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+    }
+    .sidebar-box {
+        position: static; /* 모바일엔 스티키 해제 */
+    }
+    .card-header {
+        flex-direction: column;
+    }
+    .version-select {
+        width: 100%;
+    }
+}
