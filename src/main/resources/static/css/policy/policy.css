@@ -19,15 +19,30 @@
 .sidebar {
     width: 240px;
     flex-shrink: 0;
+	padding-top: 108px;
 }
 
 .sidebar-box {
-    background-color: white;
-    border: 1px solid #eee;
-    border-radius: 16px;
-    overflow: hidden;
-    position: sticky; /* 스크롤 따라오기 */
-    top: 24px;
+	background-color: white;
+	    border: 1px solid #eee;
+	    border-radius: 16px;
+	    overflow: hidden;
+	    
+	    position: -webkit-sticky;
+	    position: sticky;
+	    
+	    /* [핵심 수정] Navbar 높이를 고려해서 값을 키워줍니다 */
+	    /* 예: Navbar가 80px라면 -> 80px + 24px = 104px */
+	    top: 194px; 
+	    
+	    /* 혹시 Navbar가 투명해서 뒤가 비친다면 z-index를 조절해야 할 수도 있습니다 */
+	    z-index: 10; 
+	    
+	    /* Navbar만큼 화면이 좁아졌으니 최대 높이도 줄여줍니다 */
+	    /* 100vh - (Navbar높이 + 여유공간) */
+	    max-height: calc(100vh - 120px);
+	    overflow-y: auto;
+	
 }
 
 .sidebar-header {
