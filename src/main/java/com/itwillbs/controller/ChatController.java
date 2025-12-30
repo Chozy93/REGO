@@ -5,7 +5,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.itwillbs.domain.ChatMessage;
+import com.itwillbs.domain.ChatMessageVO;
 
 @Controller
 public class ChatController {
@@ -17,7 +17,7 @@ public class ChatController {
 	
     @MessageMapping("/chat.send")
     @SendTo("/topic/chat/1")
-    public ChatMessage send(ChatMessage message) {
+    public ChatMessageVO send(ChatMessageVO message) {
         return message;
     }
 }

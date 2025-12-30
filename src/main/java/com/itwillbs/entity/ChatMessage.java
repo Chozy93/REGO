@@ -1,58 +1,98 @@
 package com.itwillbs.entity;
 
-
-
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+
+import com.itwillbs.domain.ChatMessageVO;
 
 @Entity
 @Table(name = "chat_message")
 @Getter
-@NoArgsConstructor
 public class ChatMessage {
 
+    /* =========================
+       PK
+    ========================= */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "message_id")
     private Long messageId;
 
-    @Column(name = "room_id", nullable = false)
-    private Long roomId;
+    /* =========================
+       채팅방
+    ========================= */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "room_id",
+        nullable = false,
+        foreignKey = @ForeignKey(name = "fk_chat_message_room")
+    )
+    private ChatRoom chatRoom;
 
-    @Column(name = "sender_id", nullable = false)
-    private Long senderId;
+    /* =========================
+       발신자
+    ========================= */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+        name = "sender_id",
+        nullable = false,
+        foreignKey = @ForeignKey(name = "fk_chat_message_sender")
+    )
+    private User sender;
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+    /* =========================
+       메시지 내용
+    ========================= */
+    @Column(name = "content", nullable = false)
     private String content;
 
+    /* =========================
+       읽음 여부 (상대방 기준)
+    ========================= */
     @Column(name = "is_read", nullable = false)
-    private Boolean isRead = false;
+    private boolean isRead;
 
     @Column(name = "read_at")
     private LocalDateTime readAt;
 
-    @Column(name = "sent_at", nullable = false, updatable = false)
-    private LocalDateTime sentAt;
+    /* =========================
+       전송 일시
+    ========================= */
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     /* =========================
-       생성자
+       JPA 전용 기본 생성자
     ========================= */
-    public ChatMessage(Long roomId, Long senderId, String content) {
-        this.roomId = roomId;
-        this.senderId = senderId;
-        this.content = content;
+    protected ChatMessage() {}
+
+    /* =========================
+       생성자 (메시지 전송)
+    ========================= */
+    public ChatMessage(ChatRoom chatRoom, User sender, ChatMessageVO vo) {
+        this.chatRoom = chatRoom;
+        this.sender = sender;
+        this.content = vo.getContent();
         this.isRead = false;
-        this.sentAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
     /* =========================
-       비즈니스 메서드
+       Entity → VO
+    ========================= */
+    public ChatMessageVO toVO() {
+        return new ChatMessageVO(this);
+    }
+
+    /* =========================
+       읽음 처리
     ========================= */
     public void markAsRead() {
-        this.isRead = true;
-        this.readAt = LocalDateTime.now();
+        if (!this.isRead) {
+            this.isRead = true;
+            this.readAt = LocalDateTime.now();
+        }
     }
 }

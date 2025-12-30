@@ -5,29 +5,20 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-import com.itwillbs.domain.ChatRoomVO;
-import com.itwillbs.entity.enumtype.ChatRoomStatus;
+import com.itwillbs.domain.ReviewVO;
 
 @Entity
-@Table(
-    name = "chat_room",
-    uniqueConstraints = {
-        @UniqueConstraint(
-            name = "uk_chat_room_unique",
-            columnNames = {"product_id", "buyer_id", "seller_id"}
-        )
-    }
-)
+@Table(name = "reviews")
 @Getter
-public class ChatRoom {
+public class Review {
 
     /* =========================
        PK
     ========================= */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "room_id")
-    private Long roomId;
+    @Column(name = "id")
+    private Long reviewId;
 
     /* =========================
        상품
@@ -36,38 +27,38 @@ public class ChatRoom {
     @JoinColumn(
         name = "product_id",
         nullable = false,
-        foreignKey = @ForeignKey(name = "fk_chat_room_product")
+        foreignKey = @ForeignKey(name = "fk_reviews_product")
     )
     private Product product;
 
     /* =========================
-       구매자
+       구매자 (작성자)
     ========================= */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "buyer_id",
         nullable = false,
-        foreignKey = @ForeignKey(name = "fk_chat_room_buyer")
+        foreignKey = @ForeignKey(name = "fk_reviews_buyer")
     )
     private User buyer;
 
     /* =========================
-       판매자
+       판매자 ID (대상)
     ========================= */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "seller_id",
-        nullable = false,
-        foreignKey = @ForeignKey(name = "fk_chat_room_seller")
-    )
-    private User seller;
+    @Column(name = "seller_id", nullable = false)
+    private Long sellerId;
 
     /* =========================
-       상태
+       리뷰 내용
     ========================= */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "room_status", nullable = false)
-    private ChatRoomStatus roomStatus;
+    @Column(name = "content", nullable = false)
+    private String content;
+
+    /* =========================
+       별점
+    ========================= */
+    @Column(name = "rating", nullable = false)
+    private int rating;
 
     /* =========================
        날짜
@@ -81,16 +72,17 @@ public class ChatRoom {
     /* =========================
        JPA 전용 기본 생성자
     ========================= */
-    protected ChatRoom() {}
+    protected Review() {}
 
     /* =========================
        생성자 (VO → Entity)
     ========================= */
-    public ChatRoom(Product product, User buyer, User seller, ChatRoomVO vo) {
+    public Review(Product product, User buyer, Long sellerId, ReviewVO vo) {
         this.product = product;
         this.buyer = buyer;
-        this.seller = seller;
-        this.roomStatus = ChatRoomStatus.ACTIVE;
+        this.sellerId = sellerId;
+        this.content = vo.getContent();
+        this.rating = vo.getRating();
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
@@ -98,19 +90,16 @@ public class ChatRoom {
     /* =========================
        Entity → VO
     ========================= */
-    public ChatRoomVO toVO() {
-        return new ChatRoomVO(this);
+    public ReviewVO toVO() {
+        return new ReviewVO(this);
     }
 
     /* =========================
-       상태 변경
+       수정
     ========================= */
-    public void close() {
-        this.roomStatus = ChatRoomStatus.CLOSED;
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    public void touch() {
+    public void update(ReviewVO vo) {
+        this.content = vo.getContent();
+        this.rating = vo.getRating();
         this.updatedAt = LocalDateTime.now();
     }
 }
