@@ -111,24 +111,29 @@ public class Product {
     protected Product() {}
 
     /* =========================
-       생성자 (VO → Entity)
-    ========================= */
-    public Product(User seller, Category category, ProductVO vo) {
-        this.seller = seller;
-        this.category = category;
-        this.productName = vo.getProductName();
-        this.description = vo.getDescription();
-        this.price = vo.getPrice();
-        this.conditionStatus = vo.getConditionStatus();
-        this.salesStatus = ProductSalesStatus.ON_SALE;
-        this.regionDisplayName = vo.getRegionDisplayName();
-        this.regionCode = vo.getRegionCode();
-        this.tradeType = vo.getTradeType();
-        this.mainImageUrl = vo.getMainImageUrl();
-        this.viewCount = 0;
-        this.likeCount = 0;
-        this.createdAt = LocalDateTime.now();
-    }
+    생성자 (VO → Entity)
+ ========================= */
+ public Product(User seller, Category category, ProductVO vo) {
+     this.seller = seller;
+     this.category = category;
+     this.productName = vo.getProductName();
+     this.description = vo.getDescription();
+     this.price = vo.getPrice();
+
+     this.conditionStatus = ProductConditionStatus.valueOf(vo.getConditionStatusCode());
+     this.salesStatus = ProductSalesStatus.ON_SALE;
+
+     this.regionDisplayName = vo.getRegionDisplayName();
+     this.regionCode = vo.getRegionCode();
+
+     this.tradeType = TradeType.valueOf(vo.getTradeTypeCode());
+     this.mainImageUrl = vo.getMainImageUrl();
+
+     this.viewCount = 0;
+     this.likeCount = 0;
+     this.createdAt = LocalDateTime.now();
+ }
+
 
     /* =========================
        Entity → VO

@@ -5,8 +5,18 @@ package com.itwillbs.entity.enumtype;
  */
 public enum ProductSalesStatus {
 
-    ON_SALE,    // 판매중
-    RESERVED,   // 예약중
-    SOLD,       // 판매 완료
-    HIDDEN      // 숨김 (비노출)
+    ON_SALE("판매중"),
+    RESERVED("예약중"),
+    SOLD("판매완료"),
+    HIDDEN("숨김");
+
+    private final String label;
+
+    ProductSalesStatus(String label) {
+        this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
+    }
 }

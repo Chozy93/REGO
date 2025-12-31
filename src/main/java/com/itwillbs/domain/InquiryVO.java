@@ -1,9 +1,8 @@
 package com.itwillbs.domain;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.itwillbs.entity.Inquiry;
-import com.itwillbs.entity.enumtype.InquiryStatus;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -18,16 +17,21 @@ public class InquiryVO {
     private final String title;
     private final String content;
 
-    private final InquiryStatus status;
+    /* enum 제거 */
+    private final String statusCode;
+    private final String statusLabel;
 
     private final String answerContent;
     private final Long answeredBy;
-    private final LocalDateTime answeredAt;
+    private final String answeredAt;
 
     private final boolean isPrivate;
 
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    private final String createdAt;
+    private final String updatedAt;
+
+    private static final DateTimeFormatter FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     /* =========================
        Entity → VO (조회)
@@ -37,13 +41,22 @@ public class InquiryVO {
         this.userId = entity.getUser().getUserId();
         this.title = entity.getTitle();
         this.content = entity.getContent();
-        this.status = entity.getStatus();
+
+        this.statusCode = entity.getStatus().name();
+        this.statusLabel = entity.getStatus().getLabel();
+
         this.answerContent = entity.getAnswerContent();
         this.answeredBy = entity.getAnsweredBy();
-        this.answeredAt = entity.getAnsweredAt();
+        this.answeredAt = entity.getAnsweredAt() != null
+                ? entity.getAnsweredAt().format(FORMATTER)
+                : "";
+
         this.isPrivate = entity.isPrivate();
-        this.createdAt = entity.getCreatedAt();
-        this.updatedAt = entity.getUpdatedAt();
+
+        this.createdAt = entity.getCreatedAt().format(FORMATTER);
+        this.updatedAt = entity.getUpdatedAt() != null
+                ? entity.getUpdatedAt().format(FORMATTER)
+                : "";
     }
 
     /* =========================
@@ -54,12 +67,17 @@ public class InquiryVO {
         this.userId = null;
         this.title = title;
         this.content = content;
-        this.status = null;
-        this.answerContent = null;
+
+        this.statusCode = "";
+        this.statusLabel = "";
+
+        this.answerContent = "";
         this.answeredBy = null;
-        this.answeredAt = null;
+        this.answeredAt = "";
+
         this.isPrivate = isPrivate;
-        this.createdAt = null;
-        this.updatedAt = null;
+
+        this.createdAt = "";
+        this.updatedAt = "";
     }
 }

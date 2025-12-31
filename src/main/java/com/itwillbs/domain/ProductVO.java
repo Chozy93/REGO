@@ -1,11 +1,8 @@
 package com.itwillbs.domain;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.itwillbs.entity.Product;
-import com.itwillbs.entity.enumtype.ProductConditionStatus;
-import com.itwillbs.entity.enumtype.ProductSalesStatus;
-import com.itwillbs.entity.enumtype.TradeType;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -22,8 +19,12 @@ public class ProductVO {
     private final String description;
     private final int price;
 
-    private final ProductConditionStatus conditionStatus;
-    private final ProductSalesStatus salesStatus;
+    /* enum 제거 */
+    private final String conditionStatusCode;
+    private final String conditionStatusLabel;
+
+    private final String salesStatusCode;
+    private final String salesStatusLabel;
 
     private final String regionDisplayName;
     private final String regionCode;
@@ -31,11 +32,16 @@ public class ProductVO {
     private final int viewCount;
     private final int likeCount;
 
-    private final TradeType tradeType;
+    private final String tradeTypeCode;
+    private final String tradeTypeLabel;
+
     private final String mainImageUrl;
 
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    private final String createdAt;
+    private final String updatedAt;
+
+    private static final DateTimeFormatter FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     /* =========================
        Entity → VO 생성자
@@ -44,18 +50,31 @@ public class ProductVO {
         this.productId = entity.getProductId();
         this.sellerId = entity.getSeller().getUserId();
         this.categoryId = entity.getCategory().getCategoryId();
+
         this.productName = entity.getProductName();
         this.description = entity.getDescription();
         this.price = entity.getPrice();
-        this.conditionStatus = entity.getConditionStatus();
-        this.salesStatus = entity.getSalesStatus();
+
+        this.conditionStatusCode = entity.getConditionStatus().name();
+        this.conditionStatusLabel = entity.getConditionStatus().getLabel();
+
+        this.salesStatusCode = entity.getSalesStatus().name();
+        this.salesStatusLabel = entity.getSalesStatus().getLabel();
+
         this.regionDisplayName = entity.getRegionDisplayName();
         this.regionCode = entity.getRegionCode();
+
         this.viewCount = entity.getViewCount();
         this.likeCount = entity.getLikeCount();
-        this.tradeType = entity.getTradeType();
+
+        this.tradeTypeCode = entity.getTradeType().name();
+        this.tradeTypeLabel = entity.getTradeType().getLabel();
+
         this.mainImageUrl = entity.getMainImageUrl();
-        this.createdAt = entity.getCreatedAt();
-        this.updatedAt = entity.getUpdatedAt();
+
+        this.createdAt = entity.getCreatedAt().format(FORMATTER);
+        this.updatedAt = entity.getUpdatedAt() != null
+                ? entity.getUpdatedAt().format(FORMATTER)
+                : "";
     }
 }

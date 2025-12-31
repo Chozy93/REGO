@@ -69,19 +69,22 @@ public class Report {
        JPA 전용 생성자
     ========================= */
     protected Report() {}
-
     /* =========================
-       생성자 (VO → Entity)
-    ========================= */
-    public Report(User reporter, ReportVO vo) {
-        this.reporter = reporter;
-        this.targetType = vo.getTargetType();
-        this.targetId = vo.getTargetId();
-        this.reason = vo.getReason();
-        this.detail = vo.getDetail();
-        this.status = ReportStatus.PENDING;
-        this.createdAt = LocalDateTime.now();
-    }
+    생성자 (VO → Entity)
+ ========================= */
+ public Report(User reporter, ReportVO vo) {
+     this.reporter = reporter;
+
+     this.targetType = ReportTargetType.valueOf(vo.getTargetTypeCode());
+     this.targetId = vo.getTargetId();
+
+     this.reason = vo.getReason();
+     this.detail = vo.getDetail();
+
+     this.status = ReportStatus.PENDING;
+     this.createdAt = LocalDateTime.now();
+ }
+
 
     /* =========================
        Entity → VO
