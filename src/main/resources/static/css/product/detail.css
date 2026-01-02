@@ -1,0 +1,390 @@
+/* ==================================================
+   Product Detail Page
+   - variables.css 기반
+   - page 전용 스타일만 정의
+================================================== */
+
+/* ===== Layout ===== */
+.container-content {
+  padding-top: var(--space-32);
+  padding-bottom: var(--space-64);
+}
+
+/* ===== Seller Card ===== */
+.seller-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-20);
+}
+
+.seller-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+}
+
+.seller-profile {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seller-profile .material-symbols-outlined {
+  font-size: 28px;
+  color: var(--color-text-subtle);
+}
+
+.seller-temp {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  font-size: var(--fs-10);
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+  background-color: var(--color-primary);
+  padding: 2px var(--space-6);
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--color-surface);
+}
+
+.seller-name {
+  font-size: var(--fs-16);
+  font-weight: var(--fw-bold);
+}
+
+.seller-region {
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+  margin-top: var(--space-4);
+}
+
+/* ===== Product Meta ===== */
+.product-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  margin-top: var(--space-24);
+}
+
+.product-meta .badge {
+  font-size: var(--fs-12);
+}
+
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+}
+
+.meta-item .material-symbols-outlined {
+  font-size: 18px;
+}
+
+/* ===== Description ===== */
+.product-description {
+  font-size: var(--fs-14);
+  line-height: var(--lh-relaxed);
+  color: var(--color-text);
+}
+
+/* ===== Action Buttons ===== */
+.product-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+#likeBtn {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+#likeBtn:hover {
+  background-color: var(--color-surface-2);
+}
+
+#likeIcon {
+  font-size: 24px;
+  color: var(--color-text-subtle);
+}
+
+#likeIcon.filled {
+  color: var(--color-danger);
+}
+
+/* ===== Buttons (page 확장) ===== */
+.btn-dark {
+  background-color: var(--color-text);
+  color: #fff;
+}
+
+.btn-dark:hover {
+  opacity: 0.9;
+}
+
+/* ==================================================
+   Product Detail Layout (page only)
+   - mobile: 1 column
+   - desktop: 2 columns
+================================================== */
+
+/* 상세페이지 전체 그리드 */
+.product-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-32);
+}
+
+/* 좌측: 상품 이미지 영역 */
+.product-detail-media {
+  width: 100%;
+}
+
+/* 우측: 상품 정보 영역 */
+.product-detail-info {
+  width: 100%;
+}
+
+/* ==================================================
+   Desktop Layout
+================================================== */
+@media (min-width: 1024px) {
+  .product-detail-grid {
+    grid-template-columns: 2fr 1fr;
+    align-items: start;
+  }
+}
+
+/* ==================================================
+   Product Detail - Right Column Card Style
+   (Step 1: Visual Density)
+================================================== */
+
+/* 오른쪽 컬럼 전체 흐름 */
+.product-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+/* 상품명 */
+.product-title {
+  font-size: var(--fs-24);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+}
+
+/* 가격 */
+.product-price {
+  font-size: var(--fs-28);
+  font-weight: var(--fw-bold);
+}
+
+/* 등록 시간 */
+.product-created-at {
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+}
+
+/* 공통 카드 박스 */
+.detail-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-20);
+}
+
+/* 판매자 카드 보강 */
+.seller-card {
+  margin-top: var(--space-8);
+}
+
+/* 상품 설명 섹션 */
+.product-description-section {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-24);
+}
+
+.product-description-title {
+  font-size: var(--fs-18);
+  font-weight: var(--fw-bold);
+  margin-bottom: var(--space-16);
+}
+
+/* 버튼 영역 카드화 */
+.product-actions {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-16);
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+/* ==================================================
+   Product Image Viewer (Detail Page)
+================================================== */
+
+.product-image-viewer {
+  width: 100%;
+}
+
+/* 메인 이미지 박스 */
+.product-image-main {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background-color: var(--color-surface-2);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+/* 이미지 자체 */
+.product-image-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* (추후) 썸네일 영역 */
+.product-image-thumbs {
+  display: flex;
+  gap: var(--space-12);
+  margin-top: var(--space-16);
+}
+
+.product-image-thumbs .thumb {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  opacity: 0.7;
+  border: 1px solid var(--color-border);
+}
+
+.product-image-thumbs .thumb:hover {
+  opacity: 1;
+  border-color: var(--color-primary);
+}
+
+/* ==================================================
+   Product Info Cards (Detail Page)
+================================================== */
+
+/* 제목 + 가격 */
+.product-header-card {
+  margin-bottom: var(--space-24);
+}
+
+.product-title {
+  font-size: var(--fs-28);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+}
+
+.product-price {
+  margin-top: var(--space-12);
+  font-size: var(--fs-28);
+  font-weight: var(--fw-bold);
+}
+
+.product-time {
+  margin-top: var(--space-8);
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+}
+
+/* 공통 정보 카드 */
+.info-card {
+  margin-top: var(--space-24);
+  padding: var(--space-20);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.info-card-title {
+  margin-bottom: var(--space-12);
+  font-size: var(--fs-16);
+  font-weight: var(--fw-bold);
+}
+
+/* 하단 액션 카드 */
+.action-card {
+  margin-top: var(--space-24);
+  padding: var(--space-16);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+/* 찜 버튼 보강 */
+.like-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-surface);
+}
+
+.like-btn:hover {
+  background-color: var(--color-surface-2);
+}
+
+/* 찜 버튼 활성 상태 */
+.like-btn .filled {
+  color: var(--color-danger);
+}
+
+.like-btn:active {
+  transform: scale(0.95);
+}
+
+.btn-primary:active,
+.btn-dark:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 480px) {
+  .action-card {
+    flex-direction: column;
+  }
+
+  .action-card .btn {
+    width: 100%;
+  }
+}
+
+
+
+
+
+
