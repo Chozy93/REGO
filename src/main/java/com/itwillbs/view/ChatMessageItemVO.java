@@ -1,4 +1,4 @@
-package com.itwillbs.domain.chat;
+package com.itwillbs.view;
 
 /**
  * 채팅 메시지 1개 아이템 VO

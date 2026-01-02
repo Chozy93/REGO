@@ -1,17 +1,12 @@
-package com.itwillbs.domain.chat;
-
-import java.util.Collections;
-import java.util.List;
+package com.itwillbs.view;
 
 /**
- * 채팅 상세 화면(View) 전용 VO
- * - 채팅 헤더(상품/상대) + 메시지 리스트를 "한 덩어리"로 전달
- * - View에는 VO 1개만 전달 규칙 준수
+ * 채팅방 리스트의 "1개 채팅방" 아이템 VO
+ * - enum 금지, 날짜 객체 금지, null 금지
  */
-public class ChatRoomDetailViewVO {
+public class ChatRoomListItemVO {
 
-    private final String roomId;
-
+    private final String roomId;                 // VO에서는 String 허용(문서 ID 규칙)
     private final String productId;
     private final String productTitle;
     private final String productThumbnailUrl;
@@ -19,19 +14,23 @@ public class ChatRoomDetailViewVO {
     private final String opponentUserId;
     private final String opponentUserName;
 
-    private final List<ChatMessageItemVO> chatMessageItems;
+    private final String lastMessageContent;
+    private final String lastMessageCreatedAt;   // yyyy-MM-dd HH:mm 등 "문자열"로만
 
-    public ChatRoomDetailViewVO(
+    private final int unreadCount;
+
+    public ChatRoomListItemVO(
             String roomId,
             String productId,
             String productTitle,
             String productThumbnailUrl,
             String opponentUserId,
             String opponentUserName,
-            List<ChatMessageItemVO> chatMessageItems
+            String lastMessageContent,
+            String lastMessageCreatedAt,
+            Integer unreadCount
     ) {
         this.roomId = (roomId != null) ? roomId : "";
-
         this.productId = (productId != null) ? productId : "";
         this.productTitle = (productTitle != null) ? productTitle : "";
         this.productThumbnailUrl = (productThumbnailUrl != null) ? productThumbnailUrl : "";
@@ -39,7 +38,10 @@ public class ChatRoomDetailViewVO {
         this.opponentUserId = (opponentUserId != null) ? opponentUserId : "";
         this.opponentUserName = (opponentUserName != null) ? opponentUserName : "";
 
-        this.chatMessageItems = (chatMessageItems != null) ? chatMessageItems : Collections.emptyList();
+        this.lastMessageContent = (lastMessageContent != null) ? lastMessageContent : "";
+        this.lastMessageCreatedAt = (lastMessageCreatedAt != null) ? lastMessageCreatedAt : "";
+
+        this.unreadCount = (unreadCount != null) ? unreadCount : 0;
     }
 
     public String getRoomId() { return roomId; }
@@ -48,5 +50,7 @@ public class ChatRoomDetailViewVO {
     public String getProductThumbnailUrl() { return productThumbnailUrl; }
     public String getOpponentUserId() { return opponentUserId; }
     public String getOpponentUserName() { return opponentUserName; }
-    public List<ChatMessageItemVO> getChatMessageItems() { return chatMessageItems; }
+    public String getLastMessageContent() { return lastMessageContent; }
+    public String getLastMessageCreatedAt() { return lastMessageCreatedAt; }
+    public int getUnreadCount() { return unreadCount; }
 }

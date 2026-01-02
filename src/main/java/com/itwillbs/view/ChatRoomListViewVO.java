@@ -1,4 +1,4 @@
-package com.itwillbs.domain.chat;
+package com.itwillbs.view;
 
 import java.util.Collections;
 import java.util.List;

@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.itwillbs.domain.ChatMessageVO;
 import com.itwillbs.domain.ChatRoomVO;
 import com.itwillbs.domain.UserVO;
-import com.itwillbs.domain.chat.ChatRoomListItemVO;
-import com.itwillbs.domain.chat.ChatRoomListViewVO;
 import com.itwillbs.entity.enumtype.ChatFilterType;
+import com.itwillbs.view.ChatRoomListItemVO;
+import com.itwillbs.view.ChatRoomListViewVO;
 
 @Controller
 @RequestMapping("/chat")
