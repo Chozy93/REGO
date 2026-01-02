@@ -30,11 +30,37 @@
 /* =========================
    Filter
 ========================= */
+.chat-filter-wrap {
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: 8px;
+}
+
+.chat-filter-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    to left,
+    var(--color-surface),
+    transparent
+  );
+}
 .chat-filter {
   display: flex;
   gap: var(--space-8);
   padding: 0 var(--space-20) var(--space-12);
   overflow-x: auto;
+  
+  /* 🔥 추가 */
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
 }
 
 .chat-filter-btn {
@@ -44,12 +70,19 @@
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-text-muted);
+  /* 🔥 추가 */
+  white-space: nowrap;
+  word-break: keep-all;
 }
 
 .chat-filter-btn.is-active {
   background: var(--color-primary);
   color: var(--color-text);
   border-color: var(--color-primary);
+}
+.chat-filter-option {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 8px 20px;
 }
 
 /* =========================
@@ -65,6 +98,7 @@
   gap: var(--space-12);
   padding: var(--space-16) var(--space-20);
   cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .chat-room-item:hover {
@@ -99,6 +133,7 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 4px;
+ 
 }
 
 .chat-room-name {
@@ -112,11 +147,36 @@
 }
 
 .chat-room-preview {
-  font-size: var(--fs-13);
+  flex: 1;
+  font-size: 13px;
   color: var(--color-text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.chat-room-bottom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.chat-room-unread {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff3b30; /* iOS 스타일 레드 */
+}
+
+.unread-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ff3b30;
 }
 
 /* =========================

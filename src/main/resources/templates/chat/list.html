@@ -5,8 +5,8 @@
       layout:decorate="~{layout/base}">
 
 <!-- page 전용 CSS -->
-<th:block layout:fragment="pageCss">
-    <link rel="stylesheet" href="/css/chatting/chat-list.css">
+<th:block th:fragment="pageCss">
+    <link rel="stylesheet" href="/css/chat/chat-list.css">
 </th:block>
 
 <div layout:fragment="content" class="chat-layout">
@@ -21,55 +21,106 @@
             <h2 class="chat-sidebar-title">전체 대화</h2>
         </div>
 
-        <!-- Filter Pills (UI only) -->
-        <div class="chat-filter">
-            <button class="chat-filter-btn is-active">전체</button>
-            <button class="chat-filter-btn">대기</button>
-            <button class="chat-filter-btn">진행중</button>
-            <button class="chat-filter-btn">대화종료</button>
-            <button class="chat-filter-btn">보관함</button>
-        </div>
+        <!-- =========================
+             Filter (Role)
+        ========================== -->
+		<div class="chat-filter-wrap">
+		    <div class="chat-filter">
 
-        <!-- Chat Room List -->
-        <div class="chat-room-list">
+		        <a th:each="filter : ${chatFilters}"
+		           class="chat-filter-btn"
+		           th:text="${filter.label}"
+		           th:href="@{/chat/rooms(
+		               type=${filter.name()},
+		               unread=${unreadOnly}
+		           )}"
+		           th:classappend="${filter == currentFilter} ? ' is-active'">
+		        </a>
 
-            <!-- 반복 아이템 -->
-            <div class="chat-room-item">
-                <div class="chat-room-avatar">
-                    <span class="material-symbols-outlined">bolt</span>
-                </div>
+		    </div>
+		</div>
 
-                <div class="chat-room-body">
-                    <div class="chat-room-head">
-                        <strong class="chat-room-name">번개장터</strong>
-                        <span class="chat-room-time">12월 16일</span>
-                    </div>
-                    <p class="chat-room-preview">
-                        번개장터에 오신 걸 환영해요 🎉
-                    </p>
-                </div>
-            </div>
 
-            <!-- 반복 아이템 -->
-            <div class="chat-room-item">
-                <img class="chat-room-avatar-img"
-                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9XAg3j6lFPOZWqaylwp_IxM7Y7xCsNQutMZ5Sxqqt62jarsRBO8ZivtpNglBeMPL5dTkpHzbpMUL5GRzUKfuDAeSDzJ4t_mf0Ta7RpewKJyQY4cXVj_FoTDQH7URIRzunFMVTjoF-IyR8PfkSHyQLTcaXjf6UVQGMw0RG5KiO3oD7ywTLYmhQuhX3T99jWZd5PK9VUGppF4q55xfTcYDu6OXvtR_s2qpdG8uL-L1BiRogR4hKWRcPCjzH3r8g_xU0autaxBrDv4s"
-                     alt="">
-
-                <div class="chat-room-body">
-                    <div class="chat-room-head">
-                        <strong class="chat-room-name">김철수</strong>
-                        <span class="chat-room-time">어제</span>
-                    </div>
-                    <p class="chat-room-preview">
-                        네, 알겠습니다. 내일 뵙겠습니다!
-                    </p>
-                </div>
-            </div>
+        <!-- =========================
+             Filter Option (Unread)
+        ========================== -->
+        <div class="chat-filter-option">
+			<label class="chat-unread-toggle">
+			    <input type="checkbox"
+			           name="unread"
+			           th:checked="${unreadOnly}"
+			           onchange="location.href=this.checked
+			             ? '?type=[[${currentFilter.name()}]]&unread=true'
+			             : '?type=[[${currentFilter.name()}]]'">
+			    <span>안읽음만</span>
+			</label>
 
         </div>
-    </aside>
 
+        <!-- =========================
+             Chat Room List
+        ========================== -->
+		<div class="chat-room-list">
+
+		    <!-- 채팅방 아이템 반복 -->
+		    <div class="chat-room-item"
+		         th:each="room : ${view.chatRoomItems}"
+		         th:data-room-id="${room.roomId}">
+
+		        <!-- 썸네일 / 아바타 -->
+		        <div class="chat-room-avatar"
+		             th:if="${room.productThumbnailUrl == ''}">
+		            <span class="material-symbols-outlined">bolt</span>
+		        </div>
+
+		        <img class="chat-room-avatar-img"
+		             th:if="${room.productThumbnailUrl != ''}"
+		             th:src="${room.productThumbnailUrl}"
+		             alt="상품 썸네일">
+
+		        <!-- 본문 -->
+		        <div class="chat-room-body">
+
+		            <!-- 상단: 이름 + 날짜 -->
+		            <div class="chat-room-head">
+		                <strong class="chat-room-name"
+		                        th:text="${room.opponentUserName}">
+		                </strong>
+
+		                <span class="chat-room-time"
+		                      th:text="${room.lastMessageCreatedAt}">
+		                </span>
+		            </div>
+
+		            <!-- 하단: 요약 + 안읽음 -->
+		            <div class="chat-room-bottom">
+
+		                <p class="chat-room-preview"
+		                   th:text="${room.lastMessageContent}">
+		                </p>
+
+		                <!-- 안읽음 -->
+		                <div class="chat-room-unread"
+		                     th:if="${room.unreadCount > 0}">
+		                    <span class="unread-dot"></span>
+		                    <span class="unread-count"
+		                          th:text="${room.unreadCount}">
+		                    </span>
+		                </div>
+
+		            </div>
+		        </div>
+
+		    </div>
+
+		    <!-- 채팅방 없음 -->
+		    <div class="chat-room-empty"
+		         th:if="${#lists.isEmpty(view.chatRoomItems)}">
+		        대화 내역이 없습니다.
+		    </div>
+
+		</div>
+		</aside>
     <!-- =========================
          Empty State (Right)
     ========================== -->
