@@ -41,7 +41,7 @@
       </div>
 	
       <div class="grid grid-products">
-        <th:block th:each="p : ${aiProducts}">
+        <th:block th:each="p : ${aiList}">
           <th:block th:replace="fragments/product-card :: productCard(${p})"/>
         </th:block>
       </div>
@@ -55,7 +55,7 @@
       </div>
 
       <div class="grid grid-products">
-        <th:block th:each="p : ${hotProducts}">
+        <th:block th:each="p : ${popularList}">
           <th:block th:replace="fragments/product-card :: productCard(${p})"/>
         </th:block>
       </div>
@@ -69,7 +69,7 @@
       </div>
 
       <div class="grid grid-products">
-        <th:block th:each="p : ${recentProducts}">
+        <th:block th:each="p : ${recentList}">
           <th:block th:replace="fragments/product-card :: productCard(${p})"/>
         </th:block>
       </div>

@@ -7,7 +7,7 @@
 
     <!-- 메인 상품 목록 조회 -->
     <select id="selectMainProductList"
-            resultType="com.itwillbs.dto.MainProductDTO">
+        resultType="com.itwillbs.dto.MainProductListDTO">
 
         SELECT
             p.product_id           AS productId,
