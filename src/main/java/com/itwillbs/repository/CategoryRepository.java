@@ -10,6 +10,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
 	List<Category> findByLevelAndIsActiveOrderBySortOrderAsc(int level, boolean isActive);
 
-	List<Category> findByParentCategoryIdAndIsActiveOrderBySortOrderAsc(Long parentId, boolean isActive);
-
+	
 }
