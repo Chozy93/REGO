@@ -1,0 +1,74 @@
+<div class="category-modal is-hidden"
+     th:fragment="category-modal">
+
+  <!-- overlay -->
+  <div class="category-modal-overlay"></div>
+
+  <!-- panel -->
+  <div class="category-modal-panel">
+
+    <!-- header -->
+    <div class="category-modal-header">
+      <h2 class="category-modal-title">카테고리</h2>
+      <button type="button" class="category-modal-close-btn">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <!-- body -->
+    <div class="category-modal-body">
+
+      <!-- ===============================
+           1차 카테고리 loop
+      =============================== -->
+      <div class="category-modal-group"
+           th:each="node : ${headerCategoryListVO.categories}">
+
+        <!-- 1차 카테고리 -->
+        <button type="button" class="category-modal-main-btn">
+          <div class="category-modal-main-left">
+
+            <!-- icon (1차 전용) -->
+            <div class="category-modal-icon"
+                 th:if="${node.iconCode != ''}">
+              <span class="material-symbols-outlined"
+                    th:text="${node.iconCode}">
+              </span>
+            </div>
+
+            <span class="category-modal-main-text"
+                  th:text="${node.parent.name}">
+              카테고리명
+            </span>
+          </div>
+
+          <!-- arrow -->
+          <span class="material-symbols-outlined category-modal-arrow"
+                th:if="${!#lists.isEmpty(node.children)}">
+            expand_more
+          </span>
+        </button>
+
+        <!-- ===============================
+             2차 카테고리
+        =============================== -->
+        <div class="category-modal-sub-list"
+             th:if="${!#lists.isEmpty(node.children)}">
+
+          <a class="category-modal-sub-item"
+             th:each="child : ${node.children}"
+             th:href="@{/products(categoryId=${child.categoryId})}">
+
+            <span class="category-modal-sub-text"
+                  th:text="${child.name}">
+              서브카테고리
+            </span>
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

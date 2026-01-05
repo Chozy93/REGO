@@ -215,13 +215,20 @@ padding-left: var(--logo-width);
   border-top: 1px solid var(--color-border);
 }
 
-.category-btn {
+.header-category-btn {
   display: inline-flex;
   align-items: center;
+  flex-direction: row;   /* 🔥 이거 */
   gap: var(--space-6);
   font-weight: var(--fw-semibold);
 }
-
+.header-category-icon {
+  display: flex;        /* ← 중요 */
+  align-items: center;
+  line-height: 1;
+    transform: translateY(-1px);
+  font-size: 20px;      /* 텍스트랑 밸런스 */
+}
 /* 헤더 우측 지역 채팅 판매*/
 .header-right {
   display: flex;
