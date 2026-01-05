@@ -14,8 +14,9 @@ public class GlobalCategoryAdvice {
 
     private final CategoryService categoryService;	
 
-    @ModelAttribute("headerCategoryVO")
+    @ModelAttribute("headerCategoryListVO")
     public HeaderCategoryListVO headerCategories() {
+    	System.out.println("가져온 카테고리 : "+categoryService.getHeaderCategories());
         return categoryService.getHeaderCategories();
     }
 }
