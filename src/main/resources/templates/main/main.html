@@ -34,46 +34,58 @@
     </section>
 
     <!-- AI 추천 -->
-    <section class="section">
-      <div class="section-head">
-        <h2 class="section-title">🤖 AI 맞춤 상품</h2>
-        <a href="#" class="section-link">전체보기</a>
-      </div>
-	
-      <div class="grid grid-products">
-        <th:block th:each="p : ${aiList}">
-          <th:block th:replace="fragments/product-card :: productCard(${p})"/>
-        </th:block>
-      </div>
-    </section>
+	<section class="section"
+	         th:if="${page.aiProducts != null and #lists.size(page.aiProducts) > 0}">
+	  <div class="section-head">
+	    <h2 class="section-title">🤖 AI 맞춤 상품</h2>
+	    <a href="#" class="section-link">전체보기</a>
+	  </div>
+
+	  <div class="grid grid-products">
+	    <th:block th:each="p : ${page.aiProducts}">
+	      <th:block
+	        th:replace="~{fragments/product-card :: productCard(product=${p})}"/>
+	    </th:block>
+	  </div>
+	</section>
 
     <!-- 인기 상품 -->
-    <section class="section">
-      <div class="section-head">
-        <h2 class="section-title">🔥 인기 상품</h2>
-        <a href="#" class="section-link">전체보기</a>
-      </div>
+	<section class="section"
+	         th:if="${page.popularProducts != null and #lists.size(page.popularProducts) > 0}">
+	  <div class="section-head">
+	    <h2 class="section-title">🔥 인기 상품</h2>
+	    <a href="#" class="section-link">전체보기</a>
+	  </div>
 
-      <div class="grid grid-products">
-        <th:block th:each="p : ${popularList}">
-          <th:block th:replace="fragments/product-card :: productCard(${p})"/>
-        </th:block>
-      </div>
-    </section>
-
+	  <div class="grid grid-products">
+	    <th:block th:each="p : ${page.popularProducts}">
+	      <th:block
+	        th:replace="~{fragments/product-card :: productCard(product=${p})}"/>
+	    </th:block>
+	  </div>
+	</section>
+	
     <!-- 최근 상품 -->
-    <section class="section">
-      <div class="section-head">
-        <h2 class="section-title">🆕 최근 등록 상품</h2>
-        <a href="#" class="section-link">전체보기</a>
-      </div>
+	<section class="section"
+	         th:if="${page.recentProducts != null and #lists.size(page.recentProducts) > 0}">
+	  <div class="section-head">
+	    <h2 class="section-title">🆕 최근 등록 상품</h2>
+	    <a href="#" class="section-link">전체보기</a>
+	  </div>
 
-      <div class="grid grid-products">
-        <th:block th:each="p : ${recentList}">
-          <th:block th:replace="fragments/product-card :: productCard(${p})"/>
-        </th:block>
-      </div>
-    </section>
+	  <div class="grid grid-products">
+	    <th:block th:each="p : ${page.recentProducts}">
+	      <th:block
+	        th:replace="~{fragments/product-card :: productCard(product=${p})}"/>
+	    </th:block>
+	  </div>
+	</section>
 
   </div>
+  
+  <!-- 페이지 전용 JS -->
+  <th:block th:fragment="pageJs">
+      <script th:src="@{/js/product-like.js}"></script>
+  </th:block>
+  
 </html>

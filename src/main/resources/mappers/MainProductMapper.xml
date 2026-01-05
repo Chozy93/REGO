@@ -5,21 +5,40 @@
 
 <mapper namespace="com.itwillbs.mapper.MainProductMapper">
 
-    <!-- 메인 상품 목록 조회 -->
-    <select id="selectMainProductList"
+ <select id="selectRecentProducts"
         resultType="com.itwillbs.dto.MainProductListDTO">
 
-        SELECT
-            p.product_id           AS productId,
-            p.product_name         AS productName,
-            p.price                AS price,
-            p.main_image_url       AS mainImageUrl,
-            p.region_display_name  AS regionDisplayName,
-            p.like_count           AS likeCount,
-            p.view_count           AS viewCount
-        FROM products p
-        ORDER BY p.created_at DESC
+    SELECT
+        p.product_id           AS productId,
+        p.product_name         AS productName,
+        p.price                AS price,
+        p.main_image_url       AS mainImageUrl,
+        p.region_display_name  AS regionDisplayName,
+        p.like_count           AS likeCount,
+        p.view_count           AS viewCount
+    FROM products p
+    ORDER BY p.created_at DESC
+    LIMIT 8
 
-    </select>
+</select>
+
+
+<select id="selectPopularProducts"
+        resultType="com.itwillbs.dto.MainProductListDTO">
+
+    SELECT
+        p.product_id           AS productId,
+        p.product_name         AS productName,
+        p.price                AS price,
+        p.main_image_url       AS mainImageUrl,
+        p.region_display_name  AS regionDisplayName,
+        p.like_count           AS likeCount,
+        p.view_count           AS viewCount
+    FROM products p
+    ORDER BY p.view_count DESC
+    LIMIT 8
+
+</select>
+
 
 </mapper>

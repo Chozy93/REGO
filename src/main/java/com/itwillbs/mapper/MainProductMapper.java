@@ -7,6 +7,9 @@ import com.itwillbs.dto.MainProductListDTO;
 @Mapper
 public interface MainProductMapper {
 
-    List<MainProductListDTO> selectMainProductList();
+    // 최근 등록 상품
+    List<MainProductListDTO> selectRecentProducts();
 
+    // 인기 상품
+    List<MainProductListDTO> selectPopularProducts();
 }

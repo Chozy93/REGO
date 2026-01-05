@@ -24,8 +24,14 @@
 				<div class="product-image-viewer">
 					
 					<div class="product-image-main">
-                		<img th:src="${product.imageUrls[0]}"
-                     		 alt="상품 이미지">
+						<img th:if="${#lists.size(product.imageUrls) > 0}"
+						     th:src="${product.imageUrls[0]}"
+						     alt="상품 이미지"/>
+
+						<img th:if="${#lists.isEmpty(product.imageUrls)}"
+						     src="/images/no-image.png"
+						     alt="기본 이미지"/>
+
                    </div>
 				   
 				   <!-- (추후용) 썸네일 영역 -->
@@ -35,7 +41,13 @@
 				                    th:src="${img}"
 				                    class="thumb">
 				           </div>
-				           -->
+					   <img th:if="${product != null and #lists.size(product.imageUrls) > 0}"
+					                th:src="${product.imageUrls[0]}"
+					                alt="상품 이미지">
+
+					           <img th:if="${product == null or #lists.isEmpty(product.imageUrls)}"
+					                src="/images/no-image.png"
+					                alt="기본 이미지">				           -->
 					</div>
 
           </div>
@@ -48,7 +60,7 @@
 
                 <!-- 상품명 -->
                 <h1 class="product-title"
-                    th:text="${product.productName}">
+                     th:text="${product.productName}">
                     상품명
                 </h1>
 
@@ -139,17 +151,19 @@
 				</div>
 
                 <!-- 하단 버튼 -->
-                <div class="action-card">
+				<div class="action-card">
 
-                    <button id="likeBtn"
-							class="like-btn"
-                            th:data-product-id="${product.productId}">
-                        <span id="likeIcon"
-                              class="material-symbols-outlined"
-                              th:classappend="${product.liked} ? ' filled' : ''">
-                            favorite
-                        </span>
-                    </button>
+				    <button type="button"
+				            class="product-card__like-btn"
+				            th:data-product-id="${product.productId}"
+				            aria-label="찜하기">
+
+				        <span class="material-symbols-outlined"
+				              th:classappend="${product.liked} ? ' filled' : ''">
+				            favorite
+				        </span>
+
+				    </button>
 
                     <button class="btn btn-primary">
                         채팅하기

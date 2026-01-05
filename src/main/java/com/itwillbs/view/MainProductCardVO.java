@@ -1,25 +1,31 @@
-package com.itwillbs.domain;
+package com.itwillbs.view;
 
 import lombok.Getter;
 
 @Getter
 public class MainProductCardVO {
 
-    private final Long id;
+    private final String id;        // 🔥 Long → String
     private final String title;
     private final int price;
     private final String img;
     private final String loc;
     private final String time;
     private final boolean reserved;
+    
+ // 🔥 추가
+    private final boolean liked;
 
-    public MainProductCardVO(Long id,
-                             String title,
-                             int price,
-                             String img,
-                             String loc,
-                             String time,
-                             boolean reserved) {
+    public MainProductCardVO(
+            String id,
+            String title,
+            int price,
+            String img,
+            String loc,
+            String time,
+            boolean reserved,
+            boolean liked
+    ) {
         this.id = id;
         this.title = title;
         this.price = price;
@@ -27,5 +33,6 @@ public class MainProductCardVO {
         this.loc = loc;
         this.time = time;
         this.reserved = reserved;
+        this.liked = liked;
     }
 }

@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwillbs.dto.ProductDetailDTO;
+import com.itwillbs.service.ProductDetailService;
 import com.itwillbs.service.ProductService;
+import com.itwillbs.view.ProductDetailPageVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 	
 	private final ProductService productService;
+	private final ProductDetailService productDetailService;
 
 	// 판매하기 페이지 (상품 등록)
 	@GetMapping("/product/write")
@@ -31,20 +34,17 @@ public class ProductController {
 	
 	// ✅ 상품 상세 페이지
 	@GetMapping("/product/{id}")
-	public String productDetail(@PathVariable("id") Long id, Model model) {
-		
-		ProductDetailDTO product = productService.getProductDetail(id);
-		model.addAttribute("product", product);
-		
-		return "product/detail";
-		
-	}
-	
-	// ✅ 찜 토글 (Ajax)
-	@PostMapping("/product/{productId}/like")
-    @ResponseBody
-    public Map<String, Object> toggleLike(@PathVariable Long productId) {
+	public String productDetail(
+	        @PathVariable("id") Long id,
+	        Model model
+	) {
+	    ProductDetailPageVO page =
+	            productDetailService.getProductDetailPage(id);
 
-        return productService.toggleLike(productId);
-    }
+	    model.addAttribute("page", page);
+	    model.addAttribute("product", page.getProduct()); // ⭐ 핵심
+
+	    return "product/detail";
+	}
+
 }
