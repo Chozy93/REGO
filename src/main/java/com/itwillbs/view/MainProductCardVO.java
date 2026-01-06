@@ -14,6 +14,7 @@ public class MainProductCardVO {
     private final boolean reserved;
     
  // 🔥 추가
+    private final int likeCount;   
     private final boolean liked;
 
     public MainProductCardVO(
@@ -24,6 +25,7 @@ public class MainProductCardVO {
             String loc,
             String time,
             boolean reserved,
+            int likeCount,
             boolean liked
     ) {
         this.id = id;
@@ -33,6 +35,7 @@ public class MainProductCardVO {
         this.loc = loc;
         this.time = time;
         this.reserved = reserved;
+        this.likeCount = likeCount;
         this.liked = liked;
     }
 }

@@ -1,50 +1,47 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    const likeButtons = document.querySelectorAll(".product-card__like-btn");
+  document.querySelectorAll(".product-card__like-btn, .detail-like-btn")
+    .forEach(button => {
 
-    likeButtons.forEach(button => {
+      button.addEventListener("click", async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-        button.addEventListener("click", async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+        const productId = button.dataset.productId;
+        if (!productId) return;
 
-            const productId = button.dataset.productId;
-            if (!productId) return;
+        const icon = button.querySelector(".material-symbols-outlined");
+        const countEl =
+          button.closest(".product-card, .product-detail")
+                ?.querySelector(".like-count");
 
-            const icon = button.querySelector("span");
+        const wasLiked = icon.classList.contains("filled");
 
-            // 🔥 1. 현재 상태 저장
-            const wasLiked = icon.classList.contains("filled");
+        // 🔥 1. UI 선반영
+        icon.classList.toggle("filled");
 
-            // 🔥 2. UI 먼저 토글 (낙관적 업데이트)
-            icon.classList.toggle("filled");
+        try {
+          const res = await fetch(`/product/${productId}/like`, {
+            method: "POST"
+          });
 
-            try {
-                const response = await fetch(`/product/${productId}/like`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
+          if (!res.ok) throw new Error();
 
-                if (!response.ok) {
-                    throw new Error("서버 응답 실패");
-                }
+          const result = await res.json();
+          // { liked, likeCount }
 
-                const result = await response.json();
-                // result: { liked: true/false }
+          // 🔥 2. 서버 기준 동기화
+          icon.classList.toggle("filled", result.liked);
 
-                // 🔥 3. 서버 상태와 UI 동기화
-                icon.classList.toggle("filled", result.liked);
+          if (countEl) {
+            countEl.textContent = result.likeCount;
+          }
 
-            } catch (error) {
-                console.error("찜 처리 오류:", error);
-
-                // 🔥 4. 실패 시 UI 롤백
-                icon.classList.toggle("filled", wasLiked);
-
-                alert("로그인이 필요합니다.");
-            }
-        });
+        } catch (e) {
+          // 🔥 3. 실패 시 롤백
+          icon.classList.toggle("filled", wasLiked);
+          alert("로그인이 필요합니다.");
+        }
+      });
     });
 });

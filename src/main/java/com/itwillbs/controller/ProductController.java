@@ -1,19 +1,17 @@
 package com.itwillbs.controller;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.itwillbs.dto.ProductDetailDTO;
 import com.itwillbs.service.ProductDetailService;
+import com.itwillbs.service.ProductListService;
 import com.itwillbs.service.ProductService;
 import com.itwillbs.view.ProductDetailPageVO;
+import com.itwillbs.view.ProductListPageVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,11 +19,12 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class ProductController {
-	
-	private final ProductService productService;
-	private final ProductDetailService productDetailService;
 
-	// 판매하기 페이지 (상품 등록)
+    private final ProductService productService;
+    private final ProductDetailService productDetailService;
+    private final ProductListService productListService; // ⭐ 이거 필수
+
+    // TODO: 상품 등록 기능 (2차 구현)
 	@GetMapping("/product/write")
 	public String createProduct() {
 		
@@ -46,5 +45,17 @@ public class ProductController {
 
 	    return "product/detail";
 	}
+	
+	// ✅ 카테고리별 상품 목록
+	@GetMapping("/products")
+    public String productList(
+            @RequestParam("categoryId") Long categoryId,
+            Model model
+    ) {
+        ProductListPageVO page =
+                productListService.getProductsByCategory(categoryId);
 
+        model.addAttribute("page", page);
+        return "product/list";
+    }
 }

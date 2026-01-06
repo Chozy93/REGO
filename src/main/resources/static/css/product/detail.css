@@ -383,6 +383,12 @@
   }
 }
 
+.material-symbols-outlined.filled {
+    font-variation-settings: 'FILL' 1;
+    color: #ff4d4f;
+}
+
+
 
 
 

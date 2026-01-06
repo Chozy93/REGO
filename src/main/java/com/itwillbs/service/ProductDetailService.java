@@ -14,6 +14,7 @@ import java.util.List;
 public class ProductDetailService {
 
     private final ProductService productService;
+    private final ProductLikeService productLikeService;
     // ⚠️ 현재는 더미 DTO 제공용
     // 추후 MyBatis Mapper로 교체 예정
 
@@ -48,6 +49,15 @@ public class ProductDetailService {
                 dto.isLiked(),
                 dto.getCreatedAtDisplay()
         );
+
+        // 🔥 메인 ↔ 상세 찜 상태 동기화
+        boolean liked =
+                productLikeService.isLiked(productId, "testUser");
+        int likeCount =
+                productLikeService.getLikeCount(productId);
+
+        productVO.setLiked(liked);
+        productVO.setLikeCount(likeCount);
 
         return new ProductDetailPageVO(productVO);
     }

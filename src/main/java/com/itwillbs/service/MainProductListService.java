@@ -71,6 +71,7 @@ public class MainProductListService {
                 dto.getRegionDisplayName(),
                 "방금 전",                       // 날짜 포맷은 추후 교체
                 false,                         // 예약 여부 임시
+                12,
                 false                          // ❤️ liked (STEP 2-③ 핵심)
         );
     }

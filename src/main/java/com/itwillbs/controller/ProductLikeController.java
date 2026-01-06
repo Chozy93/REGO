@@ -16,14 +16,11 @@ public class ProductLikeController {
 
     private final ProductLikeService productLikeService;
 
-    // =========================
-    // 찜 토글 (임시 더미)
-    // =========================
     @PostMapping("/{productId}/like")
     public ResponseEntity<Map<String, Object>> toggleLike(
-            @PathVariable Long productId
+            @PathVariable("productId") Long productId
     ) {
-        // ⚠️ 로그인 아직 안 붙음 → user 고정
+        // 🔥 로그인 아직 안 붙음 → 더미 유저
         String dummyUserId = "testUser";
 
         Map<String, Object> result =

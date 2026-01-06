@@ -1,10 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("DETAIL JS LOADED");
 
-    const likeBtn = document.querySelector(".product-like-btn");
+    const likeBtn = document.querySelector(".product-card__like-btn");
     if (!likeBtn) return;
+
+    const icon = likeBtn.querySelector(".material-symbols-outlined");
+    const likeCountEl = document.getElementById("likeCount");
 
     likeBtn.addEventListener("click", async (e) => {
         e.preventDefault();
+        e.stopPropagation();
 
         const productId = likeBtn.dataset.productId;
         if (!productId) return;
@@ -14,16 +19,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST"
             });
 
+            // 🔥 로그인 안 돼도 UI는 바뀌게 (지금 단계 핵심)
             if (response.status === 401) {
                 alert("로그인이 필요합니다.");
+
+                // ❤️ 하트 토글
+                icon.classList.toggle("filled");
+
+                // 🔢 숫자 토글
+                if (likeCountEl) {
+                    const current = parseInt(likeCountEl.textContent, 10);
+                    likeCountEl.textContent =
+                        icon.classList.contains("filled")
+                            ? current + 1
+                            : current - 1;
+                }
                 return;
             }
 
-            const result = await response.json();
-            // result = { liked: true, likeCount: 25 }
+            if (!response.ok) {
+                throw new Error("Server Error");
+            }
 
-            const icon = document.getElementById("detailLikeIcon");
-            const count = document.getElementById("likeCount");
+            // (로그인 붙은 뒤에만 사용)
+            const result = await response.json();
 
             if (result.liked) {
                 icon.classList.add("filled");
@@ -31,10 +50,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 icon.classList.remove("filled");
             }
 
-            count.textContent = result.likeCount;
+            if (likeCountEl) {
+                likeCountEl.textContent = result.likeCount;
+            }
 
-        } catch (e) {
-            console.error("찜 처리 실패", e);
+        } catch (err) {
+            console.error("찜 처리 실패", err);
         }
     });
 });

@@ -14,7 +14,7 @@
   - p.reserved (boolean)
 -->
 
-<th:block th:fragment="productCard(product)">
+<th:block th:fragment="card(card)">
 
   <article class="product-card">
 
@@ -26,27 +26,27 @@
       <!-- 찜 버튼 (STEP 2에서 Ajax 연결 예정) -->
 	  <button type="button"
 	          class="product-card__like-btn"
-	          th:classappend="${product.liked} ? ' liked' : ''"
-	          th:data-product-id="${product.id}"
+	          th:classappend="${card.liked} ? ' liked' : ''"
+	          th:data-product-id="${card.id}"
 	          aria-label="찜하기">
 
 	      <span class="material-symbols-outlined"
-	            th:classappend="${product.liked} ? ' filled' : ''">
+	            th:classappend="${card.liked} ? ' filled' : ''">
 	          favorite
 	      </span>
 	  </button>
 
 
       <!-- 상품 링크 -->
-      <a th:href="@{/product/{id}(id=${product.id})}">
+      <a th:href="@{/product/{id}(id=${card.id})}">
 
         <!-- 상품 이미지 -->
-        <img th:if="${product.img != null}"
-             th:src="${product.img}"
+        <img th:if="${card.img != null}"
+             th:src="${card.img}"
              alt="상품 이미지"
              loading="lazy"/>
 
-        <img th:if="${product.img == null}"
+        <img th:if="${card.img == null}"
              src="/images/no-image.png"
              alt="기본 이미지"
              loading="lazy"/>
@@ -61,21 +61,36 @@
 
       <!-- 제목 -->
       <h4 class="product-card__title"
-          th:text="${product.title}">
+          th:text="${card.title}">
         상품 제목
       </h4>
 
       <!-- 가격 -->
       <p class="product-card__price"
-         th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')} + '원'">
+         th:text="${#numbers.formatInteger(card.price, 3, 'COMMA')} + '원'">
         100,000원
       </p>
 
-      <!-- 메타 정보 -->
-      <div class="product-card__meta">
-        <span th:text="${product.loc}">지역</span>
-        <span class="meta-dot">·</span>
-        <span th:text="${product.time}">시간</span>
+	  <!-- 메타 정보 -->
+	  <div class="product-card__meta">
+
+	    <!-- 지역 -->
+	    <span th:text="${card.loc}">지역</span>
+	    <span class="meta-dot">·</span>
+
+	    <!-- 시간 -->
+	    <span th:text="${card.time}">시간</span>
+	    <span class="meta-dot">·</span>
+		
+		<!-- ❤️ 찜 상태 -->
+		  <span class="material-symbols-outlined
+		               [[${card.liked} ? 'filled' : '']]">
+		      favorite
+		  </span>
+
+		  <span class="like-count"
+		        th:text="${card.likeCount}">0</span>
+ 
       </div>
 
     </div>

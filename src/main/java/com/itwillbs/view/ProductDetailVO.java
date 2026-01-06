@@ -22,9 +22,9 @@ public class ProductDetailVO {
     /* ===== 상태 / 통계 ===== */
     private final String conditionLabel;
     private final int viewCount;
-    private final int likeCount;
+    private int likeCount;          // ⭐ 변경 가능
     private final int chatCount;
-    private final boolean liked;
+    private boolean liked;          // ⭐ 변경 가능
 
     /* ===== UI 표시용 ===== */
     private final String createdAtDisplay;
@@ -63,8 +63,7 @@ public class ProductDetailVO {
         this.createdAtDisplay = createdAtDisplay;
     }
 
-    /* ===== Getter ===== */
-
+    /* ===== Getter (Thymeleaf 필수) ===== */
     public String getProductId() { return productId; }
     public String getProductName() { return productName; }
     public int getPrice() { return price; }
@@ -83,4 +82,13 @@ public class ProductDetailVO {
     public boolean isLiked() { return liked; }
 
     public String getCreatedAtDisplay() { return createdAtDisplay; }
+
+    /* ===== Setter (찜 동기화용) ===== */
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
 }

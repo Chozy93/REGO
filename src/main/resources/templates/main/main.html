@@ -1,5 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="www.ultraq.net.nz"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}"> 
 <th:block th:fragment="pageCss">
 		  <link rel="stylesheet" href="/css/main/main.css">
@@ -42,9 +42,9 @@
 	  </div>
 
 	  <div class="grid grid-products">
-	    <th:block th:each="p : ${page.aiProducts}">
+	    <th:block th:each="card : ${page.aiProducts}">
 	      <th:block
-	        th:replace="~{fragments/product-card :: productCard(product=${p})}"/>
+	        th:replace="~{fragments/product-card :: card(card=${card})}"/>
 	    </th:block>
 	  </div>
 	</section>
@@ -58,9 +58,9 @@
 	  </div>
 
 	  <div class="grid grid-products">
-	    <th:block th:each="p : ${page.popularProducts}">
+	    <th:block th:each="card : ${page.popularProducts}">
 	      <th:block
-	        th:replace="~{fragments/product-card :: productCard(product=${p})}"/>
+	        th:replace="~{fragments/product-card :: card(card=${card})}"/>
 	    </th:block>
 	  </div>
 	</section>
@@ -74,9 +74,9 @@
 	  </div>
 
 	  <div class="grid grid-products">
-	    <th:block th:each="p : ${page.recentProducts}">
+	    <th:block th:each="card : ${page.recentProducts}">
 	      <th:block
-	        th:replace="~{fragments/product-card :: productCard(product=${p})}"/>
+	        th:replace="~{fragments/product-card :: card(card=${card})}"/>
 	    </th:block>
 	  </div>
 	</section>
