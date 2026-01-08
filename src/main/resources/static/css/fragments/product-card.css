@@ -162,3 +162,23 @@
 .product-card__meta .meta-dot {
   opacity: 0.6;
 }
+
+.product-card__like-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.product-card__like-btn .material-symbols-outlined {
+  font-size: 22px;
+  color: #bbb;
+  transition: color 0.2s ease;
+}
+
+/* ❤️ 찜한 상태 */
+.product-card__like-btn.liked .material-symbols-outlined,
+.material-symbols-outlined.filled {
+  color: #ff4d6d;
+  font-variation-settings: 'FILL' 1;
+}
+
