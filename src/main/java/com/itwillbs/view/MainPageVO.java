@@ -1,5 +1,6 @@
 package com.itwillbs.view;
 
+import java.util.Collections;
 import java.util.List;
 
 public class MainPageVO {
@@ -13,9 +14,17 @@ public class MainPageVO {
             List<MainProductCardVO> popularProducts,
             List<MainProductCardVO> recentProducts
     ) {
-        this.aiProducts = aiProducts;
-        this.popularProducts = popularProducts;
-        this.recentProducts = recentProducts;
+        this.aiProducts = aiProducts != null
+                ? aiProducts
+                : Collections.emptyList();
+
+        this.popularProducts = popularProducts != null
+                ? popularProducts
+                : Collections.emptyList();
+
+        this.recentProducts = recentProducts != null
+                ? recentProducts
+                : Collections.emptyList();
     }
 
     public List<MainProductCardVO> getAiProducts() {

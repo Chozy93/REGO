@@ -1,48 +1,57 @@
 package com.itwillbs.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.itwillbs.mapper.ProductLikeMapper;
+import com.itwillbs.view.ProductLikeResultVO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductLikeService {
-	
-	private final Map<Long, Boolean> likedMap = new HashMap<>();
-	private final Map<Long, Integer> likeCountMap = new HashMap<>();
-	
-	// =========================
-    // 찜 토글 로직 (더미)
-    // =========================
-	
-	public Map<String, Object> toggleLike(Long productId, String usernaId) {
-		
-		boolean liked = likedMap.getOrDefault(productId, false);
-		int likeCount = likeCountMap.getOrDefault(productId, 12);
-		
-		liked = !liked;
-		
-		if (liked) likeCount++;
-		else  likeCount--;
-		
-		likedMap.put(productId, liked);
-		likeCountMap.put(productId, likeCount);
-		
-		
-		Map<String, Object> result = new HashMap<>();
-		result.put("liked", liked);
-		result.put("likeCount", likeCount);
-		
-		return result;
-	}
-	
-	// ⭐ 조회용 (메인/상세 공통)
-	public boolean isLiked(Long productId, String userId) {
-		return likedMap.getOrDefault(productId, false);
-	}
-	
-	public int getLikeCount(Long productId) {
-		return likeCountMap.getOrDefault(productId, 12);
-	}
 
+    // 🔥 로그인 전 임시 테스트 유저
+    private static final Long TEST_USER_ID = 1L;
+
+    private final ProductLikeMapper productLikeMapper;
+    
+    // ✅ 1️⃣ 찜 여부 조회 (상세/메인 공용)
+    public boolean isLiked(Long productId, Long userId) {
+        return productLikeMapper.exists(userId, productId);
+    }
+
+    // ✅ 2️⃣ 찜 개수 조회 (상세/메인 공용)
+    public int getLikeCount(Long productId) {
+        return productLikeMapper.countByProductId(productId);
+    }
+    
+    // ✅ 3️⃣ 찜 토글 
+    @Transactional
+    public ProductLikeResultVO toggleLike(Long productId) {
+
+        Long userId = TEST_USER_ID;
+
+        // 1️⃣ 현재 찜 상태 확인
+        boolean liked = productLikeMapper.exists(userId, productId);
+
+        
+        if (liked) {
+            productLikeMapper.delete(userId, productId);
+        } else {
+            productLikeMapper.insert(userId, productId);
+        }
+        
+        // 3결과 상태는 반전값
+        boolean nowLiked = !liked;
+
+        // 찜 개수 재조회
+        int likeCount = productLikeMapper.countByProductId(productId);
+        
+     
+        return new ProductLikeResultVO(
+                productId.toString(),
+                likeCount,
+                nowLiked
+        );
+    }
 }

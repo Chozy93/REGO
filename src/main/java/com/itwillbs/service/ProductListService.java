@@ -36,11 +36,9 @@ public class ProductListService {
                 .map(dto -> {
 
                     // 🔥 로그인 전 더미 사용자
-                    boolean liked =
-                            productLikeService.isLiked(dto.getProductId(), "testUser");
-
-                    int likeCount =
-                            productLikeService.getLikeCount(dto.getProductId());
+                    boolean liked = false;
+                    int likeCount = 0;
+                           
 
                     return new MainProductCardVO(
                             String.valueOf(dto.getProductId()),

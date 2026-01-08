@@ -3,6 +3,8 @@ package com.itwillbs.service;
 import com.itwillbs.dto.MainProductListDTO;
 import com.itwillbs.mapper.MainProductMapper;
 import com.itwillbs.view.MainProductCardVO;
+import com.itwillbs.view.condition.MainProductSortConditionVO;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,65 +16,77 @@ public class MainProductListService {
 
     private final MainProductMapper mainProductMapper;
 
+    // 🔥 로그인 전 임시 테스트 유저
+    private static final Long TEST_USER_ID = 1L;
+
     /* =========================
-       최근 등록 상품 조회
+       최근 등록 상품
+       MAIN01_LIST
     ========================= */
     public List<MainProductCardVO> getRecentProducts() {
 
-        List<MainProductListDTO> dtoList =
-                mainProductMapper.selectRecentProducts();
+        List<MainProductListDTO> list =
+                mainProductMapper.selectRecentProducts(TEST_USER_ID);
 
-        return dtoList == null
-                ? List.of()
-                : dtoList.stream()
-                         .map(this::toCardVO)
-                         .toList();
+        return list.stream()
+                .map(this::toCardVO)
+                .toList();
+    }
+    
+    /* =========================
+    최근 등록 상품 (정렬)
+    MAIN01_SORT_ORDER
+ ========================= */
+    public List<MainProductCardVO> getRecentProducts(
+            MainProductSortConditionVO condition
+    ) {
+        List<MainProductListDTO> list =
+                mainProductMapper.selectRecentProductsWithSort(
+                        TEST_USER_ID,
+                        condition.getSort()
+                );
+
+        return list.stream()
+                .map(this::toCardVO)
+                .toList();
     }
 
+
     /* =========================
-       인기 상품 조회
-    ========================= */
+     * 인기 상품
+     * MAIN01_POPULAR
+     ========================= */
+    private static final int POPULAR_LIMIT = 12;
+
     public List<MainProductCardVO> getPopularProducts() {
 
-        List<MainProductListDTO> dtoList =
-                mainProductMapper.selectPopularProducts();
+        List<MainProductListDTO> list =
+            mainProductMapper.selectPopularProducts(
+                TEST_USER_ID,
+                POPULAR_LIMIT
+            );
 
-        return dtoList == null
-                ? List.of()
-                : dtoList.stream()
-                         .map(this::toCardVO)
-                         .toList();
+        return list.stream()
+            .map(this::toCardVO)
+            .toList();
     }
 
     /* =========================
-       AI 추천 상품 (임시)
-       ※ 추후 실제 로직으로 교체 예정
-    ========================= */
-    public List<MainProductCardVO> getAiProducts() {
-
-        return List.of(); // AI 추천 미구현 상태 → 빈 리스트
-    }
-
-    /* =========================
-       DTO → View 전용 VO 변환
+       DTO → 카드 VO 변환
+       (메인 찜 동기화 핵심)
     ========================= */
     private MainProductCardVO toCardVO(MainProductListDTO dto) {
 
-        String imageUrl =
-                (dto.getMainImageUrl() == null || dto.getMainImageUrl().isBlank())
-                        ? "/images/temp/product-default.png"
-                        : dto.getMainImageUrl();
-
         return new MainProductCardVO(
-                dto.getProductId().toString(),   // VO ID는 String
-                dto.getProductName(),
+                String.valueOf(dto.getProductId()),
+                dto.getTitle(),
                 dto.getPrice(),
-                imageUrl,
-                dto.getRegionDisplayName(),
-                "방금 전",                       // 날짜 포맷은 추후 교체
-                false,                         // 예약 여부 임시
-                12,
-                false                          // ❤️ liked (STEP 2-③ 핵심)
+                dto.getThumbnailUrl(),
+                dto.getRegionName(),
+                dto.getCreatedTime(),
+                false,                 // reserved (아직 미구현)
+                dto.getLikeCount(),    // ❤️ DB 기준
+                dto.isLiked()          // ❤️ 로그인 사용자 기준
         );
     }
 }

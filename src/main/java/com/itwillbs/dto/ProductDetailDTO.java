@@ -27,7 +27,7 @@ public class ProductDetailDTO {
     private String conditionLabel;
     private int viewCount;
     private int likeCount;
-    private int chatCount;
+    //private int chatCount;
     private boolean liked;
 
     /* ===== UI 표시용 ===== */

@@ -9,21 +9,37 @@
         resultType="com.itwillbs.dto.ProductListByCategoryDTO">
 
     SELECT
-        p.product_id            AS productId,
-        p.product_name          AS title,
-        p.price                 AS price,
-        p.main_image_url        AS thumbnailUrl,
-        p.region_display_name   AS regionName,
-        p.like_count            AS likeCount,
-        p.created_at            AS createdTime
+        p.product_id           AS productId,
+        p.product_name         AS title,
+        p.price                AS price,
+        p.main_image_url       AS thumbnailUrl,
+        p.region_display_name  AS regionName,
+
+        -- 🔥 찜 개수 (DB 단일 진실)
+        (
+            SELECT COUNT(*)
+            FROM user_favorites uf
+            WHERE uf.product_id = p.product_id
+        ) AS likeCount,
+
+        -- 🔥 내가 찜했는지
+        EXISTS (
+            SELECT 1
+            FROM user_favorites uf
+            WHERE uf.product_id = p.product_id
+              AND uf.user_id = 1
+        ) AS liked,
+
+        p.created_at           AS createdTime
+
     FROM products p
     JOIN categories c
-        ON p.category_id = c.category_id
-    WHERE
-        c.category_id = #{categoryId}
-        OR c.parent_id = #{categoryId}
+      ON p.category_id = c.category_id
+    WHERE c.category_id = #{categoryId}
+       OR c.parent_id = #{categoryId}
     ORDER BY p.created_at DESC
 
 </select>
+
 
 </mapper>

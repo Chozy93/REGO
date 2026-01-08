@@ -1,42 +1,149 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.itwillbs.mapper.MainProductMapper">
 
- <select id="selectRecentProducts"
+    <!-- =========================
+         최근 등록 상품
+         MAIN01_RECENT
+    ========================= -->
+    <select id="selectRecentProducts"
+            resultType="com.itwillbs.dto.MainProductListDTO">
+
+        SELECT
+            p.product_id               AS productId,
+            p.product_name             AS title,
+            p.price                    AS price,
+            p.main_image_url           AS thumbnailUrl,
+            p.region_display_name      AS regionName,
+            DATE_FORMAT(p.created_at, '%Y-%m-%d %H:%i') AS createdTime,
+
+            /* ❤️ 찜 개수 */
+            (
+                SELECT COUNT(*)
+                FROM user_favorites uf
+                WHERE uf.product_id = p.product_id
+            ) AS likeCount,
+
+            /* ❤️ 내가 찜했는지 (임시 user_id = 1) */
+            EXISTS (
+                SELECT 1
+                FROM user_favorites uf
+                WHERE uf.product_id = p.product_id
+                  AND uf.user_id = 1
+            ) AS liked
+
+        FROM products p
+        WHERE p.sales_status = 'ON_SALE'
+        ORDER BY p.created_at DESC
+        LIMIT 12
+
+    </select>
+    
+    <!-- =========================
+     최근 등록 상품 (정렬)
+     MAIN01_SORT_ORDER
+========================= -->
+<select id="selectRecentProductsWithSort"
+        parameterType="map"
         resultType="com.itwillbs.dto.MainProductListDTO">
 
     SELECT
-        p.product_id           AS productId,
-        p.product_name         AS productName,
-        p.price                AS price,
-        p.main_image_url       AS mainImageUrl,
-        p.region_display_name  AS regionDisplayName,
-        p.like_count           AS likeCount,
-        p.view_count           AS viewCount
-    FROM products p
-    ORDER BY p.created_at DESC
-    LIMIT 8
+        p.product_id               AS productId,
+        p.product_name             AS title,
+        p.price                    AS price,
+        p.main_image_url           AS thumbnailUrl,
+        p.region_display_name      AS regionName,
+        DATE_FORMAT(p.created_at, '%Y-%m-%d %H:%i') AS createdTime,
 
+        /* ❤️ 찜 개수 */
+        (
+            SELECT COUNT(*)
+            FROM user_favorites uf
+            WHERE uf.product_id = p.product_id
+        ) AS likeCount,
+
+        /* ❤️ 내가 찜했는지 */
+        EXISTS (
+            SELECT 1
+            FROM user_favorites uf
+            WHERE uf.product_id = p.product_id
+              AND uf.user_id = #{userId}
+        ) AS liked
+
+    FROM products p
+    WHERE p.sales_status = 'ON_SALE'
+    
+    <choose>
+        <!-- 최신순 -->
+        <when test="sort == 'recent'">
+            ORDER BY p.created_at DESC
+        </when>
+
+        <!-- 찜 많은 순 -->
+        <when test="sort == 'like'">
+            ORDER BY likeCount DESC, p.created_at DESC
+        </when>
+
+        <!-- 조회 많은 순 -->
+        <when test="sort == 'view'">
+            ORDER BY p.view_count DESC, p.created_at DESC
+        </when>
+
+        <!-- 기본값 -->
+        <otherwise>
+            ORDER BY p.created_at DESC
+        </otherwise>
+    </choose>
+
+    LIMIT 12
 </select>
 
 
-<select id="selectPopularProducts"
+    <!-- =========================
+         인기 상품
+         MAIN01_POPULAR
+    ========================= -->
+    <select id="selectPopularProducts"
         resultType="com.itwillbs.dto.MainProductListDTO">
 
     SELECT
-        p.product_id           AS productId,
-        p.product_name         AS productName,
-        p.price                AS price,
-        p.main_image_url       AS mainImageUrl,
-        p.region_display_name  AS regionDisplayName,
-        p.like_count           AS likeCount,
-        p.view_count           AS viewCount
+        p.product_id               AS productId,
+        p.product_name             AS title,
+        p.price                    AS price,
+        p.main_image_url           AS thumbnailUrl,
+        p.region_display_name      AS regionName,
+        DATE_FORMAT(p.created_at, '%Y-%m-%d %H:%i') AS createdTime,
+
+        /* 👁 조회수 */
+        p.view_count               AS viewCount,
+
+        /* ❤️ 찜 개수 */
+        (
+            SELECT COUNT(*)
+            FROM user_favorites uf
+            WHERE uf.product_id = p.product_id
+        ) AS likeCount,
+
+        /* ❤️ 내가 찜했는지 (임시 user_id = 1) */
+        EXISTS (
+            SELECT 1
+            FROM user_favorites uf
+            WHERE uf.product_id = p.product_id
+              AND uf.user_id = 1
+        ) AS liked
+
     FROM products p
-    ORDER BY p.view_count DESC
-    LIMIT 8
+    WHERE p.sales_status = 'ON_SALE'
+
+    ORDER BY
+        p.view_count DESC,
+        likeCount DESC,
+        p.created_at DESC
+
+    LIMIT 12
 
 </select>
 

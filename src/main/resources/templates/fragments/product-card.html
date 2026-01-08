@@ -82,15 +82,23 @@
 	    <span th:text="${card.time}">시간</span>
 	    <span class="meta-dot">·</span>
 		
-		<!-- ❤️ 찜 상태 -->
-		  <span class="material-symbols-outlined
-		               [[${card.liked} ? 'filled' : '']]">
-		      favorite
-		  </span>
+		<button type="button"
+		        class="product-card__like-btn"
+		        th:classappend="${card.liked} ? ' liked' : ''"
+		        th:data-product-id="${card.id}"
+		        aria-label="찜하기">
 
-		  <span class="like-count"
-		        th:text="${card.likeCount}">0</span>
- 
+		    <span class="material-symbols-outlined"
+		          th:classappend="${card.liked} ? ' filled' : ''">
+		        favorite
+		    </span>
+		</button>
+
+		    <span class="like-count"
+		          th:text="${card.likeCount}">
+		        0
+		    </span>
+		
       </div>
 
     </div>

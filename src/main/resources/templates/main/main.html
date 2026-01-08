@@ -51,27 +51,48 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 
     <!-- 인기 상품 -->
 	<section class="section"
-	         th:if="${page.popularProducts != null and #lists.size(page.popularProducts) > 0}">
+	         th:if="${#lists.size(page.popularProducts) > 0}">
+
 	  <div class="section-head">
-	    <h2 class="section-title">🔥 인기 상품</h2>
+	    <h2 class="section-title">인기 상품</h2>
 	    <a href="#" class="section-link">전체보기</a>
 	  </div>
 
 	  <div class="grid grid-products">
 	    <th:block th:each="card : ${page.popularProducts}">
 	      <th:block
-	        th:replace="~{fragments/product-card :: card(card=${card})}"/>
+	        th:replace="~{fragments/product-card :: card(${card})}" />
 	    </th:block>
 	  </div>
+
 	</section>
 	
     <!-- 최근 상품 -->
 	<section class="section"
 	         th:if="${page.recentProducts != null and #lists.size(page.recentProducts) > 0}">
 	  <div class="section-head">
-	    <h2 class="section-title">🆕 최근 등록 상품</h2>
-	    <a href="#" class="section-link">전체보기</a>
-	  </div>
+		<h2 class="section-title">최근 등록 상품</h2>
+
+		<select id="sortSelect"
+		        onchange="location.href='/?sort=' + this.value">
+
+		  <option value="recent"
+		          th:selected="${sort == 'recent'}">
+		    최신순
+		  </option>
+
+		  <option value="like"
+		          th:selected="${sort == 'like'}">
+		    찜 많은 순
+		  </option>
+
+		  <option value="view"
+		          th:selected="${sort == 'view'}">
+		    조회 많은 순
+		  </option>
+
+		</select>
+		</div>
 
 	  <div class="grid grid-products">
 	    <th:block th:each="card : ${page.recentProducts}">
@@ -84,8 +105,10 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
   </div>
   
   <!-- 페이지 전용 JS -->
+  <!-- 페이지 전용 JS -->
   <th:block th:fragment="pageJs">
       <script th:src="@{/js/product-like.js}"></script>
+      <script th:src="@{/js/main.js}"></script>
   </th:block>
-  
+
 </html>

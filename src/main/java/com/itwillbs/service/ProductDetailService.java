@@ -1,6 +1,7 @@
 package com.itwillbs.service;
 
 import com.itwillbs.dto.ProductDetailDTO;
+import com.itwillbs.mapper.ProductDetailMapper;
 import com.itwillbs.view.ProductDetailPageVO;
 import com.itwillbs.view.ProductDetailVO;
 import lombok.RequiredArgsConstructor;
@@ -13,24 +14,39 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductDetailService {
 
-    private final ProductService productService;
-    private final ProductLikeService productLikeService;
-    // ⚠️ 현재는 더미 DTO 제공용
-    // 추후 MyBatis Mapper로 교체 예정
+    private final ProductDetailMapper productDetailMapper;
+    private final ProductLikeService productLikeService; // (다음 단계용)
 
     /* =========================
        상품 상세 페이지 조회
        DETAIL01_INFO
        DETAIL01_STATUS
+       DETAIL01_VIEWCOUNT
     ========================= */
     public ProductDetailPageVO getProductDetailPage(Long productId) {
+    	return getProductDetailPage(productId, true); 
+    	
+    }
+    
+    public ProductDetailPageVO getProductDetailPage(Long productId, boolean increaseView) {
 
+    	// ✅ 1. 조회수 증가 (조건부)
+        if (increaseView) {
+            productDetailMapper.increaseViewCount(productId);
+        }
+
+        // ✅ 2️⃣ 상품 상세 조회 (반드시 같은 Mapper)
         ProductDetailDTO dto =
-                productService.getProductDetail(productId);
+                productDetailMapper.selectProductDetail(productId);
 
         if (dto == null) {
             throw new IllegalArgumentException("존재하지 않는 상품입니다. id=" + productId);
         }
+        
+        Long testUserId = 1L; // 로그인 전 임시
+
+        boolean liked = productLikeService.isLiked(productId, testUserId);
+        int likeCount = productLikeService.getLikeCount(productId);
 
         ProductDetailVO productVO = new ProductDetailVO(
                 dto.getProductId().toString(),
@@ -43,21 +59,12 @@ public class ProductDetailService {
                 dto.getSellerRegion(),
                 dto.getSellerTemperature() + "°",
                 dto.getConditionLabel(),
-                dto.getViewCount(),
-                dto.getLikeCount(),
-                dto.getChatCount(),
-                dto.isLiked(),
+                dto.getViewCount(),     // 🔥 DB 값 그대로
+                likeCount,
+                0,
+                liked,          // (현재는 false or 더미)
                 dto.getCreatedAtDisplay()
         );
-
-        // 🔥 메인 ↔ 상세 찜 상태 동기화
-        boolean liked =
-                productLikeService.isLiked(productId, "testUser");
-        int likeCount =
-                productLikeService.getLikeCount(productId);
-
-        productVO.setLiked(liked);
-        productVO.setLikeCount(likeCount);
 
         return new ProductDetailPageVO(productVO);
     }
