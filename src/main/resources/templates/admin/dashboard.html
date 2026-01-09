@@ -1,13 +1,114 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>RE:GO AdminDashboard</title>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 
-</head>
-<body>
+<th:block th:fragment="pageCss">
+    <link rel="stylesheet" href="/css/admin/dashboard-main.css">
+	<link rel="stylesheet" href="/css/admin/admin-sidebar.css">
 
-<h1>관리자 dashboard 페이지</h1>
+</th:block>
 
-</body>
+<div layout:fragment="content" class="admin-dashboard-layout">
+
+    <!-- 좌측 사이드바 -->
+	<th:block th:replace="fragments/admin-sidebar :: admin-sidebar(${activeMenu})"></th:block>
+
+
+    <!-- 메인 대시보드 영역 -->
+    <main class="admin-dashboard">
+
+        <section class="dashboard-header between">
+            <h1 class="dashboard-title">대시보드</h1>
+            <div class="dashboard-date">2023년 12월 05일 (화)</div>
+        </section>
+
+        <section class="dashboard-summary grid">
+            <div class="summary-card">
+                <div class="summary-icon">👥</div>
+                <div class="summary-body">
+                    <div class="summary-label">총 회원 수</div>
+                    <div class="summary-value">12,403</div>
+                    <div class="summary-diff is-up">+12%</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon">📦</div>
+                <div class="summary-body">
+                    <div class="summary-label">총 상품 수</div>
+                    <div class="summary-value">45,231</div>
+                    <div class="summary-diff is-up">+5.2%</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon">💰</div>
+                <div class="summary-body">
+                    <div class="summary-label">총 거래액</div>
+                    <div class="summary-value">₩1.24B</div>
+                    <div class="summary-diff is-up">+24%</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon">🆕</div>
+                <div class="summary-body">
+                    <div class="summary-label">신규 가입 (오늘)</div>
+                    <div class="summary-value">156</div>
+                    <div class="summary-diff is-down">-2.1%</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard-chart section">
+            <div class="section-head">
+                <h2 class="section-title">주간 거래량 추이</h2>
+                <span class="text-muted">이번주</span>
+            </div>
+            <div class="chart-box"></div>
+        </section>
+
+        <section class="dashboard-bottom grid">
+            <div class="dashboard-panel">
+                <div class="section-head">
+                    <h3 class="section-title">최근 등록 상품</h3>
+                    <a th:href="@{/admin/products}" class="section-link">더보기</a>
+                </div>
+                <ul class="panel-list">
+                    <li class="panel-item"><span class="item-title">빈티지 블랙 카메라</span><span class="item-meta">5분 전</span></li>
+                    <li class="panel-item"><span class="item-title">시디즈 의자 T50</span><span class="item-meta">12분 전</span></li>
+                    <li class="panel-item"><span class="item-title">아이패드 에어 5세대</span><span class="item-meta">30분 전</span></li>
+                </ul>
+            </div>
+
+            <div class="dashboard-panel">
+                <div class="section-head">
+                    <h3 class="section-title">최근 거래 내역</h3>
+                    <a href="#" class="section-link">더보기</a>
+                </div>
+                <ul class="panel-list">
+                    <li class="panel-item is-success"><span class="item-title">거래 완료</span><span class="item-meta">₩1.2M</span></li>
+                    <li class="panel-item is-success"><span class="item-title">거래 성공</span><span class="item-meta">₩25,000</span></li>
+                    <li class="panel-item is-danger"><span class="item-title">거래 취소</span><span class="item-meta">₩220,000</span></li>
+                </ul>
+            </div>
+
+            <div class="dashboard-panel">
+                <div class="section-head">
+                    <h3 class="section-title">최근 신고</h3>
+                    <a href="#" class="section-link">더보기</a>
+                </div>
+                <ul class="panel-list">
+                    <li class="panel-item is-danger"><span class="item-title">사기 의심 게시물</span><span class="item-meta">방금</span></li>
+                    <li class="panel-item is-warning"><span class="item-title">부적절한 상품</span><span class="item-meta">21분 전</span></li>
+                    <li class="panel-item"><span class="item-title">욕설 및 비방</span><span class="item-meta">어제</span></li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<th:block layout:fragment="pageJs">
+    <script src="/js/admin/dashboard.js"></script>
+</th:block>
+
 </html>

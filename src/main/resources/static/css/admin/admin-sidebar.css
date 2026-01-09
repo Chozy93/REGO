@@ -1,0 +1,69 @@
+/* ================= Admin Sidebar ================= */
+
+.admin-sidebar {
+  width: 240px;
+  min-height: calc(100vh - 80px);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  box-shadow: var(--shadow-sm);
+  margin: var(--space-24);
+}
+
+.admin-menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.admin-menu-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-12) var(--space-14);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-14);
+  font-weight: var(--fw-medium);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.admin-menu-item:hover {
+  background: var(--color-surface-2);
+}
+
+.admin-menu-item.is-active {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-weight: var(--fw-semibold);
+}
+
+/* ================= Optional Icon Support ================= */
+.admin-menu-item::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: var(--space-10);
+  border-radius: 50%;
+  background: transparent;
+}
+
+.admin-menu-item.is-active::before {
+  background: var(--color-primary);
+}
+
+
+/* ================= Responsive ================= */
+@media (max-width: 1024px) {
+  .admin-sidebar {
+    width: 200px;
+    padding: var(--space-20);
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-sidebar {
+    display: none;
+  }
+}

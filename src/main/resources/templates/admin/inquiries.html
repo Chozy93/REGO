@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/admin/admin-sidebar.css">
+  <link rel="stylesheet" href="/css/admin/inquiries.css">
+</th:block>
+
+<div layout:fragment="content" class="admin-layout">
+
+  <!-- 사이드바 -->
+  <th:block th:replace="fragments/admin-sidebar :: admin-sidebar('inquiries')"></th:block>
+
+  <!-- 메인 -->
+  <div class="admin-inquiries">
+
+    <!-- 헤더 -->
+    <section class="admin-inquiries-head">
+      <div class="admin-head-row">
+        <h1 class="admin-inquiries-title">문의 관리</h1>
+
+        <!-- 오른쪽 요약 카드 -->
+        <div class="admin-summary-cards">
+          <div class="summary-card">
+            <span class="summary-label">전체</span>
+            <strong class="summary-value">1,204</strong>
+          </div>
+
+          <div class="summary-card is-wait">
+            <span class="summary-label">대기</span>
+            <strong class="summary-value">23</strong>
+          </div>
+
+          <div class="summary-card is-done">
+            <span class="summary-label">답변완료</span>
+            <strong class="summary-value">8</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 필터 -->
+    <section class="admin-inquiries-filter">
+      <div class="filter-left">
+        <select class="filter-select">
+          <option>전체 기간</option>
+          <option>최근 7일</option>
+          <option>최근 30일</option>
+        </select>
+
+        <select class="filter-select">
+          <option>전체 상태</option>
+          <option>대기</option>
+          <option>답변완료</option>
+        </select>
+
+        <input class="filter-input" type="text" placeholder="제목 / 작성자 검색">
+      </div>
+
+      <button class="btn btn-primary">검색</button>
+    </section>
+
+    <!-- 문의 내역 리스트 -->
+	<section class="admin-inquiries-list">
+
+	  <!-- 헤더 -->
+	  <div class="inquiry-list-head">
+	    <span>문의유형</span>
+	    <span>제목</span>
+	    <span>작성자</span>
+	    <span>상태</span>
+	    <span>작성일</span>
+	  </div>
+
+	  <!-- 행 -->
+	  <div class="inquiry-item">
+	    <span class="type">거래</span>
+	    <span class="title">배송이 아직 도착하지 않았습니다</span>
+	    <span class="writer">user01</span>
+	    <span class="status wait">대기</span>
+	    <span class="date">2026-01-09</span>
+	  </div>
+
+	  <div class="inquiry-item">
+	    <span class="type">계정</span>
+	    <span class="title">비밀번호 변경이 안돼요</span>
+	    <span class="writer">user22</span>
+	    <span class="status done">답변완료</span>
+	    <span class="date">2026-01-08</span>
+	  </div>
+
+	  <div class="inquiry-item">
+	    <span class="type">신고</span>
+	    <span class="title">부적절한 게시글 신고합니다</span>
+	    <span class="writer">user77</span>
+	    <span class="status wait">대기</span>
+	    <span class="date">2026-01-07</span>
+	  </div>
+
+	</section>
+
+
+    <!-- 페이징 -->
+    <section class="admin-inquiries-pagination">
+      <a class="page-btn">Previous</a>
+      <a class="page-btn is-active">1</a>
+      <a class="page-btn">2</a>
+      <a class="page-btn">Next</a>
+    </section>
+
+  </div>
+</div>
+
+</html>

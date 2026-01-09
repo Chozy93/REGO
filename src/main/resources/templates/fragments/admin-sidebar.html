@@ -1,0 +1,58 @@
+<!-- fragments/admin-sidebar.html -->
+<aside class="admin-sidebar" th:fragment="admin-sidebar(activeMenu)">
+    <nav class="admin-menu">
+        <a th:href="@{/admin/dashboard}"
+           class="admin-menu-item"
+           th:classappend="${activeMenu == 'dashboard'} ? ' is-active'">
+            대시보드
+        </a>
+
+        <a th:href="@{/admin/members}"
+           class="admin-menu-item"
+           th:classappend="${activeMenu == 'members'} ? ' is-active'">
+            회원 관리
+        </a>
+
+        <a th:href="@{/admin/products}"
+           class="admin-menu-item"
+           th:classappend="${activeMenu == 'products'} ? ' is-active'">
+            상품 관리
+        </a>
+
+        <a th:href="@{/admin/trades}"
+           class="admin-menu-item"
+           th:classappend="${activeMenu == 'trades'} ? ' is-active'">
+            거래 관리
+        </a>
+
+        <a th:href="@{/admin/inquiries}"
+           class="admin-menu-item"
+           th:classappend="${activeMenu == 'inquiries'} ? ' is-active'">
+            문의 관리
+        </a>
+
+        <a th:href="@{/admin/notices}"
+           class="admin-menu-item"
+           th:classappend="${activeMenu == 'notices'} ? ' is-active'">
+            공지사항 관리
+        </a>
+
+        <a th:href="@{/admin/reports}"
+           class="admin-menu-item"
+           th:classappend="${activeMenu == 'reports'} ? ' is-active'">
+            신고 관리
+        </a>
+
+        <a th:href="@{/admin/statistics}"
+           class="admin-menu-item"
+           th:classappend="${activeMenu == 'statistics'} ? ' is-active'">
+            통계
+        </a>
+
+        <a th:href="@{/admin/settings}"
+           class="admin-menu-item"
+           th:classappend="${activeMenu == 'settings'} ? ' is-active'">
+            설정
+        </a>
+    </nav>
+</aside>

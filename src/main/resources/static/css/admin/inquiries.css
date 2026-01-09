@@ -1,0 +1,200 @@
+/* =================================================
+   전체 레이아웃
+================================================= */
+.admin-layout {
+  display: flex;
+  gap: var(--space-32);
+  align-items: flex-start;
+  margin-right: var(--space-24);
+  margin-top: var(--space-24);
+}
+
+.admin-inquiries {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+}
+
+/* =================================================
+   헤더 + 요약 카드
+================================================= */
+.admin-inquiries-head {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-head-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.admin-inquiries-title {
+  font-size: var(--fs-24);
+  font-weight: var(--fw-bold);
+}
+
+/* 요약 카드 영역 (오른쪽 상단) */
+.admin-summary-cards {
+  display: flex;
+  gap: var(--space-16);
+}
+
+/* 카드 */
+/* 요약 카드 */
+.summary-card {
+  min-width: 140px;
+  height: 96px;
+
+  padding: var(--space-16) var(--space-20);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* 라벨: 왼쪽 상단 유지 */
+.summary-label {
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+  text-align: left;
+}
+
+/* 숫자: 중앙에서 살짝 왼쪽으로 */
+.summary-value {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding-left: 6px;   /* ← 이 값이 핵심 (아주 살짝) */
+  font-size: 26px;
+  font-weight: var(--fw-bold);
+}
+
+/* 상태 색상 */
+.summary-card.is-wait .summary-value {
+  color: #f59e0b;
+}
+
+.summary-card.is-done .summary-value {
+  color: var(--color-primary);
+}
+
+
+/* =================================================
+   필터
+================================================= */
+.admin-inquiries-filter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filter-left {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.filter-select,
+.filter-input {
+  padding: var(--space-10) var(--space-12);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  font-size: var(--fs-14);
+}
+
+/* =================================================
+   문의 리스트 (스크린샷 스타일)
+================================================= */
+.admin-inquiries-list {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+/* 리스트 헤더 */
+.inquiry-list-head {
+  display: grid;
+  grid-template-columns: 100px 1fr 120px 120px 120px;
+  padding: 16px 20px;
+
+  background: var(--color-surface-2);
+  font-size: var(--fs-13);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+}
+
+/* 리스트 행 */
+.inquiry-item {
+  display: grid;
+  grid-template-columns: 100px 1fr 120px 120px 120px;
+  align-items: center;
+
+  padding: 18px 20px;
+  border-top: 1px solid var(--color-divider);
+
+  font-size: var(--fs-14);
+  cursor: pointer;
+}
+
+.inquiry-item:hover {
+  background: var(--color-surface-2);
+}
+
+/* 컬럼 */
+.inquiry-item .type {
+  color: var(--color-text-muted);
+}
+
+.inquiry-item .title {
+  font-weight: var(--fw-medium);
+}
+
+.inquiry-item .writer,
+.inquiry-item .date {
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+/* 상태 뱃지 */
+.inquiry-item .status {
+  justify-self: center;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-12);
+}
+
+.inquiry-item .status.wait {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.inquiry-item .status.done {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+/* =================================================
+   페이징
+================================================= */
+.admin-inquiries-pagination {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-8);
+}
+
+.page-btn {
+  padding: var(--space-8) var(--space-12);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.page-btn.is-active {
+  background: var(--color-primary-soft);
+}

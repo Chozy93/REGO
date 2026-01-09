@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/admin/products.css">
+  <link rel="stylesheet" href="/css/admin/admin-sidebar.css">
+
+</th:block>
+
+<div layout:fragment="content" class="admin-page">
+
+	<!-- Sidebar -->
+	<th:block th:replace="fragments/admin-sidebar :: admin-sidebar('products')"></th:block>
+
+  <!-- Content -->
+  <section class="admin-content">
+
+    <header class="admin-content-head">
+      <div>
+        <h1 class="admin-title">상품 관리</h1>
+        <p class="admin-desc">플랫폼에 등록된 전체 상품을 조회하고 관리합니다.</p>
+      </div>
+
+      <div class="admin-summary">
+        <div class="admin-summary-card">
+          <div class="admin-summary-label">총 상품</div>
+          <div class="admin-summary-value">45,281</div>
+        </div>
+        <div class="admin-summary-card is-danger">
+          <div class="admin-summary-label">신고 상품</div>
+          <div class="admin-summary-value">38</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Filter -->
+    <div class="admin-filter">
+      <div class="admin-filter-left">
+        <select class="admin-select">
+          <option>전체 카테고리</option>
+        </select>
+        <input type="text" class="admin-input" placeholder="상품명 또는 판매자 검색">
+      </div>
+      <div class="admin-filter-right">
+        <select class="admin-select">
+          <option>전체 상태</option>
+        </select>
+        <button class="btn btn-primary">검색</button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>상품 정보</th>
+            <th>판매자</th>
+            <th>등록일</th>
+            <th>조회수</th>
+            <th>상태</th>
+            <th>관리</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              <div class="admin-product">
+                <img src="/img/sample/product1.png" class="admin-product-image" alt="">
+                <div>
+                  <div class="admin-product-name">애플워치 SE 40mm 스페이스그레이</div>
+                  <div class="admin-product-price">220,000원</div>
+                </div>
+              </div>
+            </td>
+            <td>김철수</td>
+            <td>2023.10.15</td>
+            <td>142</td>
+            <td><span class="badge badge-primary">판매중</span></td>
+			<td>
+			  <div class="admin-actions">
+			    <span>✏️</span>
+			    <span>🗑️</span>
+			    <span>⋮</span>
+			  </div>
+			</td>
+
+          </tr>
+
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              <div class="admin-product">
+                <img src="/img/sample/product2.png" class="admin-product-image" alt="">
+                <div>
+                  <div class="admin-product-name">발뮤다 더 토스터 블랙</div>
+                  <div class="admin-product-price">150,000원</div>
+                </div>
+              </div>
+            </td>
+            <td>이영희</td>
+            <td>2023.11.02</td>
+            <td>89</td>
+            <td><span class="badge">예약중</span></td>
+			<td>
+			  <div class="admin-actions">
+			    <span>✏️</span>
+			    <span>🗑️</span>
+			    <span>⋮</span>
+			  </div>
+			</td>
+
+          </tr>
+
+          <tr>
+            <td><input type="checkbox"></td>
+            <td>
+              <div class="admin-product">
+                <img src="/img/sample/product3.png" class="admin-product-image" alt="">
+                <div>
+                  <div class="admin-product-name">아이패드 에어 (상태 좋음)</div>
+                  <div class="admin-product-price">450,000원</div>
+                </div>
+              </div>
+            </td>
+            <td>박지성</td>
+            <td>2023.09.20</td>
+            <td>256</td>
+            <td><span class="badge badge-primary">판매완료</span></td>
+			<td>
+			  <div class="admin-actions">
+			    <span>✏️</span>
+			    <span>🗑️</span>
+			    <span>⋮</span>
+			  </div>
+			</td>
+
+          </tr>
+
+          <tr class="is-warning">
+            <td><input type="checkbox"></td>
+            <td>
+              <div class="admin-product">
+                <img src="/img/sample/product4.png" class="admin-product-image" alt="">
+                <div>
+                  <div class="admin-product-name">사냥개 장갑 팝니다 (급처)</div>
+                  <div class="admin-product-price">2,500,000원</div>
+                </div>
+              </div>
+            </td>
+            <td>최유나</td>
+            <td>2023.12.01</td>
+            <td>542</td>
+            <td><span class="badge badge-danger">신고접수</span></td>
+			<td>
+			  <div class="admin-actions">
+			    <span>✏️</span>
+			    <span>🗑️</span>
+			    <span>⋮</span>
+			  </div>
+			</td>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="admin-pagination">
+      <div class="text-muted">Showing 1 to 4 of 45,281 entries</div>
+      <div class="admin-page-buttons">
+        <button class="admin-page-btn">Previous</button>
+        <button class="admin-page-btn is-active">1</button>
+        <button class="admin-page-btn">2</button>
+        <button class="admin-page-btn">3</button>
+        <button class="admin-page-btn">Next</button>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<th:block layout:fragment="pageJs"></th:block>
+
+</html>

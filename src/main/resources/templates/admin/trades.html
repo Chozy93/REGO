@@ -1,0 +1,106 @@
+<!-- Re:GO Admin 거래관리 페이지 (스크린샷 기준) -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/admin/trade.css" />
+  <link rel="stylesheet" href="/css/admin/admin-sidebar.css">
+
+  
+</th:block>
+
+<div layout:fragment="content" class="admin-page">
+	
+  <!-- 좌측 사이드바 -->
+  <th:block th:replace="fragments/admin-sidebar :: admin-sidebar('trades')"></th:block>
+
+  <!-- 메인 컨텐츠 -->
+  <section class="admin-content stack">
+    <div class="admin-head between">
+      <h1 class="admin-title">거래 관리</h1>
+	  <div class="admin-summary-cards">
+	    <div class="summary-card">
+	      <span class="summary-title">총 거래</span>
+	      <strong class="summary-count">12,458</strong>
+	    </div>
+
+	    <div class="summary-card is-danger">
+	      <span class="summary-title">분쟁 접수</span>
+	      <strong class="summary-count">53</strong>
+	    </div>
+	  </div>
+    </div>
+
+    <!-- 필터 영역 -->
+    <div class="admin-filter between">
+      <div class="filter-left inline">
+        <select class="filter-select">
+          <option>전체 상태</option>
+          <option>진행중</option>
+          <option>완료</option>
+          <option>취소</option>
+        </select>
+        <input type="text" class="filter-input" placeholder="상품명 / 판매자 검색" />
+      </div>
+      <button class="btn btn-primary">검색</button>
+    </div>
+
+    <!-- 테이블 -->
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>거래번호</th>
+            <th>상품</th>
+            <th>판매자</th>
+            <th>구매자</th>
+            <th>금액</th>
+            <th>상태</th>
+            <th>거래일</th>
+            <th>관리</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#T-10231</td>
+            <td class="product-cell">
+              <img src="/images/sample/product.png" alt="" />
+              <span>아이폰 14 Pro</span>
+            </td>
+            <td>seller01</td>
+            <td>buyer77</td>
+            <td class="text-right">2,200,000원</td>
+            <td><span class="badge badge-primary">진행중</span></td>
+            <td>2026-01-05</td>
+            <td><button class="table-action">상세</button></td>
+          </tr>
+          <tr>
+            <td>#T-10230</td>
+            <td class="product-cell">
+              <img src="/images/sample/product.png" alt="" />
+              <span>갤럭시 S24</span>
+            </td>
+            <td>seller22</td>
+            <td>buyer11</td>
+            <td class="text-right">1,500,000원</td>
+            <td><span class="badge">완료</span></td>
+            <td>2026-01-04</td>
+            <td><button class="table-action">상세</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="admin-pagination">
+      <button class="page-btn">Prev</button>
+      <button class="page-btn is-active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">Next</button>
+    </div>
+  </section>
+</div>
+
+</html>

@@ -1,0 +1,244 @@
+/* ========================================================================== 
+   Admin Trade Management Page CSS (Re:GO)
+   File: trade.css
+   ========================================================================== */
+
+.admin-page {
+  display: flex;
+  gap: var(--space-32);
+  margin-right: var(--space-24);
+  margin-top: var(--space-24);
+    
+}
+
+/* ================= Sidebar ================= */
+.admin-sidebar {
+  width: 220px;
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24) var(--space-16);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-sidebar-title {
+  font-size: var(--fs-16);
+  font-weight: var(--fw-bold);
+  margin-bottom: var(--space-20);
+}
+
+.admin-sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.admin-sidebar-item {
+  padding: var(--space-10) var(--space-12);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-14);
+  color: var(--color-text-muted);
+  transition: background-color var(--duration-fast) var(--ease-out),
+              color var(--duration-fast) var(--ease-out);
+}
+
+.admin-sidebar-item:hover {
+  background-color: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+.admin-sidebar-item.is-active {
+  background-color: var(--color-primary-soft);
+  color: var(--color-text);
+  font-weight: var(--fw-semibold);
+}
+
+/* ================= Content ================= */
+.admin-content {
+  flex: 1;
+  gap: var(--space-24);
+}
+
+.admin-head {
+  padding-bottom: var(--space-16);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.admin-title {
+  font-size: var(--fs-24);
+  font-weight: var(--fw-bold);
+}
+
+.admin-summary {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-8);
+}
+
+.summary-label {
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+}
+
+.summary-value {
+  font-size: var(--fs-20);
+  font-weight: var(--fw-bold);
+}
+
+/* ================= Filter ================= */
+.admin-filter {
+  background-color: var(--color-surface);
+  padding: var(--space-16);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.filter-left {
+  gap: var(--space-12);
+}
+
+.filter-select,
+.filter-input {
+  height: 40px;
+  padding: 0 var(--space-12);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.filter-input {
+  width: 220px;
+}
+
+/* ================= Table ================= */
+.admin-table-wrap {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table thead {
+  background-color: var(--color-surface-2);
+}
+
+.admin-table th,
+.admin-table td {
+  padding: var(--space-14) var(--space-12);
+  font-size: var(--fs-13);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.admin-table th {
+  text-align: left;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-muted);
+}
+
+.admin-table tbody tr:hover {
+  background-color: var(--color-surface-3);
+}
+
+.product-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+}
+
+.product-cell img {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-2);
+}
+
+.table-action {
+  font-size: var(--fs-13);
+  color: var(--color-primary);
+}
+
+/* ================= Pagination ================= */
+.admin-pagination {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-8);
+  margin-top: var(--space-24);
+}
+
+.page-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 var(--space-8);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  font-size: var(--fs-13);
+  background-color: var(--color-surface);
+}
+
+.page-btn.is-active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  font-weight: var(--fw-semibold);
+}
+
+/* ================= Layout Fix ================= */
+
+/* admin 페이지에서는 좌측 여백 제거 */
+/* ================= Admin Layout Override ================= */
+
+
+/* 사이드바를 화면 왼쪽에 밀착 */
+.admin-sidebar {
+  margin-left: 0;
+}
+
+.admin-sidebar {
+  position: sticky;
+  top: var(--space-24);
+  align-self: flex-start;
+}
+
+
+/* ================= Summary Cards ================= */
+
+.admin-summary-cards {
+  display: flex;
+  gap: var(--space-12);
+}
+
+.summary-card {
+  min-width: 140px;
+  padding: var(--space-16) var(--space-20);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+
+  /* 핵심 변경 */
+  display: flex;
+  flex-direction: column;
+}
+
+
+.summary-title {
+  display: block;
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-6);
+}
+
+.summary-count {
+  font-size: var(--fs-24);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+}
+
+
+
+.summary-card.is-danger .summary-count {
+  color: var(--color-danger);
+}
+
