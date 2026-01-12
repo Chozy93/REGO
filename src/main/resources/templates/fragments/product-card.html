@@ -14,34 +14,44 @@
   - p.reserved (boolean)
 -->
 
-<th:block th:fragment="productCard(p)">
+<th:block th:fragment="card(card)">
 
-  <a th:href="@{/product/{id}(id=${p.id})}"
-     class="product-card">
+  <article class="product-card">
 
     <!-- =====================
          Image Area
     ====================== -->
     <div class="product-card__image">
 
-      <!-- 상태 뱃지 (예약중 등) -->
-      <span class="badge badge-primary product-card__badge"
-            th:if="${p.reserved}">
-        예약중
-      </span>
+      <!-- 찜 버튼 (STEP 2에서 Ajax 연결 예정) -->
+	  <button type="button"
+	          class="product-card__like-btn"
+	          th:classappend="${card.liked} ? ' liked' : ''"
+	          th:data-product-id="${card.id}"
+	          aria-label="찜하기">
 
-      <!-- 찜 버튼 -->
-      <button type="button"
-              class="product-card__like-btn"
-              aria-label="찜하기"
-              th:onclick="|toggleLike(event, ${p.id})|">
-        <span class="material-symbols-outlined">favorite</span>
-      </button>
+	      <span class="material-symbols-outlined"
+	            th:classappend="${card.liked} ? ' filled' : ''">
+	          favorite
+	      </span>
+	  </button>
 
-      <!-- 상품 이미지 -->
-      <img th:src="${p.img}"
-           alt=""
-           loading="lazy">
+
+      <!-- 상품 링크 -->
+      <a th:href="@{/product/{id}(id=${card.id})}">
+
+        <!-- 상품 이미지 -->
+        <img th:if="${card.img != null}"
+             th:src="${card.img}"
+             alt="상품 이미지"
+             loading="lazy"/>
+
+        <img th:if="${card.img == null}"
+             src="/images/no-image.png"
+             alt="기본 이미지"
+             loading="lazy"/>
+
+      </a>
     </div>
 
     <!-- =====================
@@ -51,25 +61,48 @@
 
       <!-- 제목 -->
       <h4 class="product-card__title"
-          th:text="${p.title}">
+          th:text="${card.title}">
         상품 제목
       </h4>
 
       <!-- 가격 -->
       <p class="product-card__price"
-         th:text="${#numbers.formatInteger(p.price, 3, 'COMMA')} + '원'">
+         th:text="${#numbers.formatInteger(card.price, 3, 'COMMA')} + '원'">
         100,000원
       </p>
 
-      <!-- 메타 정보 -->
-      <div class="product-card__meta">
-        <span th:text="${p.loc}">지역</span>
-        <span class="meta-dot">·</span>
-        <span th:text="${p.time}">시간</span>
+	  <!-- 메타 정보 -->
+	  <div class="product-card__meta">
+
+	    <!-- 지역 -->
+	    <span th:text="${card.loc}">지역</span>
+	    <span class="meta-dot">·</span>
+
+	    <!-- 시간 -->
+	    <span th:text="${card.time}">시간</span>
+	    <span class="meta-dot">·</span>
+		
+		<button type="button"
+		        class="product-card__like-btn"
+		        th:classappend="${card.liked} ? ' liked' : ''"
+		        th:data-product-id="${card.id}"
+		        aria-label="찜하기">
+
+		    <span class="material-symbols-outlined"
+		          th:classappend="${card.liked} ? ' filled' : ''">
+		        favorite
+		    </span>
+		</button>
+
+		    <span class="like-count"
+		          th:text="${card.likeCount}">
+		        0
+		    </span>
+		
       </div>
 
     </div>
 
-  </a>
+  </article>
 
 </th:block>
