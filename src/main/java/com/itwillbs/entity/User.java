@@ -2,6 +2,7 @@ package com.itwillbs.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +21,7 @@ import com.itwillbs.entity.enumtype.UserStatus; // ✅ 추가
     }
 )
 @Getter
+@Setter
 public class User {
 
     /* =========================
@@ -111,3 +113,5 @@ public class User {
         this.password = encodedPassword;
     }
 }
+
+

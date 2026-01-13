@@ -1,5 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="www.ultraq.net.nz"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}"> 
 <th:block th:fragment="pageCss">
 		  <link rel="stylesheet" href="/css/main/main.css">
@@ -34,46 +34,81 @@
     </section>
 
     <!-- AI 추천 -->
-    <section class="section">
-      <div class="section-head">
-        <h2 class="section-title">🤖 AI 맞춤 상품</h2>
-        <a href="#" class="section-link">전체보기</a>
-      </div>
-	
-      <div class="grid grid-products">
-        <th:block th:each="p : ${aiProducts}">
-          <th:block th:replace="fragments/product-card :: productCard(${p})"/>
-        </th:block>
-      </div>
-    </section>
+	<section class="section"
+	         th:if="${page.aiProducts != null and #lists.size(page.aiProducts) > 0}">
+	  <div class="section-head">
+	    <h2 class="section-title">🤖 AI 맞춤 상품</h2>
+	    <a href="#" class="section-link">전체보기</a>
+	  </div>
+
+	  <div class="grid grid-products">
+	    <th:block th:each="card : ${page.aiProducts}">
+	      <th:block
+	        th:replace="~{fragments/product-card :: card(card=${card})}"/>
+	    </th:block>
+	  </div>
+	</section>
 
     <!-- 인기 상품 -->
-    <section class="section">
-      <div class="section-head">
-        <h2 class="section-title">🔥 인기 상품</h2>
-        <a href="#" class="section-link">전체보기</a>
-      </div>
+	<section class="section"
+	         th:if="${#lists.size(page.popularProducts) > 0}">
 
-      <div class="grid grid-products">
-        <th:block th:each="p : ${hotProducts}">
-          <th:block th:replace="fragments/product-card :: productCard(${p})"/>
-        </th:block>
-      </div>
-    </section>
+	  <div class="section-head">
+	    <h2 class="section-title">인기 상품</h2>
+	    <a href="#" class="section-link">전체보기</a>
+	  </div>
 
+	  <div class="grid grid-products">
+	    <th:block th:each="card : ${page.popularProducts}">
+	      <th:block
+	        th:replace="~{fragments/product-card :: card(${card})}" />
+	    </th:block>
+	  </div>
+
+	</section>
+	
     <!-- 최근 상품 -->
-    <section class="section">
-      <div class="section-head">
-        <h2 class="section-title">🆕 최근 등록 상품</h2>
-        <a href="#" class="section-link">전체보기</a>
-      </div>
+	<section class="section"
+	         th:if="${page.recentProducts != null and #lists.size(page.recentProducts) > 0}">
+	  <div class="section-head">
+		<h2 class="section-title">최근 등록 상품</h2>
 
-      <div class="grid grid-products">
-        <th:block th:each="p : ${recentProducts}">
-          <th:block th:replace="fragments/product-card :: productCard(${p})"/>
-        </th:block>
-      </div>
-    </section>
+		<select id="sortSelect"
+		        onchange="location.href='/?sort=' + this.value">
+
+		  <option value="recent"
+		          th:selected="${sort == 'recent'}">
+		    최신순
+		  </option>
+
+		  <option value="like"
+		          th:selected="${sort == 'like'}">
+		    찜 많은 순
+		  </option>
+
+		  <option value="view"
+		          th:selected="${sort == 'view'}">
+		    조회 많은 순
+		  </option>
+
+		</select>
+		</div>
+
+	  <div class="grid grid-products">
+	    <th:block th:each="card : ${page.recentProducts}">
+	      <th:block
+	        th:replace="~{fragments/product-card :: card(card=${card})}"/>
+	    </th:block>
+	  </div>
+	</section>
 
   </div>
+  
+  <!-- 페이지 전용 JS -->
+  <!-- 페이지 전용 JS -->
+  <th:block th:fragment="pageJs">
+      <script th:src="@{/js/product-like.js}"></script>
+      <script th:src="@{/js/main.js}"></script>
+  </th:block>
+
 </html>
