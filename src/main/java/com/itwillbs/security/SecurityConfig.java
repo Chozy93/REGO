@@ -1,26 +1,22 @@
 package com.itwillbs.security;
 
+import com.itwillbs.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    /* =========================
-       비밀번호 암호화
-    ========================= */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    // 순환 참조 방지를 위해 @Lazy로 주입받기
+    @Lazy
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     /* =========================
        AuthenticationManager
@@ -34,52 +30,24 @@ public class SecurityConfig {
 
     /* =========================
        Security Filter Chain
-    ========================= */
+    ======================== */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
             /* ---------- CSRF ---------- */
             .csrf(csrf -> csrf.disable())
-            // SSR이지만, 현재는 Ajax POST 위주 구조 → 추후 필요 시 재검토
-
-//            /* ---------- 요청 권한 ---------- */
-//            .authorizeHttpRequests(auth -> auth
-//                // 정적 리소스
-//                .requestMatchers(
-//                    "/css/**",
-//                    "/js/**",
-//                    "/images/**"
-//                ).permitAll()
-//
-//                // 인증 없이 접근 가능
-//                .requestMatchers(
-//                    "/",
-//                    "/login",
-//                    "/signup"
-//                ).permitAll()
-//
-//                // 관리자
-//                .requestMatchers("/admin/**")
-//                .hasRole("ADMIN")
-//
-//                // 로그인 필요
-//                .requestMatchers(
-//                    "/mypage/**",
-//                    "/chat/**"
-//                ).authenticated()
-//
-//                // 그 외
-//                .anyRequest().permitAll()
-//            )
             
+            /* ---------- HTTP Basic 비활성화 ---------- */
+            .httpBasic(basic -> basic.disable())
+
             /* ---------- 요청 권한 ---------- */
             .authorizeHttpRequests(auth -> auth
                 // 🔧 개발 단계: 모든 요청 허용
                 .anyRequest().permitAll()
             )
 
-            /* ---------- 로그인 ---------- */
+            /* ---------- 일반 폼 로그인 ---------- */
             .formLogin(login -> login
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
@@ -88,15 +56,25 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/", true)
                 .failureUrl("/login?error")
             )
-            
 
+            /* ---------- 소셜 로그인 ---------- */
+            .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login") 
+                .userInfoEndpoint(userInfo -> userInfo
+                        .userService(customOAuth2UserService)
+                )
+                .defaultSuccessUrl("/", true) // 소셜 로그인 성공 시 이동할 곳
+            )
+
+            /* ---------- 로그아웃 ---------- */
             .logout(logout -> logout
-                    .logoutUrl("/logout")              // 헤더에서 호출할 URL
-                    .logoutSuccessUrl("/")             // 로그아웃 후 이동
-                    .invalidateHttpSession(true)       // 세션 무효화
-                    .clearAuthentication(true)         // 인증 정보 제거
-                    .deleteCookies("JSESSIONID")       // 쿠키 제거
-                );
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
+            );
+
         return http.build();
     }
 }
