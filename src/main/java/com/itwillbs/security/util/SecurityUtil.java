@@ -11,7 +11,29 @@ public class SecurityUtil {
     private SecurityUtil() {
         // 유틸 클래스 생성 방지
     }
+    
+    //로그인여부 boolean
+    public static boolean isLogined() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
 
+        if (authentication == null) {
+            return false;
+        }
+
+        if (!authentication.isAuthenticated()) {
+            return false;
+        }
+
+        // AnonymousAuthenticationToken 방어
+        if (authentication.getPrincipal() == null) {
+            return false;
+        }
+
+        return !"anonymousUser".equals(authentication.getPrincipal());
+    }
+
+    
     /* =========================
        인증 여부 확인
     ========================= */
