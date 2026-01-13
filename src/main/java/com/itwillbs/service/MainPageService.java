@@ -14,8 +14,9 @@ import java.util.List;
 public class MainPageService {
 
     private final MainProductListService mainProductListService;
+    private final MainRecentViewService mainRecentViewService;
 
-    public MainPageVO getMainPage(String sort) {
+    public MainPageVO getMainPage(String sort, String recentIds) {
 
         MainProductSortConditionVO condition =
                 new MainProductSortConditionVO(sort);
@@ -29,10 +30,20 @@ public class MainPageService {
         List<MainProductCardVO> recentProducts =
                 mainProductListService.getRecentProducts(condition);
 
-        return new MainPageVO(
+        // ✅ 1️⃣ 먼저 기존 방식대로 page 생성
+        MainPageVO page = new MainPageVO(
                 aiProducts,
                 popularProducts,
                 recentProducts
         );
+
+        // ✅ 2️⃣ 여기서 recentView "조합"
+        page.setRecentView(
+                mainRecentViewService.getRecentView(recentIds)
+        );
+
+        // ✅ 3️⃣ return
+        return page;
     }
+
 }
