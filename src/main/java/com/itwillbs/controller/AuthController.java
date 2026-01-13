@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.itwillbs.domain.LoginRequestVO;
 import com.itwillbs.domain.user.UserSignupConditionVO;
 import com.itwillbs.entity.User;
 import com.itwillbs.service.UserService;

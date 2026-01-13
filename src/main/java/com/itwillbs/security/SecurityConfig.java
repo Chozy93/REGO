@@ -88,15 +88,15 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/", true)
                 .failureUrl("/login?error")
             )
+            
 
-            /* ---------- 로그아웃 ---------- */
             .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-            );
-
+                    .logoutUrl("/logout")              // 헤더에서 호출할 URL
+                    .logoutSuccessUrl("/")             // 로그아웃 후 이동
+                    .invalidateHttpSession(true)       // 세션 무효화
+                    .clearAuthentication(true)         // 인증 정보 제거
+                    .deleteCookies("JSESSIONID")       // 쿠키 제거
+                );
         return http.build();
     }
 }

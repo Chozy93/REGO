@@ -26,6 +26,7 @@ public class GlobalViewControllerAdvice  {
     
     @ModelAttribute("loginUser")
     public UserVO loginUser() {
+    	  System.out.println("🔐 loginUser = " + SecurityUtil.getCurrentUserVO());
         return SecurityUtil.getCurrentUserVO();
     }
     
