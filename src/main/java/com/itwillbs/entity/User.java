@@ -2,6 +2,7 @@ package com.itwillbs.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +19,7 @@ import com.itwillbs.entity.enumtype.UserRole;
     }
 )
 @Getter
+@Setter
 public class User {
 
     /* =========================
@@ -89,4 +91,18 @@ public class User {
     public void changeProfileImage(String profileImg) {
         this.profileImg = profileImg;
     }
+    
+    public User(String email, String password, String username, String nickname, String phoneNumber) {
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+        this.role = UserRole.USER; // 기본값
+        this.userStatus = "ACTIVE"; // 기본값
+        this.profileImg = "default.png"; // 필수값이라 일단 세팅
+        this.createdAt = LocalDateTime.now();
+    }
 }
+
+
