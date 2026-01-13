@@ -25,14 +25,7 @@ repositories {
 }
 
 dependencies {
-	
-	//lombok
-	compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
 
-    testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
-	
     // Spring Core
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -45,8 +38,7 @@ dependencies {
     // Persistence
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
-	    // ✅ MySQL JDBC Driver (이게 없어서 터진 것)
-    runtimeOnly 'com.mysql:mysql-connector-j'
+
     // WebSocket (채팅)
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	

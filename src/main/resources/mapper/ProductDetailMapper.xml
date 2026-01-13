@@ -5,89 +5,28 @@
 
 <mapper namespace="com.itwillbs.mapper.ProductDetailMapper">
 
-    <!-- ==================================================
-         DETAIL01_VIEWCOUNT
-         조회수 증가
-    ================================================== -->
+    <!-- 조회수 증가 -->
     <update id="increaseViewCount">
         UPDATE products
         SET view_count = IFNULL(view_count, 0) + 1
         WHERE product_id = #{productId}
     </update>
 
-
-    <!-- ==================================================
-         DETAIL01_INFO
-         상품 상세 조회
-    ================================================== -->
+    <!-- 상품 상세 조회 -->
     <select id="selectProductDetail"
-            resultType="com.itwillbs.dto.ProductDetailDTO">
+        parameterType="long"
+        resultType="com.itwillbs.dto.ProductDetailDTO">
 
-        SELECT
-            p.product_id   AS productId,
-            p.product_name AS productName,
-            p.price        AS price,
-            p.view_count   AS viewCount,
-            p.like_count   AS likeCount
-        FROM products p
-        WHERE p.product_id = #{productId}
+    SELECT
+        p.product_id      AS productId,
+        p.product_name    AS productName,
+        p.price           AS price,
+        p.view_count      AS viewCount,
+        p.like_count      AS likeCount
+    FROM products p
+    WHERE p.product_id = #{productId}
 
-    </select>
+</select>
 
-
-    <!-- ==================================================
-         DETAIL01_SIMILAR
-         비슷한 상품 조회 (카테고리 기준)
-    ================================================== -->
-    <select id="selectSimilarProducts"
-            resultType="com.itwillbs.dto.ProductSimilarListDTO">
-
-        SELECT
-            p.product_id           AS productId,
-            p.product_name         AS title,
-            p.price                AS price,
-            p.main_image_url       AS thumbnailUrl,
-            p.region_display_name  AS regionName,
-            (
-                SELECT COUNT(*)
-                FROM user_favorites uf
-                WHERE uf.product_id = p.product_id
-            ) AS likeCount
-        FROM products p
-        WHERE p.category_id = (
-            SELECT category_id
-            FROM products
-            WHERE product_id = #{productId}
-        )
-        AND p.product_id != #{productId}
-        ORDER BY p.created_at DESC
-        LIMIT #{limit}
-
-    </select>
-
-
-    <!-- ==================================================
-         DETAIL01_SIMILAR (fallback)
-         인기 상품 대체
-    ================================================== -->
-    <select id="selectPopularProductsForSimilar"
-            resultType="com.itwillbs.dto.ProductSimilarListDTO">
-
-        SELECT
-            p.product_id           AS productId,
-            p.product_name         AS title,
-            p.price                AS price,
-            p.main_image_url       AS thumbnailUrl,
-            p.region_display_name  AS regionName,
-            (
-                SELECT COUNT(*)
-                FROM user_favorites uf
-                WHERE uf.product_id = p.product_id
-            ) AS likeCount
-        FROM products p
-        ORDER BY likeCount DESC
-        LIMIT #{limit}
-
-    </select>
 
 </mapper>

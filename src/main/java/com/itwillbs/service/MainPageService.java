@@ -2,7 +2,6 @@ package com.itwillbs.service;
 
 import com.itwillbs.view.MainPageVO;
 import com.itwillbs.view.MainProductCardVO;
-import com.itwillbs.view.MainRecentViewVO;
 import com.itwillbs.view.condition.MainProductSortConditionVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,17 +38,10 @@ public class MainPageService {
         );
 
         // ✅ 2️⃣ 여기서 recentView "조합"
-       
-        // 🔥 핵심: recentIds null 방어
-        if (recentIds != null && !recentIds.isBlank()) {
-            page.setRecentView(
-                    mainRecentViewService.getRecentView(recentIds)
-            );
-        } else {
-            page.setRecentView(
-                    MainRecentViewVO.empty() // or new MainRecentViewVO(emptyList)
-            );
-        }
+        page.setRecentView(
+                mainRecentViewService.getRecentView(recentIds)
+        );
+
         // ✅ 3️⃣ return
         return page;
     }

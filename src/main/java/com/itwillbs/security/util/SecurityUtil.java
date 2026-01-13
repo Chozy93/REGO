@@ -3,8 +3,6 @@ package com.itwillbs.security.util;
 import com.itwillbs.domain.user.UserVO;
 import com.itwillbs.entity.User;
 import com.itwillbs.security.CustomUserDetails;
-
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -13,23 +11,7 @@ public class SecurityUtil {
     private SecurityUtil() {
         // 유틸 클래스 생성 방지
     }
-    
-    
-    public static boolean isLogined() {
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null) {
-            return false;
-        }
-
-        if (!authentication.isAuthenticated()) {
-            return false;
-        }
-
-        // AnonymousUser 방지
-        return !(authentication instanceof AnonymousAuthenticationToken);
-    }
     /* =========================
        인증 여부 확인
     ========================= */
