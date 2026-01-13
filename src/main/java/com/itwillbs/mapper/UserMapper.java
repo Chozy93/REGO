@@ -16,4 +16,6 @@ public interface UserMapper {
     void insertSocialAccount(SocialAccountDTO socialAccountDTO);
     
     void insertUser(Map<String, Object> userParams);
+    
+    Map<String, Object> findUserByEmail(String email);
 }
