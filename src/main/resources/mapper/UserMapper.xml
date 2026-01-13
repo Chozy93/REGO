@@ -14,26 +14,40 @@
         WHERE provider = #{provider} AND provider_id = #{providerId}
     </select>
 
-    <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
-        INSERT INTO users (username, nickname, role)
-        VALUES (#{username}, #{nickname}, 'ROLE_USER')
-    </insert>
+<insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
+    INSERT INTO users (
+        username, 
+        password,   nickname, 
+        role, 
+        email, 
+        user_status, 
+        phone_number, 
+        profile_img, 
+        created_at
+    ) VALUES (
+        #{username}, 
+        #{password},   #{nickname}, 
+        'ROLE_USER', 
+        #{email}, 
+        'ACTIVE', 
+        #{phoneNumber}, 
+        'default.png', 
+        NOW()
+    )
+</insert>
 
-    <insert id="insertSocialAccount">
-        INSERT INTO social_accounts (
-            social_id, 
-            connected_at, 
-            provider, 
-            provider_id, 
-            user_id
-        )
-        VALUES (
-            #{socialId}, 
-            NOW(), 
-            #{provider}, 
-            #{providerId}, 
-            #{userId}
-        )
-    </insert>
+<select id="findUserByEmail" resultType="map">
+    SELECT user_id AS userId FROM users WHERE email = #{email}
+</select>
+
+
+<insert id="insertSocialAccount">
+    INSERT INTO social_accounts (
+        social_id, connected_at, provider, provider_id, user_id
+    )
+    VALUES (
+        #{socialId}, NOW(), #{provider}, #{providerId}, #{userId}
+    )
+</insert>
 
 </mapper>
