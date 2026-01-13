@@ -1,0 +1,208 @@
+/* ==========================================================================
+   Chat Room Page
+   ========================================================================== */
+
+.chat-room {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: var(--color-surface);
+
+ 
+}
+
+/* =========================
+   Header
+========================= */
+
+.chat-room-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: var(--space-16) var(--space-20);
+  border-bottom: 1px solid var(--color-divider);
+  background-color: var(--color-surface);
+}
+
+.chat-room-partner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.chat-room-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  object-fit: cover;
+}
+
+.chat-room-partner-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chat-room-partner-name {
+  font-size: var(--fs-15);
+  font-weight: var(--fw-bold);
+}
+
+.chat-room-partner-rating {
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+}
+
+.chat-room-actions {
+  display: flex;
+  gap: var(--space-8);
+}
+
+/* =========================
+   Messages
+========================= */
+
+.chat-room-messages {
+  flex: 1;
+  padding: var(--space-20);
+  overflow-y: auto;
+
+  /* 선택 */
+  background-color: var(--color-surface);
+}
+.chat-room-date {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-20);
+}
+
+.chat-room-date span {
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-2);
+  padding: 4px var(--space-12);
+  border-radius: var(--radius-pill);
+}
+
+/* message wrapper */
+
+.chat-room-message {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-8);
+  margin-bottom: var(--space-12);
+}
+
+.chat-room-message-me {
+  justify-content: flex-end;
+}
+
+/* avatar */
+
+.chat-room-message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  object-fit: cover;
+}
+
+/* bubble */
+
+.chat-room-bubble {
+  max-width: 65%;
+  padding: var(--space-12) var(--space-14);
+  border-radius: var(--radius-lg);
+  font-size: var(--fs-14);
+  line-height: var(--lh-normal);
+}
+
+.chat-room-bubble-other {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-soft);
+}
+
+.chat-room-bubble-me {
+  background-color: var(--color-primary-soft);
+}
+
+/* 송금 카드 */
+
+.chat-room-bubble-payment {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.chat-room-payment-amount {
+  font-size: var(--fs-18);
+  font-weight: var(--fw-bold);
+}
+
+.chat-room-payment-text {
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+}
+
+.chat-room-payment-btn {
+  margin-top: var(--space-8);
+  padding: var(--space-10);
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  font-weight: var(--fw-semibold);
+}
+
+/* time */
+
+.chat-room-time {
+  font-size: var(--fs-10);
+  color: var(--color-text-subtle);
+  text-align: right;
+}
+
+/* =========================
+   Input
+========================= */
+
+.chat-room-input {
+	flex-shrink: 0;
+  padding: var(--space-12);
+  border-top: 1px solid var(--color-divider);
+  background-color: var(--color-surface);
+}
+
+.chat-room-input-box {
+  display: flex;
+  gap: var(--space-8);
+  align-items: flex-end;
+
+  padding: var(--space-10);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-2);
+}
+
+.chat-room-input-btn,
+.chat-room-send-btn {
+  font-size: var(--fs-14);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-muted);
+}
+
+.chat-room-send-btn {
+  color: var(--color-primary);
+}
+
+.chat-room-textarea {
+  flex: 1;
+  resize: none;
+  border: none;
+  background: transparent;
+  font-size: var(--fs-14);
+  line-height: var(--lh-normal);
+}
+
+.chat-room-textarea:focus {
+  outline: none;
+}

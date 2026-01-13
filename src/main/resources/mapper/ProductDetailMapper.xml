@@ -5,15 +5,18 @@
 
 <mapper namespace="com.itwillbs.mapper.ProductDetailMapper">
 
+
     <!-- ==================================================
          DETAIL01_VIEWCOUNT
          조회수 증가
     ================================================== -->
+
     <update id="increaseViewCount">
         UPDATE products
         SET view_count = IFNULL(view_count, 0) + 1
         WHERE product_id = #{productId}
     </update>
+
 
 
     <!-- ==================================================
@@ -89,5 +92,24 @@
         LIMIT #{limit}
 
     </select>
+
+
+    <!-- 상품 상세 조회 -->
+    <select id="selectProductDetail"
+        parameterType="long"
+        resultType="com.itwillbs.dto.ProductDetailDTO">
+
+    SELECT
+        p.product_id      AS productId,
+        p.product_name    AS productName,
+        p.price           AS price,
+        p.view_count      AS viewCount,
+        p.like_count      AS likeCount
+    FROM products p
+    WHERE p.product_id = #{productId}
+
+</select>
+
+
 
 </mapper>

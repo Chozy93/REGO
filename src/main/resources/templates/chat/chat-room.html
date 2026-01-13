@@ -1,0 +1,111 @@
+<!-- =========================
+     Chat Room Fragment
+========================= -->
+<div class="chat-room" th:fragment="chat-room">
+
+    <!-- =========================
+         Chat Header
+    ========================== -->
+    <header class="chat-room-header">
+        <div class="chat-room-partner">
+            <img class="chat-room-avatar"
+                 th:src="${partnerUser.profileImg}"
+                 alt="">
+
+            <div class="chat-room-partner-info">
+                <strong class="chat-room-partner-name"
+                        th:text="${partnerUser.nickname}">
+                    상대방닉네임
+                </strong>
+            </div>
+        </div>
+
+        <div class="chat-room-actions">
+            <button class="btn btn-outline"
+                    id="open-appointment-modal">
+                약속잡기
+            </button>
+
+            <button class="btn btn-outline"
+                    id="open-payment-modal">
+                송금하기
+            </button>
+
+            <button class="btn btn-outline">
+                상품 보기
+            </button>
+        </div>
+    </header>
+
+    <!-- =========================
+         Message Area
+    ========================== -->
+    <section class="chat-room-messages">
+
+        <!-- 날짜 구분 (방 생성일 or 메시지 기준일) -->
+        <div class="chat-room-date">
+            <span th:text="${chatRoomVO.createdAt}">
+                2023년 12월 17일
+            </span>
+        </div>
+
+        <!-- =========================
+             Message List
+        ========================== -->
+        <div th:each="message : ${messages}"
+             th:class="'chat-room-message ' 
+                        + (${message.senderId} == ${loginUserId} 
+                           ? 'chat-room-message-me' 
+                           : '')">
+
+            <!-- 상대 메시지일 때만 아바타 -->
+            <img th:if="${message.senderId} != ${loginUserId}"
+                 class="chat-room-message-avatar"
+                 th:src="${partnerUser.profileImg}"
+                 alt="">
+
+            <div th:class="'chat-room-bubble '
+                           + (${message.senderId} == ${loginUserId}
+                              ? 'chat-room-bubble-me'
+                              : 'chat-room-bubble-other')">
+
+                <p th:text="${message.content}">
+                    메시지 내용
+                </p>
+
+                <span class="chat-room-time"
+                      th:text="${#temporals.format(message.createdAt, 'a h:mm')}">
+                    오후 2:15
+                </span>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- =========================
+         Input Area
+    ========================== -->
+    <footer class="chat-room-input">
+        <div class="chat-room-input-box">
+            <button class="chat-room-input-btn">+</button>
+
+            <textarea class="chat-room-textarea"
+                      placeholder="메시지를 입력하세요"
+                      rows="1"></textarea>
+
+            <button class="chat-room-send-btn">
+                전송
+            </button>
+        </div>
+    </footer>
+
+</div>
+<!-- =========================
+     Chat Modals
+========================= -->
+
+<th:block th:replace="~{fragments/chat-appointment-modal :: chat-appointment-modal}">
+</th:block>
+
+<th:block th:replace="~{fragments/chat-payment-modal :: chat-payment-modal}">
+</th:block>

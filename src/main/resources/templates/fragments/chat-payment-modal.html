@@ -1,0 +1,82 @@
+<div class="modal is-hidden"
+     id="payment-modal"
+     th:fragment="payment-modal">
+
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-panel modal-panel-payment">
+
+        <!-- =========================
+             Header
+        ========================== -->
+        <header class="modal-header modal-header-center">
+            <button class="modal-back-btn"
+                    id="close-payment-modal"
+                    type="button">
+                ←
+            </button>
+
+            <h2 class="modal-title">
+                송금 요청
+            </h2>
+        </header>
+
+        <!-- =========================
+             Body
+        ========================== -->
+        <section class="modal-body modal-body-payment">
+
+            <div class="payment-summary">
+                <p class="payment-target">
+                    <strong>구매자</strong>님에게
+                </p>
+
+                <div class="payment-amount">
+                    <strong>15,000</strong>
+                    <span>원</span>
+                </div>
+
+                <p class="payment-subtext">
+                    요청하기
+                </p>
+            </div>
+
+            <!-- =========================
+                 Keypad
+            ========================== -->
+            <div class="payment-keypad">
+
+                <button class="payment-keypad-btn">1</button>
+                <button class="payment-keypad-btn">2</button>
+                <button class="payment-keypad-btn">3</button>
+
+                <button class="payment-keypad-btn">4</button>
+                <button class="payment-keypad-btn">5</button>
+                <button class="payment-keypad-btn">6</button>
+
+                <button class="payment-keypad-btn">7</button>
+                <button class="payment-keypad-btn">8</button>
+                <button class="payment-keypad-btn">9</button>
+
+                <button class="payment-keypad-btn">00</button>
+                <button class="payment-keypad-btn">0</button>
+                <button class="payment-keypad-btn payment-keypad-back">
+                    ←
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- =========================
+             Footer
+        ========================== -->
+        <footer class="modal-footer modal-footer-fixed">
+            <button class="btn btn-primary btn-block">
+                보내기
+            </button>
+        </footer>
+
+    </div>
+
+</div>

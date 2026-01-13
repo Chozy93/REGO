@@ -1,0 +1,33 @@
+<div class="modal is-hidden"
+     th:fragment="appointment-modal">
+
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-panel">
+        <header class="modal-header">
+            <h2 class="modal-title">약속 설정</h2>
+            <button class="modal-close">닫기</button>
+        </header>
+
+        <section class="modal-body">
+            <div class="appointment-calendar">
+                <strong class="appointment-month">2023년 12월</strong>
+                <!-- 날짜 UI -->
+            </div>
+
+            <div class="appointment-time">
+                <strong class="appointment-label">시간 선택</strong>
+                <div class="appointment-time-grid">
+                    <button class="appointment-time-btn">오후 1:00</button>
+                    <button class="appointment-time-btn is-active">오후 2:00</button>
+                    <button class="appointment-time-btn">오후 3:00</button>
+                </div>
+            </div>
+        </section>
+
+        <footer class="modal-footer">
+            <button class="btn btn-primary">약속 확정</button>
+        </footer>
+    </div>
+
+</div>
