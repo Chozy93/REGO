@@ -79,6 +79,10 @@ public class AuthController {
 	    public String register(UserSignupConditionVO condition) { 
 	        System.out.println("화면에서 넘어온 데이터: " + condition.toString()); 
 	        try {
+	        	if (condition.getUsername() == null || !condition.getUsername().matches("^[가-힣]{2,5}$")) {
+	                System.out.println("유효하지 않은 이름 입력됨: " + condition.getUsername());
+	                return "redirect:/signup/step2?error=name"; // 이름 에러를 달고 다시 입력창으로 보내기
+	            }
 	            userService.join(condition);
 	            return "redirect:/signup/step3"; 
 	        } catch (Exception e) {
@@ -93,7 +97,12 @@ public class AuthController {
 	        // 유저가 있으면 true, 없으면 false 반환
 	        return userService.isEmailTaken(email);
 	    }
-
+	    
+	    public boolean checkNickname(@RequestParam("nickname") String nickname) {
+	        // 닉네임이 있으면 true, 없으면 false 반환
+	        return userService.isNicknameTaken(nickname); 
+	    }
+	    
 	    // 3단계 화면 (완료 축하)
 	    @GetMapping("/signup/step3")
 	    public String signupStep3() {

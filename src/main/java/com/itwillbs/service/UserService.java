@@ -8,6 +8,7 @@ import com.itwillbs.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 @Transactional
@@ -51,5 +52,10 @@ public class UserService {
     public boolean isEmailTaken(String email) {
         // UserRepository에서 이메일로 유저를 찾았을 때 존재하면 true 반환
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    public boolean isNicknameTaken(String nickname) {
+        // 닉네임으로 유저를 찾아서 있으면 true, 없으면 false!
+        return userRepository.existsByNickname(nickname);
     }
 }
