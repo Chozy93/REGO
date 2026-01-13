@@ -17,17 +17,21 @@ public class MainController {
     public String main(
             @RequestParam(name = "sort", required = false, defaultValue = "recent")
             String sort,
+
+            @RequestParam(name = "recentIds", required = false)
+            String recentIds,
+
             Model model
     ) {
         model.addAttribute(
                 "page",
-                mainPageService.getMainPage(sort)
+                mainPageService.getMainPage(sort, recentIds)
         );
 
-        // ✅ 이 한 줄이 핵심
         model.addAttribute("sort", sort);
 
         return "main/main";
     }
-
+    
 }
+

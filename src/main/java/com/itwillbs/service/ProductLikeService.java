@@ -1,5 +1,6 @@
 package com.itwillbs.service;
 
+import com.itwillbs.entity.User;
 import com.itwillbs.mapper.ProductLikeMapper;
 import com.itwillbs.view.ProductLikeResultVO;
 import lombok.RequiredArgsConstructor;
@@ -54,4 +55,6 @@ public class ProductLikeService {
                 nowLiked
         );
     }
+
+
 }

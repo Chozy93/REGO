@@ -70,4 +70,11 @@ public class RestGlobalExceptionHandler {
                         "처리 중 오류가 발생했습니다."
                 ));
     }
+    
+    @ExceptionHandler(DuplicateProductReportException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDuplicateProductReport(DuplicateProductReportException e) {
+        return ResponseEntity.badRequest()
+            .body(ApiResponse.fail(ApiResponseCode.REPORT_DUPLICATE, e.getMessage()));
+    }
+      
 }
