@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.LoginRequestVO;
-import com.itwillbs.domain.UserSignupConditionVO;
+import com.itwillbs.domain.user.UserSignupConditionVO;
 import com.itwillbs.entity.User;
 import com.itwillbs.service.UserService;
 
@@ -28,20 +28,7 @@ public class AuthController {
 		return "auth/login";
 	}
 
-	@PostMapping("/login")
-	public String login(LoginRequestVO request, HttpSession session, RedirectAttributes rttr) {
-	    try {
-	        User loginUser = userService.login(request);
-	        session.setAttribute("loginUser", loginUser);
-	        return "redirect:/"; 
-	    } catch (IllegalArgumentException e) {
-	        String errorCode = "error";
-	        if (e.getMessage().contains("이메일")) errorCode = "no_user";
-	        if (e.getMessage().contains("비밀번호")) errorCode = "wrong_pw";
-	        
-	        return "redirect:/login?status=" + errorCode;
-	    }
-	}
+
 	
 	// 아이디 찾기 1단계
     @GetMapping("/login/id_find1")
@@ -54,14 +41,6 @@ public class AuthController {
     public String passFind1() {
         return "auth/pass_find1";
     }
-
-	
-	
-	
-	
-	
-	
-	
 	
 	    // 1단계 화면 (약관동의)
 	    @GetMapping("/signup/step1")

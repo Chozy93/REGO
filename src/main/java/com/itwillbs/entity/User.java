@@ -81,6 +81,33 @@ public class User {
     protected User() {}
     
     
+    /* =========================
+    회원가입 전용 생성자
+    ========================= */
+ public User(
+         String email,
+         String encodedPassword,
+         String username,
+         String nickname,
+         String phoneNumber,
+         String gender
+ ) {
+     this.email = email;
+     this.password = encodedPassword;
+     this.username = username;
+     this.nickname = nickname;
+     this.phoneNumber = phoneNumber;
+     // ✅ String → Enum 변환 (도메인 내부 책임)
+     this.gender = Gender.valueOf(gender);
+
+     // 기본 상태는 Entity 책임
+     this.role = UserRole.USER;
+     this.userStatus = UserStatus.ACTIVE;
+     this.profileImg = "/images/profile/default.png";
+     this.createdAt = LocalDateTime.now();
+ }
+    
+    //변환용 생성자
     public User(UserVO vo) {
         this.userId = vo.getUserId();
         this.email = vo.getEmail();
