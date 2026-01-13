@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itwillbs.domain.ChatMessageVO;
 import com.itwillbs.domain.ChatRoomVO;
-import com.itwillbs.domain.UserVO;
+import com.itwillbs.domain.user.UserVO;
 import com.itwillbs.entity.enumtype.ChatFilterType;
 import com.itwillbs.view.ChatRoomListItemVO;
 import com.itwillbs.view.ChatRoomListViewVO;
@@ -81,13 +81,16 @@ public class ChatController {
 	        Long loginUserId = 1L;
 	        model.addAttribute("loginUserId", loginUserId);
 
-	        // 상대 유저 더미
+	     // 상대 유저 더미
 	        UserVO partnerUser = new UserVO(
-	                2L,
-	                "kim2323",
-	                "김철수",
-	                "/img/dummy/avatar.png"
+	                2L,                         // userId
+	                "kim2323@test.com",         // email (아이디)
+	                "김철수",                   // username
+	                "철수",                     // nickname
+	                "/img/dummy/avatar.png",    // profileImg
+	                null                        // gender (더미라 null)
 	        );
+
 	        model.addAttribute("partnerUser", partnerUser);
 
 	        // 채팅방 더미

@@ -1,6 +1,7 @@
 package com.itwillbs.common.exception;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -11,10 +12,30 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class RestGlobalExceptionHandler {
 
     /* =========================
-       잘못된 요청
+       Validation 오류 (@Valid)
+    ========================= */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<Void>> handleValidation(
+            MethodArgumentNotValidException e
+    ) {
+        String message = e.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .findFirst()
+                .map(error -> error.getDefaultMessage())
+                .orElse("입력값을 확인해주세요.");
+
+        log.error("VALIDATION_ERROR", e);
+
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.fail("VALIDATION_ERROR", message));
+    }
+
+    /* =========================
+       잘못된 요청 (비즈니스 규칙)
     ========================= */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(
@@ -44,6 +65,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleException(Exception e) {
         log.error("INTERNAL_SERVER_ERROR", e);
         return ResponseEntity.internalServerError()
-                .body(ApiResponse.fail("INTERNAL_SERVER_ERROR", "처리 중 오류가 발생했습니다."));
+                .body(ApiResponse.fail(
+                        "INTERNAL_SERVER_ERROR",
+                        "처리 중 오류가 발생했습니다."
+                ));
     }
 }
