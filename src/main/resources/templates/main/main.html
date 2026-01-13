@@ -7,11 +7,6 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 		</th:block>
 	
   <div class="main-wrap" layout:fragment="content">
-	
-	<form method="get" action="/" id="recentViewForm">
-	  <input type="hidden" id="recentProductIds" name="recentIds">
-	</form>
-
 
     <!-- ==================================================
          HERO
@@ -37,21 +32,6 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         </div>
       </div>
     </section>
-	
-	<!-- ✅ 최근 본 상품 (여기에!) -->
-	    <section class="section"
-	             th:if="${page.recentView != null and page.recentView.items.size() > 0}">
-	        <div class="section-head">
-	            <h2 class="section-title">최근 본 상품</h2>
-	        </div>
-
-	        <div class="grid grid-products">
-	            <a th:each="item : ${page.recentView.items}"
-	               th:href="@{/product/detail(id=${item.productId})}">
-	                <!-- 기존 상품 카드 마크업 재사용 -->
-	            </a>
-	        </div>
-	    </section>
 
     <!-- AI 추천 -->
 	<section class="section"
@@ -124,12 +104,11 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 
   </div>
   
-
+  <!-- 페이지 전용 JS -->
   <!-- 페이지 전용 JS -->
   <th:block th:fragment="pageJs">
       <script th:src="@{/js/product-like.js}"></script>
       <script th:src="@{/js/main.js}"></script>
-	  <script th:src="@{/js/main/recent-view-main.js}"></script>
   </th:block>
 
 </html>

@@ -1,8 +1,6 @@
 package com.itwillbs.view;
 
 import java.util.List;
-import com.itwillbs.view.SellerInfoVO;
-
 
 public class ProductDetailVO {
 
@@ -20,10 +18,6 @@ public class ProductDetailVO {
     private final String sellerNickname;
     private final String sellerRegion;
     private final String sellerTemperature;
-    
-    /* ===== 판매자 카드 (상세용) ===== */
-    private SellerInfoVO seller;
-
 
     /* ===== 상태 / 통계 ===== */
     private final String conditionLabel;
@@ -97,14 +91,4 @@ public class ProductDetailVO {
     public void setLiked(boolean liked) {
         this.liked = liked;
     }
-    
-    /* ===== Seller 정보 (View 조합용) ===== */
-    public void setSeller(SellerInfoVO seller) {
-        this.seller = seller;
-    }
-
-    public SellerInfoVO getSeller() {
-        return seller;
-    }
-
 }
