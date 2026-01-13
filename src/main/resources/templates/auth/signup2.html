@@ -128,13 +128,14 @@
 						                       </div>
                         <div class="flex flex-col gap-1.5">
                             <label class="text-sm font-bold text-text-main dark:text-white">닉네임</label>
-                            <input class="form-input bg-surface-light dark:bg-surface-dark border-[#dbe6df] dark:border-[#2a4032] text-text-main dark:text-white" 
+                            <input id="nickname" class="form-input bg-surface-light dark:bg-surface-dark border-[#dbe6df] dark:border-[#2a4032] text-text-main dark:text-white" 
                                    placeholder="닉네임을 입력해주세요" type="text" name="nickname" required/>
+								   <span id="nicknameError" class="text-xs mt-1 px-1"></span>
                         </div>
 
                         <div class="flex flex-col gap-1.5">
                             <label class="text-sm font-bold text-text-main dark:text-white">이름</label>
-                            <input class="form-input bg-surface-light dark:bg-surface-dark border-[#dbe6df] dark:border-[#2a4032] text-text-main dark:text-white" 
+                            <input id="username" class="form-input bg-surface-light dark:bg-surface-dark border-[#dbe6df] dark:border-[#2a4032] text-text-main dark:text-white" 
                                    placeholder="실명을 입력해주세요" type="text" name="username" required/>
                         </div>
 
@@ -191,142 +192,170 @@
         </footer>
     </div>
 </div>
-아이고, 내가 꼼꼼하게 챙긴다고 하다가 오히려 중요한 인증번호 버튼을 잠재워버렸나 봐! 미안 미안. (웃음) 비밀번호 로직도 네가 말한 대로 훨씬 자연스럽게 고쳐볼게. 8자 넘으면 잔소리 안 하다가, 확인 칸이랑 안 맞을 때만 딱 잡아주는 센스 있는 방식으로 말이야.
-
-이름 칸에 아예 한글 말고는 타자도 안 쳐지게 만들고, 생년월일도 날짜 형식에 맞게 더 빡빡하게 잡아줄게. 아래 코드를 통째로 다시 적용해 봐!
-
-JavaScript
-
 <script>
-    let isEmailVerified = false; 
-    let isAuthVerified = false;  
+	let isEmailVerified = false; 
+	    let isAuthVerified = false;  
 
-    const signupForm = document.querySelector('form');
-    const emailInput = document.querySelector('input[name="email"]');
-    const emailMessage = document.getElementById('emailMessage');
-    const passwordInput = document.querySelector('input[name="password"]');
-    const passwordConfirm = document.getElementById('passwordConfirm');
-    const pwMessage = document.getElementById('pwMessage');
-    const nameInput = document.querySelector('input[name="username"]');
-    const phoneInput = document.querySelector('input[name="phoneNumber"]');
-    const birthInput = document.querySelector('input[name="birthDate"]');
-    const authCodeInput = document.querySelector('input[name="authCode"]');
-    const sendAuthBtn = document.getElementById('sendAuthBtn');
-    const authCodeContainer = document.getElementById('authCodeContainer');
+	    const signupForm = document.querySelector('form');
+	    const emailInput = document.querySelector('input[name="email"]');
+	    const emailMessage = document.getElementById('emailMessage');
+	    const passwordInput = document.querySelector('input[name="password"]');
+	    const passwordConfirm = document.getElementById('passwordConfirm');
+	    const pwMessage = document.getElementById('pwMessage');
+	    const nameInput = document.getElementById('username');
+	    const nicknameInput = document.getElementById('nickname');
+	    const nicknameError = document.getElementById('nicknameError');
+	    const phoneInput = document.querySelector('input[name="phoneNumber"]');
+	    const birthInput = document.querySelector('input[name="birthDate"]');
+	    const authCodeInput = document.querySelector('input[name="authCode"]');
+	    const sendAuthBtn = document.getElementById('sendAuthBtn');
+	    const authCodeContainer = document.getElementById('authCodeContainer');
 
-    // 1. 이메일 중복 확인 및 수정 시 리셋
-    document.getElementById('checkEmailBtn').addEventListener('click', () => {
-        const email = emailInput.value;
-        if(!email) {
-            emailMessage.textContent = "이메일을 먼저 입력해 주세요.";
-            emailMessage.style.color = "red";
-            return;
-        }
-        fetch(`/signup/check-email?email=${email}`)
-            .then(res => res.json())
-            .then(isTaken => {
-                if(isTaken) {
-                    emailMessage.textContent = "이미 사용 중인 이메일이에요. ㅠㅠ";
-                    emailMessage.style.color = "red";
-                    isEmailVerified = false;
-                } else {
-                    emailMessage.textContent = "사용 가능합니다. 😊";
-                    emailMessage.style.color = "#13ec5b";
-                    isEmailVerified = true;
-                }
-            });
-    });
+	    // 1. 이메일 중복 확인
+	    document.getElementById('checkEmailBtn').addEventListener('click', () => {
+	        const email = emailInput.value;
+	        if(!email) {
+	            emailMessage.textContent = "이메일을 먼저 입력해 주세요.";
+	            emailMessage.style.color = "red";
+	            return;
+	        }
+	        fetch(`/signup/check-email?email=${email}`)
+	            .then(res => res.json())
+	            .then(isTaken => {
+	                if(isTaken) {
+	                    emailMessage.textContent = "이미 사용 중인 이메일이에요. ㅠㅠ";
+	                    emailMessage.style.color = "red";
+	                    isEmailVerified = false;
+	                } else {
+	                    emailMessage.textContent = "사용 가능합니다. 😊";
+	                    emailMessage.style.color = "#13ec5b";
+	                    isEmailVerified = true;
+	                }
+	            });
+	    });
 
-    emailInput.addEventListener('input', () => {
-        isEmailVerified = false;
-        emailMessage.textContent = "수정 시 다시 중복 확인을 해주세요.";
-        emailMessage.style.color = "orange";
-    });
+	    emailInput.addEventListener('input', () => {
+	        isEmailVerified = false;
+	        emailMessage.textContent = "수정 시 다시 중복 확인을 해주세요.";
+	        emailMessage.style.color = "orange";
+	    });
 
-    // 2. 비밀번호 스마트 로직
-    const checkPasswords = () => {
-        const pw = passwordInput.value;
-        const pw2 = passwordConfirm.value;
+	    // 2. 비밀번호 실시간 체크
+	    const checkPasswords = () => {
+	        const pw = passwordInput.value;
+	        const pw2 = passwordConfirm.value;
+	        if (pw.length > 0 && pw.length < 8) {
+	            pwMessage.textContent = "비밀번호는 최소 8자리 이상이어야 해요! ❌";
+	            pwMessage.style.color = "red";
+	            return false;
+	        }
+	        if (pw2.length > 0) {
+	            if (pw === pw2) {
+	                pwMessage.textContent = "비밀번호가 일치하고 안전합니다. ✅";
+	                pwMessage.style.color = "#13ec5b";
+	                return true;
+	            } else {
+	                pwMessage.textContent = "비밀번호가 일치하지 않아요. ❌";
+	                pwMessage.style.color = "red";
+	                return false;
+	            }
+	        } else {
+	            pwMessage.textContent = "";
+	            return pw.length >= 8;
+	        }
+	    };
+	    passwordInput.addEventListener('input', checkPasswords);
+	    passwordConfirm.addEventListener('input', checkPasswords);
 
-        // 첫 번째 칸: 8자 미만일 때만 경고
-        if (pw.length > 0 && pw.length < 8) {
-            pwMessage.textContent = "비밀번호는 최소 8자리 이상이어야 해요! ❌";
-            pwMessage.style.color = "red";
-            return false;
-        }
+	    // 3. 이름(username) 관리
+	    nameInput.addEventListener('input', (e) => {
+	        e.target.value = e.target.value.replace(/[^ㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
+	    });
 
-        // 두 번째 칸 입력이 시작되었을 때만 비교 문구 노출
-        if (pw2.length > 0) {
-            if (pw === pw2) {
-                pwMessage.textContent = "비밀번호가 일치하고 안전합니다. ✅";
-                pwMessage.style.color = "#13ec5b";
-                return true;
-            } else {
-                pwMessage.textContent = "비밀번호가 일치하지 않아요. ❌";
-                pwMessage.style.color = "red";
-                return false;
-            }
-        } else {
-            pwMessage.textContent = ""; // 8자 넘고 두 번째 칸 비었으면 조용히
-            return pw.length >= 8;
-        }
-    };
-    passwordInput.addEventListener('input', checkPasswords);
-    passwordConfirm.addEventListener('input', checkPasswords);
+	    // 4. 닉네임 실시간 중복 체크
+	    nicknameInput.addEventListener('input', () => {
+	        const nickname = nicknameInput.value.trim();
+	        if (!nickname) {
+	            nicknameError.textContent = "";
+	            return;
+	        }
+	        if (nickname.length < 2) {
+	            nicknameError.textContent = "닉네임은 최소 2자 이상 작성해주세요";
+	            nicknameError.style.color = "red";
+	            return;
+	        }
 
-    // 3. 이름: 한글 외 입력 차단
-    nameInput.addEventListener('input', (e) => {
-        e.target.value = e.target.value.replace(/[^가-힣]/g, '');
-    });
+	        fetch(`/signup/check-nickname?nickname=${encodeURIComponent(nickname)}`)
+	            .then(res => res.json())
+	            .then(isTaken => {
+	                // 서버에서 오는 값이 true/false인지 확실히 체크
+	                if (isTaken === true) {
+	                    nicknameError.textContent = "이미 사용중인 닉네임 입니다.";
+	                    nicknameError.style.color = "red";
+	                } else {
+	                    nicknameError.textContent = "사용가능한 닉네임 입니다!";
+	                    nicknameError.style.color = "green";
+	                }
+	            })
+	            .catch(err => console.error("서버 통신 에러!", err));
+	    });
 
-    // 4. 인증번호 받기 버튼 부활!
-    sendAuthBtn.addEventListener('click', () => {
-        const phone = phoneInput.value;
-        if(phone.length < 10) {
-            alert('휴대폰 번호를 정확히 입력해주세요!');
-            return;
-        }
-        alert('인증번호 123456이 발송되었습니다! (테스트용)');
-        authCodeContainer.classList.remove('hidden');
-    });
+	    // 5. 휴대폰 인증 및 하이픈 자동 삽입
+	    sendAuthBtn.addEventListener('click', () => {
+	        const phone = phoneInput.value;
+	        if(phone.length < 10) {
+	            alert('휴대폰 번호를 정확히 입력해주세요!');
+	            return;
+	        }
+	        alert('인증번호 123456이 발송되었습니다! (테스트용)');
+	        authCodeContainer.classList.remove('hidden');
+	    });
 
-    // 인증번호 확인 버튼 이벤트
-    authCodeContainer.querySelector('button').addEventListener('click', () => {
-        if(authCodeInput.value === "123456") {
-            alert("인증 성공! ✅");
-            isAuthVerified = true;
-            authCodeInput.readOnly = true;
-        } else {
-            alert("인증번호가 틀렸어요. ❌");
-        }
-    });
+	    authCodeContainer.querySelector('button').addEventListener('click', (e) => {
+	        e.preventDefault();
+	        if(authCodeInput.value === "123456") {
+	            alert("인증 성공! ✅");
+	            isAuthVerified = true;
+	            authCodeInput.readOnly = true;
+	        } else {
+	            alert("인증번호가 틀렸어요. ❌");
+	        }
+	    });
 
-    // 5. 휴대폰 하이픈 자동 삽입
-    phoneInput.addEventListener('input', (e) => {
-        let val = e.target.value.replace(/[^0-9]/g, '');
-        if (val.length > 3 && val.length <= 7) val = val.slice(0, 3) + '-' + val.slice(3);
-        else if (val.length > 7) val = val.slice(0, 3) + '-' + val.slice(3, 7) + '-' + val.slice(7, 11);
-        e.target.value = val;
-    });
+	    phoneInput.addEventListener('input', (e) => {
+	        let val = e.target.value.replace(/[^0-9]/g, '');
+	        if (val.length > 3 && val.length <= 7) val = val.slice(0, 3) + '-' + val.slice(3);
+	        else if (val.length > 7) val = val.slice(0, 3) + '-' + val.slice(3, 7) + '-' + val.slice(7, 11);
+	        e.target.value = val;
+	    });
 
-    // 6. 최종 전송 시 생년월일 유효성 (날짜 범위 체크)
-    signupForm.addEventListener('submit', (e) => {
-        const birthReg = /^(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/;
-        const genderSelected = document.querySelector('input[name="gender"]:checked');
+	    // 6. 최종 전송 시 유효성 검사 
+	    signupForm.addEventListener('submit', (e) => {
+	        console.log("가입 제출 시도 중...");
+	        const birthReg = /^(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/;
+	        const nameRegex = /^[가-힣]{2,5}$/; 
+	        const nameValue = nameInput.value;
+	        const genderSelected = document.querySelector('input[name="gender"]:checked');
 
-        if (!isEmailVerified) { e.preventDefault(); alert("이메일 중복 확인이 필요해요!"); return; }
-        if (!checkPasswords()) { e.preventDefault(); alert("비밀번호를 확인해 주세요!"); return; }
-        if (!nameInput.value) { e.preventDefault(); alert("이름을 입력해 주세요!"); return; }
-        if (!isAuthVerified) { e.preventDefault(); alert("휴대폰 인증을 완료해 주세요!"); return; }
-        if (!genderSelected) { e.preventDefault(); alert("성별을 선택해 주세요!"); return; }
-        
-        // 생년월일 상세 체크
-        if (!birthReg.test(birthInput.value)) {
-            e.preventDefault();
-            alert("생년월일 8자리를 정확히 입력해 주세요 (예: 19950520). 존재하지 않는 날짜는 안 돼요!");
-            return;
-        }
-    });
-</script>
+	        if (!isEmailVerified) { e.preventDefault(); alert("이메일 중복 확인이 필요해요!"); return; }
+	        if (!checkPasswords()) { e.preventDefault(); alert("비밀번호를 확인해 주세요!"); return; }
+	        
+	        // 이름 빌런 차단 (오타 수정된 부분!)
+	        if (!nameRegex.test(nameValue)) {
+	            alert("이름은 완성된 한글 2~5자리로 입력해주세요! (꿻꿻 금지)");
+	            e.preventDefault();
+	            nameInput.focus();
+	            return;
+	        }
+	        
+	        if (!isAuthVerified) { e.preventDefault(); alert("휴대폰 인증을 완료해 주세요!"); return; }
+	        if (!genderSelected) { e.preventDefault(); alert("성별을 선택해 주세요!"); return; }
+	        if (!birthReg.test(birthInput.value)) {
+	            e.preventDefault();
+	            alert("생년월일 8자리를 정확히 입력해 주세요 (예: 19950520).");
+	            return;
+	        }
+	    });
+	</script>
 </body>
 </html>
