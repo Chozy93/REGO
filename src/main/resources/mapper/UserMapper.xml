@@ -27,7 +27,7 @@
     ) VALUES (
         #{username}, 
         #{password},   #{nickname}, 
-        'ROLE_USER', 
+        'USER', 
         #{email}, 
         'ACTIVE', 
         #{phoneNumber}, 
@@ -36,10 +36,20 @@
     )
 </insert>
 
+<update id="updatePhoneNumber">
+    UPDATE users 
+    SET phone_number = #{phoneNumber} 
+    WHERE email = #{username}
+</update>
+
 <select id="findUserByEmail" resultType="map">
     SELECT user_id AS userId FROM users WHERE email = #{email}
 </select>
 
+<select id="selectUserById" resultType="com.itwillbs.entity.User">
+    SELECT * FROM users 
+    WHERE user_id = #{userId}
+</select>
 
 <insert id="insertSocialAccount">
     INSERT INTO social_accounts (

@@ -2,6 +2,7 @@ package com.itwillbs.service;
 
 import com.itwillbs.domain.user.UserSignupConditionVO;
 import com.itwillbs.entity.User;
+import com.itwillbs.mapper.UserMapper;
 import com.itwillbs.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder; // ✅ 추가
+    private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
     /**
      * 회원 가입
      */
@@ -71,4 +73,17 @@ public class UserService {
         // 닉네임으로 유저를 찾아서 있으면 true, 없으면 false!
         return userRepository.existsByNickname(nickname);
     }
-}
+
+    public User findByEmail(String email) {
+
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username).orElse(null);
+	}
+
+	public void updatePhoneNumber(String username, String newPhone) {
+	    userMapper.updatePhoneNumber(username, newPhone);
+	}
+    }
