@@ -1,7 +1,9 @@
 package com.itwillbs.service;
 
 import com.itwillbs.dto.SocialAccountDTO;
+import com.itwillbs.entity.User;
 import com.itwillbs.mapper.UserMapper;
+import com.itwillbs.security.CustomUserDetails;
 
 import groovy.lang.Lazy;
 
@@ -39,13 +41,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // 1. 먼저 이 소셜 계정 자체가 등록되어 있는지 확인
         SocialAccountDTO existingAccount = userMapper.findSocialAccount(provider.toUpperCase(), finalProviderId);
-
+        long targetUserId;
         if (existingAccount == null) {
             // 2. 소셜 계정은 없지만, 이메일이 같은 기존 유저가 있는지 확인
             String email = extractEmail(provider, attributes, finalProviderId);
             Map<String, Object> existingUser = userMapper.findUserByEmail(email);
             
-            long targetUserId;
+
 
             if (existingUser != null) {
                 // [케이스 A] 이미 가입된 이메일이 있음 -> 이 유저 ID를 그대로 사용!
@@ -85,10 +87,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userMapper.insertSocialAccount(newAccount);
             System.out.println("소셜 계정 연결 완료!");     
         } else {
+            targetUserId = Long.parseLong(existingAccount.getUserId());
             System.out.println("기존 소셜 계정 로그인 성공: " + finalProviderId);
         }
-        
-        return oAuth2User;
+        User userEntity = userMapper.selectUserById(targetUserId);
+        return new CustomUserDetails(userEntity, attributes);
     }
 
     // 소셜 아이디 추출 헬퍼 메서드
