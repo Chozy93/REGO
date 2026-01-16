@@ -46,10 +46,29 @@
     SELECT user_id AS userId FROM users WHERE email = #{email}
 </select>
 
+<select id="findEmailByPhoneNumber" resultType="string">
+    SELECT email 
+    FROM users 
+    WHERE REPLACE(phone_number, '-', '') = #{phoneNumber}
+</select>
+
 <select id="selectUserById" resultType="com.itwillbs.entity.User">
     SELECT * FROM users 
     WHERE user_id = #{userId}
 </select>
+
+<select id="countByEmailAndPhone" resultType="int">
+    SELECT COUNT(*) 
+    FROM users 
+    WHERE email = #{email} 
+      AND REPLACE(phone_number, '-', '') = #{phoneNumber}
+</select>
+
+<update id="updateUserPassword">
+    UPDATE users 
+    SET password = #{password} 
+    WHERE email = #{email}
+</update>
 
 <insert id="insertSocialAccount">
     INSERT INTO social_accounts (

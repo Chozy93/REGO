@@ -6,6 +6,7 @@ import com.itwillbs.mapper.UserMapper;
 import com.itwillbs.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,5 +86,13 @@ public class UserService {
 
 	public void updatePhoneNumber(String username, String newPhone) {
 	    userMapper.updatePhoneNumber(username, newPhone);
+	}
+
+	public boolean checkUserEmailAndPhone(String email, String phoneNumber) {
+	    return userMapper.countByEmailAndPhone(email, phoneNumber) > 0;
+	}
+
+	public void updateUserPassword(String email, String newPassword) {
+	    userMapper.updateUserPassword(email, newPassword);
 	}
     }

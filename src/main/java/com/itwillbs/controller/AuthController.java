@@ -1,10 +1,13 @@
 package com.itwillbs.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.domain.user.UserSignupConditionVO;
 import com.itwillbs.entity.User;
+import com.itwillbs.mapper.UserMapper;
 import com.itwillbs.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -26,9 +30,55 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
-
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
 	private final UserService userService;
+	private final UserMapper userMapper;
+	private String getPhoneNumber(String impUid) {
+	    try {
+	        org.springframework.web.client.RestTemplate restTemplate = new org.springframework.web.client.RestTemplate();
 
+	        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+	        headers.set("Authorization", "PortOne " + "im4tZ60IROAfT8VcCioqXCBCElABYFoYidxxVBcYPsRbjZPYCThD79J20OOEn7Iy05W0zzisYfPi2ewz");
+	        headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON); // 이것도 추가!
+
+	        org.springframework.http.HttpEntity<String> entity = new org.springframework.http.HttpEntity<>(headers);
+	        
+	        String url = "https://api.portone.io/identity-verifications/" + impUid;
+	        System.out.println("!!!!!! 1. 요청 직전");
+	        
+	        org.springframework.http.ResponseEntity<Map> response = restTemplate.exchange(url, org.springframework.http.HttpMethod.GET, entity, Map.class);
+	        System.out.println("🚩🚩🚩 2. 응답 받음!! 결과: " + response.getStatusCode());
+
+	        Map<String, Object> body = response.getBody();
+
+	        System.out.println("🚩🚩🚩 포트원 전체 응답 내용: " + body);
+
+	        if (body != null && body.containsKey("verifiedCustomer")) {
+	            Map<String, Object> customer = (Map<String, Object>) body.get("verifiedCustomer");
+	            if (customer != null && customer.containsKey("phoneNumber")) {
+	                String phone = (String) customer.get("phoneNumber");
+	                System.out.println("🚩🚩🚩 찾은 번호: " + phone);
+	                return phone;
+	            }
+	        }
+	        System.out.println("🚩🚩🚩 번호를 찾지 못함 (구조 확인 필요)");
+	        return null;
+
+	    } catch (org.springframework.web.client.HttpStatusCodeException e) {
+	        System.err.println("❌ API 에러 터짐: " + e.getRawStatusCode());
+	        System.err.println("❌ 에러 본문: " + e.getResponseBodyAsString());
+	        return null;
+	    } catch (Exception e) {
+	        System.err.println("❌ 일반 에러 터짐: " + e.getClass().getName());
+	        e.printStackTrace();
+	        return null;
+	    }
+	}
+	    
+	
+	
 	// 로그인 페이지
 	@GetMapping("/login")
 	public String loginPage() {
@@ -41,12 +91,86 @@ public class AuthController {
 		return "auth/id_find1";
 	}
 
+	// 아이디 찾기 처리 (본인인증 후 호출될 주소)
+	@PostMapping("/login/find_id_process")
+    @ResponseBody
+    public ResponseEntity<?> findIdProcess(@RequestBody Map<String, String> payload) {
+        String imp_uid = payload.get("imp_uid");
+        
+        String phoneNumber = getPhoneNumber(imp_uid); 
+        
+        if (phoneNumber == null) {
+            return ResponseEntity.ok(Map.of("success", false, "message", "인증 실패"));
+        }
+        
+        String foundEmail = userMapper.findEmailByPhoneNumber(phoneNumber);
+        System.out.println("🚩🚩🚩 포트원에서 받아온 번호: " + phoneNumber);
+        if (foundEmail != null) {
+            return ResponseEntity.ok(Map.of("success", true, "email", foundEmail));
+        } else {
+            return ResponseEntity.ok(Map.of("success", false, "message", "가입된 이메일이 없어요."));
+        }
+    }
+
 	// 비밀번호 찾기 1단계
 	@GetMapping("/login/pass_find1")
 	public String passFind1() {
 		return "auth/pass_find1";
 	}
 
+	@PostMapping("/login/verify_user_for_pw")
+	@ResponseBody
+	public Map<String, Object> verifyUserForPw(@RequestBody Map<String, String> request) {
+	    String impUid = request.get("imp_uid");
+	    String email = request.get("email");
+	    
+	    Map<String, Object> response = new HashMap<>();
+	    
+	    // 1. 포트원에서 전화번호 가져오기 
+	    String phoneNumber = getPhoneNumber(impUid);
+	    
+	    if (phoneNumber != null) {
+	        // 2. DB에서 이메일과 전화번호가 일치하는 유저가 있는지 확인
+	        boolean isMatch = userService.checkUserEmailAndPhone(email, phoneNumber);
+	        
+	        if (isMatch) {
+	            response.put("success", true);
+	        } else {
+	            response.put("success", false);
+	            response.put("message", "입력하신 이메일과 본인인증 정보가 일치하지 않습니다.");
+	        }
+	    } else {
+	        response.put("success", false);
+	        response.put("message", "본인인증에 실패했습니다.");
+	    }
+	    
+	    return response;
+	}	
+	
+	@PostMapping("/login/update_password")
+	@ResponseBody
+	public Map<String, Object> updatePassword(@RequestBody Map<String, String> request) {
+	    String email = request.get("email");
+	    String newPassword = request.get("newPassword");
+	    
+	    Map<String, Object> response = new HashMap<>();
+	    
+	    try {
+
+	        String encodedPassword = passwordEncoder.encode(newPassword);
+	        
+	        userService.updateUserPassword(email, encodedPassword);
+	        
+	        response.put("success", true);
+	    } catch (Exception e) {
+	        response.put("success", false);
+	        response.put("message", "비밀번호 변경 중 오류가 발생했습니다.");
+	    }
+	    
+	    return response;
+	}
+	
+	
 	// 1단계 화면 (약관동의)
 	@GetMapping("/signup/step1")
 	public String signupStep1() {
