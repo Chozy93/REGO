@@ -1,0 +1,188 @@
+/* 전체 레이아웃 */
+.admin-settings-page {
+    display: flex;
+    min-height: calc(100vh - 80px);
+}
+
+/* 사이드바 */
+.admin-settings-sidebar {
+    width: 220px;
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-border);
+    padding: var(--space-24);
+}
+
+.admin-sidebar-profile {
+    display: flex;
+    gap: var(--space-12);
+    align-items: center;
+    margin-bottom: var(--space-32);
+}
+
+.admin-profile-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-3);
+}
+
+.admin-profile-info strong {
+    font-size: var(--fs-14);
+}
+
+.admin-profile-info span {
+    font-size: var(--fs-12);
+    color: var(--color-text-muted);
+}
+
+/* 메뉴 */
+.admin-sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+}
+
+.admin-sidebar-item {
+    padding: var(--space-12) var(--space-16);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+}
+
+.admin-sidebar-item.is-active {
+    background: var(--color-primary-soft);
+    color: var(--color-text);
+    font-weight: var(--fw-semibold);
+}
+
+/* 컨텐츠 */
+.admin-settings-content {
+    flex: 1;
+    padding: var(--space-40);
+}
+
+.admin-settings-title {
+    font-size: var(--fs-24);
+    font-weight: var(--fw-bold);
+    margin-bottom: var(--space-24);
+}
+
+/* 카드 */
+.admin-settings-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-32);
+    max-width: 900px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* 설정 블록 */
+.setting-block {
+    margin-bottom: var(--space-32);
+}
+
+.setting-label {
+    font-size: var(--fs-13);
+    font-weight: var(--fw-semibold);
+    margin-bottom: var(--space-6);
+}
+
+.setting-desc {
+    font-size: var(--fs-12);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-12);
+}
+
+/* 입력 */
+.setting-input,
+.setting-select {
+    width: 100%;
+    padding: var(--space-12) var(--space-14);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-2);
+}
+
+.setting-readonly {
+    padding: var(--space-12) var(--space-14);
+    background: var(--color-surface-3);
+    border-radius: var(--radius-md);
+    font-size: var(--fs-13);
+}
+
+/* 로고 업로드 */
+.logo-upload {
+    display: flex;
+    gap: var(--space-24);
+}
+
+.logo-preview {
+    width: 140px;
+    height: 60px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-preview img {
+    max-height: 40px;
+}
+
+.logo-file-box {
+    display: flex;
+    align-items: center;
+    gap: var(--space-12);
+    background: var(--color-surface-2);
+    padding: var(--space-10) var(--space-14);
+    border-radius: var(--radius-md);
+}
+
+.btn-file {
+    font-size: var(--fs-12);
+    font-weight: var(--fw-semibold);
+}
+
+.logo-guide {
+    margin: var(--space-6) 0 0;
+    padding-left: var(--space-16);
+    font-size: var(--fs-12);
+}
+
+.logo-guide .is-ok {
+    color: var(--color-success);
+}
+
+.logo-remove {
+    margin-top: var(--space-6);
+    font-size: var(--fs-12);
+    color: var(--color-danger);
+}
+
+/* 그리드 */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-24);
+}
+
+/* 하단 버튼 */
+.settings-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-12);
+    margin-top: var(--space-40);
+}
+
+.btn-cancel {
+    padding: var(--space-12) var(--space-20);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-2);
+}
+
+.btn-save {
+    padding: var(--space-12) var(--space-24);
+    border-radius: var(--radius-md);
+    background: var(--color-primary);
+    font-weight: var(--fw-semibold);
+}

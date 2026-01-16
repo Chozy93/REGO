@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+    <link rel="stylesheet" href="/css/admin/notices.css">
+	<link rel="stylesheet" href="/css/admin/admin-sidebar.css">
+</th:block>
+
+<div layout:fragment="content" class="admin-page">
+
+    <!-- 좌측 사이드바는 base.html 또는 fragment에서 이미 처리된 상태 -->
+	
+	<th:block th:replace="fragments/admin-sidebar :: admin-sidebar('notices')"></th:block>
+
+
+    <section class="admin-content">
+
+        <!-- 페이지 헤더 -->
+		<div class="admin-head between">
+
+		    <div>
+		        <h1 class="admin-title">공지사항 관리</h1>
+		        <p class="admin-desc">서비스에 노출되는 공지사항을 관리합니다.</p>
+		    </div>
+
+		    <div class="admin-head-right">
+		        <div class="admin-summary">
+		            <div class="summary-card">
+		                <span class="summary-label">전체</span>
+		                <strong class="summary-value">120</strong>
+		            </div>
+		            <div class="summary-card">
+		                <span class="summary-label">노출중</span>
+		                <strong class="summary-value">98</strong>
+		            </div>
+		            <div class="summary-card">
+		                <span class="summary-label">비노출</span>
+		                <strong class="summary-value">22</strong>
+		            </div>
+		        </div>
+
+		        <a href="/admin/notice/write" class="btn btn-primary">
+		            + 공지 등록
+		        </a>
+		    </div>
+
+		</div>
+
+        <!-- 검색 영역 -->
+        <div class="admin-filter between">
+            <div class="filter-left">
+                <select class="filter-select">
+                    <option>전체 상태</option>
+                    <option>노출중</option>
+                    <option>비노출</option>
+                </select>
+
+                <input type="text"
+                       class="filter-input"
+                       placeholder="제목 또는 내용 검색">
+            </div>
+
+            <button class="btn btn-primary">검색</button>
+        </div>
+
+        <!-- 리스트 테이블 -->
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th style="width:60px;">번호</th>
+                    <th>제목</th>
+                    <th style="width:120px;">상태</th>
+                    <th style="width:160px;">등록일</th>
+                    <th style="width:120px;">관리</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>120</td>
+                    <td class="table-title">
+                        서비스 점검 안내 (1/15)
+                    </td>
+                    <td>
+                        <span class="badge badge-primary">노출중</span>
+                    </td>
+                    <td>2026-01-10</td>
+                    <td>
+                        <a href="#" class="table-link">수정</a>
+                        <a href="#" class="table-link danger">삭제</a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>119</td>
+                    <td class="table-title">
+                        개인정보 처리방침 개정 안내
+                    </td>
+                    <td>
+                        <span class="badge">비노출</span>
+                    </td>
+                    <td>2026-01-05</td>
+                    <td>
+                        <a href="#" class="table-link">수정</a>
+                        <a href="#" class="table-link danger">삭제</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 페이지네이션 -->
+		<div class="admin-pagination">
+		  <div class="admin-page-buttons">
+		    <button class="admin-page-btn">Previous</button>
+		    <button class="admin-page-btn is-active">1</button>
+		    <button class="admin-page-btn">2</button>
+		    <button class="admin-page-btn">3</button>
+		    <button class="admin-page-btn">Next</button>
+		  </div>
+		</div>
+    </section>
+
+</div>
+
+</html>

@@ -242,3 +242,16 @@
   color: var(--color-danger);
 }
 
+.admin-page-btn {
+  padding: var(--space-8) var(--space-12);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-pagination {
+    display: flex;
+	justify-content: flex-end; /* 오른쪽 정렬 */
+    align-items: center;
+    margin-top: var(--space-24);
+}

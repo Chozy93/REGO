@@ -5,7 +5,7 @@
       layout:decorate="~{layout/base}">
 
 <th:block th:fragment="pageCss">
-  <link rel="stylesheet" href="/css/admin/trade.css" />
+  <link rel="stylesheet" href="/css/admin/trades.css" />
   <link rel="stylesheet" href="/css/admin/admin-sidebar.css">
 
   
@@ -93,13 +93,15 @@
       </table>
     </div>
 
-    <!-- 페이지네이션 -->
-    <div class="admin-pagination">
-      <button class="page-btn">Prev</button>
-      <button class="page-btn is-active">1</button>
-      <button class="page-btn">2</button>
-      <button class="page-btn">Next</button>
-    </div>
+	<div class="admin-pagination">
+	  <div class="admin-page-buttons">
+	    <button class="admin-page-btn">Previous</button>
+	    <button class="admin-page-btn is-active">1</button>
+	    <button class="admin-page-btn">2</button>
+	    <button class="admin-page-btn">3</button>
+	    <button class="admin-page-btn">Next</button>
+	  </div>
+	</div>
   </section>
 </div>
 

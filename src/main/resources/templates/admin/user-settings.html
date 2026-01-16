@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{layout/base}">
+
+
+<th:block th:fragment="pageCss">
+<link rel="stylesheet" href="/css/admin/user-settings.css">
+<link rel="stylesheet" href="/css/admin/admin-sidebar.css">
+</th:block>
+
+
+<div layout:fragment="content" class="admin-page">
+
+
+<th:block th:replace="fragments/admin-sidebar :: admin-sidebar('settings')"></th:block>
+
+
+<main class="admin-main">
+<h1 class="admin-main-title">회원 설정</h1>
+
+
+<div class="toggle-row">
+<span>회원 가입 허용</span>
+<input type="checkbox" checked>
+</div>
+
+
+<div class="toggle-row">
+<span>이메일 인증 필수</span>
+<input type="checkbox" checked>
+</div>
+
+
+<button class="btn btn-primary">저장</button>
+</main>
+</div>
+</html>

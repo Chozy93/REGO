@@ -1,0 +1,170 @@
+.admin-page {
+    display: flex;
+    gap: var(--space-32);
+	margin-right: var(--space-24);
+	margin-top: var(--space-24);
+	}
+
+.admin-content {
+    flex: 1;
+}
+
+/* 헤더 */
+.admin-head {
+    margin-bottom: var(--space-32);
+}
+
+.admin-title {
+    font-size: var(--fs-24);
+    font-weight: var(--fw-bold);
+}
+
+.admin-desc {
+    margin-top: var(--space-8);
+    color: var(--color-text-muted);
+}
+
+/* 요약 카드 */
+.admin-summary {
+    display: flex;
+    gap: var(--space-16);
+    margin-bottom: var(--space-32);
+}
+
+
+
+.summary-label {
+    display: block;
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
+}
+
+.summary-value {
+    font-size: var(--fs-24);
+    font-weight: var(--fw-bold);
+}
+
+/* 검색 */
+.admin-filter {
+    margin-bottom: var(--space-20);
+}
+
+.filter-left {
+    display: flex;
+    gap: var(--space-12);
+}
+
+.filter-select,
+.filter-input {
+    padding: var(--space-12) var(--space-14);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+}
+
+/* 테이블 */
+.admin-table-wrap {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table thead {
+    background: var(--color-surface-2);
+}
+
+.admin-table th,
+.admin-table td {
+    padding: var(--space-14);
+    font-size: var(--fs-14);
+    border-bottom: 1px solid var(--color-divider);
+    text-align: left;
+}
+
+.table-title {
+    font-weight: var(--fw-medium);
+}
+
+.table-link {
+    margin-right: var(--space-8);
+    font-size: var(--fs-13);
+    color: var(--color-text-muted);
+}
+
+.table-link:hover {
+    color: var(--color-primary);
+}
+
+.table-link.danger {
+    color: var(--color-danger);
+}
+
+/* 페이지네이션 */
+.admin-pagination {
+    margin-top: var(--space-24);
+    display: flex;
+    justify-content: center;
+    gap: var(--space-8);
+}
+
+.page-btn {
+    padding: var(--space-8) var(--space-12);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-2);
+    font-size: var(--fs-13);
+}
+
+.page-btn.is-active {
+    background: var(--color-primary);
+    font-weight: var(--fw-semibold);
+}
+
+.admin-head-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-16);
+}
+.admin-head-right .summary-card {
+	min-width: 140px;
+	padding: var(--space-16) var(--space-20);
+	background: var(--color-surface);
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-sm);
+	display: flex;
+	flex-direction: column;
+}
+
+
+/* 우측 상단 요약 카드 정렬 */
+.admin-summary {
+    display: flex;
+    gap: var(--space-12);
+    margin-bottom: 0; /* 기존 하단 여백 제거 */
+}
+
+/* 카드 높이 버튼과 시각적으로 맞춤 */
+.summary-card {
+    padding: var(--space-12) var(--space-16);
+    min-width: 100px;
+}
+
+.admin-page-btn {
+  padding: var(--space-8) var(--space-12);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-pagination {
+    display: flex;
+	justify-content: flex-end; /* 오른쪽 정렬 */
+    align-items: center;
+    margin-top: var(--space-24);
+}
+

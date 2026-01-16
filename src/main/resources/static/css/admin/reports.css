@@ -1,0 +1,174 @@
+.admin-page {
+    display: flex;
+	gap: var(--space-32);
+	margin-right: var(--space-24);
+	margin-top: var(--space-24);
+}
+
+.admin-content {
+    flex: 1;
+}
+
+/* 헤더 */
+.admin-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.admin-title {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.admin-desc {
+    margin-top: 8px;
+    color: #888;
+}
+
+/* 우측 요약 카드 */
+.admin-head-right {
+    flex-shrink: 0;
+}
+
+.admin-summary {
+    display: flex;
+    gap: 12px;
+}
+
+.summary-card {
+    min-width: 140px;
+    padding: 16px 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+}
+
+.summary-label {
+    font-size: 13px;
+    color: #999;
+}
+
+.summary-value {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+/* 필터 */
+.admin-filter {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.filter-left {
+    display: flex;
+    gap: 12px;
+}
+
+.filter-select,
+.filter-input {
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+}
+
+/* 테이블 카드 */
+.admin-table-wrap {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 14px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    text-align: left;
+}
+
+thead {
+    background: #f8f8f8;
+}
+
+.report-title {
+    font-weight: 600;
+}
+
+.report-desc {
+    margin-top: 4px;
+    font-size: 13px;
+    color: #777;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    background: #eee;
+}
+
+.badge-primary {
+    background: #e8f0ff;
+    color: #2f5cff;
+}
+
+.table-link {
+    font-size: 13px;
+    color: #666;
+    text-decoration: none;
+}
+
+.table-link:hover {
+    color: #2f5cff;
+}
+
+/* 페이지네이션 */
+.admin-pagination {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.page-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--space-8);
+	padding: var(--space-12) var(--space-20);
+	border-radius: var(--radius-md);
+	font-size: var(--fs-14);
+	font-weight: var(--fw-semibold);
+	transition: background-color var(--duration-normal) var(--ease-out), color var(--duration-normal) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+}
+
+.page-btn.is-active {
+	background-color: var(--color-primary);
+	color: var(--color-text);
+}
+
+
+.admin-page-btn {
+  padding: var(--space-8) var(--space-12);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-pagination {
+    display: flex;
+	justify-content: flex-end; /* 오른쪽 정렬 */
+    align-items: center;
+    margin-top: var(--space-24);
+}

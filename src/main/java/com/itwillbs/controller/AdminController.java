@@ -63,5 +63,29 @@ public class AdminController {
         model.addAttribute("activeMenu", "settings");
         return "admin/settings";
     }
+    @GetMapping("/normal-settings")
+    public String normalSettings() {
+        return "admin/normal-settings";
+    }
+
+    /**
+     * 회원 설정
+     * URL: /admin/settings/user-settings
+     * VIEW: user-settings.html
+     */
+    @GetMapping("/user-settings")
+    public String userSettings() {
+        return "admin/user-settings";
+    }
+
+    /**
+     * 상품 설정
+     * URL: /admin/settings/product-settings
+     * VIEW: product-settings.html
+     */
+    @GetMapping("/product-settings")
+    public String productSettings() {
+        return "admin/product-settings";
+    }
 }
 

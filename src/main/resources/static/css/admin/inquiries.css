@@ -46,7 +46,6 @@
 /* 요약 카드 */
 .summary-card {
   min-width: 140px;
-  height: 96px;
 
   padding: var(--space-16) var(--space-20);
   background: var(--color-surface);
@@ -198,3 +197,18 @@
 .page-btn.is-active {
   background: var(--color-primary-soft);
 }
+
+.admin-page-btn {
+  padding: var(--space-8) var(--space-12);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-pagination {
+    display: flex;
+	justify-content: flex-end; /* 오른쪽 정렬 */
+    align-items: center;
+    margin-top: var(--space-24);
+}
+
