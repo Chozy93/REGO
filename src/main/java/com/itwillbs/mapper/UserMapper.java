@@ -22,5 +22,8 @@ public interface UserMapper {
     void updatePhoneNumber(@Param("username") String username, @Param("phoneNumber") String phoneNumber);
 
     User selectUserById(long userId);
+    String findEmailByPhoneNumber(String phoneNumber);
+    int countByEmailAndPhone(@Param("email") String email, @Param("phoneNumber") String phoneNumber);
+    void updateUserPassword(@Param("email") String email, @Param("password") String password);
 
 }
