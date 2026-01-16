@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itwillbs.mapper.UserMapper">
+
+    <select id="findSocialAccount" resultType="com.itwillbs.dto.SocialAccountDTO">
+        SELECT 
+            social_id AS socialId, 
+            connected_at AS connectedAt, 
+            provider, 
+            provider_id AS providerId, 
+            user_id AS userId
+        FROM social_accounts 
+        WHERE provider = #{provider} AND provider_id = #{providerId}
+    </select>
+
+<insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
+    INSERT INTO users (
+        username, 
+        password,   nickname, 
+        role, 
+        email, 
+        user_status, 
+        phone_number, 
+        profile_img, 
+        created_at
+    ) VALUES (
+        #{username}, 
+        #{password},   #{nickname}, 
+        'USER', 
+        #{email}, 
+        'ACTIVE', 
+        #{phoneNumber}, 
+        'default.png', 
+        NOW()
+    )
+</insert>
+
+<update id="updatePhoneNumber">
+    UPDATE users 
+    SET phone_number = #{phoneNumber} 
+    WHERE email = #{username}
+</update>
+
+<select id="findUserByEmail" resultType="map">
+    SELECT user_id AS userId FROM users WHERE email = #{email}
+</select>
+
+<select id="findEmailByPhoneNumber" resultType="string">
+    SELECT email 
+    FROM users 
+    WHERE REPLACE(phone_number, '-', '') = #{phoneNumber}
+</select>
+
+<select id="selectUserById" resultType="com.itwillbs.entity.User">
+    SELECT * FROM users 
+    WHERE user_id = #{userId}
+</select>
+
+<select id="countByEmailAndPhone" resultType="int">
+    SELECT COUNT(*) 
+    FROM users 
+    WHERE email = #{email} 
+      AND REPLACE(phone_number, '-', '') = #{phoneNumber}
+</select>
+
+<update id="updateUserPassword">
+    UPDATE users 
+    SET password = #{password} 
+    WHERE email = #{email}
+</update>
+
+<insert id="insertSocialAccount">
+    INSERT INTO social_accounts (
+        social_id, connected_at, provider, provider_id, user_id
+    )
+    VALUES (
+        #{socialId}, NOW(), #{provider}, #{providerId}, #{userId}
+    )
+</insert>
+
+</mapper>

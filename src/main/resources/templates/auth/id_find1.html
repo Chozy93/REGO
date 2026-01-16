@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>아이디 찾기 - 중고장터</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+                        "body": ["Noto Sans KR", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111813] antialiased">
+<div class="relative flex min-h-screen w-full flex-col overflow-hidden">
+<main class="flex flex-1 items-center justify-center p-4">
+<div class="layout-content-container flex w-full max-w-[480px] flex-col">
+<div class="flex flex-col gap-6 rounded-xl bg-white p-6 shadow-sm ring-1 ring-[#e6ebe8] sm:p-10">
+<div class="flex items-center gap-2">
+<button class="flex items-center justify-center p-1 -ml-2 rounded-full hover:bg-gray-100 text-[#111813] transition-colors" onclick="history.back()" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold leading-tight tracking-tight text-[#111813]">아이디 찾기</h1>
+</div>
+<div id="authArea" class="flex flex-col gap-6">
+    <div class="rounded-xl bg-[#f0f4f2] p-6 text-center border border-[#dbe6df]">
+        <span class="material-symbols-outlined text-[40px] text-[#61896f] mb-2">identity_platform</span>
+        <p class="text-base font-medium text-[#111813]">안전한 아이디 찾기</p>
+        <p class="text-sm text-[#61896f] mt-1">본인 명의의 휴대폰으로 <br> 본인확인을 진행해주세요.</p>
+    </div>
+    
+    <button type="button" onclick="certification()" class="h-14 w-full rounded-xl bg-primary px-4 text-base font-bold leading-normal text-[#102216] transition-colors hover:bg-[#0fd650] active:scale-[0.98]">
+        본인인증 시작하기
+    </button>
+</div>
+
+<div id="resultArea" class="hidden flex flex-col gap-6 mt-6 p-6 rounded-xl bg-[#f0f4f2] border-2 border-primary">
+    <div class="text-center">
+        <p class="text-sm text-[#61896f] mb-1">가입하신 아이디를 찾았습니다!</p>
+        <p id="foundEmail" class="text-xl font-bold text-[#102216]"></p>
+    </div>
+    <a href="/login" class="flex h-12 w-full items-center justify-center rounded-xl bg-primary px-6 text-base font-bold leading-normal text-[#102216] hover:bg-[#0fd650]">
+        로그인 페이지로 이동
+    </a>
+</div>
+
+<div id="errorArea" class="hidden flex flex-col gap-4 mt-6 p-4 rounded-xl bg-red-50 border border-red-200 text-center">
+    <p class="text-sm text-red-600">해당 정보로 가입된 계정을 찾을 수 없습니다.</p>
+    <a href="/register" class="text-sm font-bold text-[#111813] underline">회원가입 하러가기</a>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script>
+	async function certification() {
+	    try {
+	        const identityVerificationId = `id-verify-${new Date().getTime()}`;
+
+	        // 포트원 V2 본인인증 요청
+	        const response = await PortOne.requestIdentityVerification({
+	            storeId: "store-40e995f6-80d5-43c5-812a-babeaca09755",
+	            channelKey: "channel-key-d4d68a57-122c-4418-81fb-d1ed47cec331",
+	            identityVerificationId: identityVerificationId,
+	            identityVerificationMethod: "SMS"
+	        });
+
+	        // 인증 성공 시 
+	        if (response.code == null) { 
+	            const identityVerificationId = response.identityVerificationId;
+
+
+	            const res = await fetch("/login/find_id_process", {
+	                method: "POST",
+	                headers: { "Content-Type": "application/json" },
+	                body: JSON.stringify({ imp_uid: identityVerificationId }) 
+	            });
+
+	            const data = await res.json();
+
+				if (data.success) {
+
+				    const resultArea = document.getElementById("resultArea");
+				    resultArea.classList.remove("hidden");
+				    document.getElementById("foundEmail").innerText = data.email;
+				    document.getElementById("authArea").style.display = 'none'; 
+				    document.getElementById("errorArea").classList.add("hidden");
+	            } else {
+	                // 가입 정보 없음
+	                document.getElementById("errorArea").classList.remove("hidden");
+	                document.getElementById("resultArea").classList.add("hidden");
+	            }
+	        }
+	    } catch (error) {
+	        alert("본인인증 중 오류가 발생했습니다: " + error.message);
+	    }
+	}
+</script>
+</body></html>

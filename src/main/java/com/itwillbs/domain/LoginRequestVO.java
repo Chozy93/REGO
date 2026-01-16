@@ -7,10 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ChatMessage {
-
-    private String sender;
-    private String content;
-
-    // getter / setter
+public class LoginRequestVO {
+    private String email;
+    private String password;
 }

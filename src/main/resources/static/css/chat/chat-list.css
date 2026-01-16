@@ -1,0 +1,221 @@
+/* =========================
+   Chat Layout
+========================= */
+.chat-layout {
+  display: flex;
+  height: 800px;
+  background: var(--color-bg);
+}
+
+/* 좌측 고정 폭 */
+.chat-sidebar{
+  width: 380px;
+  flex: 0 0 380px;
+  border-right: 1px solid var(--color-divider);
+}
+
+/* 우측은 남는 영역 */
+.chat-room-container{
+  flex: 1;
+  min-width: 0;
+  display: flex;       /* 중요: 내부(.chat-room / .chat-empty)가 꽉 차게 */ 
+   
+}
+
+/* =========================
+   Sidebar
+========================= */
+.chat-sidebar {
+  width: 360px;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-sidebar-head {
+  padding: var(--space-20);
+}
+
+.chat-sidebar-title {
+  font-size: var(--fs-20);
+  font-weight: var(--fw-bold);
+}
+
+/* =========================
+   Filter
+========================= */
+.chat-filter-wrap {
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: 8px;
+}
+
+.chat-filter-wrap::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    to left,
+    var(--color-surface),
+    transparent
+  );
+}
+.chat-filter {
+  display: flex;
+  gap: var(--space-8);
+  padding: 0 var(--space-20) var(--space-12);
+  overflow-x: auto;
+  
+  /* 🔥 추가 */
+  overflow-y: hidden;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+}
+
+.chat-filter-btn {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-13);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  /* 🔥 추가 */
+  white-space: nowrap;
+  word-break: keep-all;
+}
+
+.chat-filter-btn.is-active {
+  background: var(--color-primary);
+  color: var(--color-text);
+  border-color: var(--color-primary);
+}
+.chat-filter-option {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 8px 20px;
+}
+
+/* =========================
+   Chat Room List
+========================= */
+.chat-room-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.chat-room-item {
+  display: flex;
+  gap: var(--space-12);
+  padding: var(--space-16) var(--space-20);
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.chat-room-item:hover {
+  background: var(--color-surface-2);
+}
+
+.chat-room-avatar,
+.chat-room-avatar-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-text);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-room-avatar-img {
+  object-fit: cover;
+}
+
+/* =========================
+   Chat Room Body
+========================= */
+.chat-room-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-room-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+ 
+}
+
+.chat-room-name {
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-14);
+}
+
+.chat-room-time {
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+}
+
+.chat-room-preview {
+  flex: 1;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chat-room-bottom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.chat-room-unread {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff3b30; /* iOS 스타일 레드 */
+}
+
+.unread-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ff3b30;
+}
+
+/* =========================
+   Empty State
+========================= */
+.chat-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+}
+
+.chat-empty-inner {
+  text-align: center;
+}
+
+.chat-empty-icon {
+  font-size: 64px;
+  color: var(--color-text-subtle);
+}
+
+.chat-empty-title {
+  margin-top: var(--space-12);
+  font-size: var(--fs-16);
+  font-weight: var(--fw-semibold);
+}

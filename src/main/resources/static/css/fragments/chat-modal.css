@@ -1,0 +1,154 @@
+/* ==========================================================================
+   Modal Base
+   ========================================================================== */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.is-hidden {
+  display: none;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* =========================
+   Modal Panel
+========================= */
+
+.modal-panel {
+  position: relative;
+  background-color: var(--color-surface);
+  width: 100%;
+  max-width: 380px;
+  max-height: 90vh;
+
+  display: flex;
+  flex-direction: column;
+
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+/* =========================
+   Header
+========================= */
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: var(--space-16);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.modal-header-center {
+  justify-content: center;
+}
+
+.modal-title {
+  font-size: var(--fs-16);
+  font-weight: var(--fw-bold);
+}
+
+.modal-back-btn,
+.modal-close {
+  position: absolute;
+  left: var(--space-16);
+  font-size: var(--fs-16);
+  color: var(--color-text-muted);
+}
+
+/* =========================
+   Body
+========================= */
+
+.modal-body {
+  padding: var(--space-20);
+  overflow-y: auto;
+}
+
+/* =========================
+   Footer
+========================= */
+
+.modal-footer {
+  padding: var(--space-16);
+  border-top: 1px solid var(--color-divider);
+  background-color: var(--color-surface);
+}
+
+.modal-footer-fixed {
+  position: sticky;
+  bottom: 0;
+}
+
+/* ==========================================================================
+   Payment Modal
+   ========================================================================== */
+
+.modal-panel-payment {
+  height: 80vh;
+}
+
+.payment-summary {
+  text-align: center;
+  margin-bottom: var(--space-32);
+}
+
+.payment-target {
+  font-size: var(--fs-14);
+}
+
+.payment-amount {
+  margin: var(--space-12) 0;
+}
+
+.payment-amount strong {
+  font-size: var(--fs-28);
+  font-weight: var(--fw-bold);
+}
+
+.payment-amount span {
+  font-size: var(--fs-18);
+}
+
+.payment-subtext {
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+}
+
+/* keypad */
+
+.payment-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-16);
+}
+
+.payment-keypad-btn {
+  padding: var(--space-16) 0;
+  font-size: var(--fs-18);
+  font-weight: var(--fw-semibold);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-2);
+}
+
+.payment-keypad-btn:active {
+  background-color: var(--color-surface-3);
+}
+
+.payment-keypad-back {
+  font-size: var(--fs-16);
+}

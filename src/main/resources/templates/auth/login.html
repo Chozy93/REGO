@@ -1,13 +1,170 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>RE:GO Login</title>
-
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>로그인 - 중고장터</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "Noto Sans KR", "sans-serif"],
+                        "body": ["Noto Sans KR", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
 </head>
-<body>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111813] antialiased">
+<div class="relative flex min-h-screen w-full flex-col overflow-hidden">
+<header class="flex items-center justify-between border-b border-[#f0f4f2] bg-white px-6 py-4 lg:px-20">
+<div class="flex items-center gap-4 text-[#111813]">
+<div class="size-8 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-[-0.015em] text-[#111813]">중고장터</h2>
+</div>
+</header>
+<main class="flex flex-1 items-center justify-center p-4">
+<div class="layout-content-container flex w-full max-w-[480px] flex-col">
+<form action="/login" method="post" class="flex flex-col gap-6 rounded-xl bg-white p-6 shadow-sm ring-1 ring-[#e6ebe8] sm:p-10">
+<div class="flex flex-col gap-2 text-center">
+<h1 class="text-[32px] font-bold leading-tight tracking-tight text-[#111813]">로그인</h1>
+<p class="text-sm font-normal text-[#61896f]">중고 거래를 시작해보세요</p>
+</div>
+<div class="flex flex-col gap-4">
+<label class="flex flex-col gap-1.5">
+<p class="text-base font-medium leading-normal text-[#111813]">이메일</p>
+<input name="email" id="userEmail" required class="form-input h-14 w-full rounded-xl border border-[#dbe6df] bg-white p-[15px] text-base font-normal text-[#111813] placeholder:text-[#61896f] focus:border-primary focus:outline-0 focus:ring-1 focus:ring-primary" placeholder="example@email.com" type="email"/>
+</label>
+<label class="flex flex-col gap-1.5">
+<p class="text-base font-medium leading-normal text-[#111813]">비밀번호</p>
+<div class="relative flex w-full items-center rounded-xl">
+<input name="password" id="Password" required class="form-input h-14 w-full rounded-xl border border-[#dbe6df] bg-white p-[15px] pr-12 text-base font-normal text-[#111813] placeholder:text-[#61896f] focus:border-primary focus:outline-0 focus:ring-1 focus:ring-primary" placeholder="비밀번호를 입력해 주세요" type="password"/>
+<button class="absolute right-4 flex text-[#61896f] hover:text-[#111813]" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</label>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-3">
+<label class="flex cursor-pointer items-center gap-2">
+<input id="rememberId" class="size-5 rounded border-2 border-[#dbe6df] bg-transparent text-primary focus:ring-0 focus:ring-offset-0 checked:border-primary checked:bg-primary" type="checkbox"/>
+<span class="text-sm font-normal leading-normal text-[#111813]">아이디 기억하기</span>
+</label>
+<div class="flex gap-3 text-sm font-normal text-[#61896f]">
+<a class="hover:text-[#111813] hover:underline" href="/login/id_find1">아이디 찾기</a>
+<span class="text-[#dbe6df]">|</span>
+<a class="hover:text-[#111813] hover:underline" href="/login/pass_find1">비밀번호 찾기</a>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<button type="submit"class="flex h-12 w-full items-center justify-center rounded-xl bg-primary px-6 text-base font-bold leading-normal text-[#102216] transition-colors hover:bg-[#0fd650] active:scale-[0.99]">
+                            로그인
+                        </button>
+						</form>
+<div class="text-center text-sm font-normal text-[#111813]">
+                            아직 회원이 아니신가요? <a class="font-medium text-primary hover:underline" href="/signup/step1">회원가입</a>
+</div>
+</div>
+<div class="relative flex items-center py-2">
+<div class="grow border-t border-[#f0f4f2]"></div>
+<span class="mx-4 shrink-0 text-sm text-[#61896f]">SNS 계정으로 로그인</span>
+<div class="grow border-t border-[#f0f4f2]"></div>
+</div>
+<div class="flex justify-center gap-4">
+    <a href="/oauth2/authorization/kakao" aria-label="Login with Kakao" class="flex size-12 items-center justify-center rounded-full bg-[#FEE500] hover:shadow-md transition-shadow">
+        <svg class="size-6 fill-[#371D1E]" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3C7.58 3 4 5.79 4 9.24C4 11.53 5.46 13.53 7.69 14.61L6.79 17.88C6.73 18.09 6.96 18.25 7.14 18.13L11.16 15.46C11.44 15.48 11.71 15.49 12 15.49C16.42 15.49 20 12.69 20 9.24C20 5.79 16.42 3 12 3Z"></path>
+        </svg>
+    </a>
 
-<h1>login 페이지</h1>
+    <a href="/oauth2/authorization/naver" aria-label="Login with Naver" class="flex size-12 items-center justify-center rounded-full bg-[#03C75A] hover:shadow-md transition-shadow">
+        <svg class="size-5 fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.495 3H21V21H16.495V9.415L7.505 21H3V3H7.505V14.585L16.495 3Z"></path>
+        </svg>
+    </a>
 
-</body>
-</html>
+    <a href="/oauth2/authorization/google" aria-label="Login with Google" class="flex size-12 items-center justify-center rounded-full border border-[#dbe6df] bg-white hover:bg-gray-50 hover:shadow-md transition-shadow">
+        <svg class="size-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21.35 11.1H12V15.15H17.4C17.15 16.35 15.75 18.9 12 18.9C8.85 18.9 6.3 16.35 6.3 13.2C6.3 10.05 8.85 7.5 12 7.5C13.8 7.5 15 8.25 15.7 8.9L18.6 6C16.8 4.35 14.6 3.45 12 3.45C6.6 3.45 2.25 7.8 2.25 13.2C2.25 18.6 6.6 22.95 12 22.95C17.4 22.95 21.6 19.2 21.6 13.65C21.6 12.75 21.5 11.9 21.35 11.1Z" fill="#757575"></path>
+        </svg>
+    </a>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script>
+    // 1. 비밀번호 보이기/숨기기 기능
+    const passwordInput = document.getElementById("Password");
+    const toggleButton = document.querySelector("button[type='button']"); // 눈 모양 버튼
+    const icon = toggleButton.querySelector("span");
+
+    toggleButton.addEventListener("click", function() {
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            icon.innerText = "visibility_off"; // 눈 감은 모양으로 변경
+        } else {
+            passwordInput.type = "password";
+            icon.innerText = "visibility"; // 눈 뜬 모양으로 변경
+        }
+    });
+
+    // 2. 로그인 실패 팝업 & 주소창 관리
+    window.onload = function() {
+		const emailInput = document.getElementById("userEmail");
+		    const rememberCheck = document.getElementById("rememberId");
+
+		    // 1. 페이지 켜지자마자 저장된 아이디 있는지 확인
+		    const savedEmail = localStorage.getItem("savedEmail");
+		    if (savedEmail) {
+		        emailInput.value = savedEmail;
+		        rememberCheck.checked = true;
+		    }
+
+		    // 2. 로그인 버튼(폼 제출) 누를 때 저장할지 말지 결정
+		    document.querySelector("form").onsubmit = function() {
+		        if (rememberCheck.checked) {
+		            localStorage.setItem("savedEmail", emailInput.value);
+		        } else {
+		            localStorage.removeItem("savedEmail");
+		        }
+		    };
+			
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        if (status === 'no_user') {
+            alert("가입되지 않은 이메일이에요. 다시 확인해 주세요!");
+        } else if (status === 'wrong_pw') {
+            alert("비밀번호가 틀렸어요!");
+        }
+        
+        if (status) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    };
+</script>
+</body></html>
