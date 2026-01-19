@@ -58,13 +58,13 @@ public class SecurityConfig {
             )
 
             /* ---------- 소셜 로그인 ---------- */
-            .oauth2Login(oauth2 -> oauth2
-                .loginPage("/login") 
-                .userInfoEndpoint(userInfo -> userInfo
-                        .userService(customOAuth2UserService)
-                )
-                .defaultSuccessUrl("/", true) // 소셜 로그인 성공 시 이동할 곳
-            )
+//            .oauth2Login(oauth2 -> oauth2
+//                .loginPage("/login") 
+//                .userInfoEndpoint(userInfo -> userInfo
+//                        .userService(customOAuth2UserService)
+//                )
+//                .defaultSuccessUrl("/", true) // 소셜 로그인 성공 시 이동할 곳
+//            )
 
             /* ---------- 로그아웃 ---------- */
             .logout(logout -> logout

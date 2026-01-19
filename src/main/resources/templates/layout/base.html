@@ -42,6 +42,7 @@
     <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
     <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">
     <link rel="stylesheet" th:href="@{/css/fragments/category-modal.css}">
+
 <!--    <link rel="stylesheet" th:href="@{/css/modal.css}">-->
 
     <!-- ==================================================
@@ -80,13 +81,15 @@
 ================================================== -->
 <!--<th:block th:replace="fragments/login-modal :: loginModal"></th:block>-->
 <div th:replace="fragments/category-modal :: category-modal"></div>
-
+<!--에러처리 모달-->
+<div th:replace="fragments/error-modal :: error-modal"></div>
 <!-- ==================================================
      Global JS
 ================================================== -->
-<!--<script th:src="@{/js/common.js}"></script>-->
-<script th:src="@{/js/fragments/category-modal.js}"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script th:src="@{/js/common.js}"></script>
 <script th:src="@{/js/fragments/header.js}"></script>
+
 <!-- ==================================================
      Page JS Slot
      🔥 page 에서 script 여러 개 써도 자동으로 전부 적용

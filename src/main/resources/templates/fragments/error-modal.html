@@ -1,0 +1,31 @@
+<!-- =========================
+     Global Error Modal
+     - ViewGlobalExceptionHandler 연동
+     - ALERT 사용 ❌
+     - 페이지 이동 ❌
+========================= -->
+
+	 <div class="error-modal is-hidden"
+	      th:fragment="error-modal">
+  <div class="error-modal-backdrop"></div>
+
+  <div class="error-modal-box">
+    <div class="error-modal-header">
+      <h3>오류가 발생했습니다</h3>
+    </div>
+
+    <div class="error-modal-body">
+      <p th:text="${errorMessage}">
+        오류 메시지 영역
+      </p>
+    </div>
+
+    <div class="error-modal-footer">
+      <button type="button"
+              class="btn-confirm"
+              onclick="closeErrorModal()">
+        확인
+      </button>
+    </div>
+  </div>
+</div>

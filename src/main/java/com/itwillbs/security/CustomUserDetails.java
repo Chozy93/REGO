@@ -17,7 +17,10 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(User user) {
         this.user = user;
     }
-
+    
+    public Long getUserId() {
+        return user.getUserId();
+    }
     /* =========================
        권한
     ========================= */
@@ -32,6 +35,7 @@ public class CustomUserDetails implements UserDetails {
     /* =========================
        인증 정보
     ========================= */
+    
     @Override
     public String getPassword() {
         return user.getPassword();
