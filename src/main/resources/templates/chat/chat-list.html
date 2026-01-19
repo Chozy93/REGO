@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<!-- page 전용 CSS -->
+<th:block th:fragment="pageCss">
+    <link rel="stylesheet" href="/css/chat/chat-list.css">
+    <link rel="stylesheet" href="/css/chat/chat-room.css">
+    <link rel="stylesheet" href="/css/fragments/chat-modal.css">
+</th:block>
+
+<div layout:fragment="content" class="chat-layout">
+
+    <!-- =========================
+         Left
+    ========================== -->
+    <aside class="chat-sidebar">
+
+        <div class="chat-sidebar-head">
+            <h2 class="chat-sidebar-title">전체 대화</h2>
+        </div>
+
+        <div class="chat-filter-wrap">
+            <div class="chat-filter">
+                <a th:each="filter : ${chatFilters}"
+                   class="chat-filter-btn"
+                   th:text="${filter.label}"
+                   th:href="@{/chat/rooms(type=${filter.name()}, unread=${unreadOnly})}"
+                   th:classappend="${filter == currentFilter} ? ' is-active'">
+                </a>
+            </div>
+        </div>
+
+        <div class="chat-filter-option">
+            <label class="chat-unread-toggle">
+                <input type="checkbox"
+                       th:checked="${unreadOnly}"
+                       onchange="location.href=this.checked
+                         ? '?type=[[${currentFilter.name()}]]&unread=true'
+                         : '?type=[[${currentFilter.name()}]]'">
+                <span>안읽음만</span>
+            </label>
+        </div>
+
+        <div class="chat-room-list">
+
+            <a class="chat-room-item"
+               th:each="room : ${view.chatRoomItems}"
+               th:href="@{/chat/list/{roomId}(roomId=${room.roomId}, type=${currentFilter.name()}, unread=${unreadOnly})}"
+               th:classappend="${view.currentRoomId != null and room.roomId == view.currentRoomId} ? ' is-active'">
+
+                <div class="chat-room-avatar"
+                     th:if="${room.productThumbnailUrl == ''}">
+                    <span class="material-symbols-outlined">bolt</span>
+                </div>
+
+                <img class="chat-room-avatar-img"
+                     th:if="${room.productThumbnailUrl != ''}"
+                     th:src="${room.productThumbnailUrl}"
+                     alt="상품 썸네일">
+
+                <div class="chat-room-body">
+                    <div class="chat-room-head">
+                        <strong class="chat-room-name"
+                                th:text="${room.opponentUserName}">
+                        </strong>
+                        <span class="chat-room-time"
+                              th:text="${room.lastMessageCreatedAt}">
+                        </span>
+                    </div>
+
+                    <div class="chat-room-bottom">
+                        <p class="chat-room-preview"
+                           th:text="${room.lastMessageContent}">
+                        </p>
+
+                        <div class="chat-room-unread"
+                             th:if="${room.unreadCount > 0}">
+                            <span class="unread-dot"></span>
+                            <span class="unread-count"
+                                  th:text="${room.unreadCount}">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <div class="chat-room-empty"
+                 th:if="${#lists.isEmpty(view.chatRoomItems)}">
+                대화 내역이 없습니다.
+            </div>
+
+        </div>
+    </aside>
+
+    <!-- =========================
+         Right
+    ========================== -->
+    <section class="chat-room-container">
+	
+        <div class="chat-empty"
+             th:if="${view.currentRoomId == null}">
+            <div class="chat-empty-inner">
+                <span class="material-symbols-outlined chat-empty-icon">chat_bubble</span>
+                <h3 class="chat-empty-title">대화방을 선택해주세요</h3>
+            </div>
+        </div>
+
+        <th:block th:if="${view.currentRoomId != null}"
+                  th:replace="~{chat/chat-room :: chat-room}">
+        </th:block>
+
+    </section>
+
+</div>
+
+<!-- page JS (반드시 html 안에) -->
+<th:block th:fragment="pageJs">
+    <script src="/js/chat/chat-room.js"></script>
+</th:block>
+
+</html>

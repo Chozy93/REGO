@@ -1,0 +1,29 @@
+package com.itwillbs.mapper;
+
+import com.itwillbs.dto.SocialAccountDTO;
+import com.itwillbs.entity.User;
+
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+@Mapper
+public interface UserMapper {
+    // 1. 이미 연결된 소셜 계정이 있는지 확인
+	SocialAccountDTO findSocialAccount(@Param("provider") String provider, @Param("providerId") String providerId);
+
+    // 2. 소셜 계정 정보 저장
+    void insertSocialAccount(SocialAccountDTO socialAccountDTO);
+    
+    void insertUser(Map<String, Object> userParams);
+    
+    Map<String, Object> findUserByEmail(String email);
+    void updatePhoneNumber(@Param("username") String username, @Param("phoneNumber") String phoneNumber);
+
+    User selectUserById(long userId);
+    String findEmailByPhoneNumber(String phoneNumber);
+    int countByEmailAndPhone(@Param("email") String email, @Param("phoneNumber") String phoneNumber);
+    void updateUserPassword(@Param("email") String email, @Param("password") String password);
+
+}

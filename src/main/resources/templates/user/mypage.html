@@ -1,13 +1,181 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>RE:GO MyPage</title>
-
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}"> <head>
+    <th:block layout:fragment="pageCss">
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+        <style>
+            .mypage-container { font-family: 'Manrope', 'Noto Sans KR', sans-serif; }
+			footer, .footer { display: none !important; }
+        </style>
+    </th:block>
 </head>
+
 <body>
+    <div layout:fragment="content">
+        <div class="mypage-container bg-[#f8faf9] dark:bg-[#0d130f] min-h-screen">
+            <div class="w-full max-w-[1024px] mx-auto px-4 py-8 flex flex-col gap-6">
+                
+                <section class="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-sm border border-[#f0f4f2] dark:border-white/5 relative overflow-hidden">
+                    <div class="flex flex-col md:flex-row items-center gap-6 md:gap-8 z-10 relative">
+                        <div class="relative group cursor-pointer flex-shrink-0">
+                            <img th:src="${user.profileImg != null ? user.profileImg : 'https://lh3.googleusercontent.com/aida-public/AB6AXuD0ObRBFDRs_vob6idb6aYKUuIove2YF-wbvYCHg-2sm6qoyedO7RYGPgbD3YUragy7aKMdHZaGuFf9n2VN8bfXNLuaHQv41ulrqhVYIpmk3x64L5NlUFVVfia-ExqeHUsxo5vgQfQPtrASlzehup3VxN0K1KuHLfM_Jo4LSDScARNe9G-rzONQqnH5Zobrl4cD0Z9vAbXnHqFPATdIE6yqtnbrqSfNs-liXa-Ege7QLNN9juuw7GAvbZhH4XK8XgkJEehsTeeKTVY'}" 
+                                 alt="Profile" class="size-24 rounded-full object-cover border-4 border-white dark:border-[#1A2C20] shadow-md bg-gray-200" />
+                            <div class="absolute bottom-0 right-0 bg-white dark:bg-[#1A2C20] p-1.5 rounded-full border border-gray-100 dark:border-white/10 shadow-sm text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined text-[16px] block">edit</span>
+                            </div>
+                        </div>
+                        <div class="flex-1 text-center md:text-left space-y-2">
+                            <div class="flex flex-col md:flex-row md:items-center gap-2 justify-center md:justify-start">
+                                <h2 class="text-2xl font-bold text-[#111813] dark:text-white" th:text="${user.nickname}">닉네임</h2>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/20 text-green-700 dark:text-green-400 self-center">인증된 이웃</span>
+                            </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400" th:text="'가입일 ' + ${#strings.substring(user.createdAt, 0, 10)}">가입일 2023.10.15</p>
+                            <button class="text-sm font-medium text-gray-400 hover:text-primary underline transition-colors">프로필 수정</button>
+                        </div>
+                        <div class="w-full md:w-72 bg-gray-50 dark:bg-white/5 rounded-xl p-4 border border-[#f0f4f2] dark:border-white/5">
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="text-sm font-bold text-gray-600 dark:text-gray-300">매너 별점</span>
+                                <div class="flex items-center gap-1"><span class="text-lg font-bold text-[#111813] dark:text-white">4.8</span><span class="text-sm text-gray-500">/ 5.0</span></div>
+                            </div>
+                            <div class="flex items-center gap-0.5 mb-3">
+                                <span class="material-symbols-outlined text-yellow-400" style="font-variation-settings: 'FILL' 1; font-size: 28px;">star</span>
+                                <span class="material-symbols-outlined text-yellow-400" style="font-variation-settings: 'FILL' 1; font-size: 28px;">star</span>
+                                <span class="material-symbols-outlined text-yellow-400" style="font-variation-settings: 'FILL' 1; font-size: 28px;">star</span>
+                                <span class="material-symbols-outlined text-yellow-400" style="font-variation-settings: 'FILL' 1; font-size: 28px;">star</span>
+                                <span class="material-symbols-outlined text-yellow-400" style="font-variation-settings: 'FILL' 1; font-size: 28px;">star_half</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-white/10 text-xs text-gray-400">
+                                <span>거래 후기 128개</span><span class="underline cursor-pointer hover:text-gray-500 dark:hover:text-gray-300">평가 상세</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-<h1>mypage 페이지</h1>
-
+                <section class="grid grid-cols-3 gap-3 md:gap-6">
+                    <a class="bg-white dark:bg-white/5 p-5 md:p-6 rounded-2xl border border-[#f0f4f2] dark:border-white/5 text-center hover:shadow-md hover:border-primary/30 transition-all group" href="#">
+                        <div class="inline-flex items-center justify-center size-12 rounded-full bg-orange-50 text-orange-500 mb-3 group-hover:scale-110 transition-all"><span class="material-symbols-outlined">inventory_2</span></div>
+                        <div class="text-2xl font-extrabold text-[#111813] dark:text-white mb-1" th:text="${user.sellingCount}">0</div>
+                        <div class="text-sm font-medium text-gray-500 dark:text-gray-400">판매 상품</div>
+                    </a>
+                    <a class="bg-white dark:bg-white/5 p-5 md:p-6 rounded-2xl border border-[#f0f4f2] dark:border-white/5 text-center hover:shadow-md hover:border-primary/30 transition-all group" href="#">
+                        <div class="inline-flex items-center justify-center size-12 rounded-full bg-blue-50 text-blue-500 mb-3 group-hover:scale-110 transition-all"><span class="material-symbols-outlined">shopping_bag</span></div>
+                        <div class="text-2xl font-extrabold text-[#111813] dark:text-white mb-1" th:text="${user.boughtCount}">0</div>
+                        <div class="text-sm font-medium text-gray-500 dark:text-gray-400">구매 상품</div>
+                    </a>
+                    <a class="bg-white dark:bg-white/5 p-5 md:p-6 rounded-2xl border border-[#f0f4f2] dark:border-white/5 text-center hover:shadow-md hover:border-primary/30 transition-all group" href="#">
+                        <div class="inline-flex items-center justify-center size-12 rounded-full bg-red-50 text-red-500 mb-3 group-hover:scale-110 transition-all"><span class="material-symbols-outlined">favorite</span></div>
+                        <div class="text-2xl font-extrabold text-[#111813] dark:text-white mb-1" th:text="${user.favoriteCount}">0</div>
+                        <div class="text-sm font-medium text-gray-500 dark:text-gray-400">찜한 상품</div>
+                    </a>
+                </section>
+					<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-2">
+					<section class="space-y-4">
+					<h3 class="text-lg font-bold text-[#111813] dark:text-white px-1">나의 거래</h3>
+					<div class="grid grid-cols-1 gap-3">
+					<a class="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-sm transition-all group" href="#">
+					<div class="flex items-center gap-4">
+					<div class="size-10 rounded-xl bg-gray-50 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+					<span class="material-symbols-outlined">list_alt</span>
+					</div>
+					<span class="font-bold text-[#111813] dark:text-white group-hover:text-primary transition-colors">내 판매 상품</span>
+					</div>
+					<span class="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
+					</a>
+					<a class="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-sm transition-all group" href="#">
+					<div class="flex items-center gap-4">
+					<div class="size-10 rounded-xl bg-gray-50 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+					<span class="material-symbols-outlined">shopping_cart</span>
+					</div>
+					<span class="font-bold text-[#111813] dark:text-white group-hover:text-primary transition-colors">내 구매 내역</span>
+					</div>
+					<span class="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
+					</a>
+					<a class="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-sm transition-all group" href="#">
+					<div class="flex items-center gap-4">
+					<div class="size-10 rounded-xl bg-gray-50 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+					<span class="material-symbols-outlined">favorite_border</span>
+					</div>
+					<span class="font-bold text-[#111813] dark:text-white group-hover:text-primary transition-colors">찜한 상품</span>
+					</div>
+					<span class="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
+					</a>
+					<a class="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-sm transition-all group" href="#">
+					<div class="flex items-center gap-4">
+					<div class="size-10 rounded-xl bg-gray-50 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+					<span class="material-symbols-outlined">rate_review</span>
+					</div>
+					<span class="font-bold text-[#111813] dark:text-white group-hover:text-primary transition-colors">거래 후기 관리</span>
+					</div>
+					<span class="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
+					</a>
+					</div>
+					</section>
+					<section class="space-y-4">
+					<h3 class="text-lg font-bold text-[#111813] dark:text-white px-1">나의 활동</h3>
+					<div class="grid grid-cols-1 gap-3">
+					<a class="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-sm transition-all group" href="#">
+					<div class="flex items-center gap-4">
+					<div class="size-10 rounded-xl bg-gray-50 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+					<span class="material-symbols-outlined">chat_bubble_outline</span>
+					</div>
+					<span class="font-bold text-[#111813] dark:text-white group-hover:text-primary transition-colors">채팅 목록</span>
+					</div>
+					<div class="flex items-center gap-2">
+					<span class="flex h-2.5 w-2.5 relative">
+					<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+					<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+					</span>
+					<span class="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
+					</div>
+					</a>
+					<a class="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-sm transition-all group" href="#">
+					<div class="flex items-center gap-4">
+					<div class="size-10 rounded-xl bg-gray-50 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+					<span class="material-symbols-outlined">payments</span>
+					</div>
+					<span class="font-bold text-[#111813] dark:text-white group-hover:text-primary transition-colors">RE:PAY 이동</span>
+					</div>
+					<span class="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
+					</a>
+					<a class="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-sm transition-all group" href="#">
+					<div class="flex items-center gap-4">
+					<div class="size-10 rounded-xl bg-gray-50 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+					<span class="material-symbols-outlined">manage_accounts</span>
+					</div>
+					<span class="font-bold text-[#111813] dark:text-white group-hover:text-primary transition-colors">프로필 관리</span>
+					</div>
+					<span class="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
+					</a>
+					<a class="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-sm transition-all group" href="#">
+					<div class="flex items-center gap-4">
+					<div class="size-10 rounded-xl bg-gray-50 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+					<span class="material-symbols-outlined">notifications</span>
+					</div>
+					<span class="font-bold text-[#111813] dark:text-white group-hover:text-primary transition-colors">알림</span>
+					</div>
+					<span class="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
+					</a>
+					<a class="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-sm transition-all group" href="#">
+					<div class="flex items-center gap-4">
+					<div class="size-10 rounded-xl bg-gray-50 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+					<span class="material-symbols-outlined">settings</span>
+					</div>
+					<span class="font-bold text-[#111813] dark:text-white group-hover:text-primary transition-colors">설정</span>
+					</div>
+					<span class="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
+					</a>
+					</div>
+				            </a>
+				        </div>
+				    </section>
+				</div>
+            </div>
+        </div>
+    </th:block>
+    <th:block th:fragment="pageJs">
+        </th:block>
 </body>
 </html>
+
