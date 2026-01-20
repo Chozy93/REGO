@@ -81,16 +81,18 @@
 				  <a sec:authorize="isAuthenticated()"
 				     href="/chat/list"
 				     class="chat-status">
+
 				    <span class="material-symbols-outlined chat-icon">
 				      chat_bubble_outline
 				    </span>
 
 				    <!-- 알림 뱃지 -->
-				    <span class="chat-badge"></span>
+				    <span class="chat-badge"
+				          th:if="${hasUnreadChat}">
+				    </span>
 
 				    <span class="chat-label">채팅</span>
 				  </a>
-
 
 				  <!-- 구분선 (일반 회원만) -->
 				  <span sec:authorize="hasRole('USER')" class="header-divider"></span>

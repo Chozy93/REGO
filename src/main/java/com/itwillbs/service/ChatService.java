@@ -44,6 +44,15 @@ public class ChatService {
     private final UserRepository userRepository;
     private final ChatMapper chatMapper;
     private final ChatSessionRegistry chatSessionRegistry;
+    
+    
+    
+    //새태칭 알림
+    @Transactional(readOnly = true)
+    public boolean hasUnreadChat(Long userId) {
+        return chatMapper.existsUnreadChat(userId);
+    }
+    
     /* =========================
     	내 채팅방 리스트 조회
  	========================= */
@@ -77,8 +86,8 @@ public class ChatService {
                         dto.getOpponentUserId(),
                         dto.getOpponentNickName(),
                         dto.getOpponentProfileImg(),
-                        formatChatListTime(dto.getLastSentAt()),
                         dto.getLastMessage(),
+                        formatChatListTime(dto.getLastSentAt()),
                         dto.getUnreadCount()
                 ))
                 .toList();
@@ -205,6 +214,13 @@ public class ChatService {
         if (updatedCount < 0) {
             throw new IllegalStateException("채팅 메시지 읽음 처리 실패");
         }
+     // 방에 메시지가 있는데 0이하면 이상 상황
+        if (updatedCount < 0) {
+            throw new IllegalStateException("채팅 메시지 읽음 처리 실패");
+        }
+
+  
+
         
         
         // 2. 메시지 목록 조회

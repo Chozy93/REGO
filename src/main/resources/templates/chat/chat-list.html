@@ -58,16 +58,16 @@
                         <strong class="chat-room-name"
                                 th:text="${room.opponentNickName}">
                         </strong>
-                        <span class="chat-room-time"
-                              th:text="${room.lastSentAtText}">
-                        </span>
+						
+						 <span class="chat-room-time"
+                          th:text="${room.lastSentAtText}">
+                       	 </span>
                     </div>
 
                     <div class="chat-room-bottom">
-                        <p class="chat-room-preview"
-                           th:text="${room.lastMessage}">
-                        </p>
-
+						<p class="chat-room-preview"
+                         th:text="${room.lastMessage}">
+	                     </p>
                         <div class="chat-room-unread"
                              th:if="${room.unreadCount > 0}">
                             <span class="unread-dot"></span>
