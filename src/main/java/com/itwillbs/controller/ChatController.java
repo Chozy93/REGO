@@ -3,7 +3,6 @@ package com.itwillbs.controller;
 import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,16 +53,14 @@ public class ChatController {
     @GetMapping("/room/{roomId}")
     public String enterChatRoom(
     		 @PathVariable("roomId") Long roomId,
-            Model model,
-            HttpSession session
+            Model model
     ) {
     	
         Long loginUserId = SecurityUtil.getCurrentUserId();
         System.out.println("채팅방진입 컨트롤러 실행");
         ChatRoomPageVO pageVO =
             chatService.getChatRoomPage(roomId, loginUserId);
-        
-        
+
         model.addAttribute("chatRoom", pageVO);
         return "chat/chat-room :: chatRoomContent";
     }

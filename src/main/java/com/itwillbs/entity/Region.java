@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import com.itwillbs.domain.RegionVO;
 
@@ -13,8 +12,7 @@ import com.itwillbs.domain.RegionVO;
     name = "region",
     indexes = {
         @Index(name = "idx_region_parent", columnList = "parent_code"),
-        @Index(name = "idx_region_level", columnList = "region_level"),
-        @Index(name = "idx_region_parent_active", columnList = "parent_code, is_active")
+        @Index(name = "idx_region_level", columnList = "region_level")
     }
 )
 @Getter
@@ -44,17 +42,10 @@ public class Region {
     private Region parent;
 
     /* =========================
-       지역 단계 (1 / 2 / 3)
+       지역 단계
     ========================= */
-    @Column(name = "region_level", nullable = false)
-    private int regionLevel;
-
-    /* =========================
-       지역 타입
-       (SIDO, SIGUNGU, EUP, MYEON, DONG, RI)
-    ========================= */
-    @Column(name = "region_type", length = 20, nullable = false)
-    private String regionType;
+    @Column(name = "region_level", length = 20, nullable = false)
+    private String regionLevel; // SIDO / SIGUNGU / DONG
 
     /* =========================
        사용 여부
@@ -84,40 +75,10 @@ public class Region {
         this.regionName = vo.getRegionName();
         this.parent = parent;
         this.regionLevel = vo.getRegionLevel();
-        this.regionType = vo.getRegionType();
         this.isActive = vo.isActive();
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
-    /* =========================
-    행정구역 정보 동기화 (UPDATE 전용)
-    - 이름 변경
-    - 타입 변경
-    - 사용 여부 변경
- ========================= */
- public void updateFromVO(RegionVO vo) {
-
-     boolean changed = false;
-
-     if (!Objects.equals(this.regionName, vo.getRegionName())) {
-         this.regionName = vo.getRegionName();
-         changed = true;
-     }
-
-     if (!Objects.equals(this.regionType, vo.getRegionType())) {
-         this.regionType = vo.getRegionType();
-         changed = true;
-     }
-
-     if (this.isActive != vo.isActive()) {
-         this.isActive = vo.isActive();
-         changed = true;
-     }
-
-     if (changed) {
-         this.updatedAt = LocalDateTime.now();
-     }
- }
 
     /* =========================
        Entity → VO

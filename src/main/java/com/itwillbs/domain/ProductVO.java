@@ -25,13 +25,9 @@ public class ProductVO {
 
     private final String salesStatusCode;
     private final String salesStatusLabel;
-    /* =========================
-	    지역 정보
-	 ========================= */
-	 private final String regionSidoCode;
-	 private final String regionSigunguCode;
-	 private final String regionEupmyeondongCode;
-	 private final String regionDisplayName;
+
+    private final String regionDisplayName;
+    private final String regionCode;
 
     private final int viewCount;
     private final int likeCount;
@@ -65,10 +61,8 @@ public class ProductVO {
         this.salesStatusCode = entity.getSalesStatus().name();
         this.salesStatusLabel = entity.getSalesStatus().getLabel();
 
-        this.regionSidoCode = entity.getRegionSidoCode();
-        this.regionSigunguCode = entity.getRegionSigunguCode();
-        this.regionEupmyeondongCode = entity.getRegionEupmyeondongCode();
         this.regionDisplayName = entity.getRegionDisplayName();
+        this.regionCode = entity.getRegionCode();
 
         this.viewCount = entity.getViewCount();
         this.likeCount = entity.getLikeCount();

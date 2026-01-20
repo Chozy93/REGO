@@ -12,15 +12,6 @@
 }
 
 /* =========================
-   Chat Room Fragment Wrapper
-========================= */
-#chat-room-content {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-}
-
-/* =========================
    Header
 ========================= */
 

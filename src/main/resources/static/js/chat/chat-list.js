@@ -62,12 +62,7 @@ $(function () {
     // 클릭한 채팅방의 roomId 추출
     const roomId = $(this).data("room-id");
     if (!roomId) return;
-	
-	// 이미 활성화된 채팅방 재클릭 차단
-	if ($(this).hasClass("is-active")) {
-	  return;
-	}
-	
+
     // 빈 상태 UI 숨기고 채팅방 영역 표시
     $("#chatEmptyState").hide();
     $("#chatRoomArea").show();
@@ -84,16 +79,7 @@ $(function () {
          - fragment가 DOM에 삽입된 직후
          - chat-room-avatar 접근 가능한 유일한 위치
       ============================================ */
-		
-	  // 🔥 채팅 메시지 영역
-	  const $messages = $("#chatMessages");
 
-	  if ($messages.length) {
-	    $messages.scrollTop($messages[0].scrollHeight);
-	  }
-	  
-	  // ✅ active 채팅방 동기화
-	  syncActiveChatRoom();
 
 
       // 상대방 아바타 src 저장 (append에서는 DOM 접근 금지)
@@ -167,20 +153,4 @@ function leaveChatRoom() {
   // 전역 상태 초기화
 
   window.currentRoomId = null;
-}
-
-//채팅방 활성화 함수
-function syncActiveChatRoom() {
-  const $content = $("#chat-room-content");
-  if ($content.length === 0) return;
-
-  const activeRoomId = $content.data("room-id");
-  if (!activeRoomId) return;
-
-  // 기존 active 제거
-  $(".chat-room-item").removeClass("is-active");
-
-  // 현재 room active
-  $(".chat-room-item[data-room-id='" + activeRoomId + "']")
-    .addClass("is-active");
 }
