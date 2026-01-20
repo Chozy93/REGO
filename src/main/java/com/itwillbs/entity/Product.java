@@ -172,4 +172,5 @@ public class Product {
     public void changeSalesStatus(ProductSalesStatus status) {
         this.salesStatus = status;
     }
+
 }
