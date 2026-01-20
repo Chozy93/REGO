@@ -9,20 +9,16 @@ import java.util.List;
 public class SellerShopPageVO {
 
     private final String sellerId;
+    private final SellerShopSellerProfileVO sellerProfile;
     private final List<SellerShopProductCardVO> products;
 
     public SellerShopPageVO(
-            String sellerId,
+            Long sellerId,
+            SellerShopSellerProfileVO sellerProfile,
             List<SellerShopProductCardVO> products
     ) {
-        this.sellerId = sellerId != null ? sellerId : "";
+        this.sellerId = sellerId != null ? sellerId.toString() : "";
+        this.sellerProfile = sellerProfile;
         this.products = products != null ? products : Collections.emptyList();
-    }
-
-    public static SellerShopPageVO empty(Long sellerId) {
-        return new SellerShopPageVO(
-                sellerId != null ? sellerId.toString() : "",
-                Collections.emptyList()
-        );
     }
 }

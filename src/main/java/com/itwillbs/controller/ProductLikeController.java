@@ -1,5 +1,6 @@
 package com.itwillbs.controller;
 
+import com.itwillbs.security.util.SecurityUtil;
 import com.itwillbs.service.ProductLikeService;
 import com.itwillbs.view.ProductLikeResultVO;
 
@@ -15,9 +16,17 @@ public class ProductLikeController {
 
     @PostMapping("/{productId}/like")
     public ProductLikeResultVO toggleLike(
-            @PathVariable("productId") Long productId
+    		@PathVariable("productId") Long productId
     ) {
-        // ✅ User 안 넘김 (Service에서 TEST_USER_ID 사용)
-        return productLikeService.toggleLike(productId);
+        // ✅ 로그인 사용자 ID 조회
+    	Long userId = SecurityUtil.getCurrentUserId();
+    	System.out.println("🔥 LOGIN USER ID = " + userId);
+
+        if (userId == null) {
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
+
+        return productLikeService.toggleLike(productId, userId);
     }
 }
+

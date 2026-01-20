@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.itwillbs.dto.ProductSimilarListDTO;
+import com.itwillbs.dto.ProductSimilarDTO;
 import com.itwillbs.mapper.ProductDetailMapper;
 import com.itwillbs.view.ProductSimilarListVO;
 
@@ -18,7 +18,7 @@ public class ProductSimilarQueryService {
 
     public ProductSimilarListVO getSimilarProducts(Long productId, int limit) {
 
-        List<ProductSimilarListDTO> list =
+        List<ProductSimilarDTO> list =
                 productDetailMapper.selectSimilarProducts(productId, limit);
 
         if (list == null || list.isEmpty()) {

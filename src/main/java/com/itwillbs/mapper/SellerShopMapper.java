@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.itwillbs.dto.SellerShopProductListDTO;
+import com.itwillbs.view.SellerShopSellerProfileVO;
 
 @Mapper
 public interface SellerShopMapper {
@@ -16,4 +17,9 @@ public interface SellerShopMapper {
     List<SellerShopProductListDTO> selectSellerProducts(
             @Param("sellerId") Long sellerId
     );
+    
+    SellerShopSellerProfileVO selectSellerProfile(
+            @Param("sellerId") Long sellerId
+    );
+
 }

@@ -1,5 +1,6 @@
 package com.itwillbs.service;
 
+import com.itwillbs.security.util.SecurityUtil;
 import com.itwillbs.view.MainPageVO;
 import com.itwillbs.view.MainProductCardVO;
 import com.itwillbs.view.condition.MainProductSortConditionVO;
@@ -18,32 +19,35 @@ public class MainPageService {
 
     public MainPageVO getMainPage(String sort, String recentIds) {
 
-        MainProductSortConditionVO condition =
-                new MainProductSortConditionVO(sort);
+        Long userId = SecurityUtil.getCurrentUserId(); // 로그인 아니면 null
+
+        MainProductSortConditionVO condition = new MainProductSortConditionVO(sort);
 
         List<MainProductCardVO> aiProducts =
-                Collections.emptyList(); // 아직 미구현
+                mainProductListService.getPopularProducts(userId);
 
         List<MainProductCardVO> popularProducts =
-                mainProductListService.getPopularProducts();
+                mainProductListService.getPopularProducts(userId);
 
         List<MainProductCardVO> recentProducts =
-                mainProductListService.getRecentProducts(condition);
+                mainProductListService.getRecentProducts(userId, condition);
 
-        // ✅ 1️⃣ 먼저 기존 방식대로 page 생성
-        MainPageVO page = new MainPageVO(
-                aiProducts,
-                popularProducts,
-                recentProducts
-        );
+        boolean isLogin = SecurityUtil.isAuthenticated();
 
-        // ✅ 2️⃣ 여기서 recentView "조합"
-        page.setRecentView(
-                mainRecentViewService.getRecentView(recentIds)
-        );
+        List<MainProductCardVO> recentView =
+        	    mainRecentViewService.getRecentView(recentIds);
 
-        // ✅ 3️⃣ return
-        return page;
+        	MainPageVO page =
+        	    new MainPageVO(
+        	        isLogin,
+        	        aiProducts,
+        	        popularProducts,
+        	        recentProducts, // 최근 등록
+        	        recentView      // 최근 본
+        	    );
+
+        	return page;
+
     }
-
+    
 }

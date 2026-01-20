@@ -188,4 +188,22 @@
     gap: 16px;
 }
 
+.product-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+
+}
+
+.product-card {
+  width: 220px;
+  flex-shrink: 0;
+}
+
+
+
+
+
+
+
 

@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
-	boolean existsByTargetTypeAndTargetIdAndReporter_UserId(
-		    ReportTargetType targetType,
-		    Long targetId,
-		    Long userId
-		);
-
+    boolean existsByTargetTypeAndTargetIdAndReporterUserId(
+        ReportTargetType targetType,
+        Long targetId,
+        Long userId
+    );
 }
+

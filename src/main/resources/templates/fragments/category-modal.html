@@ -25,29 +25,33 @@
            th:each="node : ${headerCategoryListVO.categories}">
 
         <!-- 1차 카테고리 -->
-        <button type="button" class="category-modal-main-btn">
-          <div class="category-modal-main-left">
+		<a th:href="@{/products(categoryId=${node.parent.categoryId})}"
+		   class="category-modal-main-link">
 
-            <!-- icon (1차 전용) -->
-            <div class="category-modal-icon"
-                 th:if="${node.iconCode != ''}">
-              <span class="material-symbols-outlined"
-                    th:text="${node.iconCode}">
-              </span>
-            </div>
+		  <button type="button" class="category-modal-main-btn">
+		    <div class="category-modal-main-left">
 
-            <span class="category-modal-main-text"
-                  th:text="${node.parent.name}">
-              카테고리명
-            </span>
-          </div>
+		      <div class="category-modal-icon"
+		           th:if="${node.iconCode != ''}">
+		        <span class="material-symbols-outlined"
+		              th:text="${node.iconCode}">
+		        </span>
+		      </div>
 
-          <!-- arrow -->
-          <span class="material-symbols-outlined category-modal-arrow"
-                th:if="${!#lists.isEmpty(node.children)}">
-            expand_more
-          </span>
-        </button>
+		      <span class="category-modal-main-text"
+		            th:text="${node.parent.name}">
+		        카테고리명
+		      </span>
+		    </div>
+
+		    <span class="material-symbols-outlined category-modal-arrow"
+		          th:if="${!#lists.isEmpty(node.children)}">
+		      expand_more
+		    </span>
+		  </button>
+
+		</a>
+
 
         <!-- ===============================
              2차 카테고리
@@ -62,7 +66,7 @@
             <span class="category-modal-sub-text"
                   th:text="${child.name}">
               서브카테고리
-            </span>
+            </span>z
           </a>
 
         </div>

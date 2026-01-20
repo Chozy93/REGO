@@ -5,33 +5,35 @@
 
 <mapper namespace="com.itwillbs.mapper.MainRecentViewMapper">
 
-    <select id="selectRecentProducts"
-            parameterType="list"
-            resultType="com.itwillbs.dto.MainRecentViewDTO">
+  <select id="selectRecentViewProducts"
+        parameterType="list"
+        resultType="com.itwillbs.view.MainProductCardVO">
 
-        SELECT
-            p.product_id            AS productId,
-            p.product_name          AS productName,
-            p.price                 AS price,
-            p.main_image_url        AS thumbnailUrl,
-            p.region_display_name   AS regionName
-        FROM products p
-        WHERE p.product_id IN
-        <foreach collection="list"
-                 item="id"
-                 open="("
-                 separator=","
-                 close=")">
-            #{id}
-        </foreach>
+  SELECT
+    p.product_id       AS id,
+    p.product_name     AS title,
+    p.price            AS price,
+    p.main_image_url   AS img,        <!-- 🔥 여기 -->
+    p.region_display_name AS loc,      <!-- 이미 테이블에 있음 -->
+    p.created_at       AS time,
+    false              AS reserved,
+    p.like_count       AS likeCount,
+    false              AS liked
 
-        <!-- localStorage 순서 유지 (최신 → 과거) -->
-        ORDER BY FIELD(p.product_id,
-        <foreach collection="list" item="id" separator=",">
-            #{id}
-        </foreach>
-        )
+  FROM products p
 
-    </select>
+  WHERE p.product_id IN
+    <foreach item="id" collection="list" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+
+  ORDER BY FIELD(p.product_id,
+    <foreach item="id" collection="list" separator=",">
+      #{id}
+    </foreach>
+  )
+
+</select>
+
 
 </mapper>

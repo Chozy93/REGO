@@ -28,5 +28,24 @@
         ORDER BY p.created_at DESC
 
     </select>
+    
+   <select id="selectSellerProfile"
+        parameterType="long"
+        resultType="com.itwillbs.view.SellerShopSellerProfileVO">
+
+    SELECT
+        u.user_id  AS sellerId,
+        u.nickname AS nickname,
+        NULL       AS regionName,
+        COUNT(p.product_id) AS productCount
+    FROM users u
+    LEFT JOIN products p
+           ON p.seller_id = u.user_id
+          AND p.sales_status = 'ON_SALE'
+    WHERE u.user_id = #{sellerId}
+    GROUP BY u.user_id, u.nickname
+
+</select>
+
 
 </mapper>

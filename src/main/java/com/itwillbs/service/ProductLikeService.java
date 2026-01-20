@@ -11,50 +11,45 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ProductLikeService {
 
-    // 🔥 로그인 전 임시 테스트 유저
-    private static final Long TEST_USER_ID = 1L;
-
     private final ProductLikeMapper productLikeMapper;
-    
-    // ✅ 1️⃣ 찜 여부 조회 (상세/메인 공용)
+
+    /* =========================
+       찜 여부 조회
+    ========================= */
     public boolean isLiked(Long productId, Long userId) {
         return productLikeMapper.exists(userId, productId);
     }
 
-    // ✅ 2️⃣ 찜 개수 조회 (상세/메인 공용)
+    /* =========================
+       찜 개수 조회
+    ========================= */
     public int getLikeCount(Long productId) {
         return productLikeMapper.countByProductId(productId);
     }
-    
-    // ✅ 3️⃣ 찜 토글 
+
+    /* =========================
+       ❤️ 찜 토글 (FIXED)
+    ========================= */
     @Transactional
-    public ProductLikeResultVO toggleLike(Long productId) {
+    public ProductLikeResultVO toggleLike(Long productId, Long userId) {
 
-        Long userId = TEST_USER_ID;
+        boolean liked;
 
-        // 1️⃣ 현재 찜 상태 확인
-        boolean liked = productLikeMapper.exists(userId, productId);
-
-        
-        if (liked) {
+        // ✅ userId, productId 순서가 핵심
+        if (productLikeMapper.exists(userId, productId)) {
             productLikeMapper.delete(userId, productId);
+            liked = false;
         } else {
             productLikeMapper.insert(userId, productId);
+            liked = true;
         }
-        
-        // 3결과 상태는 반전값
-        boolean nowLiked = !liked;
 
-        // 찜 개수 재조회
         int likeCount = productLikeMapper.countByProductId(productId);
-        
-     
+
         return new ProductLikeResultVO(
-                productId.toString(),
+                String.valueOf(productId),
                 likeCount,
-                nowLiked
+                liked
         );
     }
-
-
 }

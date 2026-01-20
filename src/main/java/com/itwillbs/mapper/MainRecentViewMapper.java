@@ -1,12 +1,12 @@
 package com.itwillbs.mapper;
 
-import com.itwillbs.dto.MainRecentViewDTO;
-import org.apache.ibatis.annotations.Mapper;
-
+import com.itwillbs.view.MainProductCardVO;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface MainRecentViewMapper {
 
-    List<MainRecentViewDTO> selectRecentProducts(List<Long> ids);
+    List<MainProductCardVO> selectRecentViewProducts(List<Long> ids);
 }

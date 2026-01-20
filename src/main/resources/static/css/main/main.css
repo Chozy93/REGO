@@ -156,4 +156,24 @@
   .hero-desc {
     font-size: var(--fs-14);
   }
+  
 }
+
+
+.ai-scroll {
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.ai-track {
+  display: flex;
+  gap: 16px;
+}
+
+
+
+
+
+
+
+

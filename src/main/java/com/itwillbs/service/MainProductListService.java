@@ -13,62 +13,39 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MainProductListService {
+	
+	private static final int POPULAR_LIMIT = 12;
 
     private final MainProductMapper mainProductMapper;
 
-    // 🔥 로그인 전 임시 테스트 유저
-    private static final Long TEST_USER_ID = 1L;
-
+  
     /* =========================
        최근 등록 상품
        MAIN01_LIST
     ========================= */
-    public List<MainProductCardVO> getRecentProducts() {
-
-        List<MainProductListDTO> list =
-                mainProductMapper.selectRecentProducts(TEST_USER_ID);
-
-        return list.stream()
-                .map(this::toCardVO)
-                .toList();
+    public List<MainProductCardVO> getRecentProducts(Long userId) {
+        List<MainProductListDTO> list = mainProductMapper.selectRecentProducts(userId);
+        return list.stream().map(this::toCardVO).toList();
     }
     
     /* =========================
     최근 등록 상품 (정렬)
     MAIN01_SORT_ORDER
  ========================= */
-    public List<MainProductCardVO> getRecentProducts(
-            MainProductSortConditionVO condition
-    ) {
+    public List<MainProductCardVO> getRecentProducts(Long userId, MainProductSortConditionVO condition) {
         List<MainProductListDTO> list =
-                mainProductMapper.selectRecentProductsWithSort(
-                        TEST_USER_ID,
-                        condition.getSort()
-                );
-
-        return list.stream()
-                .map(this::toCardVO)
-                .toList();
+                mainProductMapper.selectRecentProductsWithSort(userId, condition.getSort());
+        return list.stream().map(this::toCardVO).toList();
     }
-
 
     /* =========================
      * 인기 상품
      * MAIN01_POPULAR
      ========================= */
-    private static final int POPULAR_LIMIT = 12;
-
-    public List<MainProductCardVO> getPopularProducts() {
-
+    public List<MainProductCardVO> getPopularProducts(Long userId) {
         List<MainProductListDTO> list =
-            mainProductMapper.selectPopularProducts(
-                TEST_USER_ID,
-                POPULAR_LIMIT
-            );
-
-        return list.stream()
-            .map(this::toCardVO)
-            .toList();
+                mainProductMapper.selectPopularProducts(userId, POPULAR_LIMIT);
+        return list.stream().map(this::toCardVO).toList();
     }
 
     /* =========================

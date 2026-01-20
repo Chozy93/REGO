@@ -2,11 +2,11 @@ package com.itwillbs.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.itwillbs.dto.SellerInfoDTO;
+import com.itwillbs.dto.ProductSellerInfoDTO;
 
 @Mapper
 public interface SellerInfoMapper {
 	
-	SellerInfoDTO selectSellerInfoByProductId(Long productId);
+	ProductSellerInfoDTO selectSellerInfoByProductId(Long productId);
 
 }

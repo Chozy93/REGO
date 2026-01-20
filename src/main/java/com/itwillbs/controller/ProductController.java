@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itwillbs.entity.User;
 import com.itwillbs.repository.UserRepository;
+import com.itwillbs.security.util.SecurityUtil;
 import com.itwillbs.service.ProductDetailService;
 import com.itwillbs.service.ProductListService;
 import com.itwillbs.service.ProductReportService;
 import com.itwillbs.service.ProductService;
 import com.itwillbs.view.ProductDetailPageVO;
 import com.itwillbs.view.ProductListPageVO;
+import com.itwillbs.view.condition.ProductListConditionVO;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -68,48 +70,32 @@ public class ProductController {
 	    }
 
 	    // 2️⃣ 로그인 여부
-	    boolean isLogin = false;
-	    User loginUser = null;
+	    User loginUser = SecurityUtil.getCurrentUser();
+	    Long loginUserId = (loginUser != null) ? loginUser.getUserId() : null;
 
-	    HttpSession session = request.getSession(false);
-	    if (session != null) {
-	        loginUser = (User) session.getAttribute("loginUser");
-	        isLogin = (loginUser != null);
-	    }
-
-	    // 🔥 테스트 중이면 임시 로그인
-	     isLogin = true;
-	     loginUser = userRepository.findById(1L).orElse(null);
-
-	    // 3️⃣ PageVO 생성
 	    ProductDetailPageVO page =
-	            productDetailService.getProductDetailPage(id, !alreadyViewed, isLogin);
-
-	    // 4️⃣ DETAIL01_REPORT_STATUS
-	    boolean alreadyReported = false;
-	    if (loginUser != null) {
-	        alreadyReported =
-	                productReportService.isAlreadyReported(id, loginUser);
-	    }
-
-	    page.setAlreadyReported(alreadyReported);
+	            productDetailService.getProductDetailPage(
+	                    id,
+	                    !alreadyViewed,
+	                    loginUserId   // ✅ Long
+	            );
 
 	    model.addAttribute("page", page);
 	    return "product/detail";
 	}
 
-
-	
 	// ✅ 카테고리별 상품 목록
 	@GetMapping("/products")
-    public String productList(
-            @RequestParam("categoryId") Long categoryId,
-            Model model
-    ) {
-        ProductListPageVO page =
-                productListService.getProductsByCategory(categoryId);
+	public String productList(
+	        ProductListConditionVO condition,
+	        Model model
+	) {
 
-        model.addAttribute("page", page);
-        return "product/list";
-    }
+	    ProductListPageVO page =
+	            productListService.getProductListPage(condition);
+
+	    model.addAttribute("page", page);
+	    return "product/list";
+	}
+
 }

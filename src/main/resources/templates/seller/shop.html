@@ -7,17 +7,46 @@
     <link rel="stylesheet" th:href="@{/css/seller/shop.css}">
 </th:block>
 
-<!-- ⭐⭐⭐ 이 div가 핵심입니다 -->
 <div layout:fragment="content">
+	
+	<!-- =========================
+	     판매자 프로필 카드
+	========================= -->
+	<section class="seller-profile-card"
+	         th:if="${page.sellerProfile != null}">
 
-    <!-- =========================
-         판매자 상품 목록
-    ========================== -->
+	    <div class="seller-profile-inner">
 
+	        <span class="material-symbols-outlined seller-icon">
+	            person
+	        </span>
+
+	        <div class="seller-info">
+	            <h2 th:text="${page.sellerProfile.nickname}">
+	                판매자 닉네임
+	            </h2>
+
+	            <p class="seller-region"
+	               th:text="${page.sellerProfile.regionName}">
+	                지역
+	            </p>
+
+	            <p class="seller-count">
+	                판매중 상품
+	                <b th:text="${page.sellerProfile.productCount}">0</b>개
+	            </p>
+	        </div>
+
+	    </div>
+	</section>
+
+
+    <!-- 판매자 상품 없음 -->
     <div th:if="${#lists.isEmpty(page.products)}">
         <p>등록된 상품이 없습니다.</p>
     </div>
 
+    <!-- 판매자 상품 목록 -->
     <div th:if="${!#lists.isEmpty(page.products)}"
          class="seller-product-list">
 
@@ -68,6 +97,4 @@
     </div>
 
 </div>
-<!-- ⭐⭐⭐ 여기까지가 content -->
-
 </html>

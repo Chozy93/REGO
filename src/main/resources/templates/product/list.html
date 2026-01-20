@@ -5,27 +5,76 @@
 
 <div layout:fragment="content">
 
-    <!-- ✅ 카테고리 제목 -->
-    <h2 th:text="${page.categoryName}">카테고리</h2>
+  <!-- =========================
+       CATEGORY BAR
+  ========================= -->
+  <section class="category-bar">
+    <h2 class="category-title"
+        th:text="${page.categoryBar.categoryName}">
+      카테고리명
+    </h2>
 
-    <!-- ✅ 상품 목록 -->
-    <section class="product-list">
+    <ul class="category-tabs">
+      <li th:each="tab : ${page.categoryBar.tabs}"
+          th:classappend="${tab.active} ? 'active'">
 
-        <!-- ❌ 상품 없을 때 -->
-        <div th:if="${#lists.isEmpty(page.cards)}" class="empty">
-            해당 카테고리에 등록된 상품이 없습니다.
-        </div>
+        <a th:href="@{/products(categoryId=${tab.id})}"
+           th:text="${tab.name}">
+          탭명
+        </a>
 
-        <!-- ✅ 상품 있을 때 -->
-        <div class="product-grid"
-             th:if="${!#lists.isEmpty(page.cards)}">
+      </li>
+    </ul>
+  </section>
 
-            <div th:each="card : ${page.cards}"
-                 th:replace="~{fragments/product-card :: card(card=${card})}">
-            </div>
+  <!-- =========================
+       PRODUCT LIST
+  ========================= -->
+  <section class="product-list">
 
-        </div>
-    </section>
+    <!-- 상품 없음 -->
+    <div th:if="${#lists.isEmpty(page.cards)}"
+         class="empty-message">
+      등록된 상품이 없습니다.
+    </div>
+
+    <!-- 상품 카드 -->
+    <div class="product-grid"
+         th:if="${!#lists.isEmpty(page.cards)}">
+
+      <div class="product-card"
+           th:each="card : ${page.cards}">
+
+        <a th:href="@{/products/{id}(id=${card.id})}">
+
+          <img th:src="${card.img}"
+               alt="상품 이미지"/>
+
+          <div class="info">
+            <p class="title" th:text="${card.title}">상품명</p>
+            <p class="price"
+               th:text="${#numbers.formatInteger(card.price, 3, 'COMMA')} + '원'">
+              가격
+            </p>
+            <p class="meta">
+              <span th:text="${card.loc}">지역</span>
+              ·
+              <span th:text="${card.time}">시간</span>
+            </p>
+          </div>
+
+        </a>
+
+        <!-- 찜 -->
+        <button class="like-btn"
+                th:classappend="${card.liked} ? 'liked'">
+          ♥ <span th:text="${card.likeCount}">0</span>
+        </button>
+
+      </div>
+    </div>
+
+  </section>
 
 </div>
 </html>

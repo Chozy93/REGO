@@ -5,20 +5,29 @@ import java.util.List;
 
 public class MainPageVO {
 
+    private final boolean login;
+
     private final List<MainProductCardVO> aiProducts;
     private final List<MainProductCardVO> popularProducts;
-    private final List<MainProductCardVO> recentProducts;
-
-    private MainRecentViewVO recentView;
+    private final List<MainProductCardVO> recentProducts; // 최근 등록
+    private final List<MainProductCardVO> recentView;     // 최근 본
 
     public MainPageVO(
+            boolean login,
             List<MainProductCardVO> aiProducts,
             List<MainProductCardVO> popularProducts,
-            List<MainProductCardVO> recentProducts
+            List<MainProductCardVO> recentProducts,
+            List<MainProductCardVO> recentView
     ) {
+        this.login = login;
         this.aiProducts = aiProducts != null ? aiProducts : Collections.emptyList();
         this.popularProducts = popularProducts != null ? popularProducts : Collections.emptyList();
         this.recentProducts = recentProducts != null ? recentProducts : Collections.emptyList();
+        this.recentView = recentView != null ? recentView : Collections.emptyList();
+    }
+
+    public boolean isLogin() {
+        return login;
     }
 
     public List<MainProductCardVO> getAiProducts() {
@@ -33,13 +42,7 @@ public class MainPageVO {
         return recentProducts;
     }
 
-    // ✅ 추가된 부분
-    public MainRecentViewVO getRecentView() {
+    public List<MainProductCardVO> getRecentView() {
         return recentView;
-    }
-
-    // ✅ 조합용 setter
-    public void setRecentView(MainRecentViewVO recentView) {
-        this.recentView = recentView;
     }
 }

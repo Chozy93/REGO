@@ -1,26 +1,24 @@
 package com.itwillbs.view;
 
-import com.itwillbs.dto.ProductSimilarListDTO;
-
+import com.itwillbs.dto.ProductSimilarDTO;
 import lombok.Getter;
 
 @Getter
 public class ProductSimilarItemVO {
 
     private final String productId;
-    private final String title;
+    private final String productName;
     private final int price;
     private final String thumbnailUrl;
     private final String regionName;
-    private final int likeCount;
 
-    public ProductSimilarItemVO(ProductSimilarListDTO dto) {
+    public ProductSimilarItemVO(ProductSimilarDTO dto) {
         this.productId = String.valueOf(dto.getProductId());
-        this.title = dto.getTitle();
+        this.productName = dto.getProductName();
         this.price = dto.getPrice();
-        this.thumbnailUrl = dto.getThumbnailUrl();
-        this.regionName = dto.getRegionName();
-        this.likeCount = dto.getLikeCount();
+        this.thumbnailUrl =
+                dto.getThumbnailUrl() != null ? dto.getThumbnailUrl() : "";
+        this.regionName =
+                dto.getRegionName() != null ? dto.getRegionName() : "";
     }
 }
-

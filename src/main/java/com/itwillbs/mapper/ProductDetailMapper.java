@@ -1,37 +1,40 @@
 package com.itwillbs.mapper;
 
-import java.util.List;
-
+import com.itwillbs.dto.ProductDetailDTO;
+import com.itwillbs.dto.ProductSimilarDTO;
+import com.itwillbs.dto.ProductSellerInfoDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.itwillbs.dto.ProductDetailDTO;
-import com.itwillbs.dto.ProductSimilarListDTO;
+import java.util.List;
 
 @Mapper
 public interface ProductDetailMapper {
 
-    // =========================
-    // DETAIL01_VIEWCOUNT
-    // =========================
+    // 조회수 증가
     void increaseViewCount(@Param("productId") Long productId);
 
+    // 상품 상세 기본 정보
+    ProductDetailDTO selectProductDetail(@Param("productId") Long productId);
+
+    // 상세 이미지 목록
+    List<String> selectProductImages(@Param("productId") Long productId);
+
+    // 판매자 정보 (STEP 6)
+    ProductSellerInfoDTO selectSellerInfo(@Param("productId") Long productId);
+
     // =========================
-    // DETAIL01_INFO
+    // 비슷한 상품
     // =========================
-    ProductDetailDTO selectProductDetail(
-            @Param("productId") Long productId
+    List<ProductSimilarDTO> selectSimilarProducts(
+        @Param("productId") Long productId,
+        @Param("limit") int limit
     );
 
     // =========================
-    // DETAIL01_SIMILAR
+    // 비슷한 상품 fallback (인기 상품)
     // =========================
-    List<ProductSimilarListDTO> selectSimilarProducts(
-            @Param("productId") Long productId,
-            @Param("limit") int limit
-    );
-
-    List<ProductSimilarListDTO> selectPopularProductsForSimilar(
-            @Param("limit") int limit
+    List<ProductSimilarDTO> selectPopularProductsForSimilar(
+        @Param("limit") int limit
     );
 }
