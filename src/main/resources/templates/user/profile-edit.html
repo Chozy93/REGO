@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<head>
+    <th:block layout:fragment="pageCss">
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+        <style>
+            .profile-edit-container { font-family: 'Manrope', 'Noto Sans KR', sans-serif; }
+            footer, .footer { display: none !important; }
+        </style>
+    </th:block>
+</head>
+
+<body>
+	<div layout:fragment="content">
+	    <div class="profile-edit-container bg-[#f8faf9] dark:bg-[#0d130f] min-h-screen">
+	        <div class="w-full max-w-[1280px] mx-auto px-4 py-8 flex flex-col md:flex-row gap-6">
+	            
+	            <aside class="w-full md:w-64 flex-shrink-0">
+	                <div class="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-sm border border-[#f0f4f2] dark:border-white/5 space-y-6">
+	                    <div class="flex flex-col items-center pb-6 border-b border-[#f0f4f2] dark:border-white/5">
+	                        <img th:src="${user.profileImg != null ? user.profileImg : 'https://lh3.googleusercontent.com/aida-public/AB6AXuD0ObRBFDRs_vob6idb6aYKUuIove2YF-wbvYCHg-2sm6qoyedO7RYGPgbD3YUragy7aKMdHZaGuFf9n2VN8bfXNLuaHQv41ulrqhVYIpmk3x64L5NlUFVVfia-ExqeHUsxo5vgQfQPtrASlzehup3VxN0K1KuHLfM_Jo4LSDScARNe9G-rzONQqnH5Zobrl4cD0Z9vAbXnHqFPATdIE6yqtnbrqSfNs-liXa-Ege7QLNN9juuw7GAvbZhH4XK8XgkJEehsTeeKTVY'}" 
+	                             alt="Profile" class="size-20 rounded-full object-cover border-4 border-white dark:border-[#1A2C20] shadow-md bg-gray-200 mb-3"/>
+	                        <h2 class="text-xl font-bold text-[#111813] dark:text-white" th:text="${user.nickname}">닉네임</h2>
+	                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">인증된 회원</p>
+	                    </div>
+	                    <nav class="space-y-1">
+	                        <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/10 text-primary font-bold transition-colors" href="#">
+	                            <span class="material-symbols-outlined text-[20px]">person</span>
+	                            <span class="text-sm">프로필 관리</span>
+	                        </a>
+	                    </nav>
+	                </div>
+	            </aside>
+
+	            <main class="flex-1">
+	                <div class="bg-white dark:bg-white/5 rounded-2xl p-6 md:p-8 shadow-sm border border-[#f0f4f2] dark:border-white/5 w-full max-w-2xl mx-auto">
+	                    <div class="flex items-center justify-between mb-8">
+	                        <h2 class="text-2xl font-bold text-[#111813] dark:text-white">프로필 관리</h2>
+	                    </div>
+
+	                    <div class="flex flex-col items-center mb-10">
+	                        <div class="relative group cursor-pointer">
+	                            <img th:src="${user.profileImg != null ? user.profileImg : 'https://lh3.googleusercontent.com/aida-public/AB6AXuD0ObRBFDRs_vob6idb6aYKUuIove2YF-wbvYCHg-2sm6qoyedO7RYGPgbD3YUragy7aKMdHZaGuFf9n2VN8bfXNLuaHQv41ulrqhVYIpmk3x64L5NlUFVVfia-ExqeHUsxo5vgQfQPtrASlzehup3VxN0K1KuHLfM_Jo4LSDScARNe9G-rzONQqnH5Zobrl4cD0Z9vAbXnHqFPATdIE6yqtnbrqSfNs-liXa-Ege7QLNN9juuw7GAvbZhH4XK8XgkJEehsTeeKTVY'}" 
+	                                 alt="Profile" class="size-32 rounded-full object-cover border-4 border-white dark:border-[#1A2C20] shadow-lg bg-gray-200"/>
+	                            <div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+	                                <span class="material-symbols-outlined text-white text-3xl">photo_camera</span>
+	                            </div>
+	                            <button type="button" class="absolute bottom-0 right-0 p-2.5 bg-primary text-[#111813] rounded-full shadow-lg border-2 border-white dark:border-[#1A2C20]">
+	                                <span class="material-symbols-outlined text-xl leading-none">edit</span>
+	                            </button>
+	                        </div>
+	                        <button type="button" class="mt-4 text-sm font-bold text-primary hover:text-primary/80 transition-colors">이미지 변경</button>
+	                    </div>
+
+						<form th:action="@{/mypage/update}" method="post" class="space-y-6">
+						    <div>
+						        <label class="block text-sm font-bold text-[#111813] dark:text-white mb-2">닉네임</label>
+						        <div class="flex gap-3">
+						            <input name="nickname" class="flex-1 h-12 rounded-xl bg-[#f0f4f2] dark:bg-white/5 border-transparent focus:border-primary focus:bg-white text-[#111813] dark:text-white px-4 transition-colors font-medium" type="text" th:value="${user.nickname}"/>
+						            <button type="button" class="h-12 px-5 rounded-xl border border-[#f0f4f2] dark:border-white/10 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-50 transition-colors bg-white dark:bg-transparent">중복 확인</button>
+						        </div>
+						    </div>
+
+						    <div>
+						        <label class="block text-sm font-bold text-[#111813] dark:text-white mb-2">내 상점 소개글</label>
+						        <textarea name="bio" class="w-full h-24 rounded-xl bg-[#f0f4f2] dark:bg-white/5 border-transparent focus:border-primary focus:bg-white text-[#111813] dark:text-white px-4 py-3 transition-colors font-medium resize-none leading-relaxed" placeholder="우리 상점을 소개해 보세요!" th:text="${user.bio}"></textarea>
+						    </div>
+
+						    <div>
+						        <label class="block text-sm font-bold text-[#111813] dark:text-white mb-2">이메일</label>
+						        <input class="w-full h-12 rounded-xl bg-gray-50 dark:bg-white/5 border-transparent text-gray-500 px-4 cursor-not-allowed font-medium" 
+						               disabled type="email" th:value="${user.email}"/>
+						    </div>
+
+							<div>
+							    <label class="block text-sm font-bold text-[#111813] dark:text-white mb-2">휴대폰 번호</label>
+							    <div class="flex gap-3">
+							        <input name="phoneNumber" class="flex-1 h-12 rounded-xl bg-[#f0f4f2] dark:bg-white/5 border-transparent focus:border-primary focus:bg-white text-[#111813] dark:text-white px-4 transition-colors font-medium" 
+							               type="tel" th:value="${user.phoneNumber}"/>
+							        <button type="button" class="h-12 px-5 rounded-xl border border-primary text-sm font-bold text-primary hover:bg-primary/10 transition-colors whitespace-nowrap bg-white dark:bg-transparent">재인증</button>
+							    </div>
+							</div>
+
+							<div class="space-y-4 mt-8">
+							    <div class="flex items-center justify-between p-4 rounded-xl border border-[#f0f4f2] dark:border-white/10 hover:border-primary/50 hover:shadow-sm transition-all group cursor-pointer bg-white dark:bg-white/5">
+							        <div class="flex items-center gap-4">
+							            <div class="p-2.5 rounded-xl bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+							                <span class="material-symbols-outlined">location_on</span>
+							            </div>
+							            <div>
+							                <h3 class="text-sm font-bold text-[#111813] dark:text-white mb-0.5">내 동네 설정</h3>
+							                <p class="text-xs text-gray-500 dark:text-gray-400" th:text="${user.address ?: '서울시 강남구 역삼동'}">서울시 강남구 역삼동</p>
+							            </div>
+							        </div>
+							        <button type="button" class="text-xs font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-colors">변경</button>
+							    </div>
+							    </div>
+						        <div class="flex items-center justify-between p-4 rounded-xl border border-[#f0f4f2] dark:border-white/10 hover:border-primary/50 hover:shadow-sm transition-all group cursor-pointer bg-white dark:bg-white/5">
+						            <div class="flex items-center gap-4">
+						                <div class="p-2.5 rounded-xl bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+						                    <span class="material-symbols-outlined">lock</span>
+						                </div>
+						                <h3 class="text-sm font-bold text-[#111813] dark:text-white">비밀번호 변경</h3>
+						            </div>
+						            <span class="material-symbols-outlined text-gray-400 group-hover:text-[#111813] dark:group-hover:text-white transition-colors">chevron_right</span>
+						        </div>
+
+						        <div class="flex items-center justify-between p-4 rounded-xl border border-[#f0f4f2] dark:border-white/10 hover:border-primary/50 hover:shadow-sm transition-all group cursor-pointer bg-white dark:bg-white/5">
+						            <div class="flex items-center gap-4">
+						                <div class="p-2.5 rounded-xl bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+						                    <span class="material-symbols-outlined">link</span>
+						                </div>
+						                <div>
+						                    <h3 class="text-sm font-bold text-[#111813] dark:text-white mb-0.5">소셜 계정 연동</h3>
+						                    <div class="flex items-center gap-1">
+						                        <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+						                        <p class="text-xs text-gray-500 dark:text-gray-400">카카오톡 연결됨</p>
+						                    </div>
+						                </div>
+						            </div>
+						            <span class="material-symbols-outlined text-gray-400 group-hover:text-[#111813] dark:group-hover:text-white transition-colors">chevron_right</span>
+						        </div>
+						    </div>
+
+						    <div class="flex gap-4 mt-10">
+								<button class="flex-1 h-12 rounded-xl border border-[#f0f4f2] dark:border-white/10 text-[#111813] dark:text-white font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors bg-white dark:bg-transparent">취소</button>
+								<button class="flex-1 h-12 rounded-xl bg-primary text-[#111813] font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">저장</button>
+						    </div>
+						</form>
+	                </div>
+	            </main>
+	        </div>
+	    </div>
+	</div>
+</body>
+</html>
+
+
+

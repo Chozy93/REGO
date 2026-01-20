@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
 <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -45,42 +46,119 @@
 <h1 class="text-lg font-bold leading-tight tracking-tight text-[#111813]">비밀번호 찾기</h1>
 </div>
 <div class="flex flex-col gap-6">
-<label class="flex flex-col gap-1.5">
-<p class="text-base font-medium leading-normal text-[#111813]">아이디</p>
-<input class="form-input h-14 w-full rounded-xl border border-[#dbe6df] bg-white p-[15px] text-base font-normal text-[#111813] placeholder:text-[#61896f] focus:border-primary focus:outline-0 focus:ring-1 focus:ring-primary" placeholder="아이디를 입력해주세요" type="text"/>
-</label>
-<label class="flex flex-col gap-1.5">
-<p class="text-base font-medium leading-normal text-[#111813]">휴대폰 번호</p>
-<div class="flex items-center gap-2">
-<input class="form-input h-14 w-full flex-1 rounded-xl border border-[#dbe6df] bg-white p-[15px] text-base font-normal text-[#111813] placeholder:text-[#61896f] focus:border-primary focus:outline-0 focus:ring-1 focus:ring-primary" placeholder="휴대폰 번호 (-없이 숫자만 입력)" type="tel"/>
-<button class="h-14 min-w-[120px] rounded-xl bg-[#e6ebe8] px-4 text-sm font-bold leading-normal text-[#111813] transition-colors hover:bg-[#dbe6df] active:scale-[0.98]">
-                                인증번호 받기
-                            </button>
-</div>
-</label>
-<label class="flex flex-col gap-1.5">
-<p class="text-base font-medium leading-normal text-[#111813]">인증번호</p>
-<div class="flex items-center gap-2">
-<div class="relative w-full flex-1">
-<input class="form-input h-14 w-full rounded-xl border border-[#dbe6df] bg-white p-[15px] text-base font-normal text-[#111813] placeholder:text-[#61896f] focus:border-primary focus:outline-0 focus:ring-1 focus:ring-primary" placeholder="인증번호 6자리" type="text"/>
-<span class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-red-500">03:00</span>
-</div>
-<button class="h-14 min-w-[120px] rounded-xl border border-[#dbe6df] bg-white px-4 text-sm font-bold leading-normal text-[#61896f] transition-colors hover:bg-background-light hover:text-[#111813] active:scale-[0.98]">
-                                인증번호 확인
-                            </button>
-</div>
-<p class="text-xs text-[#61896f] pl-1">가입 시 등록한 휴대폰 번호로 인증번호를 발송합니다.</p>
-</label>
-</div>
-<div class="flex-1"></div>
-<div class="flex flex-col gap-4 mt-4">
-<button class="flex h-12 w-full items-center justify-center rounded-xl bg-primary px-6 text-base font-bold leading-normal text-[#102216] transition-colors hover:bg-[#0fd650] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed">
-                        다음
-                    </button>
-</div>
+    <div id="idInputArea" class="flex flex-col gap-6">
+        <label class="flex flex-col gap-1.5">
+            <p class="text-base font-medium leading-normal text-[#111813]">아이디(이메일)</p>
+            <input id="targetEmail" class="form-input h-14 w-full rounded-xl border border-[#dbe6df] bg-white p-[15px] text-base font-normal text-[#111813] placeholder:text-[#61896f] focus:border-primary focus:outline-0 focus:ring-1 focus:ring-primary" placeholder="가입한 이메일을 입력해주세요" type="email"/>
+        </label>
+        <button type="button" onclick="checkEmailAndVerify()" class="h-14 w-full rounded-xl bg-primary px-4 text-base font-bold leading-normal text-[#102216] transition-colors hover:bg-[#0fd650]">
+            본인인증하고 비밀번호 변경하기
+        </button>
+    </div>
+
+    <div id="resetPwArea" class="hidden flex flex-col gap-6">
+        <div class="rounded-xl bg-[#f0f4f2] p-4 text-center border border-primary">
+            <p class="text-sm font-bold text-primary">본인인증 성공!</p>
+            <p class="text-xs text-[#61896f]">새로운 비밀번호를 설정해주세요.</p>
+        </div>
+        <label class="flex flex-col gap-1.5">
+            <p class="text-base font-medium leading-normal text-[#111813]">새 비밀번호</p>
+            <input id="newPassword" class="form-input h-14 w-full rounded-xl border border-[#dbe6df] bg-white p-[15px] text-base font-normal text-[#111813]" type="password" placeholder="새 비밀번호 입력"/>
+        </label>
+        <label class="flex flex-col gap-1.5">
+            <p class="text-base font-medium leading-normal text-[#111813]">비밀번호 확인</p>
+            <input id="confirmPassword" class="form-input h-14 w-full rounded-xl border border-[#dbe6df] bg-white p-[15px] text-base font-normal text-[#111813]" type="password" placeholder="비밀번호 재입력"/>
+        </label>
+        <button type="button" onclick="updatePassword()" class="h-14 w-full rounded-xl bg-primary px-4 text-base font-bold leading-normal text-[#102216]">
+            비밀번호 변경 완료
+        </button>
+    </div>
 </div>
 </div>
 </main>
 </div>
+<script>
+    // 1. 본인인증 및 유저 확인
+    async function checkEmailAndVerify() {
+        const email = document.getElementById("targetEmail").value;
 
+        if (!email) {
+            alert("이메일을 먼저 입력해주세요!");
+            return;
+        }
+
+        try {
+            const identityVerificationId = `id-verify-${new Date().getTime()}`;
+
+            // 포트원 V2 본인인증 요청
+            const response = await PortOne.requestIdentityVerification({
+                storeId: "store-40e995f6-80d5-43c5-812a-babeaca09755",
+                channelKey: "channel-key-d4d68a57-122c-4418-81fb-d1ed47cec331",
+                identityVerificationId: identityVerificationId,
+                identityVerificationMethod: "SMS"
+            });
+
+            // 본인인증 창 닫혔을 때 성공 여부 확인
+            if (response.code == null) {
+                // 서버에 이메일과 본인인증 ID 보내서 검증
+                const res = await fetch("/login/verify_user_for_pw", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        imp_uid: response.identityVerificationId,
+                        email: email 
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    // 검증 성공 시: 아이디 입력창 숨기고 비번 재설정창 보여주기
+                    document.getElementById("idInputArea").classList.add("hidden");
+                    document.getElementById("resetPwArea").classList.remove("hidden");
+                } else {
+                    alert(data.message || "정보가 일치하지 않습니다.");
+                }
+            }
+        } catch (error) {
+            alert("본인인증 중 오류가 발생했습니다: " + error.message);
+        }
+    }
+
+    // 2. 실제 비밀번호 변경
+	async function updatePassword() {
+	    const email = document.getElementById("targetEmail").value;
+	    const newPw = document.getElementById("newPassword").value;
+	    const confirmPw = document.getElementById("confirmPassword").value;
+
+	    if (!newPw || newPw.length < 4) { // 최소한의 유효성 검사
+	        alert("비밀번호는 4자리 이상 입력해주세요!");
+	        return;
+	    }
+
+	    if (newPw !== confirmPw) {
+	        alert("비밀번호가 서로 일치하지 않아요!");
+	        return;
+	    }
+	    
+	    // 실제 서버로 변경 요청 보내기
+	    const res = await fetch("/login/update_password", {
+	        method: "POST",
+	        headers: { "Content-Type": "application/json" },
+	        body: JSON.stringify({ 
+	            email: email,
+	            newPassword: newPw 
+	        })
+	    });
+
+	    const data = await res.json();
+
+	    if (data.success) {
+	        alert("비밀번호가 성공적으로 변경되었습니다! 다시 로그인해주세요.");
+	        location.href = "/login"; // 로그인 페이지로 이동
+	    } else {
+	        alert(data.message);
+	    }
+	}
+</script>
 </body></html>

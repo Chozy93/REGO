@@ -1,6 +1,7 @@
 package com.itwillbs.mapper;
 
 import com.itwillbs.dto.SocialAccountDTO;
+import com.itwillbs.entity.User;
 
 import java.util.Map;
 
@@ -18,4 +19,11 @@ public interface UserMapper {
     void insertUser(Map<String, Object> userParams);
     
     Map<String, Object> findUserByEmail(String email);
+    void updatePhoneNumber(@Param("username") String username, @Param("phoneNumber") String phoneNumber);
+
+    User selectUserById(long userId);
+    String findEmailByPhoneNumber(String phoneNumber);
+    int countByEmailAndPhone(@Param("email") String email, @Param("phoneNumber") String phoneNumber);
+    void updateUserPassword(@Param("email") String email, @Param("password") String password);
+
 }

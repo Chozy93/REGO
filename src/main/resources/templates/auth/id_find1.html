@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
 <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -44,38 +45,78 @@
 </button>
 <h1 class="text-lg font-bold leading-tight tracking-tight text-[#111813]">아이디 찾기</h1>
 </div>
-<div class="flex flex-col gap-6">
-<label class="flex flex-col gap-1.5">
-<p class="text-base font-medium leading-normal text-[#111813]">휴대폰 번호</p>
-<div class="flex items-center gap-2">
-<input class="form-input h-14 w-full flex-1 rounded-xl border border-[#dbe6df] bg-white p-[15px] text-base font-normal text-[#111813] placeholder:text-[#61896f] focus:border-primary focus:outline-0 focus:ring-1 focus:ring-primary" placeholder="휴대폰 번호 (-없이 숫자만 입력)" type="tel"/>
-<button class="h-14 min-w-[120px] rounded-xl bg-[#e6ebe8] px-4 text-sm font-bold leading-normal text-[#111813] transition-colors hover:bg-[#dbe6df] active:scale-[0.98]">
-                                인증번호 받기
-                            </button>
+<div id="authArea" class="flex flex-col gap-6">
+    <div class="rounded-xl bg-[#f0f4f2] p-6 text-center border border-[#dbe6df]">
+        <span class="material-symbols-outlined text-[40px] text-[#61896f] mb-2">identity_platform</span>
+        <p class="text-base font-medium text-[#111813]">안전한 아이디 찾기</p>
+        <p class="text-sm text-[#61896f] mt-1">본인 명의의 휴대폰으로 <br> 본인확인을 진행해주세요.</p>
+    </div>
+    
+    <button type="button" onclick="certification()" class="h-14 w-full rounded-xl bg-primary px-4 text-base font-bold leading-normal text-[#102216] transition-colors hover:bg-[#0fd650] active:scale-[0.98]">
+        본인인증 시작하기
+    </button>
 </div>
-</label>
-<label class="flex flex-col gap-1.5">
-<p class="text-base font-medium leading-normal text-[#111813]">인증번호</p>
-<div class="flex items-center gap-2">
-<div class="relative w-full flex-1">
-<input class="form-input h-14 w-full rounded-xl border border-[#dbe6df] bg-white p-[15px] text-base font-normal text-[#111813] placeholder:text-[#61896f] focus:border-primary focus:outline-0 focus:ring-1 focus:ring-primary" placeholder="인증번호 6자리" type="text"/>
-<span class="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium text-red-500">03:00</span>
+
+<div id="resultArea" class="hidden flex flex-col gap-6 mt-6 p-6 rounded-xl bg-[#f0f4f2] border-2 border-primary">
+    <div class="text-center">
+        <p class="text-sm text-[#61896f] mb-1">가입하신 아이디를 찾았습니다!</p>
+        <p id="foundEmail" class="text-xl font-bold text-[#102216]"></p>
+    </div>
+    <a href="/login" class="flex h-12 w-full items-center justify-center rounded-xl bg-primary px-6 text-base font-bold leading-normal text-[#102216] hover:bg-[#0fd650]">
+        로그인 페이지로 이동
+    </a>
 </div>
-<button class="h-14 min-w-[120px] rounded-xl border border-[#dbe6df] bg-white px-4 text-sm font-bold leading-normal text-[#61896f] transition-colors hover:bg-background-light hover:text-[#111813] active:scale-[0.98]">
-                                인증번호 확인
-                            </button>
-</div>
-<p class="text-xs text-[#61896f] pl-1">입력하신 휴대폰 번호로 전송된 인증번호를 입력해주세요.</p>
-</label>
-</div>
-<div class="flex-1"></div>
-<div class="flex flex-col gap-4 mt-4">
-<button class="flex h-12 w-full items-center justify-center rounded-xl bg-primary px-6 text-base font-bold leading-normal text-[#102216] transition-colors hover:bg-[#0fd650] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed">
-                        아이디 확인
-                    </button>
+
+<div id="errorArea" class="hidden flex flex-col gap-4 mt-6 p-4 rounded-xl bg-red-50 border border-red-200 text-center">
+    <p class="text-sm text-red-600">해당 정보로 가입된 계정을 찾을 수 없습니다.</p>
+    <a href="/register" class="text-sm font-bold text-[#111813] underline">회원가입 하러가기</a>
 </div>
 </div>
 </div>
 </main>
 </div>
+<script>
+	async function certification() {
+	    try {
+	        const identityVerificationId = `id-verify-${new Date().getTime()}`;
+
+	        // 포트원 V2 본인인증 요청
+	        const response = await PortOne.requestIdentityVerification({
+	            storeId: "store-40e995f6-80d5-43c5-812a-babeaca09755",
+	            channelKey: "channel-key-d4d68a57-122c-4418-81fb-d1ed47cec331",
+	            identityVerificationId: identityVerificationId,
+	            identityVerificationMethod: "SMS"
+	        });
+
+	        // 인증 성공 시 
+	        if (response.code == null) { 
+	            const identityVerificationId = response.identityVerificationId;
+
+
+	            const res = await fetch("/login/find_id_process", {
+	                method: "POST",
+	                headers: { "Content-Type": "application/json" },
+	                body: JSON.stringify({ imp_uid: identityVerificationId }) 
+	            });
+
+	            const data = await res.json();
+
+				if (data.success) {
+
+				    const resultArea = document.getElementById("resultArea");
+				    resultArea.classList.remove("hidden");
+				    document.getElementById("foundEmail").innerText = data.email;
+				    document.getElementById("authArea").style.display = 'none'; 
+				    document.getElementById("errorArea").classList.add("hidden");
+	            } else {
+	                // 가입 정보 없음
+	                document.getElementById("errorArea").classList.remove("hidden");
+	                document.getElementById("resultArea").classList.add("hidden");
+	            }
+	        }
+	    } catch (error) {
+	        alert("본인인증 중 오류가 발생했습니다: " + error.message);
+	    }
+	}
+</script>
 </body></html>
