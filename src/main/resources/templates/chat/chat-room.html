@@ -1,7 +1,9 @@
 <!-- =========================
      Chat Room Fragment
 ========================= -->
-<th:block th:fragment="chatRoomContent">
+<div id="chat-room-content"
+     th:fragment="chatRoomContent"
+     th:attr="data-room-id=${chatRoom.header.roomId}">
 
     <div class="chat-room">
 
@@ -42,7 +44,7 @@
         <!-- =========================
              Message Area
         ========================== -->
-        <section class="chat-room-messages">
+        <section class="chat-room-messages" id="chatMessages">
 
             <!-- =========================
                  Message List
@@ -117,4 +119,4 @@
 	window.chatOpponentProfileImageUrl =
 	   /*[[${chatRoom.header.opponentProfileImageUrl}]]*/ '';
 </script>
-</th:block>
+</div>

@@ -14,7 +14,11 @@ import com.itwillbs.dto.ChatRoomHeaderDTO;
 
 @Mapper
 public interface ChatMapper {
-
+	
+	boolean existsUnreadChat( 
+			@Param("userId") Long userId
+			);
+	
 	List<ChatListDTO> selectMyChatList(
 		    @Param("userId") Long userId,
 		    @Param("unreadOnly") Boolean unreadOnly

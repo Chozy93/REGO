@@ -66,13 +66,20 @@ public class Product {
     private ProductSalesStatus salesStatus;
 
     /* =========================
-       지역 정보
-    ========================= */
-    @Column(name = "region_display_name", length = 100, nullable = false)
-    private String regionDisplayName;
+	    지역 정보
+	 ========================= */
+	 @Column(name = "region_sido_code", length = 20)
+	 private String regionSidoCode;
+	
+	 @Column(name = "region_sigungu_code", length = 20)
+	 private String regionSigunguCode;
+	
+	 @Column(name = "region_eupmyeondong_code", length = 20)
+	 private String regionEupmyeondongCode;
+	
+	 @Column(name = "region_display_name", length = 100)
+	 private String regionDisplayName;
 
-    @Column(name = "region_code", length = 20, nullable = false)
-    private String regionCode;
 
     /* =========================
        통계
@@ -113,26 +120,31 @@ public class Product {
     /* =========================
     생성자 (VO → Entity)
  ========================= */
- public Product(User seller, Category category, ProductVO vo) {
-     this.seller = seller;
-     this.category = category;
-     this.productName = vo.getProductName();
-     this.description = vo.getDescription();
-     this.price = vo.getPrice();
+    public Product(User seller, Category category, ProductVO vo) {
+        this.seller = seller;
+        this.category = category;
 
-     this.conditionStatus = ProductConditionStatus.valueOf(vo.getConditionStatusCode());
-     this.salesStatus = ProductSalesStatus.ON_SALE;
+        this.productName = vo.getProductName();
+        this.description = vo.getDescription();
+        this.price = vo.getPrice();
 
-     this.regionDisplayName = vo.getRegionDisplayName();
-     this.regionCode = vo.getRegionCode();
+        this.conditionStatus =
+            ProductConditionStatus.valueOf(vo.getConditionStatusCode());
+        this.salesStatus = ProductSalesStatus.ON_SALE;
 
-     this.tradeType = TradeType.valueOf(vo.getTradeTypeCode());
-     this.mainImageUrl = vo.getMainImageUrl();
+        /* 지역 */
+        this.regionSidoCode = vo.getRegionSidoCode();
+        this.regionSigunguCode = vo.getRegionSigunguCode();
+        this.regionEupmyeondongCode = vo.getRegionEupmyeondongCode();
+        this.regionDisplayName = vo.getRegionDisplayName();
 
-     this.viewCount = 0;
-     this.likeCount = 0;
-     this.createdAt = LocalDateTime.now();
- }
+        this.tradeType = TradeType.valueOf(vo.getTradeTypeCode());
+        this.mainImageUrl = vo.getMainImageUrl();
+
+        this.viewCount = 0;
+        this.likeCount = 0;
+        this.createdAt = LocalDateTime.now();
+    }
 
 
     /* =========================

@@ -7,8 +7,10 @@ import com.itwillbs.domain.user.UserVO;
 import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.security.util.SecurityUtil;
 import com.itwillbs.service.CategoryService;
+import com.itwillbs.service.ChatService;
 import com.itwillbs.view.HeaderCategoryListVO;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @ControllerAdvice
@@ -16,11 +18,23 @@ import lombok.RequiredArgsConstructor;
 public class GlobalViewControllerAdvice  {
 
     private final CategoryService categoryService;	
+    private final ChatService chatService;	
 
     @ModelAttribute("headerCategoryListVO")
-    public HeaderCategoryListVO headerCategories() {
-    	System.out.println("가져온 카테고리 : "+categoryService.getHeaderCategories());
-        return categoryService.getHeaderCategories();
+    public HeaderCategoryListVO headerCategories(HttpSession session) {
+
+        HeaderCategoryListVO cached =
+                (HeaderCategoryListVO) session.getAttribute("headerCategoryListVO");
+
+        if (cached != null) {
+            return cached;
+        }
+
+        HeaderCategoryListVO categoryList =
+                categoryService.getHeaderCategories();
+
+        session.setAttribute("headerCategoryListVO", categoryList);
+        return categoryList;
     }
     
     
@@ -30,4 +44,15 @@ public class GlobalViewControllerAdvice  {
         return SecurityUtil.getCurrentUserVO();
     }
     
+    @ModelAttribute("hasUnreadChat")
+    public boolean hasUnreadChat() {
+
+        Long userId = SecurityUtil.getCurrentUserId();
+        if (userId == null) {
+            return false;
+        }
+
+        boolean hasUnread = chatService.hasUnreadChat(userId);
+        return hasUnread;
+    }
 }
