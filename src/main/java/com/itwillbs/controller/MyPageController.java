@@ -58,7 +58,6 @@ public class MyPageController {
     }
     
     
-    
     @GetMapping("/buys")
     public String getPurchaseList(Authentication authentication, Model model) {
         if (authentication == null) return "redirect:/login";
@@ -80,4 +79,28 @@ public class MyPageController {
         
         return "user/my_buys"; 
     }
+    
+    @GetMapping("/likes")
+    public String getLikeList(Authentication authentication, Model model) {
+        if (authentication == null) return "redirect:/login";
+
+        String email = authentication.getName(); 
+        MyPageDTO mypageInfo = mypageMapper.getMyPageInfo(email);
+        
+        // 찜한 목록 가져오기
+        List<Product> entityList = mypageMapper.getLikeListByUserId(mypageInfo.getUserId());
+        
+        List<ProductVO> likeList = entityList.stream()
+                .map(ProductVO::new)
+                .collect(Collectors.toList());
+
+        model.addAttribute("user", mypageInfo);
+        model.addAttribute("likeList", likeList);
+        
+        return "user/my_likes"; 
+    }
+    
+    
+    
+    
 }
