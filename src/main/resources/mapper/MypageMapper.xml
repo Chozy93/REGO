@@ -2,21 +2,130 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.itwillbs.mapper.MypageMapper">
 
-    <select id="getMyPageInfo" resultType="com.itwillbs.dto.MyPageDTO">
-        SELECT 
-            u.user_id as userId,
-            u.email,
-            u.nickname,
-            u.phone_number as phoneNumber,
-            u.gender,
-            u.profile_img as profileImg,
-            u.created_at as createdAt,
-            ua.address as address
-        FROM users u
-        LEFT JOIN user_address ua 
-               ON u.user_id = ua.user_id 
-              AND ua.is_default = 1
-        WHERE u.email = #{email}
-    </select>
+<select id="getMyPageInfo" resultType="com.itwillbs.dto.MyPageDTO">
+    SELECT 
+        u.user_id as userId,
+        u.email,
+        u.nickname,
+        u.bio,
+        u.phone_number as phoneNumber,
+        u.gender,
+        u.profile_img as profileImg,
+        u.created_at as createdAt,
+        ua.address as address
+    FROM users u
+    LEFT JOIN (
+        SELECT user_id, address 
+        FROM user_address 
+        WHERE is_default = 1 
+        ORDER BY updated_at DESC 
+        LIMIT 1
+    ) ua ON u.user_id = ua.user_id
+    WHERE u.email = #{email}
+</select>
+<update id="updateUser">
+    UPDATE users 
+    SET nickname = #{vo.nickname},
+        bio = #{vo.bio},
+        phone_number = #{vo.phoneNumber}
+    WHERE user_id = #{userId}
+</update>
+
+
+<insert id="updateAddress">
+    INSERT INTO user_address (
+        user_id, address, address_name, receiver_name, 
+        receiver_phone, zip_code, is_default, created_at, updated_at
+    )
+    VALUES (
+        #{userId}, #{address}, '기본배송지', '사용자', 
+        '010-0000-0000', '00000', 1, NOW(), NOW()
+    )
+    ON DUPLICATE KEY UPDATE 
+        address = VALUES(address),
+        updated_at = NOW()
+</insert>
+
+<select id="getUserPassword" resultType="string">
+    SELECT password FROM users WHERE user_id = #{userId}
+</select>
+
+<update id="updatePassword">
+    UPDATE users 
+    SET password = #{encodedPassword}
+    WHERE user_id = #{userId}
+</update>
+
+<update id="updateProfileImg">
+    UPDATE users SET profile_img = #{profileImg} WHERE user_id = #{userId}
+</update>
+
+
+<resultMap id="ProductFullMap" type="com.itwillbs.entity.Product">
+    <id property="productId" column="product_id"/>
+    <result property="productName" column="product_name"/>
+    <result property="price" column="price"/>
+    <result property="mainImageUrl" column="main_image_url"/>
+    <result property="salesStatus" column="sales_status"/>
+    <result property="regionDisplayName" column="region_display_name"/>
+    <result property="createdAt" column="created_at"/>
+    <result property="viewCount" column="view_count"/>
+    <result property="likeCount" column="like_count"/>
+    
+    <result property="conditionStatus" column="condition_status"/>
+    <result property="tradeType" column="trade_type"/>
+    <result property="description" column="description"/>
+
+    <association property="seller" javaType="com.itwillbs.entity.User">
+        <id property="userId" column="seller_id"/>
+    </association>
+
+    <association property="category" javaType="com.itwillbs.entity.Category">
+        <id property="categoryId" column="category_id"/>
+    </association>
+</resultMap>
+
+<select id="getSalesListByUserId" resultMap="ProductFullMap">
+    SELECT 
+        * FROM products
+    WHERE seller_id = #{userId}
+    ORDER BY created_at DESC
+</select>
+
+<resultMap id="PurchaseProductMap" type="com.itwillbs.entity.Product">
+    <id property="productId" column="product_id"/>
+    <result property="productName" column="product_name"/>
+    <result property="price" column="price"/>
+    <result property="mainImageUrl" column="main_image_url"/>
+    <result property="salesStatus" column="sales_status"/>
+    <result property="regionDisplayName" column="region_display_name"/>
+    <result property="createdAt" column="created_at"/>
+    
+    <result property="conditionStatus" column="condition_status"/>
+    <result property="tradeType" column="trade_type"/>
+    <result property="description" column="description"/>
+    <result property="viewCount" column="view_count"/>
+    <result property="likeCount" column="like_count"/>
+
+    <association property="category" javaType="com.itwillbs.entity.Category">
+        <id property="categoryId" column="category_id"/>
+    </association>
+
+    <association property="seller" javaType="com.itwillbs.entity.User">
+        <id property="userId" column="seller_id"/>
+        <result property="nickname" column="seller_nickname"/>
+        <result property="profileImg" column="seller_profile_img"/>
+    </association>
+</resultMap>
+
+<select id="getPurchaseListByUserId" resultMap="PurchaseProductMap">
+    SELECT 
+        p.*, 
+        u.nickname as seller_nickname,
+        u.profile_img as seller_profile_img  FROM products p
+    JOIN users u ON p.seller_id = u.user_id
+    WHERE p.buyer_id = #{userId}
+    ORDER BY p.created_at DESC
+</select>
 
 </mapper>

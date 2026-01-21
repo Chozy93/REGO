@@ -17,21 +17,21 @@
 <insert id="insertUser" useGeneratedKeys="true" keyProperty="userId">
     INSERT INTO users (
         username, 
-        password,   nickname, 
+        password,   
+        nickname, 
         role, 
         email, 
         user_status, 
-        phone_number, 
-        profile_img, 
+        phone_number, profile_img, 
         created_at
     ) VALUES (
         #{username}, 
-        #{password},   #{nickname}, 
+        #{password},   
+        #{nickname}, 
         'USER', 
         #{email}, 
         'ACTIVE', 
-        #{phoneNumber}, 
-        'default.png', 
+        COALESCE(#{phoneNumber}, 'PENDING'), COALESCE(#{profileImg}, 'https://lh3.googleusercontent.com/aida-public/AB6AXuD0ObRBFDRs_vob6idb6aYKUuIove2YF-wbvYCHg-2sm6qoyedO7RYGPgbD3YUragy7aKMdHZaGuFf9n2VN8bfXNLuaHQv41ulrqhVYIpmk3x64L5NlUFVVfia-ExqeHUsxo5vgQfQPtrASlzehup3VxN0K1KuHLfM_Jo4LSDScARNe9G-rzONQqnH5Zobrl4cD0Z9vAbXnHqFPATdIE6yqtnbrqSfNs-liXa-Ege7QLNN9juuw7GAvbZhH4XK8XgkJEehsTeeKTVY'), 
         NOW()
     )
 </insert>
@@ -64,6 +64,12 @@
       AND REPLACE(phone_number, '-', '') = #{phoneNumber}
 </select>
 
+<select id="countByPhoneNumber" resultType="int">
+    SELECT COUNT(*)
+    FROM users
+    WHERE REPLACE(phone_number, '-', '') = #{phoneNumber}
+</select>
+
 <update id="updateUserPassword">
     UPDATE users 
     SET password = #{password} 
@@ -78,5 +84,13 @@
         #{socialId}, NOW(), #{provider}, #{providerId}, #{userId}
     )
 </insert>
+
+<update id="updateSocialInfo">
+    UPDATE users 
+    SET phone_number = #{phoneNumber}, 
+        password = #{password} 
+    WHERE email = #{username}
+</update>
+
 
 </mapper>

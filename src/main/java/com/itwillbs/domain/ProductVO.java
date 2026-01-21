@@ -12,6 +12,9 @@ import lombok.ToString;
 public class ProductVO {
 
     private final Long productId;
+    private final Long buyerId;
+    private final String sellerNickname;
+    private final String sellerProfileImg;
     private final Long sellerId;
     private final Long categoryId;
 
@@ -48,6 +51,9 @@ public class ProductVO {
     ========================= */
     public ProductVO(Product entity) {
         this.productId = entity.getProductId();
+        this.buyerId = (entity.getBuyer() != null) ? entity.getBuyer().getUserId() : null;
+        this.sellerNickname = entity.getSeller().getNickname();
+        this.sellerProfileImg = entity.getSeller().getProfileImg();
         this.sellerId = entity.getSeller().getUserId();
         this.categoryId = entity.getCategory().getCategoryId();
 

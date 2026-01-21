@@ -25,11 +25,6 @@ public class UserService {
      */
     public void join(UserSignupConditionVO condition) {
 
-        // 1. 인증번호 검증 (입력 검증 책임은 Service)
-        if (!"123456".equals(condition.getAuthCode())) {
-            throw new IllegalArgumentException("인증번호가 틀렸어요!");
-        }
-
         // 2. 이메일 중복 검증
         if (userRepository.findByEmail(condition.getEmail()).isPresent()) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
@@ -44,8 +39,10 @@ public class UserService {
                 condition.getNickname(),
                 condition.getPhoneNumber(),
                 condition.getGender()
+                
+                
         );
-
+        newUser.setProfileImg("https://lh3.googleusercontent.com/aida-public/AB6AXuD0ObRBFDRs_vob6idb6aYKUuIove2YF-wbvYCHg-2sm6qoyedO7RYGPgbD3YUragy7aKMdHZaGuFf9n2VN8bfXNLuaHQv41ulrqhVYIpmk3x64L5NlUFVVfia-ExqeHUsxo5vgQfQPtrASlzehup3VxN0K1KuHLfM_Jo4LSDScARNe9G-rzONQqnH5Zobrl4cD0Z9vAbXnHqFPATdIE6yqtnbrqSfNs-liXa-Ege7QLNN9juuw7GAvbZhH4XK8XgkJEehsTeeKTVY");
         // 5. 저장
         userRepository.save(newUser);
     }
@@ -84,8 +81,10 @@ public class UserService {
 		return userRepository.findByUsername(username).orElse(null);
 	}
 
-	public void updatePhoneNumber(String username, String newPhone) {
-	    userMapper.updatePhoneNumber(username, newPhone);
+	public void updateSocialUserInfo(String username, String newPhone, String rawPassword) {
+
+	    String encodedPassword = passwordEncoder.encode(rawPassword);
+	    userMapper.updateSocialInfo(username, newPhone, encodedPassword);
 	}
 
 	public boolean checkUserEmailAndPhone(String email, String phoneNumber) {
@@ -95,4 +94,9 @@ public class UserService {
 	public void updateUserPassword(String email, String newPassword) {
 	    userMapper.updateUserPassword(email, newPassword);
 	}
+	
+	public boolean isPhoneNumberTaken(String phoneNumber) {
+	    return userMapper.countByPhoneNumber(phoneNumber) > 0;
+	}
+	
     }

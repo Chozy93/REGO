@@ -77,7 +77,12 @@
 					    </div>
 					</div>
                 </div>
-
+				<div class="flex flex-col gap-2 mt-4">
+				    <p class="text-base font-medium leading-normal text-[#111813]">비밀번호 설정</p>
+				    <input id="newPassword" class="form-input h-14 w-full rounded-xl border border-[#dbe6df] bg-white p-[15px] text-base font-normal text-[#111813] placeholder:text-[#61896f] focus:border-primary focus:outline-0 focus:ring-1 focus:ring-primary" type="password" placeholder="사용하실 비밀번호를 입력해 주세요."/>
+				    <input id="confirmPassword" class="form-input h-14 w-full rounded-xl border border-[#dbe6df] bg-white p-[15px] text-base font-normal text-[#111813] placeholder:text-[#61896f] focus:border-primary focus:outline-0 focus:ring-1 focus:ring-primary mt-1" type="password" placeholder="비밀번호를 한 번 더 입력해 주세요."/>
+				    <p id="pwError" class="text-xs text-red-500 hidden">비밀번호가 일치하지 않아요!</p>
+				</div>
                 <button id="submitBtn" disabled class="mt-4 flex h-14 w-full items-center justify-center rounded-xl bg-primary px-6 text-lg font-bold text-[#102216] transition-all hover:bg-[#0fd650] active:scale-[0.98] disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed">
                     인증 완료하고 시작하기
                 </button>
@@ -133,19 +138,39 @@
 		// '인증 완료하고 시작하기' 버튼 클릭 시
 		document.getElementById('submitBtn').addEventListener('click', function() {
 		    const phoneNumber = document.getElementById('phoneNumber').value;
-		    
+		    const newPassword = document.getElementById('newPassword').value;
+		    const confirmPassword = document.getElementById('confirmPassword').value;
+		    const pwError = document.getElementById('pwError');
 
+		    // 1. 비밀번호 일치 확인
+		    if (newPassword !== confirmPassword) {
+		        pwError.classList.remove('hidden');
+		        document.getElementById('confirmPassword').focus();
+		        return;
+		    } else {
+		        pwError.classList.add('hidden');
+		    }
+
+		    // 2. 비밀번호 입력 여부 확인
+		    if (!newPassword) {
+		        alert("앞으로 사용하실 비밀번호를 설정해 주세요! 🔐");
+		        document.getElementById('newPassword').focus();
+		        return;
+		    }
+
+		    // 3. 서버로 전송
 		    fetch('/auth/update-phone', {
 		        method: 'POST',
 		        headers: {
 		            'Content-Type': 'application/json'
 		        },
 		        body: JSON.stringify({
-		            phoneNumber: phoneNumber
+		            phoneNumber: phoneNumber,
+		            password: newPassword
 		        }),
-				credentials: 'include'
+		        credentials: 'include'
 		    })
-		    .then(response => response.text()) // 서버에서 보낸 "success" 문자열 받기
+		    .then(response => response.text())
 		    .then(data => {
 		        if (data === "success") {
 		            alert("환영합니다! 회원가입 정보가 업데이트되었습니다. 😊");
