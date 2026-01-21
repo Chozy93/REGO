@@ -1,9 +1,13 @@
 package com.itwillbs.service;
 
 import com.itwillbs.dto.ProductDetailDTO;
+import com.itwillbs.dto.ProductSellerInfoDTO;
 import com.itwillbs.mapper.ProductDetailMapper;
 import com.itwillbs.view.ProductDetailPageVO;
 import com.itwillbs.view.ProductDetailVO;
+import com.itwillbs.view.ProductSimilarListVO;
+import com.itwillbs.view.ProductSellerInfoVO;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,63 +19,133 @@ import java.util.List;
 public class ProductDetailService {
 
     private final ProductDetailMapper productDetailMapper;
-    private final ProductLikeService productLikeService; // (다음 단계용)
+    private final ProductLikeService productLikeService;
+    private final ProductSimilarQueryService productSimilarQueryService;
+    private final ProductReportService productReportService;
 
     /* =========================
-       상품 상세 페이지 조회
-       DETAIL01_INFO
-       DETAIL01_STATUS
-       DETAIL01_VIEWCOUNT
+       상품 상세 페이지 조회 (비로그인)
     ========================= */
     public ProductDetailPageVO getProductDetailPage(Long productId) {
-    	return getProductDetailPage(productId, true, null); 
-    	
+        return getProductDetailPage(productId, false, null);
     }
-    
-    public ProductDetailPageVO getProductDetailPage(Long productId, boolean increaseView, Long userId) {
 
-    	// ✅ 1. 조회수 증가 (조건부)
+    /* =========================
+       상품 상세 페이지 조회 (공통)
+    ========================= */
+    public ProductDetailPageVO getProductDetailPage(
+            Long productId,
+            boolean increaseView,
+            Long loginUserId
+    ) {
+
+        /* =========================
+           0️⃣ 로그인 여부
+        ========================= */
+        boolean isLogin = (loginUserId != null);
+
+        /* =========================
+           1️⃣ 조회수 증가
+        ========================= */
         if (increaseView) {
             productDetailMapper.increaseViewCount(productId);
         }
 
-        // ✅ 2️⃣ 상품 상세 조회 (반드시 같은 Mapper)
+        /* =========================
+           2️⃣ 상품 기본 정보
+        ========================= */
         ProductDetailDTO dto =
                 productDetailMapper.selectProductDetail(productId);
 
         if (dto == null) {
             throw new IllegalArgumentException("존재하지 않는 상품입니다. id=" + productId);
         }
-        
 
-        boolean liked = (userId != null) && productLikeService.isLiked(productId, userId);
-        int likeCount = productLikeService.getLikeCount(productId);
+        /* =========================
+           3️⃣ 상세 이미지
+        ========================= */
+        List<String> imageUrls =
+                productDetailMapper.selectProductImages(productId);
 
-        ProductDetailVO productVO = new ProductDetailVO(
-                dto.getProductId().toString(),
-                dto.getProductName(),
-                dto.getPrice(),
-                dto.getPriceDisplay(),
-                dto.getDescription(),
-                safeList(dto.getImageUrls()),
-                dto.getSellerNickname(),
-                dto.getSellerRegion(),
-                dto.getSellerTemperature() + "°",
-                dto.getConditionLabel(),
-                dto.getViewCount(),     // 🔥 DB 값 그대로
-                likeCount,
-                0,
-                liked,          // (현재는 false or 더미)
-                dto.getCreatedAtDisplay()
+        if (imageUrls == null || imageUrls.isEmpty()) {
+            if (dto.getMainImageUrl() != null && !dto.getMainImageUrl().isBlank()) {
+                imageUrls = List.of(dto.getMainImageUrl());
+            } else {
+                imageUrls = Collections.emptyList();
+            }
+        }
+
+        dto.setImageUrls(imageUrls);
+
+        /* =========================
+           4️⃣ 찜 정보
+        ========================= */
+        boolean liked = false;
+        if (isLogin) {
+            liked = productLikeService.isLiked(productId, loginUserId);
+        }
+
+        int likeCount =
+                productLikeService.getLikeCount(productId);
+
+        /* =========================
+           5️⃣ 상품 VO
+        ========================= */
+        ProductDetailVO productVO =
+                new ProductDetailVO(dto);
+       
+
+        productVO.setLiked(liked);
+        productVO.setLikeCount(likeCount);
+
+        /* =========================
+           6️⃣ 판매자 정보 (STEP 6)
+        ========================= */
+        ProductSellerInfoVO sellerInfo =
+                getSellerInfo(productId);
+
+        /* =========================
+           7️⃣ 신고 여부
+        ========================= */
+        boolean alreadyReported = false;
+        if (isLogin) {
+            alreadyReported =
+                    productReportService.isAlreadyReported(productId, loginUserId);
+        }
+
+        /* =========================
+           8️⃣ 비슷한 상품
+        ========================= */
+        ProductSimilarListVO similar =
+                productSimilarQueryService.getSimilarProducts(productId, 4);
+
+        /* =========================
+           9️⃣ PageVO 조립 (최종)
+        ========================= */
+        return new ProductDetailPageVO(
+                productVO,
+                sellerInfo,
+                similar,
+                isLogin,
+                alreadyReported
         );
-
-        return new ProductDetailPageVO(productVO);
     }
 
     /* =========================
-       null 방어 (헌법 규칙)
+       DETAIL01_SELLER_INFO
+       판매자 정보 조회
     ========================= */
-    private List<String> safeList(List<String> list) {
-        return list != null ? list : Collections.emptyList();
+    public ProductSellerInfoVO getSellerInfo(Long productId) {
+
+        ProductSellerInfoDTO dto =
+                productDetailMapper.selectSellerInfo(productId);
+
+        if (dto == null) {
+            return new ProductSellerInfoVO(
+                    new ProductSellerInfoDTO()
+            );
+        }
+
+        return new ProductSellerInfoVO(dto);
     }
 }

@@ -24,30 +24,43 @@
       <div class="category-modal-group"
            th:each="node : ${headerCategoryListVO.categories}">
 
-        <!-- 1차 카테고리 -->
-        <button type="button" class="category-modal-main-btn">
-          <div class="category-modal-main-left">
+        <!-- ===============================
+             1차 카테고리 (이동 / 토글 분리)
+        =============================== -->
+        <div class="category-modal-main">
 
-            <!-- icon (1차 전용) -->
-            <div class="category-modal-icon"
-                 th:if="${node.iconCode != ''}">
-              <span class="material-symbols-outlined"
-                    th:text="${node.iconCode}">
+          <!-- ✅ 이동 전용 -->
+          <a th:href="@{/products(categoryId=${node.parent.categoryId})}"
+             class="category-modal-main-link">
+
+            <div class="category-modal-main-left">
+
+              <div class="category-modal-icon"
+                   th:if="${node.iconCode != ''}">
+                <span class="material-symbols-outlined"
+                      th:text="${node.iconCode}">
+                </span>
+              </div>
+
+              <span class="category-modal-main-text"
+                    th:text="${node.parent.name}">
+                카테고리명
               </span>
+
             </div>
+          </a>
 
-            <span class="category-modal-main-text"
-                  th:text="${node.parent.name}">
-              카테고리명
+          <!-- ✅ 토글 전용 (소분류 있을 때만) -->
+          <button type="button"
+                  class="category-modal-toggle"
+                  th:if="${!#lists.isEmpty(node.children)}"
+                  data-action="toggle">
+            <span class="material-symbols-outlined">
+              expand_more
             </span>
-          </div>
+          </button>
 
-          <!-- arrow -->
-          <span class="material-symbols-outlined category-modal-arrow"
-                th:if="${!#lists.isEmpty(node.children)}">
-            expand_more
-          </span>
-        </button>
+        </div>
 
         <!-- ===============================
              2차 카테고리
@@ -63,6 +76,7 @@
                   th:text="${child.name}">
               서브카테고리
             </span>
+
           </a>
 
         </div>

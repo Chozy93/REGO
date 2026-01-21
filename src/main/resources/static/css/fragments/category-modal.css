@@ -162,3 +162,55 @@
   background: var(--color-surface-2);
   color: var(--color-primary);
 }
+
+/* 모달 전체 박스 */
+.category-modal-panel {
+  width: 720px;
+  height: 80vh;        /* 🔥 무조건 고정 */
+  max-height: 80vh;    /* 🔥 안전장치 */
+  display: flex;
+  flex-direction: column;
+}
+
+.category-modal-body {
+  flex: 1;             /* 🔥 남은 높이 전부 차지 */
+  overflow-y: auto;    /* 내부 스크롤 */
+}
+
+.category-modal-main {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;   /* 🔥 기존보다 줄이기 */
+  min-height: 44px;     /* 🔥 터치 UX 유지 */
+}
+
+.category-modal-toggle {
+  margin-left: auto;   /* 🔥 이것만 */
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.category-modal-group {
+  margin-bottom: 4px;   /* 🔥 과한 간격 제거 */
+}
+
+.category-modal-sub-list {
+  margin-top: 4px;
+  padding-left: 36px;  /* 아이콘 기준 들여쓰기 */
+}
+
+.category-modal-sub-item {
+  padding: 6px 12px;   /* 🔥 줄이기 */
+  min-height: 36px;
+}
+
+.category-modal-body {
+  padding: 8px 0;   /* 🔥 위아래 여백 축소 */
+}
+
+
+
+
+
+

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itwillbs.mapper.MainRecentViewMapper">
+
+  <select id="selectRecentViewProducts"
+        parameterType="list"
+        resultType="com.itwillbs.view.MainProductCardVO">
+
+  SELECT
+    p.product_id       AS id,
+    p.product_name     AS title,
+    p.price            AS price,
+    p.main_image_url   AS img,        <!-- 🔥 여기 -->
+    p.region_display_name AS loc,      <!-- 이미 테이블에 있음 -->
+    p.created_at       AS time,
+    false              AS reserved,
+    p.like_count       AS likeCount,
+    false              AS liked
+
+  FROM products p
+
+  WHERE p.product_id IN
+    <foreach item="id" collection="list" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+
+  ORDER BY FIELD(p.product_id,
+    <foreach item="id" collection="list" separator=",">
+      #{id}
+    </foreach>
+  )
+
+</select>
+
+
+</mapper>

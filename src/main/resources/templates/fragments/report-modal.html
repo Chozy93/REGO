@@ -1,0 +1,91 @@
+<!-- fragments/report-modal.html -->
+<div class="modal is-hidden"
+     th:fragment="report-modal"
+     id="reportModal">
+
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-panel">
+
+        <!-- =========================
+             Header
+        ========================= -->
+        <header class="modal-header">
+            <h3 class="modal-title">신고하기</h3>
+
+            <button type="button"
+                    class="modal-close-btn"
+                    data-action="close-report-modal">
+                ✕
+            </button>
+        </header>
+
+        <!-- =========================
+             Body
+        ========================= -->
+        <div class="modal-body">
+
+            <!-- 신고 사유 -->
+            <div class="report-field">
+                <p class="report-label">신고 사유</p>
+
+                <label>
+                    <input type="radio" name="report-reason" value="SPAM">
+                    광고 / 스팸
+                </label>
+
+                <label>
+                    <input type="radio" name="report-reason" value="FRAUD">
+                    사기 의심
+                </label>
+
+                <label>
+                    <input type="radio" name="report-reason" value="ILLEGAL">
+                    불법 상품
+                </label>
+
+                <label>
+                    <input type="radio" name="report-reason" value="ABUSE">
+                    욕설 / 비매너
+                </label>
+
+                <label>
+                    <input type="radio" name="report-reason" value="ETC">
+                    기타
+                </label>
+            </div>
+
+            <!-- 상세 내용 -->
+            <div class="report-field">
+                <label class="report-label">
+                    상세 내용 (선택)
+                </label>
+
+                <textarea class="report-textarea"
+                          rows="4"
+                          placeholder="신고 사유를 자세히 작성해주세요"></textarea>
+            </div>
+
+        </div>
+
+        <!-- =========================
+             Footer
+        ========================= -->
+        <footer class="modal-footer">
+
+            <button type="button"
+                    class="btn"
+                    data-action="close-report-modal">
+                취소
+            </button>
+
+            <button type="button"
+                    class="btn btn-primary"
+                    data-action="submit-report">
+                신고 접수
+            </button>
+
+        </footer>
+
+    </div>
+</div>

@@ -5,28 +5,141 @@
 
 <mapper namespace="com.itwillbs.mapper.ProductDetailMapper">
 
-    <!-- 조회수 증가 -->
-    <update id="increaseViewCount">
+    <!-- ==================================================
+         DETAIL01_VIEWCOUNT
+         조회수 증가
+    ================================================== -->
+    <update id="increaseViewCount" parameterType="long">
         UPDATE products
         SET view_count = IFNULL(view_count, 0) + 1
         WHERE product_id = #{productId}
     </update>
 
-    <!-- 상품 상세 조회 -->
+
+    <!-- ==================================================
+         DETAIL01_INFO
+         상품 상세 기본 정보
+         (이미지는 여기서 조회 ❌)
+    ================================================== -->
     <select id="selectProductDetail"
         parameterType="long"
         resultType="com.itwillbs.dto.ProductDetailDTO">
 
     SELECT
-        p.product_id      AS productId,
-        p.product_name    AS productName,
-        p.price           AS price,
-        p.view_count      AS viewCount,
-        p.like_count      AS likeCount
+        p.product_id           AS productId,
+        p.product_name         AS productName,
+        p.price                AS price,
+        p.description          AS description,
+
+        /* ✅ 대표 이미지 추가 */
+        p.main_image_url       AS mainImageUrl,
+
+        p.view_count           AS viewCount,
+        p.like_count           AS likeCount,
+        p.created_at           AS createdAt,
+        p.condition_status     AS conditionStatus,
+        p.sales_status         AS salesStatus,      
+        p.region_display_name  AS sellerRegion
     FROM products p
     WHERE p.product_id = #{productId}
 
 </select>
 
+<!-- ==================================================
+     DETAIL01_SELLER_INFO
+     판매자 정보 (상품 상세)
+================================================== -->
+<select id="selectSellerInfo"
+        parameterType="long"
+        resultType="com.itwillbs.dto.ProductSellerInfoDTO">
+
+    SELECT
+    u.user_id              AS sellerId,
+    u.nickname             AS nickname,
+    COUNT(p.product_id)    AS productCount,
+    AVG(r.rating)          AS rating
+FROM users u
+LEFT JOIN products p
+       ON p.seller_id = u.user_id
+LEFT JOIN reviews r
+       ON r.seller_id = u.user_id
+WHERE u.user_id = (
+    SELECT seller_id
+    FROM products
+    WHERE product_id = #{productId}
+)
+GROUP BY u.user_id, u.nickname
+
+</select>
+
+
+    <!-- ==================================================
+         DETAIL01_IMAGES
+         상품 상세 이미지 목록 ⭐⭐⭐
+    ================================================== -->
+    <select id="selectProductImages"
+            parameterType="long"
+            resultType="string">
+
+        SELECT
+            image_url
+        FROM product_images
+        WHERE product_id = #{productId}
+        ORDER BY sort_order ASC
+
+    </select>
+
+
+    <!-- ==================================================
+     DETAIL01_SIMILAR
+     비슷한 상품 조회 (카테고리 기준)
+================================================== -->
+<select id="selectSimilarProducts"
+        parameterType="map"
+        resultType="com.itwillbs.dto.ProductSimilarDTO">
+
+    SELECT
+        p.product_id          AS productId,
+        p.product_name        AS productName,
+        p.price               AS price,
+        p.main_image_url      AS thumbnailUrl,
+        p.region_display_name AS regionName
+    FROM products p
+    WHERE p.category_id = (
+        SELECT category_id
+        FROM products
+        WHERE product_id = #{productId}
+    )
+    AND p.product_id != #{productId}
+    ORDER BY p.created_at DESC
+    LIMIT #{limit}
+
+</select>
+
+
+    <!-- ==================================================
+         DETAIL01_SIMILAR (fallback)
+         인기 상품 대체
+    ================================================== -->
+    <select id="selectPopularProductsForSimilar"
+            parameterType="int"
+            resultType="com.itwillbs.dto.ProductSimilarDTO">
+
+        SELECT
+            p.product_id           AS productId,
+            p.product_name         AS title,
+            p.price                AS price,
+            p.main_image_url       AS thumbnailUrl,
+            p.region_display_name  AS regionName,
+            (
+                SELECT COUNT(*)
+                FROM user_favorites uf
+                WHERE uf.product_id = p.product_id
+            ) AS likeCount
+        FROM products p
+        ORDER BY likeCount DESC
+        LIMIT #{limit}
+
+    </select>
 
 </mapper>

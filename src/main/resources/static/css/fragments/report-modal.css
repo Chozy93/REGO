@@ -1,0 +1,142 @@
+/* ==========================================================================
+   Report Modal (신고 모달)
+   - fragment 전용
+   - variables.css / common.css 토큰만 사용
+   ========================================================================== */
+
+/* =========================
+   Modal Wrapper
+========================= */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  pointer-events: auto;
+}
+
+
+/* 숨김 상태 */
+.modal.is-hidden {
+  display: none !important;
+}
+
+/* =========================
+   Backdrop
+========================= */
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  pointer-events: auto;
+}
+
+/* =========================
+   Panel
+========================= */
+.modal-panel {
+  position: relative;
+  z-index: 1;
+
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  pointer-events: auto;
+}
+
+/* =========================
+   Header
+========================= */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: var(--space-16) var(--space-20);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.modal-title {
+  font-size: var(--fs-18);
+  font-weight: var(--fw-semibold);
+}
+
+.modal-close-btn {
+  font-size: var(--fs-18);
+  line-height: 1;
+  color: var(--color-text-muted);
+}
+
+.modal-close-btn:hover {
+  color: var(--color-text);
+}
+
+/* =========================
+   Body
+========================= */
+.modal-body {
+  padding: var(--space-20);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+}
+
+/* 신고 필드 공통 */
+.report-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+}
+
+.report-label {
+  font-size: var(--fs-14);
+  font-weight: var(--fw-medium);
+}
+
+/* 라디오 그룹 */
+.report-field label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+
+  font-size: var(--fs-14);
+  cursor: pointer;
+}
+
+.report-field input[type="radio"] {
+  accent-color: var(--color-primary);
+}
+
+/* 텍스트 영역 */
+.report-textarea {
+  resize: vertical;
+  min-height: 80px;
+
+  padding: var(--space-12);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+
+  font-size: var(--fs-14);
+  line-height: var(--lh-normal);
+}
+
+.report-textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+  border-color: var(--color-primary);
+}
+
+/* =========================
+   Footer
+========================= */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-12);
+
+  padding: var(--space-16) var(--space-20);
+  border-top: 1px solid var(--color-divider);
+}

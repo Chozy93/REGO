@@ -1,0 +1,20 @@
+<div th:fragment="card(card)"
+     class="product-card">
+
+  <a th:href="@{/product/{id}(id=${card.productId})}">
+
+    <img th:src="${card.thumbnailUrl}" alt="상품 이미지"/>
+
+    <div class="product-card-body">
+      <p class="product-card-title"
+         th:text="${card.title}"></p>
+
+      <p class="product-card-price"
+         th:text="${card.price} + '원'"></p>
+
+      <p class="product-card-meta"
+         th:text="${card.regionName}"></p>
+    </div>
+
+  </a>
+</div>
