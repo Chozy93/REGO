@@ -7,8 +7,8 @@
 <select id="selectWalletWithAccount" resultType="com.itwillbs.dto.WalletViewDTO">
         SELECT 
             w.balance,
-            b.bank_name,
-            b.account_num
+            b.bank_name AS bankName,
+            b.account_num AS accountNum
         FROM wallets w
         LEFT JOIN bank_accounts b 
             ON w.user_id = b.user_id

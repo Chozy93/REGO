@@ -62,21 +62,28 @@ public class BankAccount {
     
     
     
- // --- 화면 표시 데이터 ---
- // 은행 이름 -> 예: KB국민은행 
+ // token 이용해서 추가로 가져올 상세 정보들
     @Column(name = "bank_name", length = 50)
     private String bankName; 
     
     
-    @Column(name = "account_num_masked", length = 50)
+    @Column(name = "account_num", length = 255)
     private String accountNumMasked; // 예: 123-***-7890
     
+    @Column(name = "account_holder_name")
+    private String accountHolderName;   // 예금주명
+    
+    @Column(name = "bank_code_std")
+    private String bankCodeStd;
+    
     // 대표 계좌 여부 (Y/N)
-    @Column(name = "is_primary", length = 1)
-    @ColumnDefault("'N'")
-    private String isPrimary = "N";
+    @Column(name = "is_main")
+    private boolean isMain; // 자바에서 true/false를 쓰면 DB에는 1/0으로 저장됨
     
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+    
+    
+    
 }
