@@ -1,0 +1,284 @@
+/* ==========================================================================
+   Seller Profile Page
+========================================================================== */
+
+.seller-profile {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-24);
+  background: var(--color-bg);
+}
+
+/* =========================
+   Summary
+========================= */
+
+.seller-summary {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-32);
+  margin-bottom: var(--space-32);
+  box-shadow: var(--shadow-sm);
+}
+
+.profile-card-btn{
+	border: 1px solid var(--color-border);	
+}
+
+.seller-summary-inner {
+  display: flex;
+  gap: var(--space-32);
+}
+
+.seller-avatar {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--color-surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seller-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: var(--color-primary);
+  color: var(--color-text);
+  font-size: var(--fs-10);
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+}
+
+.seller-info {
+  flex: 1;
+}
+
+.seller-name {
+  font-size: var(--fs-24);
+  font-weight: var(--fw-bold);
+}
+
+.seller-rating {
+  margin: var(--space-8) 0;
+  color: var(--color-text-muted);
+}
+
+.seller-desc {
+  margin: var(--space-16) 0;
+  color: var(--color-text-muted);
+}
+
+.seller-actions {
+  display: flex;
+  gap: var(--space-12);
+}
+
+.seller-stats {
+  display: flex;
+  border-left: 1px solid var(--color-border);
+}
+
+.seller-stats div {
+  padding: 0 var(--space-24);
+  text-align: center;
+}
+
+/* =========================
+   Seller Tabs
+========================= */
+
+.seller-tabs {
+  display: flex;
+  gap: var(--space-12);
+  margin-bottom: var(--space-24);
+}
+
+/* 탭 버튼 */
+.seller-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: var(--fs-14);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-base);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+/* 숫자 칩 */
+.seller-tab-count {
+  padding: 2px 8px;
+  border-radius: var(--radius-lg);
+  font-size: var(--fs-12);
+  font-weight: var(--fw-bold);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+}
+
+/* hover */
+.seller-tab:hover {
+  background: var(--color-bg-soft);
+}
+
+/* 활성 탭 */
+.seller-tab.is-active {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: rgba(0, 200, 80, 0.08); /* primary 연한 배경 */
+}
+
+/* 활성 탭 숫자 */
+.seller-tab.is-active .seller-tab-count {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+/* =========================
+   Products
+========================= */
+
+.section-title {
+  margin: var(--space-24) 0 var(--space-16);
+  font-size: var(--fs-18);
+  font-weight: var(--fw-bold);
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-20);
+}
+
+.product-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-16);
+
+  box-shadow: var(--shadow-sm);
+  transition:
+    box-shadow var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out);
+}
+
+.product-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.product-card.done {
+  background: var(--color-surface);
+  border-color: var(--color-border-soft);
+  box-shadow: none;
+}
+
+.product-card.done .product-title,
+.product-card.done .product-price {
+  color: var(--color-text-muted);
+}
+
+/* =========================
+   Reviews
+========================= */
+
+.seller-reviews {
+  margin-top: var(--space-40);
+}
+
+.review-card {
+  display: flex;
+  gap: var(--space-16);
+  padding: var(--space-24);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-16);
+}
+
+.review-head {
+  margin-bottom: var(--space-8);
+}
+
+.more-wrap {
+  text-align: center;
+  margin-top: var(--space-24);
+}
+
+/* =========================
+   jQuery UI Reset
+========================= */
+
+.seller-tabs-wrap .ui-tabs-nav {
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.seller-tabs-wrap .ui-tabs-nav li {
+  list-style: none;
+  margin: 0;
+}
+
+/* =========================
+   Seller Tabs (Chip)
+========================= */
+
+.seller-tabs {
+  display: flex;
+  gap: var(--space-12);
+  margin-bottom: var(--space-24);
+}
+
+.seller-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: var(--fs-14);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-base);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.seller-tab-count {
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-12);
+  font-weight: var(--fw-bold);
+  background: var(--color-bg-soft);
+  color: var(--color-text-muted);
+}
+
+/* hover */
+.seller-tab:hover {
+  background: var(--color-bg-soft);
+}
+
+/* =========================
+   Active (jQuery UI 연동)
+========================= */
+
+.seller-tabs-wrap .ui-tabs-active .seller-tab {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: rgba(0, 200, 80, 0.08);
+}
+
+.seller-tabs-wrap .ui-tabs-active .seller-tab-count {
+  background: var(--color-primary);
+  color: #fff;
+}
+

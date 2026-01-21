@@ -58,6 +58,12 @@ public class SellerProfile {
     private String sellerStatus; // ACTIVE / SUSPENDED
 
     /* =========================
+       약관 동의
+    ========================= */
+    @Column(name = "terms_agreed_at", nullable = false, updatable = false)
+    private LocalDateTime termsAgreedAt;
+
+    /* =========================
        날짜
     ========================= */
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -77,12 +83,19 @@ public class SellerProfile {
     public SellerProfile(User seller, SellerProfileVO vo) {
         this.seller = seller;
         this.sellerId = seller.getUserId();
+
         this.description = vo.getDescription();
+
         this.ratingAvg = vo.getRatingAvg();
         this.ratingCount = vo.getRatingCount();
         this.totalSales = vo.getTotalSales();
         this.totalReviews = vo.getTotalReviews();
+
         this.sellerStatus = vo.getSellerStatus();
+
+        /* 약관 동의 시점 */
+        this.termsAgreedAt = vo.getTermsAgreedAt();
+
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }

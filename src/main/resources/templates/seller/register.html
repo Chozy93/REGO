@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/seller/register.css">
+</th:block>
+
+<div layout:fragment="content" class="seller-register">
+	<section class="register-header">
+	  <h1 class="register-header-title">판매자 등록</h1>
+	  <p class="register-header-desc">
+	    판매자로 등록하면 상품을 판매할 수 있습니다.<br>
+	    아래 내용을 확인한 후 등록을 진행해 주세요.
+	  </p>
+	</section>
+  <!-- ===============================
+       Register Card
+  =============================== -->
+  <section class="register-card">
+
+
+    <form method="post" action="/seller/register">
+
+      <!-- 소개글 -->
+      <div class="form-group">
+        <label for="description">판매자 소개글</label>
+        <textarea id="description"
+                  name="description"
+                  placeholder="어떤 상품을 주로 판매하는지, 거래 방식이나 판매 원칙을 간단히 소개해 주세요."
+                  rows="5"></textarea>
+        <p class="form-help">
+          * 소개글은 판매자 프로필에 공개됩니다.
+        </p>
+      </div>
+
+      <!-- 약관 박스 -->
+      <div class="terms-box">
+        <h2>판매자 이용약관</h2>
+
+        <div class="terms-content">
+          <p><strong>1. 판매자 등록</strong><br>
+          판매자는 본 서비스를 통해 상품을 판매할 수 있으며, 등록 시 제공한 정보는 프로필에 공개될 수 있습니다.</p>
+
+          <p><strong>2. 판매자의 책임</strong><br>
+          판매자는 실제 거래 가능한 상품만 등록해야 하며, 상품 정보는 사실에 근거하여 정확히 작성해야 합니다.</p>
+
+          <p><strong>3. 거래 및 분쟁</strong><br>
+          판매자와 구매자 간의 거래에 대한 책임은 당사자에게 있으며, 서비스는 중개 역할을 수행합니다.</p>
+
+          <p><strong>4. 판매자 상태 제한</strong><br>
+          허위 정보 등록, 반복적인 분쟁, 운영 정책 위반 시 판매자 상태가 제한되거나 상품 노출이 중단될 수 있습니다.</p>
+
+          <p><strong>5. 약관의 효력</strong><br>
+          본 약관은 판매자 등록 시 동의함으로써 효력이 발생합니다.</p>
+        </div>
+
+        <label class="terms-agree">
+          <input type="checkbox" name="termsAgreed" required>
+          <span>위 판매자 이용약관 및 운영 정책에 동의합니다.</span>
+        </label>
+      </div>
+
+      <!-- 안내 -->
+      <div class="register-notice">
+        <span class="material-symbols-outlined">info</span>
+        <p>
+          판매자 등록 후 바로 상품 등록이 가능합니다.<br>
+          운영 정책 위반 시 판매자 활동이 제한될 수 있습니다.
+        </p>
+      </div>
+
+      <!-- 버튼 -->
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          판매자 등록하기
+        </button>
+        <a href="/" class="btn btn-outline">
+          취소
+        </a>
+      </div>
+
+    </form>
+  </section>
+
+</div>
+
+<th:block layout:fragment="pageJs"></th:block>
+</html>

@@ -1,0 +1,221 @@
+/* ==========================================================================
+   Seller Product Register
+========================================================================== */
+
+.seller-product-register {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-40) var(--space-24) var(--space-56);
+  background: var(--color-bg);
+}
+
+/* =========================
+   Form Card (메인 카드)
+========================= */
+
+.seller-product-register__form {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* =========================
+   Card Header (타이틀 카드 안으로)
+========================= */
+
+.seller-product-register__header {
+  padding: var(--space-24) var(--space-24) var(--space-16);
+  border-bottom: 1px solid var(--color-divider);
+  text-align: left;
+}
+
+.seller-product-register__title {
+  font-size: var(--fs-18);
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+}
+
+.seller-product-register__desc {
+  margin-top: var(--space-6);
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+  line-height: var(--lh-relaxed);
+}
+
+/* =========================
+   Card Body
+========================= */
+
+.seller-product-register__body {
+  padding: var(--space-32);
+}
+
+@media (max-width: 640px) {
+  .seller-product-register__body {
+    padding: var(--space-20);
+  }
+}
+
+/* =========================
+   Section
+========================= */
+
+.spr-section {
+  margin-bottom: var(--space-28);
+}
+
+.spr-section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-12);
+}
+
+.spr-section__title {
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-16);
+  color: var(--color-text);
+}
+
+.spr-section__meta {
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+}
+
+.spr-section__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  margin-bottom: var(--space-12);
+}
+
+.spr-divider {
+  border: 0;
+  border-top: 1px solid var(--color-divider);
+  margin: var(--space-28) 0;
+}
+
+/* =========================
+   Inputs
+========================= */
+
+.spr-input,
+.spr-textarea {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-14) var(--space-16);
+  font-size: var(--fs-14);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.spr-textarea {
+  resize: vertical;
+  line-height: var(--lh-relaxed);
+}
+
+.spr-input:focus,
+.spr-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+.spr-input--price {
+  padding-left: 38px;
+}
+
+.spr-counter {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-8);
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+}
+
+/* =========================
+   Images
+========================= */
+
+.spr-images__add {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-14) var(--space-16);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-2);
+  cursor: pointer;
+}
+
+/* =========================
+   Category / Chips
+========================= */
+
+.spr-chip {
+  padding: var(--space-10) var(--space-12);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  cursor: pointer;
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+  font-weight: var(--fw-semibold);
+}
+
+.spr-chip--active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  box-shadow: var(--shadow-primary);
+}
+
+/* =========================
+   Panels
+========================= */
+
+.spr-panel {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-20);
+  background: var(--color-surface);
+}
+
+/* =========================
+   Transaction Cards
+========================= */
+
+.spr-tx__card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: var(--space-16);
+  cursor: pointer;
+  transition: border-color var(--duration-normal) var(--ease-out),
+              background var(--duration-normal) var(--ease-out);
+}
+
+.spr-tx__card--active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+/* =========================
+   Actions
+========================= */
+
+.spr-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-12);
+  margin-top: var(--space-32);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--color-divider);
+}
