@@ -1,0 +1,139 @@
+/* --- 변수 설정 --- */
+:root {
+    --primary-color: #13ec5b;
+    --primary-hover: #0fd651;
+    --bg-light: #f6f8f6;
+    --text-dark: #111813;
+    --text-gray: #6b7280;
+    --text-light-gray: #9ca3af;
+    --border-color: #f0f4f2;
+    --white: #ffffff;
+    --radius-xl: 24px; /* Tailwind rounded-2xl 대응 */
+    --radius-lg: 16px; /* Tailwind rounded-xl 대응 */
+    --radius-md: 12px;
+}
+
+/* --- 기본 초기화 --- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Manrope', 'Noto Sans KR', sans-serif; background-color: var(--bg-light); color: var(--text-dark); }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+/* --- 레이아웃 --- */
+.layout-container { max-width: 1024px; margin: 0 auto; padding: 32px 16px; width: 100%; }
+
+.page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.btn-back { padding: 8px; border-radius: 50%; color: var(--text-gray); display: flex; }
+.btn-back:hover { background-color: #f3f4f6; color: var(--text-dark); }
+.page-header h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.025em; }
+
+.dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+
+/* --- 카드 공통 --- */
+.card {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 24px 32px; /* p-6 md:p-8 대응 */
+    display: flex;
+    flex-direction: column;
+    min-height: 240px; /* 높이 맞춤 */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.card-header h3 { font-size: 14px; font-weight: bold; color: var(--text-gray); display: flex; align-items: center; gap: 8px; }
+
+/* --- 지갑 섹션 --- */
+.icon-circle {
+    width: 32px; height: 32px; background-color: rgba(19, 236, 91, 0.2);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: var(--primary-color);
+}
+.balance-display { font-size: 36px; font-weight: 900; margin-bottom: 32px; letter-spacing: -0.025em; }
+.balance-display span { font-size: 24px; font-weight: bold; color: var(--text-gray); margin-left: 4px; }
+
+.button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; }
+.btn-lg { height: 56px; font-size: 18px; border-radius: var(--radius-md); font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s; }
+.btn-lg:hover { transform: translateY(-2px); }
+
+.btn-primary { background-color: var(--primary-color); color: var(--text-dark); box-shadow: 0 10px 15px -3px rgba(19, 236, 91, 0.2); }
+.btn-primary:hover { background-color: var(--primary-hover); }
+.btn-secondary { background-color: #f3f4f6; color: var(--text-dark); }
+.btn-secondary:hover { background-color: #e5e7eb; }
+
+/* --- 계좌 섹션 (핵심 수정 부분) --- */
+.account-card { position: relative; }
+.btn-text-danger { font-size: 12px; font-weight: bold; color: #9ca3af; }
+.btn-text-danger:hover { color: #ef4444; }
+
+/* Case A: 계좌 있음 */
+.account-content-wrapper { flex: 1; display: flex; flex-direction: column; }
+.account-box { display: flex; align-items: center; gap: 16px; padding: 16px; background-color: #f9fafb; border-radius: var(--radius-md); margin-bottom: 16px; margin-top: auto; margin-bottom: auto;}
+.bank-icon { width: 48px; height: 48px; background-color: #dbeafe; color: #2563eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.bank-name { font-weight: bold; font-size: 18px; }
+.account-num { color: var(--text-gray); font-family: monospace; }
+.badge { background-color: #dbeafe; color: #1d4ed8; font-size: 12px; font-weight: bold; padding: 4px 8px; border-radius: 4px; }
+.btn-dashed { width: 100%; height: 56px; border: 2px dashed #e5e7eb; border-radius: var(--radius-md); color: var(--text-gray); font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-dashed:hover { border-color: var(--primary-color); color: var(--primary-color); }
+
+/* Case B: 계좌 없음 (Empty State) - 디자인 완벽 복원 */
+.empty-state-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* 위아래 분배 */
+}
+
+.empty-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 16px 0;
+}
+
+.empty-icon-circle {
+    width: 64px; height: 64px;
+    background-color: #f9fafb; /* bg-gray-50 */
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #d1d5db; /* text-gray-300 */
+    margin-bottom: 16px;
+}
+.empty-icon-circle span { font-size: 36px; }
+
+.empty-title { color: #9ca3af; font-weight: 500; margin-bottom: 4px; } /* text-gray-400 */
+.empty-desc { font-size: 12px; color: #9ca3af; }
+
+.btn-black-full {
+    width: 100%;
+    height: 56px; /* py-4 padding과 유사한 높이 */
+    background-color: #111813; /* Tailwind 예제의 짙은 색 */
+    color: white;
+    font-weight: bold;
+    border-radius: var(--radius-md); /* rounded-xl */
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-top: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s;
+}
+.btn-black-full:hover { background-color: #000000; }
+
+.mt-auto { margin-top: auto; }
+
+/* --- 거래 내역 --- */
+.history-section { padding: 0; }
+.history-section .card-header { padding: 24px 24px 16px; margin-bottom: 0; border-bottom: 1px solid var(--border-color); }
+.text-primary { color: var(--primary-color); }
+
+.filter-group select { padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; outline: none; }
+
+.empty-history { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 64px 0; text-align: center; }
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+}
