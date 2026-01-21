@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/seller/profile.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+</th:block>
+
+<div layout:fragment="content" class="seller-profile">
+
+  <!-- ===============================
+       Seller Summary
+  =============================== -->
+  <section class="seller-summary">
+    <div class="seller-summary-inner">
+
+      <div class="seller-avatar">
+        <span class="material-symbols-outlined">person</span>
+        <span class="seller-badge">인증됨</span>
+      </div>
+
+      <div class="seller-info">
+        <h1 class="seller-name">카메라매니아</h1>
+
+        <div class="seller-rating">
+          <span class="stars">★★★★☆</span>
+          <span class="score">4.8</span>
+          <span class="count">후기 152개</span>
+        </div>
+
+        <p class="seller-desc">
+          필름 카메라와 빈티지 렌즈를 전문으로 수집하고 판매합니다.<br>
+          꼼꼼하게 검수하여 믿을 수 있는 물건만 올립니다.
+        </p>
+
+        <div class="seller-actions">
+          <button class="btn btn-primary profile-card-btn">팔로우</button>
+          <button class="btn btn-outline profile-card-btn">프로필 공유</button>
+        </div>
+      </div>
+
+      <div class="seller-stats">
+        <div><strong>42</strong><span>판매상품</span></div>
+        <div><strong>152</strong><span>거래후기</span></div>
+        <div><strong>890</strong><span>팔로워</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===============================
+       Seller Tabs (jQuery UI)
+  =============================== -->
+  <div id="sellerTabs" class="seller-tabs-wrap">
+
+    <!-- Tabs Header -->
+    <ul class="seller-tabs">
+      <li>
+        <a href="#tab-selling" class="tab-btn">
+          판매중 <span class="seller-tab-count">5</span>
+        </a>
+      </li>
+      <li>
+        <a href="#tab-completed" class="tab-btn">
+          거래완료 <span class="seller-tab-count">36</span>
+        </a>
+      </li>
+      <li>
+        <a href="#tab-reviews" class="tab-btn">
+          받은후기 <span class="seller-tab-count">28</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- ===============================
+         판매중
+    =============================== -->
+    <section id="tab-selling" class="seller-products">
+      <h2 class="section-title">판매중</h2>
+
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-thumb"></div>
+          <div class="product-info">
+            <p class="product-title">필름 카메라 입문용</p>
+            <p class="product-price">120,000원</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===============================
+         거래완료
+    =============================== -->
+    <section id="tab-completed" class="seller-products">
+      <h2 class="section-title">거래완료</h2>
+
+      <div class="product-grid">
+        <div class="product-card done">
+          <div class="product-thumb"></div>
+          <div class="product-info">
+            <p class="product-title">소니 헤드폰</p>
+            <p class="product-price">250,000원</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===============================
+         받은후기
+    =============================== -->
+    <section id="tab-reviews" class="seller-reviews">
+      <h2 class="section-title">받은후기</h2>
+
+      <article class="review-card">
+        <div class="review-user">
+          <span class="material-symbols-outlined">person</span>
+        </div>
+        <div class="review-body">
+          <div class="review-head">
+            <strong>진상콜렉터</strong>
+            <span>★★★★★ · 2일 전</span>
+          </div>
+          <p class="review-content">
+            상품 상태가 설명보다 훨씬 좋네요. 믿고 거래할 수 있는 판매자입니다.
+          </p>
+        </div>
+      </article>
+
+      <div class="more-wrap">
+        <button class="btn btn-soft">후기 더보기</button>
+      </div>
+    </section>
+
+  </div>
+
+
+</div>
+
+<th:block th:fragment="pageJs">
+	<script th:src="https://code.jquery.com/ui/1.13.3/jquery-ui.min.js"></script>
+	<script th:src="@{/js/seller/profile.js}"></script>
+</th:block>
+</html>

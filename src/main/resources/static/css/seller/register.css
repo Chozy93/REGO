@@ -1,0 +1,156 @@
+/* ==========================================================================
+   Seller Register Page
+========================================================================== */
+.terms-agree input[type="checkbox"] {
+  accent-color: var(--color-primary);
+}
+.seller-register {
+  width: 860px; /* 기존 720px → 확장 */
+  
+  margin: 0 auto;
+  padding: var(--space-32) var(--space-24);
+}
+/* =========================
+   Card
+========================= */
+
+.register-card {
+	height: 870px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-32);
+  
+}
+
+/* =========================
+   Page Header
+========================= */
+
+.register-header {
+  margin-left: var(--space-16);
+}
+
+.register-header-title {
+  font-size: var(--fs-28);
+  font-weight: var(--fw-bold);
+  margin-bottom: var(--space-12);
+  letter-spacing: -0.01em;
+}
+
+.register-header-desc {
+  max-width: 520px;
+  font-size: var(--fs-15);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+/* =========================
+   Form
+========================= */
+
+.form-group {
+  margin-bottom: var(--space-24);
+}
+
+.form-group label {
+  display: block;
+  font-weight: var(--fw-semibold);
+  margin-bottom: var(--space-8);
+}
+
+.form-group textarea {
+  width: 100%;
+  resize: vertical;
+  padding: var(--space-16);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  font-size: var(--fs-14);
+  resize: none; /* 우측 하단 크기 조절 제거 */
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.form-help {
+  margin-top: var(--space-8);
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+}
+
+/* =========================
+   Terms Box
+========================= */
+
+.terms-box {
+  margin-bottom: var(--space-32);
+  padding: var(--space-24);
+  border-radius: var(--radius-xl);
+  background: var(--color-bg-soft);
+  border: 1px solid var(--color-border);
+}
+
+.terms-box h2 {
+  font-size: var(--fs-16);
+  font-weight: var(--fw-bold);
+  margin-bottom: var(--space-16);
+}
+
+.terms-content {
+  max-height: 220px;
+  overflow-y: auto;
+  padding: var(--space-16);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  font-size: var(--fs-13);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-16);
+}
+
+.terms-content p {
+  margin-bottom: var(--space-12);
+}
+
+.terms-agree {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-8);
+  font-size: var(--fs-14);
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+}
+
+.terms-agree input {
+  margin-top: 3px;
+}
+
+/* =========================
+   Notice
+========================= */
+
+.register-notice {
+  display: flex;
+  gap: var(--space-12);
+  background: var(--color-bg-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--space-16);
+  margin-bottom: var(--space-32);
+  color: var(--color-text-muted);
+}
+
+.register-notice .material-symbols-outlined {
+  font-size: 20px;
+}
+
+/* =========================
+   Actions
+========================= */
+
+.form-actions {
+  display: flex;
+  gap: var(--space-12);
+  justify-content: flex-end;
+}

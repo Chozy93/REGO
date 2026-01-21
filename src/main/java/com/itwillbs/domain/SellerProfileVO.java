@@ -22,6 +22,11 @@ public class SellerProfileVO {
 
     private final String sellerStatus;
 
+    /* =========================
+       약관 동의 일시
+    ========================= */
+    private final LocalDateTime termsAgreedAt;
+
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
@@ -31,11 +36,15 @@ public class SellerProfileVO {
     public SellerProfileVO(SellerProfile entity) {
         this.sellerId = entity.getSellerId();
         this.description = entity.getDescription();
+
         this.ratingAvg = entity.getRatingAvg();
         this.ratingCount = entity.getRatingCount();
         this.totalSales = entity.getTotalSales();
         this.totalReviews = entity.getTotalReviews();
+
         this.sellerStatus = entity.getSellerStatus();
+        this.termsAgreedAt = entity.getTermsAgreedAt();
+
         this.createdAt = entity.getCreatedAt();
         this.updatedAt = entity.getUpdatedAt();
     }
