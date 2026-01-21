@@ -41,11 +41,22 @@
         </div>
       </div>
 
-      <div class="seller-stats">
-        <div><strong>42</strong><span>판매상품</span></div>
-        <div><strong>152</strong><span>거래후기</span></div>
-        <div><strong>890</strong><span>팔로워</span></div>
-      </div>
+	  <div class="seller-stats">
+	    <div class="seller-stat">
+	      <strong class="seller-stat-value">42</strong>
+	      <span class="seller-stat-label">판매중</span>
+	    </div>
+
+	    <div class="seller-stat">
+	      <strong class="seller-stat-value">152</strong>
+	      <span class="seller-stat-label">후기</span>
+	    </div>
+
+	    <div class="seller-stat">
+	      <strong class="seller-stat-value">890</strong>
+	      <span class="seller-stat-label">팔로워</span>
+	    </div>
+	  </div>
 
     </div>
   </section>
@@ -140,7 +151,7 @@
 </div>
 
 <th:block th:fragment="pageJs">
-	<script th:src="https://code.jquery.com/ui/1.13.3/jquery-ui.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.min.js"></script>
 	<script th:src="@{/js/seller/profile.js}"></script>
 </th:block>
 </html>

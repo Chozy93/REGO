@@ -27,6 +27,11 @@ public class ChatController {
 
     private final ChatService chatService;
     
+    @GetMapping("/test/error")
+    public String testError() {
+        throw new IllegalArgumentException("에러 테스트용 메시지입니다.");
+    }
+    
     @GetMapping("/list")
     public String chatList(
             @RequestParam(value = "unreadOnly", required = false) Boolean unreadOnly,

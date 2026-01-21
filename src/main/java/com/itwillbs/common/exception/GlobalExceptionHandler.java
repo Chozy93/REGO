@@ -13,20 +13,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-/*
- * 통합 글로벌 예외 처리기
- *
- * ✔ View / REST 컨트롤러 혼합 허용
- * ✔ 응답 타입(JSON / HTML) 기준 분기
- * ✔ SSR은 DOM 유지 + 모달 제어
- * ✔ REST는 ApiResponse JSON 반환
- */
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     /* =========================
-       Validation 오류 (@Valid)
+       Validation 오류
     ========================= */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Object handleValidation(
@@ -41,13 +33,7 @@ public class GlobalExceptionHandler {
                 .findFirst()
                 .orElse("입력값을 확인해주세요.");
 
-        return handleByResponseType(
-                request,
-                model,
-                e,
-                "VALIDATION_ERROR",
-                message
-        );
+        return handle(request, model, e, "VALIDATION_ERROR", message);
     }
 
     /* =========================
@@ -59,13 +45,7 @@ public class GlobalExceptionHandler {
             HttpServletRequest request,
             Model model
     ) {
-        return handleByResponseType(
-                request,
-                model,
-                e,
-                "ENTITY_NOT_FOUND",
-                e.getMessage()
-        );
+        return handle(request, model, e, "ENTITY_NOT_FOUND", e.getMessage());
     }
 
     /* =========================
@@ -77,17 +57,11 @@ public class GlobalExceptionHandler {
             HttpServletRequest request,
             Model model
     ) {
-        return handleByResponseType(
-                request,
-                model,
-                e,
-                "ACCESS_DENIED",
-                e.getMessage()
-        );
+        return handle(request, model, e, "ACCESS_DENIED", e.getMessage());
     }
 
     /* =========================
-       잘못된 요청 / 비즈니스 오류
+       잘못된 요청
     ========================= */
     @ExceptionHandler({
             IllegalArgumentException.class,
@@ -98,17 +72,11 @@ public class GlobalExceptionHandler {
             HttpServletRequest request,
             Model model
     ) {
-        return handleByResponseType(
-                request,
-                model,
-                e,
-                "INVALID_REQUEST",
-                e.getMessage()
-        );
+        return handle(request, model, e, "INVALID_REQUEST", e.getMessage());
     }
 
     /* =========================
-       그 외 모든 예외 (최후 방어)
+       그 외 모든 예외
     ========================= */
     @ExceptionHandler(Exception.class)
     public Object handleException(
@@ -116,7 +84,7 @@ public class GlobalExceptionHandler {
             HttpServletRequest request,
             Model model
     ) {
-        return handleByResponseType(
+        return handle(
                 request,
                 model,
                 e,
@@ -125,10 +93,10 @@ public class GlobalExceptionHandler {
         );
     }
 
-    /* ==================================================
-       응답 타입 기준 분기 (핵심)
-    ================================================== */
-    private Object handleByResponseType(
+    /* =========================
+       공통 처리
+    ========================= */
+    private Object handle(
             HttpServletRequest request,
             Model model,
             Exception e,
@@ -137,38 +105,30 @@ public class GlobalExceptionHandler {
     ) {
         log.error(errorCode, e);
 
-        // ✅ JSON 응답이 필요한 요청
+        // ✅ AJAX / REST → JSON
         if (isJsonRequest(request)) {
             return ResponseEntity.internalServerError()
                     .body(ApiResponse.fail(errorCode, message));
         }
 
-        // ✅ View(SSR) 요청 → 모달만 제어
-        model.addAttribute("isErrorModalOpen", true);
+        // ✅ SSR → 에러 페이지
         model.addAttribute("errorCode", errorCode);
         model.addAttribute("errorMessage", message);
 
-        return resolveViewName(request);
+        return "error/error-page";
     }
 
     /* =========================
        JSON 요청 판별
     ========================= */
     private boolean isJsonRequest(HttpServletRequest request) {
-        String accept = request.getHeader("Accept");
-        String contentType = request.getContentType();
         String xhr = request.getHeader("X-Requested-With");
+        String contentType = request.getContentType();
 
-        return (accept != null && accept.contains("application/json"))
-                || (contentType != null && contentType.contains("application/json"))
-                || "XMLHttpRequest".equalsIgnoreCase(xhr);
-    }
+        if ("XMLHttpRequest".equalsIgnoreCase(xhr)) {
+            return true;
+        }
 
-    /* =========================
-       현재 View 유지
-    ========================= */
-    private String resolveViewName(HttpServletRequest request) {
-        Object viewName = request.getAttribute("CURRENT_VIEW_NAME");
-        return viewName != null ? viewName.toString() : "main/index";
+        return contentType != null && contentType.contains("application/json");
     }
 }

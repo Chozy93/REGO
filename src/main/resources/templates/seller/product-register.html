@@ -28,46 +28,34 @@
         action="/seller/product/register"
         enctype="multipart/form-data">
 
-    <!-- ===============================
-         Images
-    =============================== -->
-    <section class="spr-section">
-      <div class="spr-section__head">
-        <h2 class="spr-section__title">상품 이미지</h2>
-        <span class="spr-section__meta">(0/10)</span>
-      </div>
+   
+	<!-- ===============================
+	     Images
+	=============================== -->
+	<section class="spr-section">
+	  <div class="spr-section__head">
+	    <h2 class="spr-section__title">상품 이미지</h2>
+	    <span class="spr-section__meta">(0/10)</span>
+	  </div>
 
-      <div class="spr-images">
-        <label class="spr-images__add">
-          <input type="file" name="images" multiple accept="image/*" class="spr-images__input">
-          <span class="material-symbols-outlined">photo_camera</span>
-          <span class="spr-images__add-text">이미지 등록</span>
-        </label>
+	  <div class="spr-images">
+	    <label class="spr-images__add">
+	      <input type="file"
+	             name="images"
+	             multiple
+	             accept="image/*"
+	             class="spr-images__input">
+	      <span class="material-symbols-outlined">camera_alt</span>
+	      <span class="spr-images__add-text">이미지 등록</span>
+	    </label>
+	  </div>
 
-        <!-- 미리보기 슬롯 (UI용 더미) -->
-        <div class="spr-images__preview">
-          <div class="spr-images__thumb spr-images__thumb--primary">
-            <img src="" alt="preview" class="spr-images__thumb-img">
-            <span class="spr-images__badge">대표</span>
-            <button type="button" class="spr-images__remove" aria-label="remove">
-              <span class="material-symbols-outlined">close</span>
-            </button>
-          </div>
+	  <p class="spr-help">
+	    <span class="material-symbols-outlined">info</span>
+	    상품 이미지는 최대 10장까지 등록 가능합니다.
+	  </p>
+	</section>
 
-          <div class="spr-images__thumb">
-            <img src="" alt="preview" class="spr-images__thumb-img">
-            <button type="button" class="spr-images__remove" aria-label="remove">
-              <span class="material-symbols-outlined">close</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <p class="spr-help">
-        <span class="material-symbols-outlined">info</span>
-        상품 이미지는 최대 10장까지 등록 가능합니다.
-      </p>
-    </section>
 
     <hr class="spr-divider">
 
@@ -82,44 +70,66 @@
 
     <hr class="spr-divider">
 
-    <!-- ===============================
-         Category (Main + Sub)
-    =============================== -->
-    <section class="spr-section">
-      <h2 class="spr-section__title">카테고리</h2>
 
-      <!-- 메인 카테고리 -->
-      <div class="spr-category">
-        <div class="spr-category__main">
-          <button type="button" class="spr-chip spr-chip--active">디지털기기</button>
-          <button type="button" class="spr-chip">생활가전</button>
-          <button type="button" class="spr-chip">가구/인테리어</button>
-          <button type="button" class="spr-chip">유아동</button>
-          <button type="button" class="spr-chip">의류</button>
-          <button type="button" class="spr-chip">생활/가공식품</button>
-          <button type="button" class="spr-chip">스포츠/레저</button>
-          <button type="button" class="spr-chip">취미/게임/음반</button>
-          <button type="button" class="spr-chip">뷰티/미용</button>
-          <button type="button" class="spr-chip spr-chip--muted">더보기 +</button>
-        </div>
+	<!-- ===============================
+	     Category (Tab 방식)
+	=============================== -->
+	<section class="spr-section">
+	  <h2 class="spr-section__title">카테고리</h2>
 
-        <!-- 서브 카테고리 박스 -->
-        <div class="spr-category__sub-box">
-          <p class="spr-category__sub-title">디지털기기 상세 카테고리</p>
-          <div class="spr-category__sub">
-            <button type="button" class="spr-subchip">모바일</button>
-            <button type="button" class="spr-subchip">노트북/PC</button>
-            <button type="button" class="spr-subchip">카메라/광학기기</button>
-            <button type="button" class="spr-subchip">음향가전</button>
-            <button type="button" class="spr-subchip">게임기기</button>
-          </div>
-        </div>
+	  <div class="spr-category">
 
-        <!-- 값 전송용 (나중에 JS/서버 바인딩용) -->
-        <input type="hidden" name="categoryMain" value="디지털기기">
-        <input type="hidden" name="categorySub" value="">
-      </div>
-    </section>
+	    <!-- ===============================
+	         1차 카테고리 (Tab Buttons)
+	         - UI 탐색용
+	    =============================== -->
+	    <div class="spr-category__main">
+	      <button type="button"
+	              class="spr-chip"
+	              th:each="node, stat : ${headerCategoryListVO.categories}"
+	              th:text="${node.parent.name}"
+	              th:data-parent-id="${node.parent.categoryId}"
+	              th:classappend="${stat.index == 0} ? ' spr-chip--active' : ''">
+	      </button>
+	    </div>
+
+	    <!-- ===============================
+	         2차 카테고리 (Tab Panels)
+	         - 전부 렌더
+	         - active 된 것만 노출
+	    =============================== -->
+	    <div class="spr-category__sub-area">
+
+	      <div class="spr-category__sub-box"
+	           th:each="node, stat : ${headerCategoryListVO.categories}"
+	           th:data-parent-id="${node.parent.categoryId}"
+	           th:classappend="${stat.index == 0} ? ' is-active' : ''">
+
+	        <p class="spr-category__sub-title"
+	           th:text="${node.parent.name} + ' 상세 카테고리'"></p>
+
+	        <div class="spr-category__sub">
+	          <button type="button"
+	                  class="spr-subchip"
+	                  th:each="child : ${node.children}"
+	                  th:text="${child.name}"
+	                  th:data-category-id="${child.categoryId}">
+	          </button>
+	        </div>
+
+	      </div>
+
+	    </div>
+
+	    <!-- ===============================
+	         서버 전송용 (핵심)
+	         Product.category_id (FK)
+	    =============================== -->
+	    <input type="hidden" name="categoryId" value="">
+	  </div>
+	</section>
+
+
 
     <hr class="spr-divider">
 
@@ -157,28 +167,33 @@
     <!-- ===============================
          Price
     =============================== -->
-    <section class="spr-section">
-      <div class="spr-section__row">
-        <label class="spr-section__title" for="price">가격</label>
+	<section class="spr-section">
+		<div class="spr-header">
+			<div class="spr-section__title">가격</div>
+			<button type="button" class="spr-ai-btn">
+			      <span class="material-symbols-outlined">smart_toy</span>
+			      GPT	
+			    </button>
+		</div>
+	
 
-        <!-- UI 버튼만 (기능은 나중에) -->
-        <button type="button" class="spr-ai-btn">
-          <span class="material-symbols-outlined">smart_toy</span>
-          GPT 가격 추천
-        </button>
-      </div>
+	  <div class="spr-price">
+	    <div class="spr-price__field">
+	      <span class="spr-price__prefix">₩</span>
+	      <input type="number"
+	             class="spr-input spr-input--price"
+	             placeholder="가격을 입력해주세요">
+	    </div>
 
-      <div class="spr-price">
-        <span class="spr-price__prefix">₩</span>
-        <input id="price" name="price" type="number" class="spr-input spr-input--price"
-               placeholder="가격을 입력해주세요">
-      </div>
+	  
+	  </div>
 
-      <label class="spr-check">
-        <input type="checkbox" name="shippingIncluded">
-        <span>배송비 포함</span>
-      </label>
-    </section>
+	  <label class="spr-check">
+	    <input type="checkbox">
+	    배송비 포함
+	  </label>
+	</section>
+
 
     <hr class="spr-divider">
 
@@ -206,25 +221,32 @@
       <div class="spr-panel">
         <h2 class="spr-section__title">거래 방식</h2>
 
-        <div class="spr-tx">
-          <label class="spr-tx__card spr-tx__card--active">
-            <input type="radio" name="transactionType" value="DIRECT" checked>
-            <div class="spr-tx__text">
-              <p class="spr-tx__title">직거래</p>
-              <p class="spr-tx__desc">동네 이웃과 직접 만나서 거래합니다.</p>
-            </div>
-            <span class="material-symbols-outlined spr-tx__icon">handshake</span>
-          </label>
+		<div class="spr-tx">
+		  <label class="spr-tx__card">
+		    <input type="checkbox"
+		           name="transactionTypes"
+		           value="DIRECT"
+		           class="spr-tx__input">
+		    <div class="spr-tx__text">
+		      <p class="spr-tx__title">직거래</p>
+		      <p class="spr-tx__desc">동네 이웃과 직접 만나서 거래합니다.</p>
+		    </div>
+		    <span class="material-symbols-outlined spr-tx__icon">handshake</span>
+		  </label>
 
-          <label class="spr-tx__card">
-            <input type="radio" name="transactionType" value="DELIVERY">
-            <div class="spr-tx__text">
-              <p class="spr-tx__title">택배거래</p>
-              <p class="spr-tx__desc">택배를 통해 물건을 보내고 받습니다.</p>
-            </div>
-            <span class="material-symbols-outlined spr-tx__icon">local_shipping</span>
-          </label>
-        </div>
+		  <label class="spr-tx__card">
+		    <input type="checkbox"
+		           name="transactionTypes"
+		           value="DELIVERY"
+		           class="spr-tx__input">
+		    <div class="spr-tx__text">
+		      <p class="spr-tx__title">택배거래</p>
+		      <p class="spr-tx__desc">택배를 통해 물건을 보내고 받습니다.</p>
+		    </div>
+		    <span class="material-symbols-outlined spr-tx__icon">local_shipping</span>
+		  </label>
+		</div>
+
       </div>
 
       <!-- 거래 희망 장소 -->
@@ -260,5 +282,7 @@
 
   </form>
 </div>
-
+<th:block th:fragment="pageJs">
+	<script th:src="@{/js/seller/product-register.js}"></script>
+</th:block>
 </html>

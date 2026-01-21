@@ -49,38 +49,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
-
-
-//에러모달 조작
-$(function () {
-
-  /* ==================================================
-     Error Modal (jQuery)
-  ================================================== */
-  const $errorModal = $(".error-modal");
-
-  if ($errorModal.length === 0) return;
-
-  const $backdrop = $errorModal.find(".error-modal-backdrop");
-  const $messageEl = $errorModal.find(".error-modal-body p");
-
-  // 열기
-  window.openErrorModal = function (message) {
-    if (message) {
-      $messageEl.text(message);
-    }
-    $errorModal.removeClass("is-hidden");
-  };
-
-  // 닫기
-  window.closeErrorModal = function () {
-    $errorModal.addClass("is-hidden");
-  };
-
-  // backdrop 클릭 시 닫기
-  $backdrop.on("click", function () {
-    window.closeErrorModal();
-  });
-
-});
-
