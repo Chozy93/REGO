@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+      layout:decorate="~{layout/base}">
+      
+<th:block th:fragment="pageCss">
+    <link rel="stylesheet" href="/css/payment/myrepay.css">
+</th:block>
+
+<div layout:fragment="content">  
+    <main class="layout-container">
+            
+        <div class="page-header">
+            <a href="/" class="btn-back">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </a>
+            <h2>RE:PAY 관리</h2>
+        </div>
+
+        <div class="dashboard-grid">
+            
+            <section class="card wallet-card">
+                <div class="card-header">
+                    <h3>RE:PAY 머니 잔액</h3>
+                    <div class="icon-circle">
+                        <span class="material-symbols-outlined">account_balance_wallet</span>
+                    </div>
+                </div>
+                
+                <div class="balance-display">
+                    <span th:text="${walletInfo.balance != null ? #numbers.formatInteger(walletInfo.balance, 0, 'COMMA') : '0'}">0</span><span>원</span>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn-primary btn-lg">
+                        <span class="material-symbols-outlined">add_circle</span>
+                        충전
+                    </button>
+                    <button class="btn-secondary btn-lg">
+                        <span class="material-symbols-outlined">arrow_circle_up</span>
+                        출금
+                    </button>
+                </div>
+            </section>
+
+            <section class="card account-card">
+                <div class="card-header">
+                    <h3>연동 계좌 정보</h3>
+                    <button class="btn-text-danger" th:if="${walletInfo.bankName != null}">연동 해제</button>
+                </div>
+
+                <div class="account-content-wrapper" th:if="${walletInfo.bankName != null}">
+                    <div class="account-box">
+                        <div class="bank-icon">
+                            <span class="material-symbols-outlined">account_balance</span>
+                        </div>
+                        <div class="account-details">
+                            <div class="bank-name" th:text="${walletInfo.bankName}">은행명</div>
+                            <div class="account-num" th:text="${walletInfo.accountNumMasked}">123-*******</div>
+                        </div>
+                        <span class="badge">주계좌</span>
+                    </div>
+                    
+                    <button class="btn-dashed mt-auto" onclick="location.href='/pay/connect'">
+                        <span class="material-symbols-outlined">sync_alt</span>
+                        계좌 변경하기
+                    </button>
+                </div>
+
+                <div class="empty-state-wrapper" th:unless="${walletInfo.bankName != null}">
+                    <div class="empty-content">
+                        <div class="empty-icon-circle">
+                            <span class="material-symbols-outlined">account_balance</span>
+                        </div>
+                        <p class="empty-title">연동된 계좌가 없습니다</p>
+                        <p class="empty-desc">안전한 거래를 위해 계좌를 연동해주세요</p>
+                    </div>
+
+                    <button class="btn-black-full" onclick="location.href='/pay/connect'">
+                        <span class="material-symbols-outlined">link</span>
+                        계좌 연동하기
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <section class="card history-section">
+            <div class="card-header border-bottom">
+                <h3>
+                    <span class="material-symbols-outlined text-primary">history</span>
+                    최근 거래 내역
+                </h3>
+                <div class="filter-group">
+                    <select>
+                        <option>전체 기간</option>
+                        <option>1주일</option>
+                        <option>1개월</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="history-list empty-history">
+                <div class="empty-icon-circle">
+                    <span class="material-symbols-outlined">receipt_long</span>
+                </div>
+                <p class="empty-title">거래 내역이 없습니다</p>
+                <p class="empty-desc">RE:PAY를 통해 안전하고 간편하게 거래해보세요</p>
+            </div>
+        </section>
+
+    </main>
+</div>
+</html>

@@ -35,6 +35,14 @@ public class Product {
     private User seller;
 
     /* =========================
+    구매자 (추가!)
+========================= */
+@ManyToOne(fetch = FetchType.LAZY)
+@JoinColumn(name = "buyer_id")
+private User buyer;
+    
+    
+    /* =========================
        카테고리
     ========================= */
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,48 +1,77 @@
 package com.itwillbs.controller;
 
+import java.io.File;
 import java.util.Map;
+import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.itwillbs.domain.user.NotificationUpdateVO;
+import com.itwillbs.domain.user.UserVO;
 import com.itwillbs.dto.MyPageDTO;
+import com.itwillbs.entity.NotificationSettings;
+import com.itwillbs.entity.User;
 import com.itwillbs.mapper.MypageMapper;
+import com.itwillbs.repository.UserRepository;
+import com.itwillbs.service.MypageService;
+import com.itwillbs.service.NotificationService;
+import com.itwillbs.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 // 마이페이지 컨트롤러
 @Controller
 @RequiredArgsConstructor
 public class UserController {
-	final public MypageMapper mypageMapper;
+	private final MypageMapper mypageMapper;
+	private final MypageService mypageService;
+	private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+	@Autowired
+	private NotificationService notificationService;
+	@Autowired
+	private UserRepository userRepository;
+	
 	
 	@GetMapping("/mypage")
-	public String myPageMain(Authentication authentication, org.springframework.ui.Model model) {
-	    // 1. 로그인 확인 (비로그인 처리)
-	    if (authentication == null) {
+	public String myPageMain(Authentication authentication, Model model) {
+	    if (authentication == null) return "redirect:/login";
+
+
+	    String email = getUserEmail(authentication);
+	    
+	    System.out.println("🔍 마이페이지 진입 시도 이메일: [" + email + "]");
+
+	    if (email == null || email.isEmpty()) {
+	        System.out.println("⚠️ 이메일을 찾을 수 없어 로그인 페이지로 튕깁니다.");
 	        return "redirect:/login";
 	    }
 
-	    String email = "";
-	    if (authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.UserDetails) {
-	        email = ((org.springframework.security.core.userdetails.UserDetails)authentication.getPrincipal()).getUsername();
-	    } else if (authentication.getPrincipal() instanceof org.springframework.security.oauth2.core.user.OAuth2User) {
-	        Map<String, Object> attributes = ((org.springframework.security.oauth2.core.user.OAuth2User)authentication.getPrincipal()).getAttributes();
-	        // 소셜 로그인 제공자마다 이메일 위치가 다를 수 있으니 주의!
-	        email = (String) attributes.get("email"); 
-	    }
-
-	  
-		// 2. 데이터 가져오기
+	    // 2. 데이터 가져오기
 	    MyPageDTO mypageInfo = mypageMapper.getMyPageInfo(email);
-	    
-	    // 3. 모델에 담기
-	    model.addAttribute("user", mypageInfo);
 
+	    if (mypageInfo == null) {
+	        System.out.println("⚠️ DB에 해당 이메일의 유저 정보가 없습니다.");
+	        return "redirect:/"; 
+	    }
+	    
+	    model.addAttribute("user", mypageInfo);
 	    return "user/mypage";
 	}
 	
@@ -58,17 +87,282 @@ public class UserController {
         return "user/profile-edit"; 
     }
 
-    private String getUserEmail(Authentication authentication) {
-        if (authentication.getPrincipal() instanceof UserDetails) {
-            return ((UserDetails) authentication.getPrincipal()).getUsername();
-        } else if (authentication.getPrincipal() instanceof OAuth2User) {
-            Map<String, Object> attributes = ((OAuth2User) authentication.getPrincipal()).getAttributes();
-            return (String) attributes.get("email");
+	private String getUserEmail(Authentication authentication) {
+	    Object principal = authentication.getPrincipal();
+	    
+	    if (principal instanceof UserDetails) {
+	        return ((UserDetails) principal).getUsername();
+	    } else if (principal instanceof OAuth2User) {
+	        Map<String, Object> attributes = ((OAuth2User) principal).getAttributes();
+	        
+
+	        if (attributes.containsKey("email")) {
+	            return (String) attributes.get("email");
+	        }
+	        
+
+	        if (attributes.containsKey("response")) {
+	            Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+	            return (String) response.get("email");
+	        }
+	        
+
+	        if (attributes.containsKey("kakao_account")) {
+	            Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+	            return (String) kakaoAccount.get("email");
+	        }
+	    }
+	    return null;
+	}
+    
+    
+    @PostMapping("/mypage/update")
+    public String updateProfile(@ModelAttribute UserVO updateData, 
+                               Authentication authentication,
+                               HttpSession session) {
+        
+        System.out.println("1. 수정 요청 데이터 확인: " + updateData.toString());
+
+        if (authentication == null) {
+            return "redirect:/login";
         }
-        return "";
+
+        String email = getUserEmail(authentication);
+        UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+        
+
+        if (loginUser == null) {
+            System.out.println("⚠️ 세션 복구 시작 (이메일: " + email + ")");
+            
+
+            MyPageDTO mypageInfo = mypageMapper.getMyPageInfo(email);
+            
+
+            loginUser = new UserVO();
+            loginUser.setUserId(mypageInfo.getUserId());
+            loginUser.setEmail(mypageInfo.getEmail());
+            loginUser.setNickname(mypageInfo.getNickname());
+
+            
+            // 3. 복구된 정보를 세션에 다시 저장
+            session.setAttribute("loginUser", loginUser);
+        }
+
+        System.out.println("2. 유저 아이디 확인: " + loginUser.getUserId());
+        
+        mypageService.updateUserInfo(loginUser.getUserId(), updateData);
+        
+        // 세션 정보 업데이트
+        loginUser.setNickname(updateData.getNickname());
+        loginUser.setBio(updateData.getBio());
+        loginUser.setAddress(updateData.getAddress());
+        loginUser.setPhoneNumber(updateData.getPhoneNumber());
+        
+        session.setAttribute("loginUser", loginUser);
+        
+        return "redirect:/mypage";
     }
-}
+    
+    @PostMapping("/mypage/check-password")
+    @ResponseBody
+    public ResponseEntity<?> checkPassword(@RequestParam("currentPassword") String currentPassword, 
+                                           Authentication authentication) {
+        System.out.println("🔍 1. 프론트 비번 확인: [" + currentPassword + "]");
+
+        try {
+            if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 필요");
+
+            String email = getUserEmail(authentication);
+            MyPageDTO user = mypageMapper.getMyPageInfo(email);
+            
+            if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("유저 없음");
+
+            System.out.println("🔍 2. DB 조회 성공 (ID: " + user.getUserId() + ")");
+
+            String encodedPassword = mypageMapper.getUserPassword(user.getUserId());
+            System.out.println("🔍 3. DB 비번 확인: [" + encodedPassword + "]");
+
+
+            if (encodedPassword == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("소셜 계정은 비밀번호가 없습니다.");
+            }
+
+            boolean isMatch = passwordEncoder.matches(currentPassword, encodedPassword);
+            System.out.println("🔍 4. 일치 여부: " + isMatch);
+
+            if (isMatch) return ResponseEntity.ok().build();
+            else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("불일치");
+
+        } catch (Exception e) {
+            System.out.println("❌ 에러 발생!!! 원인: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/mypage/update-password")
+    @ResponseBody
+    public ResponseEntity<?> updatePassword(@RequestParam("newPassword") String newPassword, 
+                                           Authentication authentication) {
+        try {
+            if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+            String email = getUserEmail(authentication);
+            MyPageDTO user = mypageMapper.getMyPageInfo(email);
+            
+            System.out.println("🔍 비번 변경 시작 (ID: " + user.getUserId() + ")");
+
+            // 새 비밀번호 암호화
+            String encodedPwd = passwordEncoder.encode(newPassword);
+            
+            // DB 업데이트
+            mypageMapper.updatePassword(user.getUserId(), encodedPwd);
+            System.out.println("✅ 비번 변경 완료!");
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    @PostMapping("/mypage/upload-profile")
+    @ResponseBody
+    public ResponseEntity<?> uploadProfile(@RequestParam("profileFile") MultipartFile file, 
+                                           Authentication authentication, 
+                                           HttpSession session) {
+        try {
+            if (file.isEmpty()) return ResponseEntity.badRequest().body("파일이 비어있습니다.");
+
+            // 1. 유저 정보 식별
+            String email = getUserEmail(authentication);
+            UserVO loginUser = (UserVO) session.getAttribute("loginUser");
+
+            if (loginUser == null) {
+                MyPageDTO mypageInfo = mypageMapper.getMyPageInfo(email);
+                loginUser = new UserVO();
+                loginUser.setUserId(mypageInfo.getUserId());
+                loginUser.setEmail(mypageInfo.getEmail());
+                session.setAttribute("loginUser", loginUser);
+            }
+
+            // 2. 파일 저장 경로 설정
+            String uploadDir = System.getProperty("user.dir") + File.separator + "upload" + File.separator;
+            File dir = new File(uploadDir);
+            if (!dir.exists()) dir.mkdirs(); 
+
+            // 3. 파일명 중복 방지 및 저장
+            String savedFilename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            file.transferTo(new File(uploadDir + savedFilename));
+
+            // 4. DB에 저장할 웹 경로
+            String dbPath = "/upload/" + savedFilename;
+            
+            //  DB 업데이트 호출
+            mypageMapper.updateProfileImg(loginUser.getUserId(), dbPath);
+
+            // 5. 세션에도 실시간 반영
+            loginUser.setProfileImg(dbPath);
+            session.setAttribute("loginUser", loginUser);
+
+            System.out.println("✅ 프로필 이미지 변경 성공: " + dbPath);
+            return ResponseEntity.ok(Map.of("imageUrl", dbPath));
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("서버 오류 발생");
+        }
+    }
+    
+ // 설정 메인 페이지
+    @GetMapping("/mypage/settings")
+    public String settings(Authentication authentication, Model model) {
+        if (authentication == null) return "redirect:/login";
+        
+        String email = getUserEmail(authentication);
+        MyPageDTO mypageInfo = mypageMapper.getMyPageInfo(email);
+        model.addAttribute("user", mypageInfo);
+        
+        return "user/settings"; 
+    }
+
+    // 알림 설정 페이지
+    @GetMapping("/mypage/settings/notifications")
+    public String notificationSettings(Model model, Authentication authentication) {
+        if (authentication == null) return "redirect:/login";
+        
+
+        String email = getUserEmail(authentication); 
+        Long userId = userRepository.findByEmail(email)
+                                    .map(user -> user.getUserId())
+                                    .orElseThrow(() -> new RuntimeException("유저 없음"));
+
+        NotificationSettings settings = notificationService.getSettings(userId);
+        model.addAttribute("settings", settings);
+        
+        return "user/notifications"; 
+    }
+    
+    
+    @PostMapping("/mypage/settings/notifications/update")
+    @ResponseBody
+    public ResponseEntity<String> updateNotification(@RequestBody NotificationUpdateVO vo, Authentication authentication) {
+        if (authentication == null) return ResponseEntity.status(401).build();
+        
+
+        String email = authentication.getName(); 
+        
+
+        Long userId = userRepository.findByEmail(email)
+                                    .map(user -> user.getUserId())
+                                    .orElseThrow(() -> new RuntimeException("유저 없음"));
+
+        notificationService.updateSettings(userId, vo);
+        return ResponseEntity.ok("Success");
+    }
+
+ //   1. 회원 탈퇴 페이지 이동 (GET)
+    @GetMapping("/mypage/settings/withdraw")
+    public String withdrawPage(Authentication authentication, Model model) {
+        if (authentication == null) return "redirect:/login";
+        
+
+        String email = getUserEmail(authentication);
+        MyPageDTO mypageInfo = mypageMapper.getMyPageInfo(email);
+        model.addAttribute("user", mypageInfo);
+        
+        return "user/withdraw";
+    }
+
+ // 2. 실제 탈퇴 처리 
+    @PostMapping("/mypage/settings/withdraw/process")
+    @ResponseBody
+    public ResponseEntity<?> processWithdraw(@RequestParam("password") String password, 
+                                            Authentication authentication,
+                                            HttpSession session) {
+        try {
+            String email = getUserEmail(authentication);
+            MyPageDTO user = mypageMapper.getMyPageInfo(email);
+            
+            // 1. 비밀번호 검증
+            String encodedPassword = mypageMapper.getUserPassword(user.getUserId());
+            if (!passwordEncoder.matches(password, encodedPassword)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호가 일치하지 않습니다.");
+            }
+
+            // 2. 탈퇴 서비스 호출
+            mypageService.withdrawUser(user.getUserId());
+
+            // 3. 세션 무효화
+            session.invalidate();
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("탈퇴 처리 중 오류가 발생했습니다.");
+        }
+    }
 
 	
+}
 	
 

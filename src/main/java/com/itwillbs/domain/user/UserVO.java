@@ -4,21 +4,28 @@ import com.itwillbs.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserVO {
 
-    private final Long userId;
-    private final String email;
+    private Long userId;
+    private String email;
     private String username;
     private String nickname;
     private String profileImg;
     private String gender;   // ✅ String
+    
+    private String bio;         
+    private String address;     
+    private String phoneNumber; 
+    
     
     /* =========================
     Entity → VO 생성자

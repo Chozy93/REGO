@@ -88,7 +88,10 @@ public class ChatController {
 	                "김철수",                   // username
 	                "철수",                     // nickname
 	                "/img/dummy/avatar.png",    // profileImg
-	                null                        // gender (더미라 null)
+	                null,                        // gender (더미라 null)
+	                null,                    
+	                null,                    
+	                null                        
 	        );
 
 	        model.addAttribute("partnerUser", partnerUser);

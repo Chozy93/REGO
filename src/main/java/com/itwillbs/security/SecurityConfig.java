@@ -17,10 +17,18 @@ import groovy.lang.Lazy;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+
 	
 	@Lazy
     private final  CustomOAuth2UserService customOAuth2UserService;
     private final  AuthenticationSuccessHandler customSuccessHandler;
+
+
+    // 순환 참조 방지를 위해 @Lazy로 주입받기
+    @Lazy
+    private final CustomAuthenticationFailureHandler customFailureHandler;
+    
+
     /* =========================
        AuthenticationManager
     ========================= */
@@ -58,7 +66,8 @@ public class SecurityConfig {
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/", true)
-                .failureUrl("/login?error")
+                //.failureUrl("/login?error")
+                .failureHandler(customFailureHandler)
             )
 
 

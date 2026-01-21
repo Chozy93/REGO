@@ -52,6 +52,10 @@
 <div class="flex flex-col gap-2 text-center">
 <h1 class="text-[32px] font-bold leading-tight tracking-tight text-[#111813]">로그인</h1>
 <p class="text-sm font-normal text-[#61896f]">중고 거래를 시작해보세요</p>
+<div th:if="${param.error != null and param.exception != null}" 
+     class="mt-2 p-3 rounded-xl bg-red-50 text-red-500 text-xs font-bold border border-red-100">
+    <span th:text="${param.exception}"></span>
+</div>
 </div>
 <div class="flex flex-col gap-4">
 <label class="flex flex-col gap-1.5">
@@ -155,16 +159,16 @@
 			
         const urlParams = new URLSearchParams(window.location.search);
         const status = urlParams.get('status');
-
+		const exception = urlParams.get('exception');
         if (status === 'no_user') {
             alert("가입되지 않은 이메일이에요. 다시 확인해 주세요!");
         } else if (status === 'wrong_pw') {
             alert("비밀번호가 틀렸어요!");
         }
         
-        if (status) {
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
+		if (status || exception) {
+		        window.history.replaceState({}, document.title, window.location.pathname);
+		    }
     };
 </script>
 </body></html>

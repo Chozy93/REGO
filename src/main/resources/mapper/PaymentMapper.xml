@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwillbs.mapper.PaymentMapper">
+
+
+<!--id를 이용해 wallet 잔액 확인하기-->
+<select id="selectWalletWithAccount" resultType="com.itwillbs.dto.WalletViewDTO">
+        SELECT 
+            w.balance,
+            b.bank_name AS bankName,
+            b.account_num AS accountNum
+        FROM wallets w
+        LEFT JOIN bank_accounts b 
+            ON w.user_id = b.user_id
+        WHERE w.user_id = #{userId}
+        ORDER BY b.account_id DESC 
+        LIMIT 1
+    </select>
+
+</mapper>
