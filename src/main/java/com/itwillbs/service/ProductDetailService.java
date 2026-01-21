@@ -24,11 +24,11 @@ public class ProductDetailService {
        DETAIL01_VIEWCOUNT
     ========================= */
     public ProductDetailPageVO getProductDetailPage(Long productId) {
-    	return getProductDetailPage(productId, true); 
+    	return getProductDetailPage(productId, true, null); 
     	
     }
     
-    public ProductDetailPageVO getProductDetailPage(Long productId, boolean increaseView) {
+    public ProductDetailPageVO getProductDetailPage(Long productId, boolean increaseView, Long userId) {
 
     	// ✅ 1. 조회수 증가 (조건부)
         if (increaseView) {
@@ -43,9 +43,8 @@ public class ProductDetailService {
             throw new IllegalArgumentException("존재하지 않는 상품입니다. id=" + productId);
         }
         
-        Long testUserId = 1L; // 로그인 전 임시
 
-        boolean liked = productLikeService.isLiked(productId, testUserId);
+        boolean liked = (userId != null) && productLikeService.isLiked(productId, userId);
         int likeCount = productLikeService.getLikeCount(productId);
 
         ProductDetailVO productVO = new ProductDetailVO(

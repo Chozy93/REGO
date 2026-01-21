@@ -29,12 +29,10 @@
 
             /* ❤️ 내가 찜했는지 (임시 user_id = 1) */
             EXISTS (
-                SELECT 1
-                FROM user_favorites uf
-                WHERE uf.product_id = p.product_id
-                  AND uf.user_id = 1
-            ) AS liked
-
+                SELECT 1 FROM user_favorites uf
+            WHERE uf.product_id = p.product_id
+              AND uf.user_id = #{userId}  )
+               AS liked
         FROM products p
         WHERE p.sales_status = 'ON_SALE'
         ORDER BY p.created_at DESC
@@ -132,7 +130,7 @@
             SELECT 1
             FROM user_favorites uf
             WHERE uf.product_id = p.product_id
-              AND uf.user_id = 1
+              AND uf.user_id = #{userId}
         ) AS liked
 
     FROM products p

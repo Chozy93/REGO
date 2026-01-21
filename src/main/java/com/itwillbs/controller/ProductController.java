@@ -1,11 +1,13 @@
 package com.itwillbs.controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.service.ProductDetailService;
 import com.itwillbs.service.ProductListService;
 import com.itwillbs.service.ProductService;
@@ -39,8 +41,13 @@ public class ProductController {
 	        @PathVariable("id") Long id,
 	        Model model,
 	        HttpServletRequest request,
-	        HttpServletResponse response
+	        HttpServletResponse response,
+	        Authentication authentication
 	) {
+		Long userId = null;
+    if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+        userId = ((CustomUserDetails) authentication.getPrincipal()).getUser().getUserId();
+    }
 		boolean alreadyViewed = false;
 		String cookieName = "viewed_product_" +id;
 		
@@ -64,7 +71,7 @@ public class ProductController {
 		
 		// 3️⃣ 서비스 호출 (조회수 증가 여부는 Service에서 분기)
 	    ProductDetailPageVO page =
-	            productDetailService.getProductDetailPage(id, !alreadyViewed);
+	            productDetailService.getProductDetailPage(id, !alreadyViewed, userId);
 
 	    model.addAttribute("page", page);
 	    model.addAttribute("product", page.getProduct()); // ⭐ 핵심
