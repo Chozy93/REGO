@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+
     // 순환 참조 방지를 위해 @Lazy로 주입받기
     @Lazy
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -23,6 +24,7 @@ public class SecurityConfig {
     
     private final CustomAuthenticationFailureHandler customFailureHandler;
     
+
     /* =========================
        AuthenticationManager
     ========================= */
