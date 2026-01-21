@@ -26,4 +26,9 @@ public interface UserMapper {
     int countByEmailAndPhone(@Param("email") String email, @Param("phoneNumber") String phoneNumber);
     void updateUserPassword(@Param("email") String email, @Param("password") String password);
 
+    int countByPhoneNumber(@Param("phoneNumber") String phoneNumber);
+
+    void updateSocialInfo(@Param("username") String username, 
+            @Param("phoneNumber") String phoneNumber, 
+            @Param("password") String password);
 }

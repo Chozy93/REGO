@@ -50,12 +50,20 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         User user = userService.findByUsername(dbUsername); 
 
-        if (user != null && user.getPhoneNumber() != null && user.getPhoneNumber().startsWith("TMP_")) {
-            System.out.println("🚩 임시 유저 확인! 추가 정보 페이지로 갑니다.");
-            response.sendRedirect("/complete-info"); 
+        if (user == null) {
+
+            System.out.println("🚩 유저를 못 찾았어요! 안전하게 추가 정보 페이지로 보냅니다.");
+            response.sendRedirect("/complete-info");
             return;
         }
 
-        response.sendRedirect("/");
+        String phone = user.getPhoneNumber();
+        if (phone == null || phone.isEmpty() || phone.equals("PENDING") || phone.startsWith("TMP_")) {
+            System.out.println("🚩 정보 미기입 유저 확정: " + phone);
+            response.sendRedirect("/complete-info");
+            return;
+        }
+        
+        response.sendRedirect("/");    
     }
 }

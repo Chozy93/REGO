@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+	<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -94,17 +95,7 @@
 
                 <form action="/signup/step2" method="post">
                     <div class="flex flex-col gap-5">
-                        <div class="flex justify-center mb-2">
-                            <div class="relative group cursor-pointer">
-                                <div class="w-24 h-24 rounded-full bg-surface-light dark:bg-surface-dark border-2 border-dashed border-[#dbe6df] dark:border-[#2a4032] flex items-center justify-center overflow-hidden hover:border-primary transition-colors">
-                                    <span class="material-symbols-outlined text-gray-300 dark:text-gray-600 text-4xl">person</span>
-                                </div>
-                                <div class="absolute bottom-0 right-0 p-2 bg-surface-light dark:bg-surface-dark rounded-full border border-[#dbe6df] dark:border-[#2a4032] shadow-sm flex items-center justify-center group-hover:border-primary transition-colors">
-                                    <span class="material-symbols-outlined text-text-muted dark:text-gray-400 text-sm">camera_alt</span>
-                                </div>
-                                <input accept="image/*" class="hidden" type="file" name="profileImgFile"/>
-                            </div>
-                        </div>
+                        
                         <div class="flex flex-col gap-1.5">
                             <label class="text-sm font-bold text-text-main dark:text-white">이메일</label>
                             <div class="flex gap-2">
@@ -144,18 +135,16 @@
                             <div class="flex gap-2">
                                 <input class="form-input bg-surface-light dark:bg-surface-dark border-[#dbe6df] dark:border-[#2a4032] text-text-main dark:text-white" 
                                        placeholder="- 없이 숫자만 입력" type="tel" name="phoneNumber" required/>
-                                <button id="sendAuthBtn" class="whitespace-nowrap px-4 rounded-lg border border-[#dbe6df] dark:border-[#2a4032] bg-surface-light dark:bg-surface-dark font-medium text-sm" type="button">인증번호 받기</button>
+									   <button id="sendAuthBtn" 
+									           class="whitespace-nowrap px-4 rounded-lg border border-[#dbe6df] dark:border-[#2a4032] bg-surface-light dark:bg-surface-dark font-medium text-sm opacity-50 cursor-not-allowed" 
+									           type="button" disabled>
+									       본인인증 하기
+									   </button>
                             </div>
+							<p class="text-[11px] text-blue-500 dark:text-blue-400 mt-1 pl-1">
+							    ℹ️ 본인인증 완료 시 회원 정보가 자동 갱신됩니다.
+							</p>
                         </div>
-
-						<div id="authCodeContainer" class="hidden flex flex-col gap-1.5 mt-2">
-						    <label class="text-sm font-bold text-text-main dark:text-white">인증번호 확인</label>
-						    <div class="flex gap-2">
-								<input class="form-input bg-surface-light dark:bg-surface-dark border-[#dbe6df] dark:border-[#2a4032] text-text-main dark:text-white" 
-								                                       placeholder="6자리 숫자 입력" type="text" name="authCode"/>
-						        <button class="whitespace-nowrap px-4 rounded-lg border border-[#dbe6df] dark:border-[#2a4032] bg-surface-light dark:bg-surface-dark font-medium text-sm" type="button">확인</button>
-						    </div>
-						</div>
 						
                         <div class="flex flex-col gap-1.5">
                             <label class="text-sm font-bold text-text-main dark:text-white">성별</label>
@@ -207,10 +196,15 @@
 	    const nicknameError = document.getElementById('nicknameError');
 	    const phoneInput = document.querySelector('input[name="phoneNumber"]');
 	    const birthInput = document.querySelector('input[name="birthDate"]');
-	    const authCodeInput = document.querySelector('input[name="authCode"]');
 	    const sendAuthBtn = document.getElementById('sendAuthBtn');
-	    const authCodeContainer = document.getElementById('authCodeContainer');
 
+		function formatPhoneNumber(numbers) {
+							    if (!numbers) return "";
+							    let val = numbers.replace(/[^0-9]/g, '');
+							    if (val.length <= 3) return val;
+							    if (val.length <= 7) return val.slice(0, 3) + '-' + val.slice(3);
+							    return val.slice(0, 3) + '-' + val.slice(3, 7) + '-' + val.slice(7, 11);
+							}
 	    // 1. 이메일 중복 확인
 	    document.getElementById('checkEmailBtn').addEventListener('click', () => {
 	        const email = emailInput.value;
@@ -301,34 +295,87 @@
 	    });
 
 	    // 5. 휴대폰 인증 및 하이픈 자동 삽입
-	    sendAuthBtn.addEventListener('click', () => {
-	        const phone = phoneInput.value;
-	        if(phone.length < 10) {
-	            alert('휴대폰 번호를 정확히 입력해주세요!');
-	            return;
-	        }
-	        alert('인증번호 123456이 발송되었습니다! (테스트용)');
-	        authCodeContainer.classList.remove('hidden');
-	    });
+		sendAuthBtn.addEventListener('click', async () => {
+			if (phoneInput.value.replace(/[^0-9]/g, '').length !== 11) {
+			        alert("휴대폰 번호 11자리를 정확히 입력해 주세요!");
+			        return;
+			    }
+			    
+			    try
+		    {
+		        const identityVerificationId = `signup-${new Date().getTime()}`;
 
-	    authCodeContainer.querySelector('button').addEventListener('click', (e) => {
-	        e.preventDefault();
-	        if(authCodeInput.value === "123456") {
-	            alert("인증 성공! ✅");
-	            isAuthVerified = true;
-	            authCodeInput.readOnly = true;
-	        } else {
-	            alert("인증번호가 틀렸어요. ❌");
-	        }
-	    });
+		        // 포트원 V2 본인인증 요청
+		        const response = await PortOne.requestIdentityVerification({
+		            storeId: "store-40e995f6-80d5-43c5-812a-babeaca09755", 
+		            channelKey: "channel-key-d4d68a57-122c-4418-81fb-d1ed47cec331",
+		            identityVerificationId: identityVerificationId,
+		            identityVerificationMethod: "SMS"
+		        });
 
-	    phoneInput.addEventListener('input', (e) => {
-	        let val = e.target.value.replace(/[^0-9]/g, '');
-	        if (val.length > 3 && val.length <= 7) val = val.slice(0, 3) + '-' + val.slice(3);
-	        else if (val.length > 7) val = val.slice(0, 3) + '-' + val.slice(3, 7) + '-' + val.slice(7, 11);
-	        e.target.value = val;
-	    });
+		        if (response.code == null) {
+		            // 인증 성공 시 서버로 검증 요청
+		            const res = await fetch("/signup/verify-identity", {
+		                method: "POST",
+		                headers: { "Content-Type": "application/json" },
+		                body: JSON.stringify({ identityVerificationId: response.identityVerificationId })
+		            });
 
+		            const data = await res.json();
+					
+					if (data.success) {
+					    alert("본인인증 성공! 정보를 자동으로 입력합니다. 😊");
+					    
+					    nameInput.value = data.name;
+					    nameInput.readOnly = true;
+					    
+					    phoneInput.value = formatPhoneNumber(data.phone);
+					    phoneInput.readOnly = true;
+					    
+					    // 생일 (
+					    if(data.birthDate) {
+					        birthInput.value = data.birthDate.replace(/-/g, ''); 
+					        birthInput.readOnly = true;
+					    }
+					    
+					    // 성별 (MALE -> M, FEMALE -> F)
+					    if(data.gender) {
+					        const genderValue = data.gender === 'MALE' ? 'M' : 'F';
+					        const radio = document.querySelector(`input[name="gender"][value="${genderValue}"]`);
+					        if(radio) radio.checked = true;
+					    }
+						phoneInput.readOnly = true;
+						
+					    isAuthVerified = true;
+					    sendAuthBtn.disabled = true;
+					    sendAuthBtn.innerText = "인증 완료";
+					    sendAuthBtn.classList.add('opacity-50', 'cursor-not-allowed'); 
+		            } else {
+		                alert(data.message || "이미 가입된 번호이거나 인증에 실패했습니다.");
+		            }
+		        }
+		    } catch (error) {
+		        alert("본인인증 중 오류 발생: " + error.message);
+		    }
+		});
+
+		phoneInput.addEventListener('input', (e) => {
+		    e.target.value = formatPhoneNumber(e.target.value);
+		    
+		    const rawValue = e.target.value.replace(/[^0-9]/g, '');
+		    
+		    if (rawValue.length === 11) {
+
+		        sendAuthBtn.disabled = false;
+		        sendAuthBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+		        sendAuthBtn.classList.add('hover:bg-primary', 'hover:text-white');
+		    } else {
+		        sendAuthBtn.disabled = true;
+		        sendAuthBtn.classList.add('opacity-50', 'cursor-not-allowed');
+		        sendAuthBtn.classList.remove('hover:bg-primary', 'hover:text-white');
+		    }
+		});
+		
 	    // 6. 최종 전송 시 유효성 검사 
 	    signupForm.addEventListener('submit', (e) => {
 	        console.log("가입 제출 시도 중...");

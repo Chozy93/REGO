@@ -19,8 +19,10 @@ public class SecurityConfig {
     @Lazy
     private final CustomOAuth2UserService customOAuth2UserService;
 
+    private final  CustomSuccessHandler customSuccessHandler;
     
-    private final  AuthenticationSuccessHandler customSuccessHandler;
+    private final CustomAuthenticationFailureHandler customFailureHandler;
+    
     /* =========================
        AuthenticationManager
     ========================= */
@@ -58,7 +60,8 @@ public class SecurityConfig {
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/", true)
-                .failureUrl("/login?error")
+                //.failureUrl("/login?error")
+                .failureHandler(customFailureHandler)
             )
 
             /* ---------- 소셜 로그인 ---------- */

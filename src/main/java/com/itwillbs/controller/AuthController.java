@@ -35,48 +35,38 @@ public class AuthController {
 	
 	private final UserService userService;
 	private final UserMapper userMapper;
-	private String getPhoneNumber(String impUid) {
-	    try {
+	
+	private Map<String, Object> getVerifiedUserInfo(String impUid) {
+		try {
 	        org.springframework.web.client.RestTemplate restTemplate = new org.springframework.web.client.RestTemplate();
-
 	        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
-	        headers.set("Authorization", "PortOne " + "im4tZ60IROAfT8VcCioqXCBCElABYFoYidxxVBcYPsRbjZPYCThD79J20OOEn7Iy05W0zzisYfPi2ewz");
-	        headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON); // 이것도 추가!
-
-	        org.springframework.http.HttpEntity<String> entity = new org.springframework.http.HttpEntity<>(headers);
+	        headers.set("Authorization", "PortOne im4tZ60IROAfT8VcCioqXCBCElABYFoYidxxVBcYPsRbjZPYCThD79J20OOEn7Iy05W0zzisYfPi2ewz");
 	        
+	        org.springframework.http.HttpEntity<String> entity = new org.springframework.http.HttpEntity<>(headers);
 	        String url = "https://api.portone.io/identity-verifications/" + impUid;
-	        System.out.println("!!!!!! 1. 요청 직전");
 	        
 	        org.springframework.http.ResponseEntity<Map> response = restTemplate.exchange(url, org.springframework.http.HttpMethod.GET, entity, Map.class);
-	        System.out.println("🚩🚩🚩 2. 응답 받음!! 결과: " + response.getStatusCode());
-
 	        Map<String, Object> body = response.getBody();
 
-	        System.out.println("🚩🚩🚩 포트원 전체 응답 내용: " + body);
-
 	        if (body != null && body.containsKey("verifiedCustomer")) {
-	            Map<String, Object> customer = (Map<String, Object>) body.get("verifiedCustomer");
-	            if (customer != null && customer.containsKey("phoneNumber")) {
-	                String phone = (String) customer.get("phoneNumber");
-	                System.out.println("🚩🚩🚩 찾은 번호: " + phone);
-	                return phone;
-	            }
+	            return (Map<String, Object>) body.get("verifiedCustomer"); // 이름, 번호, 생일, 성별이 다 들어있음!
 	        }
-	        System.out.println("🚩🚩🚩 번호를 찾지 못함 (구조 확인 필요)");
-	        return null;
-
-	    } catch (org.springframework.web.client.HttpStatusCodeException e) {
-	        System.err.println("❌ API 에러 터짐: " + e.getRawStatusCode());
-	        System.err.println("❌ 에러 본문: " + e.getResponseBodyAsString());
 	        return null;
 	    } catch (Exception e) {
-	        System.err.println("❌ 일반 에러 터짐: " + e.getClass().getName());
 	        e.printStackTrace();
 	        return null;
 	    }
 	}
-	    
+	
+	
+	
+	private String getPhoneNumber(String impUid) {
+	    Map<String, Object> userInfo = getVerifiedUserInfo(impUid);
+	    if (userInfo != null && userInfo.containsKey("phoneNumber")) {
+	        return (String) userInfo.get("phoneNumber");
+	    }
+	    return null;
+	}
 	
 	
 	// 로그인 페이지
@@ -199,6 +189,40 @@ public class AuthController {
 		}
 	}
 
+	@PostMapping("/signup/verify-identity")
+	@ResponseBody
+	public ResponseEntity<?> verifyIdentity(@RequestBody Map<String, String> payload) {
+		
+	    String identityVerificationId = payload.get("identityVerificationId");
+
+	    Map<String, Object> userInfo = getVerifiedUserInfo(identityVerificationId); 
+	    System.out.println("🚩 포트원 userInfo 전체: " + userInfo);
+	    
+	    if (userInfo == null) {
+	        return ResponseEntity.ok(Map.of("success", false, "message", "본인인증 정보를 가져오지 못했습니다."));
+	    }
+
+	    String phoneNumber = (String) userInfo.get("phoneNumber");
+
+	    // 2. 휴대폰 번호 중복 체크
+	    if (userService.isPhoneNumberTaken(phoneNumber)) {
+	        return ResponseEntity.ok(Map.of(
+	            "success", false, 
+	            "message", "이미 가입된 휴대폰 번호입니다. 다른 번호를 사용하거나 로그인을 해주세요."
+	        ));
+	    }
+
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("success", true);
+	    result.put("phone", userInfo.get("phoneNumber"));
+	    result.put("name", userInfo.get("name"));       // 포트원에서 준 실명
+	    result.put("birthDate", userInfo.get("birthDate")); // 포트원에서 준 생년월일 (보통 YYYY-MM-DD)
+	    result.put("gender", userInfo.get("gender"));    // MALE 혹은 FEMALE
+	    
+	    return ResponseEntity.ok(result);
+	}
+	
+	
 	@GetMapping("/complete-info")
 	public String completeInfoPage(Authentication authentication, Model model) {
 		if (authentication != null && authentication.getPrincipal() instanceof OAuth2User) {
@@ -224,11 +248,11 @@ public class AuthController {
 	@PostMapping("/auth/update-phone")
 	@ResponseBody
 	public ResponseEntity<String> updatePhone(@RequestBody Map<String, String> data, Authentication authentication) {
-		String newPhone = data.get("phoneNumber");
-		System.out.println("🚩 API로 들어온 새로운 번호: " + newPhone);
-
-		if (authentication != null && authentication.getPrincipal() instanceof OAuth2User) {
-			OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+	    String newPhone = data.get("phoneNumber");
+	    String newPassword = data.get("password");
+	    
+	    if (authentication != null && authentication.getPrincipal() instanceof OAuth2User) {
+	        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
 			Map<String, Object> attributes = oAuth2User.getAttributes();
 			String username = "";
@@ -245,15 +269,14 @@ public class AuthController {
 			System.out.println("🚩 진짜로 DB와 대조할 식별값: " + username);
 
 			try {
-				userService.updatePhoneNumber(username, newPhone);
-				return ResponseEntity.ok("success");
-			} catch (Exception e) {
-				e.printStackTrace();
-				return ResponseEntity.status(500).body("fail");
-			}
-		}
-
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
+	            userService.updateSocialUserInfo(username, newPhone, newPassword);
+	            return ResponseEntity.ok("success");
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return ResponseEntity.status(500).body("fail");
+	        }
+	    }
+	    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
 	}
 
 	@GetMapping("/signup/check-email")
