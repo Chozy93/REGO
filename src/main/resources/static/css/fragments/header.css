@@ -289,14 +289,14 @@ padding-left: var(--logo-width);
 /* 알림 뱃지 */
 .chat-badge {
   position: absolute;
-  top: 0;
-  right: 2px;
+  top: -2px;
+  right: -4px;
+
   width: 8px;
   height: 8px;
-  background-color: #ef4444;
   border-radius: 50%;
+  background: #ff3b30; /* 알림 레드 */
 }
-
 /* ===== 구분선 ===== */
 .header-divider {
   width: 1px;

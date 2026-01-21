@@ -1,0 +1,46 @@
+/* ==========================================================================
+   Seller Register Complete
+========================================================================== */
+
+.seller-register-complete {
+  max-width: 640px;                 /* 카드 폭도 살짝 축소 */
+  margin: var(--space-64) auto;     /* 🔥 핵심 */
+  padding: 0 var(--space-24);
+}
+
+.complete-card {
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-48) var(--space-32);
+}
+
+.complete-icon {
+  color: var(--color-primary);
+  font-size: 64px;
+  margin-bottom: var(--space-16);
+}
+
+.complete-icon .material-symbols-outlined {
+  font-size: 64px;
+}
+
+.complete-title {
+  font-size: var(--fs-24);
+  font-weight: var(--fw-bold);
+  margin-bottom: var(--space-16);
+}
+
+.complete-desc {
+  font-size: var(--fs-15);
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin-bottom: var(--space-32);
+}
+
+.complete-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-12);
+}

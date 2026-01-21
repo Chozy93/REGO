@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/seller/product-register.css">
+</th:block>
+
+<div layout:fragment="content" class="seller-product-register">
+
+  <!-- ===============================
+       Page Header
+  =============================== -->
+  <header class="seller-product-register__header">
+    <h1 class="seller-product-register__title">상품 판매 등록</h1>
+    <p class="seller-product-register__desc">
+      판매할 상품 정보를 입력해 주세요.<br>
+      등록 후 검수 없이 바로 노출될 수 있습니다.
+    </p>
+  </header>
+
+  <!-- ===============================
+       Form
+  =============================== -->
+  <form class="seller-product-register__form"
+        method="post"
+        action="/seller/product/register"
+        enctype="multipart/form-data">
+
+   
+	<!-- ===============================
+	     Images
+	=============================== -->
+	<section class="spr-section">
+	  <div class="spr-section__head">
+	    <h2 class="spr-section__title">상품 이미지</h2>
+	    <span class="spr-section__meta">(0/10)</span>
+	  </div>
+
+	  <div class="spr-images">
+	    <label class="spr-images__add">
+	      <input type="file"
+	             name="images"
+	             multiple
+	             accept="image/*"
+	             class="spr-images__input">
+	      <span class="material-symbols-outlined">camera_alt</span>
+	      <span class="spr-images__add-text">이미지 등록</span>
+	    </label>
+	  </div>
+
+	  <p class="spr-help">
+	    <span class="material-symbols-outlined">info</span>
+	    상품 이미지는 최대 10장까지 등록 가능합니다.
+	  </p>
+	</section>
+
+
+    <hr class="spr-divider">
+
+    <!-- ===============================
+         Title
+    =============================== -->
+    <section class="spr-section">
+      <label class="spr-section__title" for="productTitle">제목</label>
+      <input id="productTitle" name="title" type="text" class="spr-input"
+             placeholder="상품 제목을 입력해주세요">
+    </section>
+
+    <hr class="spr-divider">
+
+
+	<!-- ===============================
+	     Category (Tab 방식)
+	=============================== -->
+	<section class="spr-section">
+	  <h2 class="spr-section__title">카테고리</h2>
+
+	  <div class="spr-category">
+
+	    <!-- ===============================
+	         1차 카테고리 (Tab Buttons)
+	         - UI 탐색용
+	    =============================== -->
+	    <div class="spr-category__main">
+	      <button type="button"
+	              class="spr-chip"
+	              th:each="node, stat : ${headerCategoryListVO.categories}"
+	              th:text="${node.parent.name}"
+	              th:data-parent-id="${node.parent.categoryId}"
+	              th:classappend="${stat.index == 0} ? ' spr-chip--active' : ''">
+	      </button>
+	    </div>
+
+	    <!-- ===============================
+	         2차 카테고리 (Tab Panels)
+	         - 전부 렌더
+	         - active 된 것만 노출
+	    =============================== -->
+	    <div class="spr-category__sub-area">
+
+	      <div class="spr-category__sub-box"
+	           th:each="node, stat : ${headerCategoryListVO.categories}"
+	           th:data-parent-id="${node.parent.categoryId}"
+	           th:classappend="${stat.index == 0} ? ' is-active' : ''">
+
+	        <p class="spr-category__sub-title"
+	           th:text="${node.parent.name} + ' 상세 카테고리'"></p>
+
+	        <div class="spr-category__sub">
+	          <button type="button"
+	                  class="spr-subchip"
+	                  th:each="child : ${node.children}"
+	                  th:text="${child.name}"
+	                  th:data-category-id="${child.categoryId}">
+	          </button>
+	        </div>
+
+	      </div>
+
+	    </div>
+
+	    <!-- ===============================
+	         서버 전송용 (핵심)
+	         Product.category_id (FK)
+	    =============================== -->
+	    <input type="hidden" name="categoryId" value="">
+	  </div>
+	</section>
+
+
+
+    <hr class="spr-divider">
+
+    <!-- ===============================
+         Condition
+    =============================== -->
+    <section class="spr-section">
+      <h2 class="spr-section__title">상품 상태</h2>
+
+      <div class="spr-radio">
+        <label class="spr-radio__item">
+          <input type="radio" name="condition" value="NEW" class="spr-radio__input">
+          <span class="spr-radio__text">새 상품 (미사용)</span>
+        </label>
+
+        <label class="spr-radio__item">
+          <input type="radio" name="condition" value="TOP" class="spr-radio__input" checked>
+          <span class="spr-radio__text">사용감 없음 (최상)</span>
+        </label>
+
+        <label class="spr-radio__item">
+          <input type="radio" name="condition" value="GOOD" class="spr-radio__input">
+          <span class="spr-radio__text">사용감 적음 (좋음)</span>
+        </label>
+
+        <label class="spr-radio__item">
+          <input type="radio" name="condition" value="NORMAL" class="spr-radio__input">
+          <span class="spr-radio__text">사용감 많음 (보통)</span>
+        </label>
+      </div>
+    </section>
+
+    <hr class="spr-divider">
+
+    <!-- ===============================
+         Price
+    =============================== -->
+	<section class="spr-section">
+		<div class="spr-header">
+			<div class="spr-section__title">가격</div>
+			<button type="button" class="spr-ai-btn">
+			      <span class="material-symbols-outlined">smart_toy</span>
+			      GPT	
+			    </button>
+		</div>
+	
+
+	  <div class="spr-price">
+	    <div class="spr-price__field">
+	      <span class="spr-price__prefix">₩</span>
+	      <input type="number"
+	             class="spr-input spr-input--price"
+	             placeholder="가격을 입력해주세요">
+	    </div>
+
+	  
+	  </div>
+
+	  <label class="spr-check">
+	    <input type="checkbox">
+	    배송비 포함
+	  </label>
+	</section>
+
+
+    <hr class="spr-divider">
+
+    <!-- ===============================
+         Description
+    =============================== -->
+    <section class="spr-section">
+      <label class="spr-section__title" for="detail">자세한 설명</label>
+      <textarea id="detail" name="description" class="spr-textarea" rows="6"
+        placeholder="상품에 대한 자세한 설명을 적어주세요. (구매 시기, 브랜드, 사용 기간, 하자 유무 등)
+신뢰할 수 있는 거래를 위해 자세히 적어주세요."></textarea>
+
+      <div class="spr-counter">
+        <span>0/2000</span>
+      </div>
+    </section>
+
+    <hr class="spr-divider">
+
+    <!-- ===============================
+         Transaction Type + Place
+    =============================== -->
+    <section class="spr-grid">
+      <!-- 거래 방식 -->
+      <div class="spr-panel">
+        <h2 class="spr-section__title">거래 방식</h2>
+
+		<div class="spr-tx">
+		  <label class="spr-tx__card">
+		    <input type="checkbox"
+		           name="transactionTypes"
+		           value="DIRECT"
+		           class="spr-tx__input">
+		    <div class="spr-tx__text">
+		      <p class="spr-tx__title">직거래</p>
+		      <p class="spr-tx__desc">동네 이웃과 직접 만나서 거래합니다.</p>
+		    </div>
+		    <span class="material-symbols-outlined spr-tx__icon">handshake</span>
+		  </label>
+
+		  <label class="spr-tx__card">
+		    <input type="checkbox"
+		           name="transactionTypes"
+		           value="DELIVERY"
+		           class="spr-tx__input">
+		    <div class="spr-tx__text">
+		      <p class="spr-tx__title">택배거래</p>
+		      <p class="spr-tx__desc">택배를 통해 물건을 보내고 받습니다.</p>
+		    </div>
+		    <span class="material-symbols-outlined spr-tx__icon">local_shipping</span>
+		  </label>
+		</div>
+
+      </div>
+
+      <!-- 거래 희망 장소 -->
+      <div class="spr-panel">
+        <div class="spr-place__head">
+          <h2 class="spr-section__title">거래 희망 장소</h2>
+          <button type="button" class="spr-place__btn">장소 변경</button>
+        </div>
+
+        <div class="spr-place">
+          <div class="spr-place__map">
+            <div class="spr-place__pin">
+              <span class="material-symbols-outlined">location_on</span>
+              <span class="spr-place__label">강남구 역삼동</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="spr-muted">* 직거래 선택 시, 설정한 지역 위주로 노출됩니다.</p>
+
+        <input type="hidden" name="regionCode" value="">
+        <input type="hidden" name="regionName" value="강남구 역삼동">
+      </div>
+    </section>
+
+    <!-- ===============================
+         Bottom Actions
+    =============================== -->
+    <div class="spr-actions">
+      <a href="/" class="btn btn-outline spr-actions__cancel">취소</a>
+      <button type="submit" class="btn btn-primary spr-actions__submit">등록하기</button>
+    </div>
+
+  </form>
+</div>
+<th:block th:fragment="pageJs">
+	<script th:src="@{/js/seller/product-register.js}"></script>
+</th:block>
+</html>

@@ -6,6 +6,8 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 import com.itwillbs.domain.ChatMessageVO;
+import com.itwillbs.entity.enumtype.ChatMessageType;
+import com.itwillbs.view.condition.ChatMessageSendConditionVO;
 
 @Entity
 @Table(name = "chat_message")
@@ -36,12 +38,18 @@ public class ChatMessage {
     ========================= */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-        name = "sender_id",
-        nullable = false,
-        foreignKey = @ForeignKey(name = "fk_chat_message_sender")
-    )
-    private User sender;
-
+    	    name = "sender_id",
+    	    nullable = true, // SYSTEM 메시지 대비
+    	    foreignKey = @ForeignKey(name = "fk_chat_message_sender")
+    	)
+    	private User sender;
+    
+    /* =========================
+	    메시지 타입
+	 ========================= */
+	 @Enumerated(EnumType.STRING)
+	 @Column(name = "message_type", nullable = false)
+	 private ChatMessageType messageType;
     /* =========================
        메시지 내용
     ========================= */
@@ -69,23 +77,45 @@ public class ChatMessage {
     protected ChatMessage() {}
 
     /* =========================
-       생성자 (메시지 전송)
-    ========================= */
-    public ChatMessage(ChatRoom chatRoom, User sender, ChatMessageVO vo) {
-        this.chatRoom = chatRoom;
-        this.sender = sender;
-        this.content = vo.getContent();
-        this.isRead = false;
-        this.createdAt = LocalDateTime.now();
-    }
+    생성자 (메시지 전송)
+    - conditon → Entity
+ ========================= */
+ public ChatMessage(ChatRoom chatRoom, User sender, ChatMessageSendConditionVO conditon) {
 
+     this.chatRoom = chatRoom;
+     this.sender = sender;
+     this.content = conditon.getContent();
+
+     this.messageType = ChatMessageType.TEXT; // 기본값은 Entity 내부에서 결정
+     this.isRead = false;
+
+     this.createdAt = LocalDateTime.now();
+ }
+ 
+ /* =========================
+ 생성자 (이미지 메시지 전송)
+========================= */
+public ChatMessage(ChatRoom chatRoom,
+                 User sender,
+                 String imageUrl) {
+
+  this.chatRoom = chatRoom;
+  this.sender = sender;
+  this.content = imageUrl;
+
+  this.messageType = ChatMessageType.IMAGE;
+  this.isRead = false;
+
+  this.createdAt = LocalDateTime.now();
+}
+
+   
     /* =========================
-       Entity → VO
-    ========================= */
-    public ChatMessageVO toVO() {
-        return new ChatMessageVO(this);
-    }
-
+    	Entity → VO
+	 ========================= */
+	 public ChatMessageVO toVO() {
+	     return new ChatMessageVO(this);
+	 }
     /* =========================
        읽음 처리
     ========================= */

@@ -313,3 +313,55 @@ select {
 .is-active {
   color: var(--color-primary);
 }
+
+
+/* =========================
+   Error Page
+========================= */
+
+.error-page {
+  min-height: calc(100vh - 400px); /* header/footer 감안 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-24);
+}
+
+.error-card {
+  width: 100%;
+  max-width: 420px;
+  padding: var(--space-32);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.error-title {
+  font-size: var(--fs-22);
+  font-weight: var(--fw-bold);
+  margin-bottom: var(--space-12);
+}
+
+.error-message {
+  font-size: var(--fs-14);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-bottom: var(--space-24);
+}
+
+.error-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  font-size: var(--fs-14);
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+}
+
+.error-btn:hover {
+  opacity: 0.9;
+}
