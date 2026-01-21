@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itwillbs.config.FintechProperties;
@@ -20,6 +21,7 @@ import com.itwillbs.service.OpenBankingAuthService;
 import com.itwillbs.service.PaymentService;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 
@@ -55,7 +57,7 @@ public class PaymentController {
         WalletViewDTO walletInfo = paymentService.getMyWalletPage(user.getUserId());
         // 3. 화면(HTML)으로 정보 전달
         model.addAttribute("walletInfo", walletInfo);
-    	
+    	System.out.println(walletInfo);
 
         return "payment/myrepay";
     }
@@ -88,7 +90,7 @@ public class PaymentController {
  // ---- 금융 결제원에서 받아온 코드를 담아 이 주소로 리다이렉트
     //  사용자가 로그인을 완료하면, redirect url로 인증코드 받아오기 
     // 이 코드를 받아서 진짜 토큰으로 바꾸고 DB에 저장
-    @GetMapping("/pay/callback")
+    @GetMapping("/callback")
     public String callback(@RequestParam("code") String code, 
     						Authentication auth) {
         
@@ -110,12 +112,37 @@ public class PaymentController {
 
         // 4. 가져온 ID로 계좌 등록
         paymentService.registerAccount(user.getUserId(), tokenResponse);
+       // 이미 지갑이 있는지 확인
+        boolean hasWallet = paymentService.hasWallet(user.getUserId());
+        if (!hasWallet) {
+            // 지갑이 없으면 -> 비밀번호 설정 페이지로 이동!
+            return "redirect:/pay/setup-password"; 
+        }
         
         
-        // 5. 모든 처리가 끝나면 마이페이지 -> re:pay 관리 페이지로 이동
+        // 지갑이 이미 있으면 -> re:pay 관리 페이지로 이동
         return "redirect:/myrepay"; 
     }
     
+    
+  //  비밀번호 설정 페이지 보여주기
+    @GetMapping("/pay/setup-password")
+    public String setupPasswordPage() {
+        return "payment/setup_password"; 
+    }
+    
+   // 비밀번호 입력받아 지갑 생성하기
+    @PostMapping("/pay/create-wallet")
+    public String createWallet(@RequestParam("payPassword") String payPassword, Authentication authentication) {
+    	// 2. 이메일 추출 (만들어두신 getUserEmail 메서드 활용)
+        String email = getUserEmail(authentication);
+     // 3. Mapper를 통해 확실한 유저 정보 가져오기 (보여주신 코드와 동일)
+        MyPageDTO user = mypageMapper.getMyPageInfo(email);
+        // 지갑 생성 서비스 호출 (비밀번호 전달)
+        paymentService.createWallet(user.getUserId(), payPassword);
+        
+        return "redirect:/myrepay"; // 생성 완료 후 re:pay 페이지
+    }
     
     
     // email값 가져오기
