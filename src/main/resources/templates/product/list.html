@@ -2,6 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
+	  
+	  <th:block th:fragment="pageCss">
+	    <link rel="stylesheet" href="/css/product/list.css">
+	  </th:block>
 
 <div layout:fragment="content">
 
@@ -18,7 +22,7 @@
       <li th:each="tab : ${page.categoryBar.tabs}"
           th:classappend="${tab.active} ? 'active'">
 
-        <a th:href="@{/products(categoryId=${tab.id})}"
+        <a th:href="@{/products(categoryId=${tab.categoryId})}"
            th:text="${tab.name}">
           탭명
         </a>
@@ -39,39 +43,15 @@
     </div>
 
     <!-- 상품 카드 -->
-    <div class="product-grid"
+    <div class="grid-products"
          th:if="${!#lists.isEmpty(page.cards)}">
 
-      <div class="product-card"
-           th:each="card : ${page.cards}">
+      <th:block th:each="card : ${page.cards}">
+		<th:block
+		        th:replace="fragments/product-card :: card(${card})">
+		      </th:block>
+      </th:block>
 
-        <a th:href="@{/products/{id}(id=${card.id})}">
-
-          <img th:src="${card.img}"
-               alt="상품 이미지"/>
-
-          <div class="info">
-            <p class="title" th:text="${card.title}">상품명</p>
-            <p class="price"
-               th:text="${#numbers.formatInteger(card.price, 3, 'COMMA')} + '원'">
-              가격
-            </p>
-            <p class="meta">
-              <span th:text="${card.loc}">지역</span>
-              ·
-              <span th:text="${card.time}">시간</span>
-            </p>
-          </div>
-
-        </a>
-
-        <!-- 찜 -->
-        <button class="like-btn"
-                th:classappend="${card.liked} ? 'liked'">
-          ♥ <span th:text="${card.likeCount}">0</span>
-        </button>
-
-      </div>
     </div>
 
   </section>

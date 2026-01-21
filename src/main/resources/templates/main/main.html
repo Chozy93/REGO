@@ -1,138 +1,177 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
 
+<!-- =========================
+     PAGE CSS
+========================= -->
 <th:block th:fragment="pageCss">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   <link rel="stylesheet" href="/css/main/main.css">
   <link rel="stylesheet" href="/css/fragments/product-card.css">
 </th:block>
 
+<!-- =========================
+     CONTENT
+========================= -->
 <div class="main-wrap" layout:fragment="content">
 
-  <!-- ==================================================
-       HERO
-  ================================================== -->
-  <section class="hero-section section">
-    <div class="hero-box">
-      <div class="hero-text">
-        <h1 class="hero-title">
-          동네 이웃들과<br>
-          따뜻한 거래를 시작하세요
-        </h1>
+  <!-- =========================
+       MAIN LAYOUT
+  ========================= -->
+  <div class="main-layout">
 
-        <p class="hero-desc">
-          가까운 이웃과 함께하는 중고거래,<br>
-          RE:GO에서 지금 바로 만나보세요.
-        </p>
+    <!-- =========================
+         LEFT : MAIN CONTENT (단일 기준선)
+    ========================= -->
+    <div class="main-content">
 
-        <button class="btn btn-primary hero-btn">
-          지금 시작하기
-        </button>
-      </div>
-    </div>
-  </section>
+      <!-- =========================
+           HERO
+      ========================= -->
+      <section class="hero-section section">
+        <div class="hero-box">
+          <div class="hero-text">
+            <h1 class="hero-title">
+              동네 이웃들과<br>
+              따뜻한 거래를 시작하세요
+            </h1>
 
-  <!-- ==================================================
-       AI 맞춤 상품
-  ================================================== -->
-  <section class="section"
-           th:if="${page.aiProducts != null and #lists.size(page.aiProducts) > 0}">
+            <p class="hero-desc">
+              가까운 이웃과 함께하는 중고거래,<br>
+              RE:GO에서 지금 바로 만나보세요.
+            </p>
 
-    <div class="section-head">
-      <h2 class="section-title">🤖 AI 맞춤 상품</h2>
-      <a href="#" class="section-link">전체보기</a>
-    </div>
+            <button class="btn btn-primary hero-btn">
+              지금 시작하기
+            </button>
+          </div>
+        </div>
+      </section>
 
-    <div class="ai-scroll">
-      <div class="ai-track">
-        <th:block th:each="card : ${page.aiProducts}">
-          <th:block th:replace="~{fragments/product-card :: card(card=${card})}" />
-        </th:block>
-      </div>
-    </div>
-  </section>
+      <!-- =========================
+           AI 맞춤 상품
+      ========================= -->
+      <section class="section"
+               th:if="${page.aiProducts != null and #lists.size(page.aiProducts) > 0}">
 
-  <!-- ==================================================
-       인기 상품
-  ================================================== -->
-  <section class="section"
-           th:if="${page.popularProducts != null and #lists.size(page.popularProducts) > 0}">
+        <div class="section-head">
+          <h2 class="section-title">🤖 AI 맞춤 상품</h2>
+          <a href="#" class="section-link">전체보기</a>
+        </div>
 
-    <div class="section-head">
-      <h2 class="section-title">인기 상품</h2>
-      <a href="#" class="section-link">전체보기</a>
-    </div>
+        <div class="swiper product-swiper">
+          <div class="swiper-wrapper">
+            <th:block th:each="card : ${page.aiProducts}">
+              <div class="swiper-slide">
+                <th:block
+                  th:replace="~{fragments/product-card :: card(card=${card})}" />
+              </div>
+            </th:block>
+          </div>
 
-    <div class="ai-scroll">
-      <div class="ai-track">
-        <th:block th:each="card : ${page.popularProducts}">
-          <th:block th:replace="~{fragments/product-card :: card(card=${card})}" />
-        </th:block>
-      </div>
-    </div>
-  </section>
-  
-  <!-- ==================================================
-       최근 본 상품
-  ================================================== -->
-  <section class="section"
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+      </section>
+
+      <!-- =========================
+           인기 상품
+      ========================= -->
+      <section class="section"
+               th:if="${page.popularProducts != null and #lists.size(page.popularProducts) > 0}">
+
+        <div class="section-head">
+          <h2 class="section-title">인기 상품</h2>
+          <a href="#" class="section-link">전체보기</a>
+        </div>
+
+        <div class="swiper product-swiper">
+          <div class="swiper-wrapper">
+            <th:block th:each="card : ${page.popularProducts}">
+              <div class="swiper-slide">
+                <th:block
+                  th:replace="~{fragments/product-card :: card(card=${card})}" />
+              </div>
+            </th:block>
+          </div>
+
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+      </section>
+
+      <!-- =========================
+           최근 등록 상품
+      ========================= -->
+      <section class="section"
+               th:if="${page.recentProducts != null and #lists.size(page.recentProducts) > 0}">
+
+        <div class="section-head">
+          <h2 class="section-title">최근 등록 상품</h2>
+          <a href="#" class="section-link">전체보기</a>
+        </div>
+
+        <div class="swiper product-swiper">
+          <div class="swiper-wrapper">
+            <th:block th:each="card : ${page.recentProducts}">
+              <div class="swiper-slide">
+                <th:block
+                  th:replace="~{fragments/product-card :: card(card=${card})}" />
+              </div>
+            </th:block>
+          </div>
+
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+      </section>
+
+    </div><!-- /.main-content -->
+
+    <!-- =========================
+         RIGHT : 최근 본 상품
+    ========================= -->
+    <aside class="recent-sidebar"
            th:if="${page.recentView != null and #lists.size(page.recentView) > 0}">
 
-    <div class="section-head">
-      <h2 class="section-title">최근 본 상품</h2>
-    </div>
+      <div class="recent-box">
+        <h3 class="recent-title">최근 본 상품</h3>
 
-    <div class="ai-scroll">
-      <div class="ai-track">
-        <th:block th:each="card : ${page.recentView}">
-          <th:block th:replace="~{fragments/product-card :: card(card=${card})}" />
-        </th:block>
+        <ul class="recent-list">
+          <li th:each="card, stat : ${page.recentView}"
+              th:if="${stat.index < 3}">
+            <a th:href="@{/product/{id}(id=${card.id})}">
+              <img th:src="${card.img}" alt="">
+              <span th:text="${card.title}">상품명</span>
+            </a>
+          </li>
+        </ul>
       </div>
-    </div>
+    </aside>
 
-  </section>
+  </div><!-- /.main-layout -->
 
-
-  <!-- ==================================================
-       최근 등록 상품
-  ================================================== -->
-  <section class="section"
-           th:if="${page.recentProducts != null and #lists.size(page.recentProducts) > 0}">
-
-    <div class="section-head">
-      <h2 class="section-title">최근 등록 상품</h2>
-
-      <select id="sortSelect"
-              onchange="location.href='/?sort=' + this.value">
-        <option value="recent" th:selected="${sort == 'recent'}">최신순</option>
-        <option value="like" th:selected="${sort == 'like'}">찜 많은 순</option>
-        <option value="view" th:selected="${sort == 'view'}">조회 많은 순</option>
-      </select>
-    </div>
-
-    <div class="ai-scroll">
-      <div class="ai-track">
-        <th:block th:each="card : ${page.recentProducts}">
-          <th:block th:replace="~{fragments/product-card :: card(card=${card})}" />
-        </th:block>
-      </div>
-    </div>
-  </section>
-  
-  <!-- =========================
-         최근 본 상품 조회용 (UI 영향 없음)
-         MAIN03_RECENT
-    ========================= -->
-    <form method="get" action="/">
-      <input type="hidden"
-             id="recentProductIds"
-             name="recentIds"/>
-    </form>
+  <!-- 최근 본 상품 유지용 -->
+  <form id="recentForm"
+        th:action="@{/}"
+        method="get"
+        style="display:none;">
+    <input type="hidden"
+           id="recentProductIds"
+           name="recentIds" />
+  </form>
 
 </div>
 
-<!-- 페이지 전용 JS -->
+<!-- =========================
+     PAGE JS
+========================= -->
 <th:block th:fragment="pageJs">
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script th:src="@{/js/common/swiper-init.js}"></script>
   <script th:src="@{/js/product-like.js}"></script>
   <script th:src="@{/js/main.js}"></script>
   <script th:src="@{/js/recent-view-main.js}"></script>

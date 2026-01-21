@@ -36,6 +36,8 @@ public class MainPageService {
 
         List<MainProductCardVO> recentView =
         	    mainRecentViewService.getRecentView(recentIds);
+        
+        System.out.println("recentView=================================================" + recentView);
 
         	MainPageVO page =
         	    new MainPageVO(

@@ -35,9 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
      Accordion
   ========================= */
 
-  modal.querySelectorAll(".category-modal-main-btn")
+  modal.querySelectorAll(".category-modal-toggle")
     .forEach((btn) => {
-      btn.addEventListener("click", () => {
+     btn.addEventListener("click", (e) => {
+		
+		e.preventDefault();
+		e.stopPropagation();
+		
         const group = btn.closest(".category-modal-group");
         if (!group) return;
 

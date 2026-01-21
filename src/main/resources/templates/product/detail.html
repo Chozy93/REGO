@@ -29,15 +29,27 @@
     ========================= -->
     <div class="detail-left">
       <section class="product-detail-media">
-        <div class="product-image-main">
-          <img th:if="${page.product != null and !#lists.isEmpty(page.product.imageUrls)}"
-               th:src="${page.product.imageUrls[0]}"
-               alt="상품 이미지"/>
+		<div class="product-image-main">
 
-          <img th:if="${page.product == null or #lists.isEmpty(page.product.imageUrls)}"
-               src="/images/no-image.png"
-               alt="기본 이미지"/>
-        </div>
+		  <!-- 1️⃣ 대표 이미지 (최우선) -->
+		  <img th:if="${page.product.mainImageUrl != null}"
+		       th:src="${page.product.mainImageUrl}"
+		       alt="상품 이미지"/>
+
+		  <!-- 2️⃣ 상세 이미지 첫 장 -->
+		  <img th:if="${page.product.mainImageUrl == null
+		               and !#lists.isEmpty(page.product.imageUrls)}"
+		       th:src="${page.product.imageUrls[0]}"
+		       alt="상품 이미지"/>
+
+		  <!-- 3️⃣ 완전 fallback -->
+		  <img th:if="${page.product.mainImageUrl == null
+		               and #lists.isEmpty(page.product.imageUrls)}"
+		       src="/images/no-image.png"
+		       alt="기본 이미지"/>
+
+		</div>
+
       </section>
     </div>
 

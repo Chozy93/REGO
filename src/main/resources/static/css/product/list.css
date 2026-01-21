@@ -17,3 +17,287 @@
   object-fit: cover;
   border-radius: 8px;
 }
+
+/* 상품 리스트 그리드 */
+.grid-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* 카드 자체는 그대로 사용 */
+.product-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.grid-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* =========================
+   CATEGORY BAR (HORIZONTAL)
+========================= */
+
+.category-bar {
+  margin: 32px auto 24px;
+  max-width: 1200px;
+  padding: 0 16px;
+}
+
+/* 카테고리 제목 */
+.category-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #222;
+}
+
+/* 탭 영역 */
+.category-tabs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+
+  /* 스크롤 UX 개선 */
+  scrollbar-width: none;          /* Firefox */
+}
+.category-tabs::-webkit-scrollbar {
+  display: none;                  /* Chrome */
+}
+
+/* 탭 아이템 */
+.category-tabs li {
+  flex-shrink: 0;
+  list-style: none;
+}
+
+/* 탭 링크 */
+.category-tabs a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 16px;
+  border-radius: 999px;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+  background-color: #f4f5f6;
+
+  text-decoration: none;
+  white-space: nowrap;
+
+  transition: all 0.2s ease;
+}
+
+/* hover */
+.category-tabs a:hover {
+  background-color: #e8f8ef;
+  color: #00c471;
+}
+
+/* active 탭 */
+.category-tabs li.active a {
+  background-color: #00c471;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+  .category-title {
+    font-size: 18px;
+  }
+
+  .category-tabs a {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+}
+
+/* =========================
+   PRODUCT GRID
+========================= */
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+/* 상품 리스트 그리드 */
+.grid-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* =========================
+   PRODUCT CARD
+========================= */
+
+.product-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* =========================
+   IMAGE AREA (하트 기준점)
+========================= */
+
+.product-card__image {
+  position: relative;        /* ⭐ 하트 기준 */
+  overflow: hidden;
+}
+
+/* 이미지 */
+.product-card__image img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+/* =========================
+   ❤️ LIKE BUTTON (IMAGE INSIDE)
+========================= */
+
+.product-card__like-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 50%;
+
+  cursor: pointer;
+  z-index: 2;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+/* 아이콘 */
+.product-card__like-btn .material-symbols-outlined {
+  font-size: 20px;
+  color: #999;
+  transition: color 0.2s ease;
+}
+
+/* 찜 활성 */
+.product-card__like-btn.liked {
+  background: #fff;
+}
+
+.product-card__like-btn.liked .material-symbols-outlined {
+  color: #ff4d4f;
+  font-variation-settings: 'FILL' 1;
+}
+
+/* hover 효과 */
+.product-card__like-btn:hover {
+  transform: scale(1.08);
+}
+
+/* =========================
+   CATEGORY BAR (HORIZONTAL)
+========================= */
+
+.category-bar {
+  margin: 32px auto 24px;
+  max-width: 1200px;
+  padding: 0 16px;
+}
+
+/* 카테고리 제목 */
+.category-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #222;
+}
+
+/* 탭 영역 */
+.category-tabs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+
+  scrollbar-width: none;
+}
+
+.category-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+/* 탭 아이템 */
+.category-tabs li {
+  flex-shrink: 0;
+  list-style: none;
+}
+
+/* 탭 링크 */
+.category-tabs a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 8px 16px;
+  border-radius: 999px;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+  background-color: #f4f5f6;
+
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+/* hover */
+.category-tabs a:hover {
+  background-color: #e8f8ef;
+  color: #00c471;
+}
+
+/* active */
+.category-tabs li.active a {
+  background-color: #00c471;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+  .category-title {
+    font-size: 18px;
+  }
+
+  .category-tabs a {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+}
+
+

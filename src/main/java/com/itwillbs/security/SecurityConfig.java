@@ -10,12 +10,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import com.itwillbs.service.CustomOAuth2UserService;
+
+import groovy.lang.Lazy;
+
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 	
-
-    
+	@Lazy
+    private final  CustomOAuth2UserService customOAuth2UserService;
     private final  AuthenticationSuccessHandler customSuccessHandler;
     /* =========================
        AuthenticationManager

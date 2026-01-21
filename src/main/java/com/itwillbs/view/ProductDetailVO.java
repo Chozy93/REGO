@@ -19,7 +19,8 @@ public class ProductDetailVO {
     private final int price;
     private final String priceDisplay;
     private final String description;
-
+    private String mainImageUrl;
+    
     /* ===== 이미지 ===== */
     private final List<String> imageUrls;
 
@@ -55,6 +56,7 @@ public class ProductDetailVO {
         this.productName = dto.getProductName();
         this.price = dto.getPrice();
         this.priceDisplay = dto.getPriceDisplay();
+        this.mainImageUrl = dto.getMainImageUrl();
 
         /* DETAIL01_INFO */
         this.description =
