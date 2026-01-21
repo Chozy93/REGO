@@ -27,9 +27,7 @@ public class ProductLikeService {
     
     // ✅ 3️⃣ 찜 토글 
     @Transactional
-    public ProductLikeResultVO toggleLike(Long productId) {
-
-        Long userId = TEST_USER_ID;
+    public ProductLikeResultVO toggleLike(Long productId, Long userId) {
 
         // 1️⃣ 현재 찜 상태 확인
         boolean liked = productLikeMapper.exists(userId, productId);

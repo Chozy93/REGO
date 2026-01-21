@@ -16,17 +16,15 @@ public class MainProductListService {
 
     private final MainProductMapper mainProductMapper;
 
-    // 🔥 로그인 전 임시 테스트 유저
-    private static final Long TEST_USER_ID = 1L;
 
     /* =========================
        최근 등록 상품
        MAIN01_LIST
     ========================= */
-    public List<MainProductCardVO> getRecentProducts() {
+    public List<MainProductCardVO> getRecentProducts(Long userId) {
 
         List<MainProductListDTO> list =
-                mainProductMapper.selectRecentProducts(TEST_USER_ID);
+                mainProductMapper.selectRecentProducts(userId);
 
         return list.stream()
                 .map(this::toCardVO)
@@ -38,11 +36,11 @@ public class MainProductListService {
     MAIN01_SORT_ORDER
  ========================= */
     public List<MainProductCardVO> getRecentProducts(
-            MainProductSortConditionVO condition
+            MainProductSortConditionVO condition, Long userId
     ) {
         List<MainProductListDTO> list =
                 mainProductMapper.selectRecentProductsWithSort(
-                        TEST_USER_ID,
+                		userId,
                         condition.getSort()
                 );
 
@@ -58,11 +56,11 @@ public class MainProductListService {
      ========================= */
     private static final int POPULAR_LIMIT = 12;
 
-    public List<MainProductCardVO> getPopularProducts() {
+    public List<MainProductCardVO> getPopularProducts(Long userId) {
 
         List<MainProductListDTO> list =
             mainProductMapper.selectPopularProducts(
-                TEST_USER_ID,
+            		userId,
                 POPULAR_LIMIT
             );
 

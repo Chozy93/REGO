@@ -24,4 +24,5 @@ public interface MypageMapper {
     List<Product> getSalesListByUserId(@Param("userId") Long userId);
     // 마이페이지 내 구매상품
     List<Product> getPurchaseListByUserId(@Param("userId") Long userId);
+	List<Product> getLikeListByUserId(@Param("userId") Long userId);
 }

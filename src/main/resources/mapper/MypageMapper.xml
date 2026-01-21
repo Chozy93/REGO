@@ -12,7 +12,10 @@
         u.gender,
         u.profile_img as profileImg,
         u.created_at as createdAt,
-        ua.address as address
+        ua.address as address,
+        (SELECT COUNT(*) FROM products WHERE seller_id = u.user_id) as sellingCount,
+        (SELECT COUNT(*) FROM products WHERE buyer_id = u.user_id) as boughtCount,
+        (SELECT COUNT(*) FROM user_favorites WHERE user_id = u.user_id) as favoriteCount
     FROM users u
     LEFT JOIN (
         SELECT user_id, address 
@@ -23,6 +26,7 @@
     ) ua ON u.user_id = ua.user_id
     WHERE u.email = #{email}
 </select>
+
 <update id="updateUser">
     UPDATE users 
     SET nickname = #{vo.nickname},
@@ -127,5 +131,17 @@
     WHERE p.buyer_id = #{userId}
     ORDER BY p.created_at DESC
 </select>
+
+<select id="getLikeListByUserId" resultMap="PurchaseProductMap">
+    SELECT 
+        p.*, 
+        u.nickname as seller_nickname,
+        u.profile_img as seller_profile_img
+    FROM user_favorites f  JOIN products p ON f.product_id = p.product_id
+    JOIN users u ON p.seller_id = u.user_id
+    WHERE f.user_id = #{userId}
+    ORDER BY f.created_at DESC
+</select>
+
 
 </mapper>

@@ -15,7 +15,7 @@ public class MainPageService {
 
     private final MainProductListService mainProductListService;
 
-    public MainPageVO getMainPage(String sort) {
+    public MainPageVO getMainPage(String sort, Long userId) {
 
         MainProductSortConditionVO condition =
                 new MainProductSortConditionVO(sort);
@@ -24,15 +24,11 @@ public class MainPageService {
                 Collections.emptyList(); // 아직 미구현
 
         List<MainProductCardVO> popularProducts =
-                mainProductListService.getPopularProducts();
+                mainProductListService.getPopularProducts(userId);
 
         List<MainProductCardVO> recentProducts =
-                mainProductListService.getRecentProducts(condition);
+                mainProductListService.getRecentProducts(condition, userId);
 
-        return new MainPageVO(
-                aiProducts,
-                popularProducts,
-                recentProducts
-        );
+        return new MainPageVO(aiProducts, popularProducts, recentProducts);
     }
 }

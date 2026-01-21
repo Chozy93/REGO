@@ -1,7 +1,10 @@
 package com.itwillbs.controller;
 
+import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.service.MainPageService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +20,16 @@ public class MainController {
     public String main(
             @RequestParam(name = "sort", required = false, defaultValue = "recent")
             String sort,
-            Model model
+            Model model,
+            Authentication authentication
     ) {
+    	Long userId = null;
+    if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+        userId = ((CustomUserDetails) authentication.getPrincipal()).getUser().getUserId();
+    }
         model.addAttribute(
                 "page",
-                mainPageService.getMainPage(sort)
+                mainPageService.getMainPage(sort, userId)
         );
 
         // ✅ 이 한 줄이 핵심
