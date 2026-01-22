@@ -84,6 +84,7 @@ public class BankAccount {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
     
-    
+    @Column(name = "is_active")
+    private String isActive; // 기본값은 true
     
 }
