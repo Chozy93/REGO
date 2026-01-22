@@ -239,53 +239,10 @@ public class PaymentController {
     
     
     
-    // ----------------- 채팅에서 결제 요청 --------------------
-    
-    
-    
-    /**
-     * 1. 판매자가 결제 요청을 보냄
-     * 요청 예시: POST /api/payment/request
-     */
-    @PostMapping("/api/payment/request")
-    public ResponseEntity<?> createRequest(@RequestBody PaymentRequestDto dto) {
-        try {
-            Long orderId = chatPaymentService.createPaymentRequest(
-                    dto.getProductId(),
-                    dto.getSellerId(),
-                    dto.getBuyerId(),
-                    dto.getRoomId(),
-                    dto.getAmount()
-            );
-            
-            // 성공 시 생성된 orderId 반환 -> 프론트에서는 이 ID를 소켓 메시지에 담아 전송
-            return ResponseEntity.ok(Map.of("orderId", orderId, "message", "결제 요청이 생성되었습니다."));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    /**
-     * 2. 구매자가 결제 버튼을 클릭하여 실제 결제 진행
-     * 요청 예시: POST /api/payment/execute
-     */
-    @PostMapping("/api/payment/execute")
-    public ResponseEntity<?> executePayment(@RequestBody Map<String, Long> payload) {
-        try {
-            Long orderId = payload.get("orderId");
-            // 실제 서비스에서는 세션이나 시큐리티에서 현재 로그인한 유저 ID를 가져와야 합니다.
-            Long currentUserId = 1L; // 임시: 현재 로그인한 구매자 ID
-
-            chatPaymentService.processRepayPayment(orderId, currentUserId);
-            
-            return ResponseEntity.ok("re:pay 결제가 완료되었습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-    
+   
 
     
+  
     
     // email값 가져오기
     private String getUserEmail(Authentication authentication) {
