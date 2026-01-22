@@ -73,4 +73,12 @@ public class Category {
     public CategoryVO toVO() {
         return new CategoryVO(this);
     }
+    
+    // 부모 이름 > 자식 이름 형태를 반환하는 메서드 추가
+    public String getFullCategoryName() {
+        if (this.parent != null) {
+            return this.parent.getName() + " > " + this.name;
+        }
+        return this.name;
+    }
 }
