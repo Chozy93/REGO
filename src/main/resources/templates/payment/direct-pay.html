@@ -9,6 +9,11 @@ layout:decorate="~{layout/base}">
 <link rel="stylesheet" href="/css/payment/direct-payment.css">
 </th:block>
 
+<th:block th:fragment="pageJs">
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="/js/payment/postcode.js"></script>
+</th:block>
+
 
 
 <div layout:fragment="content">  
@@ -22,8 +27,10 @@ layout:decorate="~{layout/base}">
     </header>
 
     <main class="container">
-        <form class="checkout-layout" th:action="@{/pay/checkout}" method="post">
+        <form class="checkout-layout" th:action="@{/direct}" method="post">
             <input type="hidden" name="productId" th:value="${product.productId}">
+			<input type="hidden" name="sellerId" th:value="${product.seller.userId}">
+			<input type="hidden" name="dealType" value="DELIVERY">
             
             <div class="checkout-main">
                 <section class="card">
@@ -60,11 +67,11 @@ layout:decorate="~{layout/base}">
                     <div class="form-grid">
                         <div class="form-group">
                             <label>받는 분</label>
-                            <input type="text" name="receiverName" th:value="${userAddress?.receiverName}" class="input-field" placeholder="이름을 입력하세요">
+                            <input type="text" name="receiverName" th:value="${userInfo?.username}" class="input-field" placeholder="이름을 입력하세요">
                         </div>
                         <div class="form-group">
                             <label>연락처</label>
-                            <input type="tel" name="receiverPhone" th:value="${userAddress?.receiverPhone}" class="input-field" placeholder="010-0000-0000">
+                            <input type="tel" name="receiverPhone" th:value="${userInfo?.phoneNumber}" class="input-field" placeholder="010-0000-0000">
                         </div>
                     </div>
 
@@ -72,7 +79,7 @@ layout:decorate="~{layout/base}">
                         <label>주소</label>
                         <div class="zipcode-box">
                             <input type="text" name="zipCode" th:value="${userAddress?.zipCode}" readonly class="input-field align-center">
-                            <button type="button" class="btn-secondary">우편번호 검색</button>
+                            <button type="button" class="btn-secondary" onclick="execDaumPostcode()">우편번호 검색</button>
                         </div>
                         <input type="text" name="address" th:value="${userAddress?.address}" readonly class="input-field mb-2">
                         <input type="text" name="addressDetail" th:value="${userAddress?.addressDetail}" placeholder="상세주소 입력" class="input-field">
@@ -80,13 +87,18 @@ layout:decorate="~{layout/base}">
 
                     <div class="form-group">
                         <label>배송 요청사항</label>
-                        <select name="deliveryRequest" class="input-field">
+                        <select name="deliveryRequest" id="deliverySelect" class="input-field">
                             <option value="문 앞에 놓아주세요">문 앞에 놓아주세요</option>
                             <option value="경비실에 맡겨주세요">경비실에 맡겨주세요</option>
                             <option value="배송 전 연락바랍니다">배송 전 연락바랍니다</option>
                             <option value="직접 입력">직접 입력</option>
                         </select>
+						
+						<input type="text" id="directInput" name="deliveryRequestDirect" 
+						           class="input-field mt-2" placeholder="요청사항을 직접 입력해주세요" 
+						           style="display: none; margin-top: 10px;">
                     </div>
+					
                 </section>
 
                 <section class="card">
@@ -96,14 +108,14 @@ layout:decorate="~{layout/base}">
                     </h2>
                     <div class="payment-methods">
                         <label class="payment-option">
-                            <input type="radio" name="paymentMethod" value="CARD" checked>
+                            <input type="radio" name="paymentType" value="CARD" checked>
                             <div class="payment-box">
                                 <span class="material-symbols-outlined">credit_card</span>
                                 신용/체크카드
                             </div>
                         </label>
                         <label class="payment-option">
-                            <input type="radio" name="paymentMethod" value="REPAY">
+                            <input type="radio" name="paymentType" value="REPAY">
                             <div class="payment-box">
                                 <span class="material-symbols-outlined">bolt</span>
                                 RE:PAY 
@@ -144,7 +156,7 @@ layout:decorate="~{layout/base}">
                             <input type="checkbox" id="terms" required>
                             <label for="terms">주문 내용을 확인하였으며, 정보 제공 등에 동의합니다.</label>
                         </div>
-
+						<input type="hidden" name="totalAmount" th:value="${product.price}">
                         <button type="submit" class="btn-primary">
                             <span th:text="${#numbers.formatInteger(product.price, 0, 'COMMA') + '원'}">0원</span> 결제하기
                         </button>

@@ -289,6 +289,41 @@ public class PaymentService {
 	        System.out.println("✅ 출금 프로세스 완료: " + amount + "원");
 	    }
 	
+	// ------ repay 결제하기 
+	// repay 상품구매 -> re:pay에서 차감
+	@Transactional
+	public void processPayment(Long userId, Long amount, Long productId) {
+	    // 1. 사용자 조회
+	    User user = userRepository.findById(userId)
+	            .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+	    
+	    WalletViewDTO wallet = paymentMapper.selectWalletInfo(userId);
+	
+
+	    
+	        if (wallet.getBalance() < amount) {
+	            throw new RuntimeException("잔액이 부족합니다.");
+	        }
+	        
+	        Long newBalance = wallet.getBalance() - amount;
+	        wallet.setBalance(newBalance);
+	        
+	        //4.  지갑 잔액 업데이트
+		    paymentMapper.chargeBalance(userId, newBalance);
+	        
+	        // 4. 출금 이력 저장 (Transaction 테이블이 있다면)
+	        WalletTransactionDTO history = new WalletTransactionDTO();
+	        history.setWalletId(wallet.getWalletId());
+	        history.setPaymentType(PayTransactionType.PAYMENT.PAYMENT);
+	        history.setAmount(amount);                      // 거래 금액
+		    history.setBalanceSnapshot(newBalance);         //  잔액 (스냅샷)
+		    history.setStatus(TradeStatus.SUCCESS);
+		    history.setRelatedId(productId);                     // 연관 ID (없음)
+		    paymentMapper.insertTransaction(history);
+
+	        System.out.println("✅ 결제 re:pay 프로세스 완료: " + amount + "원");
+	    }
+	
 	
 	
 	// 사용자의 모든 거래 내역을 최신순으로 가져옴

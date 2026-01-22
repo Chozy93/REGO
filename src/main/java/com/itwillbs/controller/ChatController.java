@@ -81,7 +81,7 @@ public class ChatController {
     ========================= */
     @GetMapping("/start/{productId}")
     public String startChat(
-            @PathVariable Long productId,
+            @PathVariable("productId") Long productId,
             HttpServletRequest request
     ) {
         Long buyerId = SecurityUtil.getCurrentUserId();
