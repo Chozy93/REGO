@@ -273,6 +273,51 @@ public class UserController {
             return ResponseEntity.status(500).body("서버 오류 발생");
         }
     }
+    private Map<String, Object> getVerifiedUserInfo(String impUid) {
+        try {
+            org.springframework.web.client.RestTemplate restTemplate = new org.springframework.web.client.RestTemplate();
+            org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+            headers.set("Authorization", "PortOne im4tZ60IROAfT8VcCioqXCBCElABYFoYidxxVBcYPsRbjZPYCThD79J20OOEn7Iy05W0zzisYfPi2ewz");
+            
+            org.springframework.http.HttpEntity<String> entity = new org.springframework.http.HttpEntity<>(headers);
+            String url = "https://api.portone.io/identity-verifications/" + impUid;
+            
+            org.springframework.http.ResponseEntity<Map> response = restTemplate.exchange(url, org.springframework.http.HttpMethod.GET, entity, Map.class);
+            Map<String, Object> body = response.getBody();
+
+            if (body != null && body.containsKey("verifiedCustomer")) {
+                return (Map<String, Object>) body.get("verifiedCustomer");
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    @PostMapping("/mypage/update-phone-verified")
+    @ResponseBody
+    public ResponseEntity<?> updatePhoneVerified(@RequestBody Map<String, String> payload, 
+                                                Authentication authentication) {
+        String impUid = payload.get("imp_uid");
+        
+        Map<String, Object> userInfo = getVerifiedUserInfo(impUid); 
+        
+        if (userInfo == null) {
+            return ResponseEntity.ok(Map.of("success", false, "message", "인증 정보를 가져오지 못했습니다."));
+        }
+
+        String verifiedPhone = (String) userInfo.get("phoneNumber");
+        String email = getUserEmail(authentication);
+        
+        try {
+            // MypageService 호출
+            mypageService.updatePhoneNumberByEmail(email, verifiedPhone);
+            return ResponseEntity.ok(Map.of("success", true, "phoneNumber", verifiedPhone));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("success", false, "message", "업데이트 중 오류 발생"));
+        }
+    }
     
  // 설정 메인 페이지
     @GetMapping("/mypage/settings")

@@ -64,6 +64,12 @@
     UPDATE users SET profile_img = #{profileImg} WHERE user_id = #{userId}
 </update>
 
+<update id="updatePhoneNumber">
+    UPDATE users
+    SET phone_number = #{verifiedPhone}
+    WHERE email = #{email}
+</update>
+
 
 <resultMap id="ProductFullMap" type="com.itwillbs.entity.Product">
     <id property="productId" column="product_id"/>

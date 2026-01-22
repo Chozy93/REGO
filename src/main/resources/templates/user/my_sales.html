@@ -3,182 +3,183 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
 <head>
-    <title>내 판매 내역 - RE: GO</title>
-    
     <th:block layout:fragment="pageCss">
-        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link rel="stylesheet" href="/css/main/main.css">
+        <script src="https://cdn.tailwindcss.com"></script>
         <script>
-          tailwind.config = {
-            darkMode: "class",
-            theme: {
-              extend: {
-                colors: {
-                  "primary": "#13ec5b",
-                  "background-light": "#f6f8f6",
-                  "background-dark": "#102216",
-                },
-                fontFamily: {
-                  "display": ["Manrope", "Noto Sans", "sans-serif"]
-                },
-                borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
-              },
-            },
-          }
+            tailwind.config = {
+                corePlugins: { preflight: false, container: false },
+                important: '#tailwind-zone', 
+                theme: {
+                    extend: {
+                        colors: { "primary": "#13ec5b" }
+                    }
+                }
+            }
         </script>
-        <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet"/>
         <style>
-            body { font-family: 'Manrope', 'Noto Sans KR', sans-serif; }
+            #tailwind-zone { font-family: 'Manrope', 'Noto Sans KR', sans-serif; background-color: #f8faf9; min-height: 100vh; }
             .no-scrollbar::-webkit-scrollbar { display: none; }
             footer, .footer { display: none !important; }
-            .product-card { cursor: pointer; }
             .menu-dropdown {
-                display: none;
-                position: absolute;
-                top: 40px;
-                right: 0;
-                background: white;
-                border-radius: 12px;
+                display: none; position: absolute; top: 30px; right: 0;
+                background: white; border-radius: 12px;
                 box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-                z-index: 100;
-                min-width: 160px;
-                border: 1px solid #f0f4f2;
+                z-index: 100; min-width: 160px; border: 1px solid #f0f4f2;
             }
             .menu-dropdown.show { display: block; }
             .dark .menu-dropdown { background: #1A2C20; border-color: rgba(255,255,255,0.1); }
+			
         </style>
     </th:block>
 </head>
 
-<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col">
+<body>
     <div layout:fragment="content">
-        <div class="layout-container w-full max-w-[1280px] mx-auto px-4 py-8 flex flex-col md:flex-row gap-6 flex-1">
-            
-            <aside class="w-full md:w-64 flex-shrink-0">
-                <div class="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-sm border border-[#f0f4f2] dark:border-white/5 space-y-6">
-                    <div class="flex flex-col items-center pb-6 border-b border-[#f0f4f2] dark:border-white/5">
-                        <img th:src="${(user.profileImg != null and user.profileImg != 'default.png') ? user.profileImg : 'https://lh3.googleusercontent.com/aida-public/AB6AXuD0ObRBFDRs_vob6idb6aYKUuIove2YF-wbvYCHg-2sm6qoyedO7RYGPgbD3YUragy7aKMdHZaGuFf9n2VN8bfXNLuaHQv41ulrqhVYIpmk3x64L5NlUFVVfia-ExqeHUsxo5vgQfQPtrASlzehup3VxN0K1KuHLfM_Jo4LSDScARNe9G-rzONQqnH5Zobrl4cD0Z9vAbXnHqFPATdIE6yqtnbrqSfNs-liXa-Ege7QLNN9juuw7GAvbZhH4XK8XgkJEehsTeeKTVY'}" 
-                             class="size-20 rounded-full object-cover border-4 border-white dark:border-[#1A2C20] shadow-md bg-gray-200 mb-3" alt="Profile"/>
-                        <h2 class="text-xl font-bold text-[#111813] dark:text-white" th:text="${user.nickname}">알뜰한토마토</h2>
-                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1" th:text="${user.address}">서울시 강남구 역삼동</p>
-                    </div>
-                    <nav class="space-y-1">
-                        <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 hover:text-[#111813] dark:hover:text-white transition-colors" href="/mypage/edit">
-                            <span class="material-symbols-outlined text-[20px]">person</span>
-                            <span class="text-sm font-medium">프로필 관리</span>
-                        </a>
-                        <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/10 text-primary font-bold" href="/mypage/sales">
-                            <span class="material-symbols-outlined text-[20px]">inventory_2</span>
-                            <span class="text-sm">판매 내역</span>
-                        </a>
-                    </nav>
-                </div>
-            </aside>
+        <div id="tailwind-zone">
+            <div class="w-full max-w-[1280px] mx-auto px-4 py-8 flex flex-col md:flex-row gap-8">
+                
+				<aside class="w-full md:w-64 flex-shrink-0">
+								    <div class="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-sm border border-[#f0f4f2] dark:border-white/5 space-y-2 sticky top-32">
+								        
+								        <div class="flex flex-col items-center pb-1" style="border-bottom: 2px solid #f0f4f2;">
+								            <img th:src="${user.profileImg != null ? user.profileImg : '/img/default-profile.png'}" 
+								                 class="size-20 rounded-full object-cover border-4 border-white shadow-md bg-gray-200 mb-3">
+								            <h2 class="text-xl font-bold" th:text="${user.nickname}">사용자</h2>
+								            <p class="text-xs text-gray-500 mt-1" th:text="${user.address}">주소 없음</p>
+								        </div>
+										<nav class="space-y-1">
+										    <a href="/mypage/edit" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-gray-600">
+										        <span class="material-symbols-outlined text-[20px]">person</span>
+										        <span class="text-sm font-medium">프로필 관리</span>
+										    </a>
+										    
+										    <a href="/mypage/sales" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/10 text-primary font-bold transition-all">
+										        <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+										        <span class="text-sm">판매 내역</span>
+										    </a>
+										    
+										    <a href="/mypage/buys" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-gray-600">
+										        <span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+										        <span class="text-sm font-medium">구매 내역</span>
+										    </a>
+										    
+										    <a href="/mypage/likes" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-gray-600">
+										        <span class="material-symbols-outlined text-[20px]">favorite</span>
+										        <span class="text-sm font-medium">찜한 상품</span>
+										    </a>
+										</nav>
+					                </div>
+					            </aside>
 
-            <main class="flex-1">
-                <div class="flex flex-col h-full space-y-6">
-                    <div class="flex items-center gap-4">
-                        <button onclick="history.back()" class="p-1 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors">
-                            <span class="material-symbols-outlined text-[#111813] dark:text-white" style="font-size: 28px;">chevron_left</span>
-                        </button>
-                        <h2 class="text-2xl font-bold text-[#111813] dark:text-white">내 판매 내역</h2>
-                    </div>
+                <main class="flex-1 min-w-0">
+                    <div class="flex flex-col">
+                        <div class="flex items-center gap-4 mb-4">
+                            <button onclick="history.back()" class="p-1 hover:bg-gray-100 rounded-full transition-colors">
+                                <span class="material-symbols-outlined text-2xl">chevron_left</span>
+                            </button>
+                            <h2 class="text-2xl font-bold">내 판매 내역</h2>
+                        </div>
 
-                    <div class="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-sm border border-[#f0f4f2] dark:border-white/5">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                            <div class="status-filters flex p-1 bg-gray-100 dark:bg-white/5 rounded-xl w-fit overflow-x-auto no-scrollbar">
-                                <button data-filter="ALL" class="filter-btn px-4 py-2 text-sm font-bold rounded-lg bg-white dark:bg-white/10 text-[#111813] dark:text-white shadow-sm transition-all whitespace-nowrap">전체</button>
-                                <button data-filter="ON_SALE" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:text-[#111813] dark:hover:text-white transition-all whitespace-nowrap">판매중</button>
-                                <button data-filter="RESERVED" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:text-[#111813] dark:hover:text-white transition-all whitespace-nowrap">예약중</button>
-                                <button data-filter="SOLD" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:text-[#111813] dark:hover:text-white transition-all whitespace-nowrap">판매완료</button>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <select id="sortOrder" class="form-select pl-3 pr-8 py-2 text-sm border-gray-200 dark:border-white/10 bg-transparent rounded-lg focus:ring-primary focus:border-primary dark:text-white">
+                        <div class="bg-white dark:bg-white/5 rounded-2xl p-4 shadow-sm border border-[#f0f4f2] dark:border-white/5 mb-6">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div class="status-filters flex p-1 bg-gray-100 dark:bg-white/5 rounded-xl w-fit overflow-x-auto no-scrollbar">
+                                    <button data-filter="ALL" class="filter-btn px-4 py-2 text-sm font-bold rounded-lg bg-white shadow-sm transition-all whitespace-nowrap">전체</button>
+                                    <button data-filter="ON_SALE" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-500 hover:text-[#111813] transition-all whitespace-nowrap">판매중</button>
+                                    <button data-filter="RESERVED" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-500 hover:text-[#111813] transition-all whitespace-nowrap">예약중</button>
+                                    <button data-filter="SOLD" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-500 hover:text-[#111813] transition-all whitespace-nowrap">판매완료</button>
+                                </div>
+                                <select id="sortOrder" class="form-select pl-3 pr-8 py-2 text-sm border-gray-200 bg-transparent rounded-lg focus:ring-primary focus:border-primary px-3 py-2">
                                     <option value="latest">최신순</option>
                                     <option value="price-high">가격 높은순</option>
                                     <option value="price-low">가격 낮은순</option>
                                 </select>
                             </div>
                         </div>
-                    </div>
 
-                    <div id="salesContent">
-                        <div id="emptyMessage" class="hidden bg-white dark:bg-white/5 rounded-2xl p-12 shadow-sm border border-[#f0f4f2] dark:border-white/5 flex flex-col items-center justify-center text-center">
-                            <div class="size-16 bg-gray-100 dark:bg-white/10 rounded-full flex items-center justify-center mb-4">
-                                <span class="material-symbols-outlined text-gray-400 dark:text-gray-500" style="font-size: 32px;">inventory_2</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-[#111813] dark:text-white mb-1">등록된 상품이 없어요</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">해당 상태의 물건이 없네요. 다른 필터를 선택해보세요!</p>
+						<div id="salesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+						    <div th:each="product : ${salesList}" 
+						         class="rego-card product-item bg-white dark:bg-white/5 rounded-2xl overflow-hidden hover:shadow-md transition-all group relative cursor-pointer"
+						         th:data-status="${product.salesStatusCode}"
+						         th:data-price="${product.price}"
+						         th:data-date="${product.createdAt}"
+						         th:onclick="|location.href='/product/${product.productId}'|">
+						        
+						        <div class="relative aspect-[4/3] bg-gray-100 dark:bg-white/5 overflow-hidden">
+						            <img th:src="${product.mainImageUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+						                 th:classappend="${product.salesStatusCode == 'SOLD'} ? 'grayscale' : ''">
+						            
+						            <div th:if="${product.salesStatusCode == 'SOLD'}" class="absolute inset-0 bg-black/40 flex items-center justify-center">
+						                <span class="px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg text-white font-bold text-sm border border-white/30">판매 완료</span>
+						            </div>
+						            <div th:if="${product.salesStatusCode != 'SOLD'}" class="absolute top-2 right-2">
+						                <span th:text="${product.salesStatusLabel}" 
+						                      th:classappend="${product.salesStatusCode == 'RESERVED' ? 'bg-yellow-500' : 'bg-primary/90'}"
+						                      class="px-2 py-1 text-[#111813] text-xs font-bold rounded-md shadow-sm">상태</span>
+						            </div>
+						        </div>
+						        
+						        <div class="p-3 pt-2"> 
+						            <div class="flex justify-between items-start">
+						                <h3 class="text-[15px] font-bold text-[#111813] dark:text-white truncate group-hover:text-primary transition-colors -mt-[2px]" th:text="${product.productName}">상품명</h3>
+						                
+						                <div class="relative">
+						                    <button class="menu-btn text-gray-400 hover:text-[#111813] transition-colors" onclick="handleMenuToggle(event, this)">
+						                        <span class="material-symbols-outlined" style="font-size: 18px;">more_vert</span>
+						                    </button>
+						                    <div class="menu-dropdown py-2 shadow-xl">
+						                        <button th:onclick="|event.stopPropagation(); location.href='/product/edit/${product.productId}'|" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2">
+						                            <span class="material-symbols-outlined text-[18px]">edit</span> 수정하기
+						                        </button>
+						                        <button th:if="${product.salesStatusCode != 'SOLD'}" onclick="handleStatusChange(event, 'SOLD')" class="w-full text-left px-4 py-2 text-sm text-primary font-bold hover:bg-gray-100 flex items-center gap-2">
+						                            <span class="material-symbols-outlined text-[18px]">check_circle</span> 판매완료로 변경
+						                        </button>
+						                        <button onclick="handleDelete(event)" class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 flex items-center gap-2 border-t">
+						                            <span class="material-symbols-outlined text-[18px]">delete</span> 삭제하기
+						                        </button>
+						                    </div>
+						                </div>
+						            </div>
+						            
+						            <div class="flex items-center gap-1 text-[11px] text-gray-500 dark:text-gray-400 mt-[-7px]">
+						                <span th:text="${product.regionDisplayName}">지역</span><span>·</span><span th:text="${product.createdAt}">시간</span>
+						            </div>
+						            
+						            <p class="text-base font-extrabold text-[#111813] dark:text-white mt-[5px] mb-2" th:text="${#numbers.formatInteger(product.price, 0, 'COMMA') + '원'}">0원</p>
+						            
+						            <div class="pt-2 flex items-center justify-between" style="border-top: 1px solid #f0f4f2;">
+						                <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400 text-[11px]">
+						                    <div class="flex items-center gap-0.5">
+						                        <span class="material-symbols-outlined text-[14px]">favorite</span> 
+						                        <span th:text="${product.likeCount}">0</span>
+						                    </div>
+						                    <div class="flex items-center gap-0.5">
+						                        <span class="material-symbols-outlined text-[14px]">visibility</span> 
+						                        <span th:text="${product.viewCount}">0</span>
+						                    </div>
+						                </div>
+						            </div>
+						        </div>
+						    </div>
                         </div>
 
-                        <div th:unless="${#lists.isEmpty(salesList)}" id="salesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <div th:each="product : ${salesList}" 
-                                 th:data-status="${product.salesStatusCode}" 
-                                 th:data-price="${product.price}"
-                                 th:data-date="${product.createdAt}"
-                                 th:onclick="|location.href='/product/${product.productId}'|"
-                                 class="product-card bg-white dark:bg-white/5 rounded-2xl overflow-hidden border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-md transition-all group relative">
-                                
-                                <div class="relative aspect-[4/3] bg-gray-100 dark:bg-white/5 overflow-hidden">
-                                    <img th:src="${product.mainImageUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Product Image"/>
-                                    <div th:if="${product.salesStatusCode == 'SOLD'}" class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                                        <span class="px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg text-white font-bold text-sm border border-white/30">판매 완료</span>
-                                    </div>
-                                    <div th:if="${product.salesStatusCode != 'SOLD'}" class="absolute top-2 right-2">
-                                        <span th:text="${product.salesStatusLabel}" 
-                                              th:classappend="${product.salesStatusCode == 'RESERVED' ? 'bg-yellow-500' : 'bg-primary/90'}"
-                                              class="px-2 py-1 text-[#111813] text-xs font-bold rounded-md shadow-sm">상태</span>
-                                    </div>
-                                </div>
+                        <div id="emptyMessage" class="hidden bg-white rounded-2xl p-12 shadow-sm border border-[#f0f4f2] flex flex-col items-center justify-center text-center mt-4">
+                            <span class="material-symbols-outlined text-gray-300 mb-4" style="font-size: 48px;">inventory_2</span>
+							<h3 class="text-lg font-bold text-[#111813] dark:text-white mb-1">등록된 상품이 없어요</h3>
+							<p class="text-sm text-gray-500 dark:text-gray-400 mb-6">해당 상태의 물건이 없네요. 다른 필터를 선택해보세요!</p>
+                        </div>
 
-                                <div class="p-4 space-y-3">
-                                    <div class="flex justify-between items-start mb-1">
-                                        <h3 th:text="${product.productName}" class="text-base font-bold text-[#111813] dark:text-white line-clamp-1 group-hover:text-primary transition-colors">상품명</h3>
-                                        <div class="relative">
-                                            <button class="menu-btn text-gray-400 hover:text-[#111813] dark:hover:text-white transition-colors" onclick="handleMenuToggle(event, this)">
-                                                <span class="material-symbols-outlined" style="font-size: 20px;">more_vert</span>
-                                            </button>
-                                            <div class="menu-dropdown py-2 shadow-xl">
-                                                <button th:onclick="|event.stopPropagation(); location.href='/product/edit/${product.productId}'|" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/10 flex items-center gap-2">
-                                                    <span class="material-symbols-outlined text-[18px]">edit</span> 수정하기
-                                                </button>
-                                                <button th:if="${product.salesStatusCode != 'SOLD'}" onclick="handleStatusChange(event, 'SOLD')" class="w-full text-left px-4 py-2 text-sm text-primary font-bold hover:bg-gray-100 dark:hover:bg-white/10 flex items-center gap-2">
-                                                    <span class="material-symbols-outlined text-[18px]">check_circle</span> 판매완료로 변경
-                                                </button>
-                                                <button onclick="handleDelete(event)" class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 flex items-center gap-2 border-t dark:border-white/5">
-                                                    <span class="material-symbols-outlined text-[18px]">delete</span> 삭제하기
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 mb-2">
-                                        <span th:text="${product.regionDisplayName}">지역</span>
-                                        <span>·</span>
-                                        <span th:text="${product.createdAt}">시간</span>
-                                    </div>
-                                    <p th:text="${#numbers.formatInteger(product.price, 0, 'COMMA')} + '원'" class="text-lg font-extrabold text-[#111813] dark:text-white">가격</p>
-                                    <div class="pt-3 border-t border-[#f0f4f2] dark:border-white/5 flex items-center justify-between">
-                                        <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400 text-xs">
-                                            <div class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">favorite</span> <span th:text="${product.likeCount}">0</span></div>
-                                            <div class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">visibility</span> <span th:text="${product.viewCount}">0</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div id="loadMoreContainer" class="flex justify-center mt-8">
+                            <button id="loadMoreBtn" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-white border border-[#f0f4f2] hover:bg-gray-50 text-gray-600 font-bold transition-all">
+                                <span>더보기</span><span class="material-symbols-outlined">expand_more</span>
+                            </button>
                         </div>
                     </div>
-
-                    <div id="loadMoreContainer" class="flex justify-center mt-6">
-                        <button id="loadMoreBtn" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-white dark:bg-white/5 border border-[#f0f4f2] dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 font-bold transition-all">
-                            <span>더보기</span>
-                            <span class="material-symbols-outlined" style="font-size: 20px;">expand_more</span>
-                        </button>
-                    </div>
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
 
-        <script>
+        <script th:inline="javascript">
         function handleMenuToggle(e, btn) {
             e.stopPropagation();
             const currentMenu = btn.nextElementSibling;
@@ -195,71 +196,55 @@
             const filterBtns = document.querySelectorAll('.filter-btn');
             const sortSelect = document.getElementById('sortOrder');
             const loadMoreBtn = document.getElementById('loadMoreBtn');
-            const cards = Array.from(document.querySelectorAll('.product-card'));
+            const cards = Array.from(document.querySelectorAll('.rego-card'));
             
-            let visibleCount = 6; 
-            let currentFilter = 'ALL';
+            let visibleCount = 6; let currentFilter = 'ALL';
 
             function updateUI() {
-                // 1. 필터링된 카드 목록 추출 
                 const filteredCards = cards.filter(card => {
-                    const cardStatus = card.getAttribute('data-status');
-                    return currentFilter === 'ALL' || cardStatus === currentFilter;
+                    const status = card.getAttribute('data-status');
+                    return currentFilter === 'ALL' || status === currentFilter;
                 });
                 
-                // 2. 카드 표시 여부 결정
                 cards.forEach(card => card.style.display = 'none');
-                filteredCards.forEach((card, index) => {
-                    if (index < visibleCount) card.style.display = 'block'; 
-                });
+                filteredCards.forEach((card, index) => { if (index < visibleCount) card.style.display = 'block'; });
 
-                // 3. 빈 화면 메시지 처리
                 if (filteredCards.length === 0) {
                     emptyMessage.classList.remove('hidden');
-                    if(salesList) salesList.style.display = 'none';
+                    salesList.style.display = 'none';
                 } else {
                     emptyMessage.classList.add('hidden');
-                    if(salesList) salesList.style.display = 'grid';
+                    salesList.style.display = 'grid';
                 }
 
-                // 4. 더보기 버튼 노출 여부
                 const container = document.getElementById('loadMoreContainer');
-                if (container) {
-                    if (visibleCount >= filteredCards.length) container.style.display = 'none';
-                    else container.style.display = 'flex';
-                }
+                if (container) container.style.display = (visibleCount >= filteredCards.length) ? 'none' : 'flex';
             }
 
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     currentFilter = this.getAttribute('data-filter');
                     visibleCount = 6;
-                    
                     filterBtns.forEach(b => {
-                        b.classList.remove('font-bold', 'bg-white', 'dark:bg-white/10', 'shadow-sm');
+                        b.classList.remove('font-bold', 'bg-white', 'shadow-sm');
                         b.classList.add('font-medium', 'text-gray-500');
                     });
-                    this.classList.add('font-bold', 'bg-white', 'dark:bg-white/10', 'shadow-sm');
+                    this.classList.add('font-bold', 'bg-white', 'shadow-sm');
                     this.classList.remove('font-medium', 'text-gray-500');
-                    
                     updateUI();
                 });
             });
 
-            if(loadMoreBtn) {
-                loadMoreBtn.addEventListener('click', () => { visibleCount += 6; updateUI(); });
-            }
-
-            sortSelect.addEventListener('change', function() {
+            if(loadMoreBtn) loadMoreBtn.addEventListener('click', () => { visibleCount += 6; updateUI(); });
+            sortSelect.addEventListener('change', () => {
                 const sorted = cards.sort((a, b) => {
-                    if (this.value === 'price-high') return b.dataset.price - a.dataset.price;
-                    if (this.value === 'price-low') return a.dataset.price - b.dataset.price;
+                    if (sortSelect.value === 'price-high') return b.dataset.price - a.dataset.price;
+                    if (sortSelect.value === 'price-low') return a.dataset.price - b.dataset.price;
                     return b.dataset.date.localeCompare(a.dataset.date);
                 });
                 sorted.forEach(card => salesList.appendChild(card));
                 updateUI();
             });
-
             updateUI();
         });
         </script>

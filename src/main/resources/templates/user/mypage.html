@@ -3,22 +3,34 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
 <head>
-    <th:block layout:fragment="pageCss">
-		<link rel="stylesheet" href="/css/main/main.css">
-        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-        <style>
-            .mypage-container { font-family: 'Manrope', 'Noto Sans KR', sans-serif; }
-            footer, .footer { display: none !important; }
-			header, .header-inner {
-			            all: revert;
-			        }
-        </style>
-    </th:block>
+	<th:block layout:fragment="pageCss">
+	    <link rel="stylesheet" href="/css/main/main.css">
+	    
+	    <script src="https://cdn.tailwindcss.com"></script>
+	    <script>
+	        tailwind.config = {
+	            corePlugins: {
+	                preflight: false, 
+	                container: false,
+	            },
+	            important: '#tailwind-zone', 
+	        }
+	    </script>
+	    
+	    <style>
+	        #tailwind-zone {
+	            font-family: 'Manrope', 'Noto Sans KR', sans-serif;
+	            background-color: #f8faf9;
+	            min-height: 100vh;
+	        }
+	        footer, .footer { display: none !important; }
+	    </style>
+	</th:block>
 </head>
 
 <body>
     <div layout:fragment="content">
-        <div class="mypage-container bg-[#f8faf9] dark:bg-[#0d130f] min-h-screen">
+        <div id="tailwind-zone" class="mypage-container">
             <div class="w-full max-w-[1024px] mx-auto px-4 py-8 flex flex-col gap-6">
                 
                 <section class="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-sm border border-[#f0f4f2] dark:border-white/5 relative overflow-hidden">

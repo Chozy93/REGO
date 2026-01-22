@@ -1,241 +1,243 @@
 <!DOCTYPE html>
-<html class="light" lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>RE: GO - 찜한 상품</title>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#13ec5b",
-                        "background-light": "#f6f8f6",
-                        "background-dark": "#102216",
-                    },
-                    fontFamily: {
-                        "display": ["Manrope", "Noto Sans KR", "sans-serif"]
-                    },
+    <th:block layout:fragment="pageCss">
+        <link rel="stylesheet" href="/css/main/main.css">
+        
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                corePlugins: {
+                    preflight: false, 
+                    container: false,
                 },
-            },
-        }
-    </script>
-    <style>
-        body { font-family: 'Manrope', 'Noto Sans KR', sans-serif; }
-        .material-symbols-outlined.filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-    </style>
+                important: '#tailwind-zone', 
+                theme: {
+                    extend: {
+                        colors: {
+                            "primary": "#13ec5b",
+                        }
+                    }
+                }
+            }
+        </script>
+        
+        <style>
+            #tailwind-zone {
+                font-family: 'Manrope', 'Noto Sans KR', sans-serif;
+                background-color: #f8faf9;
+                min-height: 100vh;
+            }
+            /* 찜 버튼 채워진 아이콘 스타일 */
+            .material-symbols-outlined.filled { 
+                font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 
+            }
+            footer, .footer { display: none !important; }
+        </style>
+    </th:block>
 </head>
-<body class="bg-background-light dark:bg-background-dark min-h-screen flex flex-col text-[#111813] dark:text-white">
 
-    <header class="w-full bg-white dark:bg-background-dark border-b border-[#f0f4f2] dark:border-white/10 sticky top-0 z-50">
-        <div class="max-w-[1280px] mx-auto w-full">
-            <div class="flex justify-end px-4 py-2 border-b border-[#f0f4f2] dark:border-white/5">
-                <div class="flex items-center gap-4 text-xs font-medium text-gray-500">
-                    <a class="text-primary" href="/mypage/profile">마이페이지</a>
-                    <span class="w-[1px] h-3 bg-gray-300 dark:bg-gray-600"></span>
-                    <a href="/logout">로그아웃</a>
-                </div>
-            </div>
-            <div class="flex flex-col md:flex-row items-center gap-6 px-4 py-4">
-                <a class="flex items-center gap-2 group" href="/">
-                    <div class="size-10 bg-primary rounded-lg flex items-center justify-center text-background-dark">
-                        <span class="material-symbols-outlined">recycling</span>
-                    </div>
-                    <h1 class="text-2xl font-extrabold tracking-tight">RE: GO</h1>
-                </a>
-                <div class="flex-1 w-full max-w-2xl relative">
-                    <label class="flex items-center rounded-xl h-12 bg-[#f0f4f2] dark:bg-white/5 border-2 border-transparent focus-within:border-primary/50 transition-all overflow-hidden px-4">
-                        <span class="material-symbols-outlined text-[#61896f]">search</span>
-                        <input class="bg-transparent border-none focus:ring-0 w-full text-base" placeholder="물품이나 동네를 검색해보세요">
-                    </label>
-                </div>
-                <div class="flex items-center gap-6">
-                    <a href="/chat" class="flex flex-col items-center gap-1 group">
-                        <span class="material-symbols-outlined group-hover:text-primary transition-colors">chat_bubble_outline</span>
-                        <span class="text-[10px] hidden lg:block">채팅</span>
-                    </a>
-                    <button class="h-12 px-6 bg-primary hover:bg-primary/90 text-background-dark font-bold rounded-xl transition-all shadow-lg shadow-primary/20">
-                        판매하기
-                    </button>
-                </div>
+<body>
+	<div layout:fragment="content">
+	    <div id="tailwind-zone">
+	        <div class="w-full max-w-[1280px] mx-auto px-4 py-8 flex flex-col md:flex-row gap-8">
+	            
+				<aside class="w-full md:w-64 flex-shrink-0">
+				    <div class="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-sm border border-[#f0f4f2] dark:border-white/5 space-y-2 sticky top-32">
+				        
+				        <div class="flex flex-col items-center pb-1" style="border-bottom: 2px solid #f0f4f2;">
+				            <img th:src="${user.profileImg != null ? user.profileImg : '/img/default-profile.png'}" 
+				                 class="size-20 rounded-full object-cover border-4 border-white shadow-md bg-gray-200 mb-3">
+				            <h2 class="text-xl font-bold" th:text="${user.nickname}">사용자</h2>
+				            <p class="text-xs text-gray-500 mt-1" th:text="${user.address}">주소 없음</p>
+				        </div>
+	                    <nav class="space-y-1">
+							<a href="/mypage/edit" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-gray-600">
+							                <span class="material-symbols-outlined text-[20px]">person</span><span class="text-sm font-medium">프로필 관리</span>
+							            </a>
+	                        <a href="/mypage/sales" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-gray-600">
+	                            <span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="text-sm font-medium">판매 내역</span>
+	                        </a>
+	                        <a href="/mypage/buys" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-gray-600">
+	                            <span class="material-symbols-outlined text-[20px]">shopping_bag</span><span class="text-sm font-medium">구매 내역</span>
+	                        </a>
+							<a href="/mypage/likes" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/10 text-primary font-bold transition-all">
+							                <span class="material-symbols-outlined text-[20px]">favorite</span><span class="text-sm">찜한 상품</span>
+							            </a>
+	                    </nav>
+	                </div>
+	            </aside>
+
+	            <main class="flex-1 min-w-0">
+					<style>
+					        #tailwind-zone .tight-spacing { margin-bottom: 1rem !important; } /* 제목-필터 간격 */
+					        #tailwind-zone .card-content-area { padding: 12px !important; } /* 카드 내부 패딩 */
+					        #tailwind-zone .info-gap { margin-top: 4px !important; margin-bottom: 4px !important; } /* 정보 사이 간격 */
+					    </style>
+						<div class="flex flex-col">
+						        <div class="flex items-center justify-between mb-4"> <div class="flex items-center gap-4">
+						                <button onclick="history.back()" class="p-1 hover:bg-gray-100 rounded-full transition-colors">
+						                    <span class="material-symbols-outlined text-2xl">chevron_left</span>
+						                </button>
+						                <h2 class="text-2xl font-bold">찜한 상품</h2>
+						            </div>
+						            <span class="text-sm text-gray-500">전체 <span id="totalLikeCount" class="text-primary font-bold" th:text="${#lists.size(likeList)}">0</span>개</span>
+						        </div>
+
+						        <div class="bg-white dark:bg-white/5 rounded-2xl p-4 shadow-sm border border-[#f0f4f2] dark:border-white/5 mb-6">
+						            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+						                <div class="status-filters flex p-1 bg-gray-100 dark:bg-white/5 rounded-xl w-fit overflow-x-auto no-scrollbar">
+						                    <button data-filter="ALL" class="filter-btn px-4 py-2 text-sm font-bold rounded-lg bg-white dark:bg-white/10 text-[#111813] dark:text-white shadow-sm transition-all whitespace-nowrap">전체</button>
+						                    <button data-filter="ON_SALE" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:text-[#111813] dark:hover:text-white transition-all whitespace-nowrap">판매중</button>
+						                    <button data-filter="SOLD" class="filter-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:text-[#111813] dark:hover:text-white transition-all whitespace-nowrap">판매완료</button>
+						                </div>
+						                <select id="sortSelect" class="form-select pl-3 pr-8 py-2 text-sm border-gray-200 dark:border-white/10 bg-transparent rounded-lg focus:ring-primary focus:border-primary dark:text-white px-3 py-2">
+						                    <option value="latest">최신순</option>
+						                    <option value="priceHigh">가격 높은순</option>
+						                    <option value="priceLow">가격 낮은순</option>
+						                </select>
+						            </div>
+						        </div>
+
+	                    <div id="emptyMessage" class="hidden bg-white dark:bg-white/5 rounded-2xl p-12 shadow-sm border border-[#f0f4f2] dark:border-white/5 flex flex-col items-center justify-center text-center">
+	                        <div class="size-16 bg-gray-100 dark:bg-white/10 rounded-full flex items-center justify-center mb-4">
+	                            <span class="material-symbols-outlined text-gray-400 dark:text-gray-500" style="font-size: 32px;">inventory_2</span>
+	                        </div>
+	                        <h3 class="text-lg font-bold text-[#111813] dark:text-white mb-1">등록된 상품이 없어요</h3>
+	                        <p class="text-sm text-gray-500 dark:text-gray-400">찜한 목록 중 해당 상태의 물건이 없네요!</p>
+	                    </div>
+
+						<div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+						            <div th:each="item : ${likeList}" 
+						                 class="rego-card product-item bg-white dark:bg-white/5 rounded-2xl overflow-hidden border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-md transition-all group relative cursor-pointer"
+						                 th:data-status="${item.salesStatusCode}"
+						                 th:data-price="${item.price}"
+						                 th:data-date="${item.createdAt}"
+						                 th:onclick="|location.href='/product/${item.productId}'|">
+						                
+						                <div class="relative aspect-[4/3] bg-gray-100 dark:bg-white/5 overflow-hidden">
+						                    <img th:src="${item.mainImageUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+						                         th:classappend="${item.salesStatusCode == 'SOLD'} ? 'grayscale' : ''">
+						                    
+						                    <div th:if="${item.salesStatusCode == 'SOLD'}" class="absolute inset-0 bg-black/40 flex items-center justify-center">
+						                        <span class="px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg text-white font-bold text-sm border border-white/30">판매 완료</span>
+						                    </div>
+						                    <div th:if="${item.salesStatusCode != 'SOLD'}" class="absolute top-2 right-2">
+						                        <span th:text="${item.salesStatusLabel}" 
+						                              th:classappend="${item.salesStatusCode == 'RESERVED' ? 'bg-yellow-500' : 'bg-primary/90'}"
+						                              class="px-2 py-1 text-[#111813] text-xs font-bold rounded-md shadow-sm">상태</span>
+						                    </div>
+						                </div>
+						                
+										<div class="p-3 pt-2"> 
+										    <div class="flex justify-between items-start">
+										        <h3 class="text-[15px] font-bold text-[#111813] dark:text-white truncate group-hover:text-primary transition-colors -mt-[2px]" 
+										            th:text="${item.productName}">상품명</h3>
+										        <button th:onclick="|event.stopPropagation(); toggleLike(${item.productId}, this)|" 
+										                class="text-red-500 z-10 hover:scale-110 transition-transform -mt-[1px]">
+										            <span class="material-symbols-outlined filled" style="font-size: 18px;">favorite</span>
+										        </button>
+										    </div>
+										    
+										    <div class="flex items-center gap-1 text-[11px] text-gray-500 dark:text-gray-400 mt-[-7px]">
+										        <span th:text="${item.regionDisplayName}">지역</span><span>·</span><span th:text="${item.createdAt}">시간</span>
+										    </div>
+										    
+										    <p class="text-base font-extrabold text-[#111813] dark:text-white mt-[5px] mb-2" 
+										       th:text="${#numbers.formatInteger(item.price, 0, 'COMMA') + '원'}">0원</p>
+										    
+										    <div class="pt-2 flex items-center justify-between" style="border-top: 1px solid #f0f4f2;">
+										        <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400 text-[11px]">
+										            <div class="flex items-center gap-0.5">
+										                <span class="material-symbols-outlined text-[14px]">favorite</span> 
+										                <span th:text="${item.likeCount}">0</span>
+										            </div>
+										            <div class="flex items-center gap-0.5">
+										                <span class="material-symbols-outlined text-[14px]">visibility</span> 
+										                <span th:text="${item.viewCount}">0</span>
+										            </div>
+										        </div>
+										        </div>
+										</div>
+						</main>
+	        </div>
+
+	        <script th:inline="javascript">
+	            document.addEventListener('DOMContentLoaded', function() {
+	                const filterBtns = document.querySelectorAll('.filter-btn');
+	                const sortSelect = document.getElementById('sortSelect');
+	                const productGrid = document.getElementById('productGrid');
+	                const emptyMessage = document.getElementById('emptyMessage');
+	                const cards = Array.from(document.querySelectorAll('.product-item'));
+	                
+	                let currentFilter = 'ALL';
+
+	                function updateUI() {
+	                    const filteredCards = cards.filter(card => {
+	                        const status = card.dataset.status;
+	                        return currentFilter === 'ALL' || status === currentFilter;
+	                    });
+
+	                    cards.forEach(card => card.style.display = 'none');
+	                    filteredCards.forEach(card => card.style.display = 'block');
+
+	                    if (filteredCards.length === 0) {
+	                        emptyMessage.classList.remove('hidden');
+	                        productGrid.classList.add('hidden');
+	                    } else {
+	                        emptyMessage.classList.add('hidden');
+	                        productGrid.classList.remove('hidden');
+	                        productGrid.classList.add('grid');
+	                    }
+
+	                    const sortValue = sortSelect.value;
+	                    filteredCards.sort((a, b) => {
+	                        if (sortValue === 'priceHigh') return b.dataset.price - a.dataset.price;
+	                        if (sortValue === 'priceLow') return a.dataset.price - b.dataset.price;
+	                        return new Date(b.dataset.date) - new Date(a.dataset.date);
+	                    });
+	                    filteredCards.forEach(card => productGrid.appendChild(card));
+	                }
+
+	                filterBtns.forEach(btn => {
+	                    btn.addEventListener('click', function() {
+	                        currentFilter = this.getAttribute('data-filter');
+	                        filterBtns.forEach(b => {
+	                            b.classList.remove('font-bold', 'bg-white', 'dark:bg-white/10', 'shadow-sm');
+	                            b.classList.add('font-medium', 'text-gray-500');
+	                        });
+	                        this.classList.add('font-bold', 'bg-white', 'dark:bg-white/10', 'shadow-sm');
+	                        this.classList.remove('font-medium', 'text-gray-500');
+	                        updateUI();
+	                    });
+	                });
+
+	                if(sortSelect) sortSelect.addEventListener('change', updateUI);
+
+	                window.toggleLike = function(productId, btn) {
+	                    const card = btn.closest('.product-item');
+	                    fetch(`/product/${productId}/like`, { method: "POST" })
+	                        .then(res => {
+	                            if (res.ok) {
+	                                card.remove();
+	                                const index = cards.indexOf(card);
+	                                if (index > -1) cards.splice(index, 1);
+	                                document.getElementById('totalLikeCount').textContent = cards.length;
+	                                updateUI();
+	                            }
+	                        });
+	                };
+
+	                updateUI(); 
+	            });
+	        </script>
+	    </div>
+	</div>
+                </main>
             </div>
         </div>
-    </header>
-
-    <div class="layout-container w-full max-w-[1280px] mx-auto px-4 py-8 flex flex-col md:flex-row gap-8 flex-1">
-        <aside class="w-full md:w-64 flex-shrink-0">
-            <div class="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-sm border border-[#f0f4f2] dark:border-white/5 space-y-6 sticky top-32">
-                <div class="flex flex-col items-center pb-6 border-b border-[#f0f4f2] dark:border-white/5">
-                    <img th:src="${user.profileImg != null ? user.profileImg : '/img/default-profile.png'}" 
-                         class="size-20 rounded-full object-cover border-4 border-white dark:border-[#1A2C20] shadow-md bg-gray-100 mb-3">
-                    <h2 class="text-xl font-bold" th:text="${user.nickname}">사용자</h2>
-                    <p class="text-xs text-gray-500 mt-1" th:text="${user.address}">주소 없음</p>
-                </div>
-                <nav class="space-y-1">
-                    <a href="/mypage/profile" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all">
-                        <span class="material-symbols-outlined text-[20px]">person</span><span class="text-sm font-medium">프로필 관리</span>
-                    </a>
-                    <a href="/mypage/sales" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all">
-                        <span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="text-sm font-medium">판매 내역</span>
-                    </a>
-                    <a href="/mypage/buys" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all">
-                        <span class="material-symbols-outlined text-[20px]">shopping_bag</span><span class="text-sm font-medium">구매 내역</span>
-                    </a>
-                    <a href="/mypage/likes" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/10 text-primary font-bold transition-all">
-                        <span class="material-symbols-outlined text-[20px]">favorite</span><span class="text-sm">찜한 상품</span>
-                    </a>
-                </nav>
-            </div>
-        </aside>
-
-        <main class="flex-1 min-w-0">
-            <div class="flex flex-col space-y-6">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-4">
-                        <button onclick="history.back()" class="p-1 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors">
-                            <span class="material-symbols-outlined text-2xl">chevron_left</span>
-                        </button>
-                        <h2 class="text-2xl font-bold">찜한 상품</h2>
-                    </div>
-                    <span class="text-sm text-gray-500">전체 
-						<span id="totalLikeCount" class="text-primary font-bold" th:text="${#lists.size(likeList)}">0</span>개</span>
-                </div>
-
-				<div class="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-sm border border-[#f0f4f2] dark:border-white/5">
-				    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-				        <div class="flex p-1 bg-gray-100 dark:bg-white/5 rounded-xl w-fit">
-				            <button class="filter-btn active px-4 py-2 text-sm font-bold rounded-lg bg-white dark:bg-white/10 shadow-sm" data-status="ALL">전체</button>
-				            <button class="filter-btn px-4 py-2 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white transition-all" data-status="SALE">판매중</button>
-				            <button class="filter-btn px-4 py-2 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white transition-all" data-status="SOLD">판매완료</button>
-				        </div>
-				        
-				        <select id="sortSelect" class="form-select pl-3 pr-8 py-2 text-sm border-gray-200 dark:border-white/10 bg-transparent rounded-lg focus:ring-primary focus:border-primary">
-				            <option value="latest">최신순</option>
-				            <option value="priceHigh">가격 높은순</option>
-				            <option value="priceLow">가격 낮은순</option>
-				        </select>
-				    </div>
-				</div>
-
-				<div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				    <div th:each="item : ${likeList}" 
-				         class="product-item bg-white dark:bg-white/5 rounded-2xl overflow-hidden border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-lg transition-all group relative"					th:data-status="${item.salesStatusCode}"
-					         th:data-price="${item.price}"
-					         th:data-date="${item.createdAt}">
-						 
-                        <div class="relative aspect-[4/3] bg-gray-100 overflow-hidden">
-                            <img th:src="${item.mainImageUrl}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                 th:classappend="${item.salesStatusCode == 'SOLD'} ? 'grayscale' : ''">
-                            <div th:if="${item.salesStatusCode != 'SALE'}" class="absolute inset-0 bg-black/40 flex items-center justify-center">
-                                <span class="px-3 py-1 bg-primary text-black font-bold text-sm rounded-lg" th:text="${item.salesStatusLabel}">판매상태</span>
-                            </div>
-                        </div>
-                        <div class="p-4 space-y-2">
-                            <div class="flex justify-between items-start">
-                                <h3 class="font-bold truncate group-hover:text-primary transition-colors" th:text="${item.productName}">상품명</h3>
-								<button th:onclick="'toggleLike(' + ${item.productId} + ', this)'" class="text-red-500">
-								            <span class="material-symbols-outlined filled">favorite</span>
-								        </button>
-                            </div>
-                            <div class="flex items-center gap-1 text-xs text-gray-400">
-                                <span th:text="${item.regionDisplayName}">지역</span><span>·</span><span th:text="${item.createdAt}">시간</span>
-                            </div>
-                            <p class="text-lg font-extrabold" th:text="${#numbers.formatInteger(item.price, 0, 'COMMA') + '원'}">0원</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div th:if="${#lists.isEmpty(likeList)}" class="py-32 flex flex-col items-center opacity-30">
-                    <span class="material-symbols-outlined text-8xl">favorite</span>
-                    <p class="mt-4 text-xl font-bold">찜한 상품이 없어요!</p>
-                </div>
-            </div>
-        </main>
     </div>
-	<script>
-	    document.addEventListener('DOMContentLoaded', function() {
-	        const filterButtons = document.querySelectorAll('.filter-btn');
-	        const sortSelect = document.getElementById('sortSelect');
-	        const productGrid = document.getElementById('productGrid');
-
-	        function updateUI() {
-	            const products = Array.from(document.querySelectorAll('.product-item'));
-	            const activeBtn = document.querySelector('.filter-btn.active');
-	            const activeStatus = activeBtn ? activeBtn.dataset.status : 'ALL';
-	            const sortValue = sortSelect.value;
-
-	            // 1. 필터링
-	            let visibleProducts = products.filter(p => {
-	                const status = p.dataset.status;
-	                const isVisible = (activeStatus === 'ALL' || status === activeStatus);
-	                p.style.display = isVisible ? 'block' : 'none';
-	                return isVisible;
-	            });
-
-	            // 2. 정렬
-	            visibleProducts.sort((a, b) => {
-	                if (sortValue === 'priceHigh') return b.dataset.price - a.dataset.price;
-	                if (sortValue === 'priceLow') return a.dataset.price - b.dataset.price;
-	                return new Date(b.dataset.date) - new Date(a.dataset.date);
-	            });
-
-	            visibleProducts.forEach(p => productGrid.appendChild(p));
-	        }
-
-	        filterButtons.forEach(btn => {
-	            btn.addEventListener('click', () => {
-	                filterButtons.forEach(b => {
-	                    b.classList.remove('active', 'bg-white', 'font-bold');
-	                    b.classList.add('text-gray-500', 'font-medium');
-	                });
-	                btn.classList.add('active', 'bg-white', 'font-bold');
-	                btn.classList.remove('text-gray-500', 'font-medium');
-	                updateUI();
-	            });
-	        });
-
-	        sortSelect.addEventListener('change', updateUI);
-
-
-	        window.toggleLike = function(productId, btn) {
-	            const card = btn.closest('.product-item');
-	            
-	            // 1. 시각적 효과
-	            card.style.transition = 'all 0.3s ease';
-	            card.style.opacity = '0';
-	            card.style.transform = 'scale(0.8)';
-	            
-	            // 2. 서버 통신 
-	            fetch(`/product/${productId}/like`, { method: "POST" })
-	                .then(res => { if (!res.ok) throw new Error(); })
-	                .catch(() => {
-	                    alert("찜 취소 실패! 로그인이 풀렸을 수 있어요.");
-	                    location.reload(); 
-	                });
-
-
-	            setTimeout(() => {
-	                card.remove(); 
-					
-	                const remainingCount = document.querySelectorAll('.product-item').length;
-	                const countDisplay = document.getElementById('totalLikeCount');
-	                
-	                if (countDisplay) {
-	                    countDisplay.textContent = remainingCount;
-	                }
-
-	                if (remainingCount === 0) {
-	                    location.reload(); 
-	                } else {
-	                    updateUI();
-	                }
-	            }, 300);
-	        };
-	    }); 
-	</script>
 </body>
 </html>
