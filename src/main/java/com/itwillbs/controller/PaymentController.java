@@ -1,8 +1,10 @@
 package com.itwillbs.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -10,18 +12,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.config.FintechProperties;
 import com.itwillbs.dto.MyPageDTO;
 import com.itwillbs.dto.PayOAuthTokenResponseDTO;
+import com.itwillbs.dto.PaymentRequestDto;
+import com.itwillbs.dto.WalletTransactionDTO;
 import com.itwillbs.dto.WalletViewDTO;
 import com.itwillbs.mapper.MypageMapper;
+import com.itwillbs.service.ChatPaymentService;
 import com.itwillbs.service.OpenBankingAuthService;
 import com.itwillbs.service.PaymentService;
 
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 
@@ -37,6 +43,7 @@ public class PaymentController {
 	final public MypageMapper mypageMapper;
 	//DB 저장을 위해 서비스 주입 
     private final PaymentService paymentService;
+    private final ChatPaymentService chatPaymentService;
     
   
 
@@ -49,22 +56,35 @@ public class PaymentController {
     	
     	// 1. 이메일 추출 (아래 만들어둔 메서드 사용)
         String email = getUserEmail(authentication);
+     // 이메일이 없으면 로그인으로
+        if(email == null) return "redirect:/login";
+        System.out.println("email = " + email);
         
      // 2. 이미 있는 MypageMapper로 유저 정보 가져오기!
         MyPageDTO user = mypageMapper.getMyPageInfo(email);
+        System.out.println(user);
         
-     // 3. 가져온 정보에서 ID(PK)만 쏙 빼서 지갑 조회에 사용
+       // 3. 가져온 정보에서 ID(PK)만 쏙 빼서 지갑 조회에 사용
         WalletViewDTO walletInfo = paymentService.getMyWalletPage(user.getUserId());
-        // 3. 화면(HTML)으로 정보 전달
+        //  화면(HTML)으로 정보 전달
         model.addAttribute("walletInfo", walletInfo);
     	System.out.println(walletInfo);
-
+    	
+    	// 전체 계좌 목록을 가져와서 화면에 뿌림 (modal용)
+        List<WalletViewDTO> accountList = paymentService.getAccountList(user.getUserId());
+        model.addAttribute("accountList", accountList);
+        
+        // 거래 내역 조회 및 모델 저장
+        List<WalletTransactionDTO> historyList = paymentService.getHistoryList(user.getUserId());
+        model.addAttribute("historyList", historyList); // HTML에서 이 이름("historyList")을 씀
+        System.out.println(historyList);
+        
         return "payment/myrepay";
     }
 	
     
     
-    // --------------------- 가상 계좌 연동하기 ---------------------------
+    // --------------------- 가상 계좌 연동하기(맨 처음에 wallet 생성) ---------------------------
     // 계좌 연동하기 버튼 클릭 시 금융결제원 OAuth 실행 
     // ----- access_token (은행 API 호출용), refresh_token(토큰 갱신용), user_seq_no(사용자 식별자) 발급받기
     // 저장된 토큰으로 1)잔액 조회 2)가상 충전 3)결제 처리까지 
@@ -87,7 +107,7 @@ public class PaymentController {
     
 
     
- // ---- 금융 결제원에서 받아온 코드를 담아 이 주소로 리다이렉트
+ // ---- 금융 결제원에서 받아온 코드를 담아 이 주소로 리다이렉트 [계좌 연동]
     //  사용자가 로그인을 완료하면, redirect url로 인증코드 받아오기 
     // 이 코드를 받아서 진짜 토큰으로 바꾸고 DB에 저장
     @GetMapping("/callback")
@@ -143,6 +163,128 @@ public class PaymentController {
         
         return "redirect:/myrepay"; // 생성 완료 후 re:pay 페이지
     }
+    
+
+    
+    
+
+    // -----------------[주계좌]  
+    // 주계좌 변경 요청 처리
+    @PostMapping("/pay/change-main")
+    public String changeMainAccount(@RequestParam("accountId") Long accountId, 
+                                    Authentication authentication) {
+        String email = getUserEmail(authentication);
+        MyPageDTO user = mypageMapper.getMyPageInfo(email);
+        
+        // 서비스 호출해서 주계좌 변경
+        paymentService.changeMainAccount(user.getUserId(), accountId);
+        
+        return "redirect:/myrepay"; // 변경 후 다시 관리 페이지로
+    }
+    
+    
+ // [버튼 클릭] 계좌 연동 해지 처리
+    @PostMapping("/pay/delete-account")
+    public String deleteAccount(@RequestParam("accountId") Long accountId, 
+                                Authentication authentication, 
+                                RedirectAttributes redirectAttributes) {
+    	
+    	// 로그로 accountId가 실제로 들어오는지 확인
+        System.out.println("🚩 삭제 요청 받은 accountId: " + accountId);
+        String email = getUserEmail(authentication);
+        MyPageDTO user = mypageMapper.getMyPageInfo(email);
+        
+        try {
+            // 서비스에서 금결원 API 호출 및 DB 삭제 동시 처리
+            paymentService.deleteAccount(user.getUserId(), accountId);
+            redirectAttributes.addFlashAttribute("message", "계좌 연동이 성공적으로 해지되었습니다.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "계좌 해지 중 오류가 발생했습니다: " + e.getMessage());
+        }
+        
+        return "redirect:/myrepay";
+    }
+    
+    
+   // [버튼 클릭] 충전하기 
+    @PostMapping("/pay/charge")
+    public String chargePoint(@RequestParam("amount") String amountStr, Authentication authentication) {
+    	String email = getUserEmail(authentication);
+        MyPageDTO user = mypageMapper.getMyPageInfo(email);
+
+        // 1. 콤마(,) 제거 후 숫자로 변환
+        Long amount = Long.parseLong(amountStr.replace(",", ""));
+       // 2. 서비스 로직 실행
+        paymentService.chargePoint(user.getUserId(), amount);
+        
+        return "redirect:/myrepay"; // 충전 후 다시 마이페이지로 이동
+    }
+    
+    // [버튼 클릭] 출금하기 (내 지갑 -> 주계좌) 
+    @PostMapping("/pay/withdraw")
+    public String withdrawPoint(@RequestParam("amount") String amountStr, Authentication authentication) {
+    	String email = getUserEmail(authentication);
+        MyPageDTO user = mypageMapper.getMyPageInfo(email);
+
+        // 1. 콤마(,) 제거 후 숫자로 변환
+        Long amount = Long.parseLong(amountStr.replace(",", ""));
+       // 2. 서비스 로직 실행
+        paymentService.processWithdraw(user.getUserId(), amount);
+        
+        return "redirect:/myrepay"; // 충전 후 다시 마이페이지로 이동
+    }
+    
+    
+    
+    
+    
+    
+    // ----------------- 채팅에서 결제 요청 --------------------
+    
+    
+    
+    /**
+     * 1. 판매자가 결제 요청을 보냄
+     * 요청 예시: POST /api/payment/request
+     */
+    @PostMapping("/api/payment/request")
+    public ResponseEntity<?> createRequest(@RequestBody PaymentRequestDto dto) {
+        try {
+            Long orderId = chatPaymentService.createPaymentRequest(
+                    dto.getProductId(),
+                    dto.getSellerId(),
+                    dto.getBuyerId(),
+                    dto.getRoomId(),
+                    dto.getAmount()
+            );
+            
+            // 성공 시 생성된 orderId 반환 -> 프론트에서는 이 ID를 소켓 메시지에 담아 전송
+            return ResponseEntity.ok(Map.of("orderId", orderId, "message", "결제 요청이 생성되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * 2. 구매자가 결제 버튼을 클릭하여 실제 결제 진행
+     * 요청 예시: POST /api/payment/execute
+     */
+    @PostMapping("/api/payment/execute")
+    public ResponseEntity<?> executePayment(@RequestBody Map<String, Long> payload) {
+        try {
+            Long orderId = payload.get("orderId");
+            // 실제 서비스에서는 세션이나 시큐리티에서 현재 로그인한 유저 ID를 가져와야 합니다.
+            Long currentUserId = 1L; // 임시: 현재 로그인한 구매자 ID
+
+            chatPaymentService.processRepayPayment(orderId, currentUserId);
+            
+            return ResponseEntity.ok("re:pay 결제가 완료되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+
     
     
     // email값 가져오기

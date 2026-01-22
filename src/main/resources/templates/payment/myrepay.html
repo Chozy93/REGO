@@ -9,7 +9,8 @@
 
 <div layout:fragment="content">  
     <main class="layout-container">
-            
+        <input type="hidden" id="initialBalanceData" th:value="${walletInfo?.balance ?: 0}">
+
         <div class="page-header">
             <a href="/" class="btn-back">
                 <span class="material-symbols-outlined">arrow_back</span>
@@ -18,7 +19,6 @@
         </div>
 
         <div class="dashboard-grid">
-            
             <section class="card wallet-card">
                 <div class="card-header">
                     <h3>RE:PAY 머니 잔액</h3>
@@ -26,19 +26,15 @@
                         <span class="material-symbols-outlined">account_balance_wallet</span>
                     </div>
                 </div>
-                
                 <div class="balance-display">
-                    <span th:text="${walletInfo.balance != null ? #numbers.formatInteger(walletInfo.balance, 0, 'COMMA') : '0'}">0</span><span>원</span>
+                    <span th:text="${walletInfo?.balance != null ? #numbers.formatInteger(walletInfo.balance, 0, 'COMMA') : '0'}">0</span><span>원</span>
                 </div>
-                
                 <div class="button-group">
-                    <button class="btn-primary btn-lg">
-                        <span class="material-symbols-outlined">add_circle</span>
-                        충전
+                    <button class="btn-primary btn-lg" onclick="openChargeModal()">
+                        <span class="material-symbols-outlined">add_circle</span>충전
                     </button>
-                    <button class="btn-secondary btn-lg">
-                        <span class="material-symbols-outlined">arrow_circle_up</span>
-                        출금
+                    <button class="btn-secondary btn-lg" onclick="openWithdrawModal()">
+                        <span class="material-symbols-outlined">arrow_circle_up</span>출금
                     </button>
                 </div>
             </section>
@@ -46,10 +42,10 @@
             <section class="card account-card">
                 <div class="card-header">
                     <h3>연동 계좌 정보</h3>
-                    <button class="btn-text-danger" th:if="${walletInfo.bankName != null}">연동 해제</button>
+                    
                 </div>
 
-                <div class="account-content-wrapper" th:if="${walletInfo.bankName != null}">
+                <div class="account-content-wrapper" th:if="${walletInfo?.bankName != null}">
                     <div class="account-box">
                         <div class="bank-icon">
                             <span class="material-symbols-outlined">account_balance</span>
@@ -61,21 +57,20 @@
                         <span class="badge">주계좌</span>
                     </div>
                     
-                    <button class="btn-dashed mt-auto" onclick="location.href='/pay/connect'">
+                    <button class="btn-dashed mt-auto" type="button" onclick="openAccountModal()">
                         <span class="material-symbols-outlined">sync_alt</span>
                         계좌 변경하기
                     </button>
                 </div>
 
-                <div class="empty-state-wrapper" th:unless="${walletInfo.bankName != null}">
+                <div class="empty-state-wrapper" th:unless="${walletInfo?.bankName != null}">
                     <div class="empty-content">
                         <div class="empty-icon-circle">
-                            <span class="material-symbols-outlined">account_balance</span>
+                            <span class="material-symbols-outlined">link_off</span>
                         </div>
                         <p class="empty-title">연동된 계좌가 없습니다</p>
                         <p class="empty-desc">안전한 거래를 위해 계좌를 연동해주세요</p>
                     </div>
-
                     <button class="btn-black-full" onclick="location.href='/pay/connect'">
                         <span class="material-symbols-outlined">link</span>
                         계좌 연동하기
@@ -84,30 +79,236 @@
             </section>
         </div>
 
-        <section class="card history-section">
-            <div class="card-header border-bottom">
-                <h3>
+        <section class="card history-card">
+            <div class="history-header">
+                <h2>
                     <span class="material-symbols-outlined text-primary">history</span>
                     최근 거래 내역
-                </h3>
+                </h2>
                 <div class="filter-group">
-                    <select>
-                        <option>전체 기간</option>
-                        <option>1주일</option>
-                        <option>1개월</option>
-                    </select>
+                    <select class="form-select"><option>전체 기간</option><option>1주일</option><option>1개월</option></select>
                 </div>
             </div>
+        
+            <div class="history-list-wrapper">
+                <th:block th:if="${historyList != null and not #lists.isEmpty(historyList)}">
+                    
+                    <div class="history-item" th:each="history : ${historyList}">
+                        
+                        <th:block th:with="pType=${#strings.toString(history.paymentType)}, 
+                                           isPlus=${pType == 'CHARGE' or pType == 'INCOME' or pType == 'REFUND'}">
 
-            <div class="history-list empty-history">
-                <div class="empty-icon-circle">
+                            <div class="item-left">
+                                <div class="item-icon" th:classappend="${isPlus} ? 'icon-green' : 'icon-red'">
+                                    <span class="material-symbols-outlined" th:text="${isPlus ? 'add' : 'remove'}">add</span>
+                                </div>
+                                
+                                <div class="item-info">
+                                    <span class="item-date" th:if="${history.createdAt != null}" 
+                                          th:text="${#dates.format(history.createdAt, 'yyyy.MM.dd HH:mm')}">날짜</span>
+                                    <span class="item-date" th:unless="${history.createdAt != null}">-</span>
+                                    
+                                    <span class="item-title" th:if="${pType == 'CHARGE'}">RE:PAY 충전</span>
+                                    <span class="item-title" th:if="${pType == 'INCOME'}">입금/수익</span>
+                                    <span class="item-title" th:if="${pType == 'REFUND'}">환불</span>
+                                    <span class="item-title" th:if="${pType == 'PAYMENT'}">결제 사용</span>
+                                    <span class="item-title" th:if="${pType == 'WITHDRAW'}">출금</span>
+                                    <span class="item-title" th:unless="${pType == 'CHARGE' or pType == 'INCOME' or pType == 'REFUND' or pType == 'PAYMENT' or pType == 'WITHDRAW'}" 
+                                          th:text="${pType}">기타</span>
+                                </div>
+                            </div>
+            
+                            <div class="item-right">
+                                <div class="item-amount" th:classappend="${isPlus} ? 'text-primary' : 'text-dark'">
+                                    <span th:if="${isPlus}">+</span>
+                                    <span th:unless="${isPlus}">-</span>
+                                    <span th:text="${#numbers.formatInteger(history.amount ?: 0, 0, 'COMMA')}">0</span>원
+                                </div>
+                                <div class="item-balance">
+                                    잔액 <span th:text="${#numbers.formatInteger(history.balanceSnapshot ?: 0, 0, 'COMMA')}">0</span>원
+                                </div>
+                            </div>
+
+                        </th:block>
+                    </div>
+                </th:block>
+        
+                <div class="empty-state" th:if="${historyList == null or #lists.isEmpty(historyList)}">
                     <span class="material-symbols-outlined">receipt_long</span>
+                    <p>거래 내역이 없습니다</p>
                 </div>
-                <p class="empty-title">거래 내역이 없습니다</p>
-                <p class="empty-desc">RE:PAY를 통해 안전하고 간편하게 거래해보세요</p>
             </div>
+        
+            <button class="btn-more" th:if="${historyList != null and not #lists.isEmpty(historyList)}">
+                거래 내역 더보기
+            </button>
         </section>
 
     </main>
+	
+	<!--계좌 리스트 모달 -->
+	<div id="accountModal" class="modal-overlay" style="display: none;">
+		<div class="modal-card account-modal">
+	    <div class="modal-header">
+	        <h2 style="margin:0; font-size: 20px;">주계좌 변경 및 삭제</h2>
+	        <span class="material-symbols-outlined" onclick="closeAccountModal()" style="cursor:pointer; color:#9ca3af;">close</span>
+	    </div>
+
+	    <form id="updateAccountForm" th:action="@{/pay/change-main}" method="post">
+	        <div class="modal-body">
+	            <p style="font-size: 14px; color: #6b7280; margin-bottom: 16px;">
+	                계좌를 선택하여 주계좌로 설정하거나, 휴지통 아이콘을 눌러 삭제하세요.
+	            </p>
+
+	            <th:block th:if="${accountList != null and not #lists.isEmpty(accountList)}">
+	                <div class="account-item" th:each="acc : ${accountList}">
+	                    <input type="radio" name="accountId" 
+	                           th:id="'acc-' + ${acc.accountId}" 
+	                           th:value="${acc.accountId}"
+	                           th:checked="${acc.isMain == 'Y'}"
+	                           style="display: none;">
+	                    
+	                    <label th:for="'acc-' + ${acc.accountId}" class="account-label">
+	                        <div class="bank-icon">
+	                            <span class="material-symbols-outlined">account_balance</span>
+	                        </div>
+	                        <div class="account-info">
+	                            <div>
+	                                <span class="bank-name" th:text="${acc.bankName}">은행명</span>
+	                                <span class="badge-main" th:if="${acc.isMain == 'Y'}">주계좌</span>
+	                            </div>
+	                            <div class="account-number" th:text="${acc.accountNumMasked}">110-392-******</div>
+	                        </div>
+	                        <div class="radio-circle"><div class="radio-dot"></div></div>
+	                    </label>
+
+						<button type="button" class="delete-btn btn-delete-account" 
+						        th:data-id="${acc.accountId}">
+						    <span class="material-symbols-outlined">delete</span>
+						</button>
+	                </div>
+	            </th:block>
+
+	            <div th:if="${accountList == null or #lists.isEmpty(accountList)}" style="text-align:center; padding: 20px; color:#9ca3af;">
+	                등록된 계좌가 없습니다.
+	            </div>
+	        </div>
+
+	        <div style="padding: 0 24px 24px 24px;">
+	            <button type="submit" class="btn-save">변경 사항 저장</button>
+	            <button type="button" class="btn-add" onclick="location.href='/pay/connect'">
+	                + 새 계좌 등록
+	            </button>
+	        </div>
+	    </form>
+	</div>
+</div>
+
+<!--충전 모달창 -->
+    <div id="chargeModal" class="modal-overlay" style="display: none;">
+        <div class="modal-card charge-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">RE:PAY 충전</h2>
+                <button type="button" class="btn-close" onclick="closeChargeModal()">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="account-box" style="margin-bottom: 20px;" th:if="${walletInfo?.bankName != null}">
+                    <div class="bank-icon">
+                        <span class="material-symbols-outlined">account_balance</span>
+                    </div>
+                    <div class="account-details">
+                        <div class="bank-name" th:text="${walletInfo.bankName}">은행명</div>
+                        <div class="account-num" th:text="${walletInfo.accountNumMasked}">계좌번호</div>
+                    </div>
+                    <span class="badge">출금</span>
+                </div>
+
+                <p class="description" style="text-align: center;">충전할 금액을 입력해주세요.</p>
+                
+                <form id="chargeForm" th:action="@{/pay/charge}" method="post">
+                    <div class="input-group-lg">
+                        <input type="text" name="amount" id="chargeAmountInput" class="form-input-lg" placeholder="0" value="0" onkeyup="formatChargeInput(this)">
+                        <span class="unit-text">원</span>
+                    </div>
+                    <div class="chip-buttons">
+                        <button type="button" class="btn-chip" onclick="addChargeAmount(10000)">+1만</button>
+                        <button type="button" class="btn-chip" onclick="addChargeAmount(50000)">+5만</button>
+                        <button type="button" class="btn-chip" onclick="addChargeAmount(100000)">+10만</button>
+                        <button type="button" class="btn-chip" onclick="resetChargeAmount()">초기화</button>
+                    </div>
+                    <div class="expected-box">
+                        <span class="expected-label">충전 후 예상 잔액</span>
+                        <span id="expectedBalanceDisplay" class="expected-val">
+                            <span th:text="${#numbers.formatInteger(walletInfo?.balance ?: 0, 0, 'COMMA')}">0</span>원
+                        </span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" form="chargeForm" class="btn-primary-modal">충전하기</button>
+            </div>
+        </div>
+    </div>
+
+	
+	<!--출금하기 모달창-->
+	<div class="modal-overlay" id="withdrawModal" style="display: none;">
+	    <div class="modal-card charge-modal">
+	        <div class="modal-header">
+	            <h2 class="modal-title">RE:PAY 출금</h2>
+	            <button type="button" class="btn-close" onclick="closeWithdrawModal()">
+	                <span class="material-symbols-outlined">close</span>
+	            </button>
+	        </div>
+	        <div class="modal-body">
+	            <div class="account-box" style="margin-bottom: 20px;" th:if="${walletInfo?.bankName != null}">
+	                <div class="bank-icon" style="background: #0046ff; color: white;"> 
+	                    <span class="material-symbols-outlined">account_balance</span>
+	                </div>
+	                <div class="account-details">
+	                    <div class="bank-name" th:text="${walletInfo.bankName}">은행명</div>
+	                    <div class="account-num" th:text="${walletInfo.accountNumMasked}">계좌번호</div>
+	                </div>
+	                <span class="badge" style="background: #eef2ff; color: #4f46e5;">입금</span>
+	            </div>
+
+	            <div style="text-align: center; margin-bottom: 1.5rem;">
+	                <p style="font-size: 0.875rem; color: #6b7280; font-weight: bold;">출금 가능 잔액</p>
+	                <p style="font-size: 1.5rem; font-weight: 900;" th:text="${#numbers.formatInteger(walletInfo?.balance ?: 0, 0, 'COMMA') + '원'}">0원</p>
+	            </div>
+
+	            <form id="withdrawForm" th:action="@{/pay/withdraw}" method="post">
+	                <div class="input-group-lg">
+	                    <input type="text" name="amount" id="withdrawAmountInput" class="form-input-lg" placeholder="0" value="0" onkeyup="formatWithdrawInput(this)">
+	                    <span class="unit-text">원</span>
+	                </div>
+
+	                <div class="chip-buttons">
+	                    <button type="button" class="btn-chip" onclick="addWithdrawAmount(10000)">+1만</button>
+	                    <button type="button" class="btn-chip" onclick="addWithdrawAmount(50000)">+5만</button>
+	                    <button type="button" class="btn-chip" onclick="addWithdrawAmount(100000)">+10만</button>
+	                    <button type="button" class="btn-chip" onclick="setFullWithdrawAmount()">전액</button>
+	                </div>
+
+	                <div class="expected-box">
+	                    <span class="expected-label">출금 후 예상 잔액</span>
+	                    <span id="expectedWithdrawBalance" class="expected-val" style="color: #ef4444;">
+	                        <span th:text="${#numbers.formatInteger(walletInfo?.balance ?: 0, 0, 'COMMA')}">0</span>원
+	                    </span>
+	                </div>
+	            </form>
+	        </div>
+	        <div class="modal-footer">
+	            <button type="submit" form="withdrawForm" class="btn-primary-modal">출금하기</button>
+	        </div>
+	    </div>
+	</div>
+	
+	
+	
+    <script src="/js/payment/myrepay.js"></script>
+
 </div>
 </html>
