@@ -7,13 +7,18 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.itwillbs.dto.OrderRequestDTO;
 import com.itwillbs.dto.PaymentRequestDto;
 import com.itwillbs.dto.WalletViewDTO;
 import com.itwillbs.entity.Product;
+import com.itwillbs.entity.ProductOrder;
 import com.itwillbs.entity.User;
 import com.itwillbs.entity.UserAddress;
 import com.itwillbs.security.CustomUserDetails;
@@ -81,7 +86,12 @@ public class OrderController {
     
     
     
+    
+    
+    
+    
     // -------------------- 바로 결제 ---------------------------------
+    // 바로결제 클릭했을 때 상품정보, user 정보, wallet 정보 화면에 들고오기
     @GetMapping("/direct")
     public String showDirectPayment(@RequestParam("productId") Long productId, 
     								@AuthenticationPrincipal CustomUserDetails userDetails,
@@ -108,6 +118,43 @@ public class OrderController {
  
         return "payment/direct-pay"; // 작성하신 HTML 경로
     }
+    
+    // 바로결제 클릭시 주문 생성
+    @PostMapping("/direct")
+    public String processOrder(@ModelAttribute OrderRequestDTO checkoutDTO,
+                               @AuthenticationPrincipal CustomUserDetails userDetails,
+                               RedirectAttributes redirectAttributes) {
+        try {
+        	System.out.println("바로결제 주문 생성");
+            Long buyerId = userDetails.getUserId();
+            Long orderId = orderService.createOrder(checkoutDTO, buyerId);
+            
+            // 성공 시 완료 페이지로 주문 번호를 가지고 이동
+            return "redirect:/direct/success/" + orderId;
+        } catch (Exception e) {
+            // 실패 시 에러 메시지와 함께 이전 페이지로 리다이렉트
+        	System.out.println("바로결제 error");
+        	System.out.println(e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/direct?productId=" + checkoutDTO.getProductId();
+        }
+    }
+    
+    // 바로결제 성공 화면
+    @GetMapping("/direct/success/{orderId}")
+    public String orderSuccess(@PathVariable("orderId") Long orderId, 
+                               Model model) {
+        // 주문 정보를 DB에서 조회 (상품 정보와 연관관계가 맺어져 있어야 함)
+        // 예: Order 엔티티 내부에 Product 정보가 포함된 형태
+        ProductOrder order = orderService.getOrderById(orderId); 
+        
+        // HTML에 "order"라는 이름으로 전달
+        model.addAttribute("order", order);
+        
+        // 아까 만든 templates/payment/success.html 경로 반환
+        return "payment/direct-success"; 
+    }
+    
     
     
 }
