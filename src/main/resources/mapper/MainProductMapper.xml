@@ -75,6 +75,10 @@
     FROM products p
     WHERE p.sales_status = 'ON_SALE'
     
+    <if test="region != null and region != ''">
+        AND p.region_display_name LIKE CONCAT('%', #{region}, '%')
+    </if>
+    
     <choose>
         <!-- 최신순 -->
         <when test="sort == 'recent'">
@@ -119,12 +123,13 @@
 
         p.view_count               AS viewCount,
 
+/* ❤️ 찜 개수 */
         (
             SELECT COUNT(*)
             FROM user_favorites uf
             WHERE uf.product_id = p.product_id
         ) AS likeCount,
-
+/* ❤️ 내가 찜했는지 */
         EXISTS (
             SELECT 1
             FROM user_favorites uf
@@ -134,11 +139,25 @@
 
     FROM products p
     WHERE p.sales_status = 'ON_SALE'
+    
+    /* 1️⃣ 지역 필터 추가: 공백을 제거하고 비교하여 검색 정확도 향상 */
+    <if test="region != null and region != ''">
+        AND REPLACE(p.region_display_name, ' ', '') LIKE CONCAT('%', REPLACE(#{region}, ' ', ''), '%')
+    </if>
 
+/* 2️⃣ 정렬 조건: 인기 상품이므로 기본은 조회수/찜순이지만, 
+       최신순 정렬 요청(sort=recent)이 있을 경우를 대비해 분기 처리 */
     ORDER BY
-        p.view_count DESC,
-        likeCount DESC,
-        p.created_at DESC
+    <choose>
+        <when test="sort == 'recent'">
+            p.created_at DESC
+        </when>
+        <otherwise>
+            p.view_count DESC,
+            likeCount DESC,
+            p.created_at DESC
+        </otherwise>
+    </choose>
 
     LIMIT #{limit}
 </select>

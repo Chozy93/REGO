@@ -32,9 +32,9 @@ public class MainProductListService {
     최근 등록 상품 (정렬)
     MAIN01_SORT_ORDER
  ========================= */
-    public List<MainProductCardVO> getRecentProducts(Long userId, MainProductSortConditionVO condition) {
+    public List<MainProductCardVO> getRecentProducts(Long userId, MainProductSortConditionVO condition, String region) {
         List<MainProductListDTO> list =
-                mainProductMapper.selectRecentProductsWithSort(userId, condition.getSort());
+                mainProductMapper.selectRecentProductsWithSort(userId, condition.getSort(), region);
         return list.stream().map(this::toCardVO).toList();
     }
 
@@ -42,9 +42,9 @@ public class MainProductListService {
      * 인기 상품
      * MAIN01_POPULAR
      ========================= */
-    public List<MainProductCardVO> getPopularProducts(Long userId) {
+    public List<MainProductCardVO> getPopularProducts(Long userId, String sort, String region) {
         List<MainProductListDTO> list =
-                mainProductMapper.selectPopularProducts(userId, POPULAR_LIMIT);
+                mainProductMapper.selectPopularProducts(userId, POPULAR_LIMIT, sort, region);
         return list.stream().map(this::toCardVO).toList();
     }
 
