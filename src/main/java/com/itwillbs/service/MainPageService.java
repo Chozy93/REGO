@@ -1,5 +1,6 @@
 package com.itwillbs.service;
 
+import com.itwillbs.security.util.SecurityUtil;
 import com.itwillbs.view.MainPageVO;
 import com.itwillbs.view.MainProductCardVO;
 import com.itwillbs.view.condition.MainProductSortConditionVO;
@@ -14,21 +15,39 @@ import java.util.List;
 public class MainPageService {
 
     private final MainProductListService mainProductListService;
+    private final MainRecentViewService mainRecentViewService;
 
-    public MainPageVO getMainPage(String sort, Long userId) {
+    public MainPageVO getMainPage(String sort, String recentIds, String region) {
 
-        MainProductSortConditionVO condition =
-                new MainProductSortConditionVO(sort);
+        Long userId = SecurityUtil.getCurrentUserId(); // 로그인 아니면 null
+
+        MainProductSortConditionVO condition = new MainProductSortConditionVO(sort);
 
         List<MainProductCardVO> aiProducts =
-                Collections.emptyList(); // 아직 미구현
+                mainProductListService.getPopularProducts(userId, sort, region);
 
         List<MainProductCardVO> popularProducts =
-                mainProductListService.getPopularProducts(userId);
+                mainProductListService.getPopularProducts(userId, sort, region);
 
         List<MainProductCardVO> recentProducts =
-                mainProductListService.getRecentProducts(condition, userId);
+                mainProductListService.getRecentProducts(userId, condition, region);
 
-        return new MainPageVO(aiProducts, popularProducts, recentProducts);
+        boolean isLogin = SecurityUtil.isAuthenticated();
+
+        List<MainProductCardVO> recentView =
+        	    mainRecentViewService.getRecentView(recentIds);
+
+        	MainPageVO page =
+        	    new MainPageVO(
+        	        isLogin,
+        	        aiProducts,
+        	        popularProducts,
+        	        recentProducts, // 최근 등록
+        	        recentView      // 최근 본
+        	    );
+
+        	return page;
+
     }
+    
 }

@@ -3,29 +3,80 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
 
-<div layout:fragment="content">
+<!-- =========================
+     PAGE CSS
+========================= -->
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" th:href="@{/css/product/list.css}">
+</th:block>
 
-    <!-- ✅ 카테고리 제목 -->
-    <h2 th:text="${page.categoryName}">카테고리</h2>
+<!-- =========================
+     CONTENT
+========================= -->
+<div class="container-content" layout:fragment="content">
 
-    <!-- ✅ 상품 목록 -->
-    <section class="product-list">
+  <!-- =========================
+       CATEGORY BAR
+  ========================= -->
+  <!-- =========================
+       CATEGORY BAR (DROPDOWN)
+  ========================= -->
+  <section class="category-bar">
 
-        <!-- ❌ 상품 없을 때 -->
-        <div th:if="${#lists.isEmpty(page.cards)}" class="empty">
-            해당 카테고리에 등록된 상품이 없습니다.
-        </div>
+    <div class="category-dropdown">
 
-        <!-- ✅ 상품 있을 때 -->
-        <div class="product-grid"
-             th:if="${!#lists.isEmpty(page.cards)}">
+      <!-- 드롭다운 버튼 (대분류) -->
+      <button type="button" class="dropdown-toggle">
+        <span th:text="${page.categoryGroup.parentCategoryName}">
+          디지털기기
+        </span>
+        <svg class="dropdown-arrow"
+             width="14" height="14" viewBox="0 0 24 24">
+          <path d="M7 10l5 5 5-5z"/>
+        </svg>
+      </button>
 
-            <div th:each="card : ${page.cards}"
-                 th:replace="~{fragments/product-card :: card(card=${card})}">
-            </div>
+      <!-- 드롭다운 메뉴 (소분류) -->
+      <ul class="dropdown-menu">
+        <li th:each="tab : ${page.categoryGroup.subCategories}"
+            th:classappend="${tab.selected} ? 'active'">
 
-        </div>
-    </section>
+          <a th:href="@{/products(categoryId=${tab.categoryId})}"
+             th:text="${tab.categoryName}">
+            소분류명
+          </a>
+
+        </li>
+      </ul>
+
+    </div>
+
+  </section>
+
+  <!-- =========================
+       PRODUCT LIST
+  ========================= -->
+  <section class="product-list">
+
+    <!-- 상품 없음 -->
+	<div class="empty-result"
+	     th:if="${#lists.isEmpty(page.productList.products)}">
+	    등록된 상품이 없습니다.
+	</div>
+
+	<!-- 상품 리스트 -->
+	<div class="product-grid"
+	     th:if="${!#lists.isEmpty(page.productList.products)}">
+
+	  <th:block th:each="card : ${page.productList.products}">
+		<th:block
+		  th:replace="fragments/product-card :: productCard(${card})">
+		</th:block>
+	  </th:block>
+
+	</div>
+
+  </section>
 
 </div>
 </html>

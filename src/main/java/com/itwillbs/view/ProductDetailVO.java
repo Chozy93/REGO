@@ -1,7 +1,16 @@
 package com.itwillbs.view;
 
+import com.itwillbs.dto.ProductDetailDTO;
+import com.itwillbs.entity.enumtype.ProductSalesStatus;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Collections;
 import java.util.List;
 
+@Getter
+@Setter
 public class ProductDetailVO {
 
     /* ===== 상품 기본 ===== */
@@ -10,7 +19,8 @@ public class ProductDetailVO {
     private final int price;
     private final String priceDisplay;
     private final String description;
-
+    private String mainImageUrl;
+    
     /* ===== 이미지 ===== */
     private final List<String> imageUrls;
 
@@ -22,73 +32,95 @@ public class ProductDetailVO {
     /* ===== 상태 / 통계 ===== */
     private final String conditionLabel;
     private final int viewCount;
-    private int likeCount;          // ⭐ 변경 가능
+    private int likeCount;
     private final int chatCount;
-    private boolean liked;          // ⭐ 변경 가능
+    private boolean liked;
+    
+    /* ===== 카테고리 ===== */
+    private final String categoryId;           // 소분류 ID
+    private final String categoryName;         // 소분류 이름
+    private final String parentCategoryId;     // 대분류 ID
+    private final String parentCategoryName;   // 대분류 이름
+
+    
+    /* ===== 판매 상태 ===== */
+    private final String salesStatusCode;   // ON_SALE / RESERVED / SOLD
+    private final String salesStatusLabel;  // 판매중 / 예약중 / 판매완료
+
 
     /* ===== UI 표시용 ===== */
     private final String createdAtDisplay;
 
-    public ProductDetailVO(
-            String productId,
-            String productName,
-            int price,
-            String priceDisplay,
-            String description,
-            List<String> imageUrls,
-            String sellerNickname,
-            String sellerRegion,
-            String sellerTemperature,
-            String conditionLabel,
-            int viewCount,
-            int likeCount,
-            int chatCount,
-            boolean liked,
-            String createdAtDisplay
-    ) {
-        this.productId = productId;
-        this.productName = productName;
-        this.price = price;
-        this.priceDisplay = priceDisplay;
-        this.description = description;
-        this.imageUrls = imageUrls;
-        this.sellerNickname = sellerNickname;
-        this.sellerRegion = sellerRegion;
-        this.sellerTemperature = sellerTemperature;
-        this.conditionLabel = conditionLabel;
-        this.viewCount = viewCount;
-        this.likeCount = likeCount;
-        this.chatCount = chatCount;
-        this.liked = liked;
-        this.createdAtDisplay = createdAtDisplay;
+    /* ===== 판매자 카드 ===== */
+    private ProductSellerInfoVO seller;
+
+    /* =========================
+       ✅ DTO 기반 생성자 (핵심)
+    ========================= */
+    public ProductDetailVO(ProductDetailDTO dto) {
+
+        this.productId = String.valueOf(dto.getProductId());
+        this.productName = dto.getProductName();
+        this.price = dto.getPrice();
+        this.priceDisplay = dto.getPriceDisplay();
+        this.mainImageUrl = dto.getMainImageUrl();
+
+        /* DETAIL01_INFO */
+        this.description =
+            dto.getDescription() != null && !dto.getDescription().isBlank()
+                ? dto.getDescription()
+                : """
+                  판매자가 상품 설명을 아직 작성하지 않았습니다.
+
+                  · 상품 상태는 사진을 참고해주세요.
+                  · 직거래 / 택배 거래 모두 가능합니다.
+                  · 추가 문의는 채팅으로 부탁드립니다.
+                  """;
+
+        /* 이미지 */
+        this.imageUrls =
+            dto.getImageUrls() != null
+                ? dto.getImageUrls()
+                : Collections.emptyList();
+
+        /* 판매자 */
+        this.sellerNickname =
+            dto.getSellerNickname() != null ? dto.getSellerNickname() : "알 수 없음";
+        this.sellerRegion =
+            dto.getSellerRegion() != null ? dto.getSellerRegion() : "";
+        this.sellerTemperature =
+            String.valueOf(dto.getSellerTemperature());
+
+        /* 상태 / 통계 */
+        this.conditionLabel = dto.getConditionLabel();
+        this.viewCount = dto.getViewCount();
+        this.likeCount = dto.getLikeCount();
+        this.chatCount = 0; // 데이터 없으면 기본값
+        this.liked = dto.isLiked();
+        
+        /* ===== 판매 상태 (DETAIL01_STATUS 핵심) ===== */
+        ProductSalesStatus status = dto.getSalesStatus();
+        this.salesStatusCode = status.name();
+        this.salesStatusLabel = status.getLabel();
+
+        this.createdAtDisplay = dto.getCreatedAtDisplay();
+        
+        /* ===== 카테고리 ===== */
+        this.categoryId =
+                dto.getCategoryId() != null
+                        ? String.valueOf(dto.getCategoryId())
+                        : null;
+
+        this.categoryName = dto.getCategoryName();
+
+        this.parentCategoryId =
+                dto.getParentCategoryId() != null
+                        ? String.valueOf(dto.getParentCategoryId())
+                        : null;
+
+        this.parentCategoryName = dto.getParentCategoryName();
+
     }
 
-    /* ===== Getter (Thymeleaf 필수) ===== */
-    public String getProductId() { return productId; }
-    public String getProductName() { return productName; }
-    public int getPrice() { return price; }
-    public String getPriceDisplay() { return priceDisplay; }
-    public String getDescription() { return description; }
-    public List<String> getImageUrls() { return imageUrls; }
-
-    public String getSellerNickname() { return sellerNickname; }
-    public String getSellerRegion() { return sellerRegion; }
-    public String getSellerTemperature() { return sellerTemperature; }
-
-    public String getConditionLabel() { return conditionLabel; }
-    public int getViewCount() { return viewCount; }
-    public int getLikeCount() { return likeCount; }
-    public int getChatCount() { return chatCount; }
-    public boolean isLiked() { return liked; }
-
-    public String getCreatedAtDisplay() { return createdAtDisplay; }
-
-    /* ===== Setter (찜 동기화용) ===== */
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
-    }
-
-    public void setLiked(boolean liked) {
-        this.liked = liked;
-    }
+    /* ===== getter / setter는 기존 그대로 유지 ===== */
 }

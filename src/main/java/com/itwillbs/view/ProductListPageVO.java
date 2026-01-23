@@ -1,23 +1,24 @@
 package com.itwillbs.view;
 
 import java.util.List;
+
+import com.itwillbs.view.product.list.CategoryBarVO;
+
 import lombok.Getter;
-import lombok.Setter;
+
 
 @Getter
 public class ProductListPageVO {
 
-    private final Long categoryId;
-
-    // 🔥 product-card fragment와 의미 맞춤
+    private final CategoryBarVO categoryBar;   // ⭐ LIST00 핵심
     private final List<MainProductCardVO> cards;
 
-    // ✅ 카테고리 이름
-    @Setter
-    private String categoryName;
-
-    public ProductListPageVO(Long categoryId, List<MainProductCardVO> cards) {
-        this.categoryId = categoryId;
-        this.cards = cards;
+    public ProductListPageVO(
+            CategoryBarVO categoryBar,
+            List<MainProductCardVO> cards
+    ) {
+        this.categoryBar = categoryBar;
+        this.cards = cards != null ? cards : List.of();
     }
 }
+

@@ -1,17 +1,11 @@
 package com.itwillbs.controller;
 
-import com.itwillbs.domain.user.UserVO;
-import com.itwillbs.security.CustomUserDetails;
+import com.itwillbs.security.util.SecurityUtil;
 import com.itwillbs.service.ProductLikeService;
 import com.itwillbs.view.ProductLikeResultVO;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -22,30 +16,17 @@ public class ProductLikeController {
 
     @PostMapping("/{productId}/like")
     public ProductLikeResultVO toggleLike(
-            @PathVariable("productId") Long productId,
-            Authentication authentication
+    		@PathVariable("productId") Long productId
     ) {
+        // ✅ 로그인 사용자 ID 조회
+    	Long userId = SecurityUtil.getCurrentUserId();
+    	System.out.println("🔥 LOGIN USER ID = " + userId);
 
-        if (authentication == null || !authentication.isAuthenticated()) {
-            System.out.println("🚩 로그인이 되어 있지 않습니다.");
-            return null; 
+        if (userId == null) {
+            throw new IllegalStateException("로그인이 필요합니다.");
         }
 
-        Object principal = authentication.getPrincipal();
-        
-        if (principal instanceof CustomUserDetails) {
-            CustomUserDetails userDetails = (CustomUserDetails) principal;
-            
-
-            Long userId = userDetails.getUser().getUserId();
-            
-            System.out.println("🚩 시큐리티에서 찾은 유저 ID: " + userId);
-            return productLikeService.toggleLike(productId, userId);
-        }
-
-        System.out.println("🚩 유저 정보를 확인할 수 없습니다.");
-        return null;
+        return productLikeService.toggleLike(productId, userId);
     }
-
 }
 

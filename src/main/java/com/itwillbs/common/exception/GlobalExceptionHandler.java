@@ -130,5 +130,6 @@ public class GlobalExceptionHandler {
         }
 
         return contentType != null && contentType.contains("application/json");
+
     }
 }

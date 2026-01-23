@@ -1,163 +1,168 @@
 <!DOCTYPE html>
-
 <!-- 이부분은 그대로 따라쓰기 -->
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
-      layout:decorate="~{layout/base}">
-      
-<!-- 여기에 본인이 작성한 css파일 불러오기 -->      
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{layout/base}">
+
+<!-- 여기에 본인이 작성한 css파일 불러오기 -->
 <th:block th:fragment="pageCss">
-    <link rel="stylesheet" href="/css/payment/direct-payment.css">
-  
+<link rel="stylesheet" href="/css/payment/direct-payment.css">
+</th:block>
+
+<th:block th:fragment="pageJs">
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="/js/payment/postcode.js"></script>
 </th:block>
 
 
+
 <div layout:fragment="content">  
-	<header class="header">
-	        <div class="container header-content">
-	            <button class="back-btn" onclick="history.back()">
-	                <span class="material-symbols-outlined">arrow_back</span>
-	            </button>
-	            <h1 class="page-title">주문/결제</h1>
-	        </div>
-	    </header>
+    <header class="header">
+        <div class="container header-content">
+            <button class="back-btn" onclick="history.back()">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <h1 class="page-title">주문/결제</h1>
+        </div>
+    </header>
 
-	    <main class="container">
-	        <form class="checkout-layout" onsubmit="event.preventDefault();">
-	            
-	            <div class="checkout-main">
-	                
-	                <section class="card">
-	                    <h2 class="card-title">
-	                        <span class="material-symbols-outlined icon-primary">shopping_bag</span>
-	                        주문 상품
-	                    </h2>
-	                    <div class="product-item">
-	                        <div class="product-img">
-	                            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYKjjWGnqVvpc14-N9HOE7NbUuwGjTYHULdaqDXo9IMtvlUkp_4Cb7W36LAAhR6_VmL8Y96WuXEUqI55KQFIzv1ACVvHp0HG23agwo1-rKLK9z6Bm79kAN8PG-6jI2FTFEMs1N1uMAoRwrUBeBGpjem2EyhntOSWzfpRrSPuYbUESs__c_UIyE4pciiPBnn1pIjIsevzF_qh4bR0U3o-ZbRdFBe1bsxlgpiGqdCOQFs-WWCzBJhQnjNhmAn2WS0uyWLYaBPbUL1Lg" alt="상품 이미지">
-	                        </div>
-	                        <div class="product-info">
-								<!--나중에 product 상세페이지에서 가지고 올 값 (지금은 mock data로 구현해 놓음)-->							
-	                            <span class="category">디지털/가전</span>
-	                            <h3 class="product-name">필름 카메라 입문용 팝니다</h3>
-	                            <div class="product-price">120,000원</div>
-	                        </div>
-	                    </div>
-	                </section>
+    <main class="container">
+        <form class="checkout-layout" th:action="@{/direct}" method="post">
+            <input type="hidden" name="productId" th:value="${product.productId}">
+			<input type="hidden" name="sellerId" th:value="${product.seller.userId}">
+			<input type="hidden" name="dealType" value="DELIVERY">
+            
+            <div class="checkout-main">
+                <section class="card">
+                    <h2 class="card-title">
+                        <span class="material-symbols-outlined icon-primary">shopping_bag</span>
+                        주문 상품
+                    </h2>
+                    <div class="product-item">
+                        <div class="product-img">
+                            <img th:src="${product.mainImageUrl ?: '/images/default-product.png'}" alt="상품 이미지">
+                        </div>
+                        <div class="product-info">
+							<span class="category" 
+							          th:text="${product.category.parent != null ? 
+							                    product.category.parent.name + ' > ' + product.category.name : 
+							                    product.category.name}">
+							        디지털 기기 > 모바일
+							    </span>
+                            <h3 class="product-name" th:text="${product.productName}">상품명</h3>
+                            <div class="product-price" th:text="${#numbers.formatInteger(product.price, 3, 'COMMA') + '원'}">0원</div>
+                        </div>
+                    </div>
+                </section>
 
-	                <section class="card">
-	                    <div class="card-header">
-	                        <h2 class="card-title">
-	                            <span class="material-symbols-outlined icon-primary">local_shipping</span>
-	                            배송지 정보
-	                        </h2>
-	                        <button type="button" class="btn-text">변경하기</button>
-	                    </div>
-	                    
-	                    <div class="form-grid">
-	                        <div class="form-group">
-	                            <label>받는 분</label>
-	                            <input type="text" value="김철수" class="input-field">
-	                        </div>
-	                        <div class="form-group">
-	                            <label>연락처</label>
-	                            <input type="tel" value="010-1234-5678" class="input-field">
-	                        </div>
-	                    </div>
+                <section class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span class="material-symbols-outlined icon-primary">local_shipping</span>
+                            배송지 정보
+                        </h2>
+                        <button type="button" class="btn-text">변경하기</button>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>받는 분</label>
+                            <input type="text" name="receiverName" th:value="${userInfo?.username}" class="input-field" placeholder="이름을 입력하세요">
+                        </div>
+                        <div class="form-group">
+                            <label>연락처</label>
+                            <input type="tel" name="receiverPhone" th:value="${userInfo?.phoneNumber}" class="input-field" placeholder="010-0000-0000">
+                        </div>
+                    </div>
 
-	                    <div class="form-group">
-	                        <label>주소</label>
-	                        <div class="zipcode-box">
-	                            <input type="text" value="06234" readonly class="input-field align-center">
-	                            <button type="button" class="btn-secondary">우편번호 검색</button>
-	                        </div>
-	                        <input type="text" value="서울 강남구 테헤란로 123" readonly class="input-field mb-2">
-	                        <input type="text" value="역삼하이츠 101호" placeholder="상세주소 입력" class="input-field">
-	                    </div>
+                    <div class="form-group">
+                        <label>주소</label>
+                        <div class="zipcode-box">
+                            <input type="text" name="zipCode" th:value="${userAddress?.zipCode}" readonly class="input-field align-center">
+                            <button type="button" class="btn-secondary" onclick="execDaumPostcode()">우편번호 검색</button>
+                        </div>
+                        <input type="text" name="address" th:value="${userAddress?.address}" readonly class="input-field mb-2">
+                        <input type="text" name="addressDetail" th:value="${userAddress?.addressDetail}" placeholder="상세주소 입력" class="input-field">
+                    </div>
 
-	                    <div class="form-group">
-	                        <label>배송 요청사항</label>
-	                        <select class="input-field">
-	                            <option>문 앞에 놓아주세요</option>
-	                            <option>경비실에 맡겨주세요</option>
-	                            <option>배송 전 연락바랍니다</option>
-	                            <option>직접 입력</option>
-	                        </select>
-	                    </div>
-	                </section>
+                    <div class="form-group">
+                        <label>배송 요청사항</label>
+                        <select name="deliveryRequest" id="deliverySelect" class="input-field">
+                            <option value="문 앞에 놓아주세요">문 앞에 놓아주세요</option>
+                            <option value="경비실에 맡겨주세요">경비실에 맡겨주세요</option>
+                            <option value="배송 전 연락바랍니다">배송 전 연락바랍니다</option>
+                            <option value="직접 입력">직접 입력</option>
+                        </select>
+						
+						<input type="text" id="directInput" name="deliveryRequestDirect" 
+						           class="input-field mt-2" placeholder="요청사항을 직접 입력해주세요" 
+						           style="display: none; margin-top: 10px;">
+                    </div>
+					
+                </section>
 
-	                <section class="card">
-	                    <h2 class="card-title">
-	                        <span class="material-symbols-outlined icon-primary">payments</span>
-	                        결제 수단
-	                    </h2>
-	                    <div class="payment-methods">
-	                        <label class="payment-option">
-	                            <input type="radio" name="payment" checked>
-	                            <div class="payment-box">
-	                                <span class="material-symbols-outlined">credit_card</span>
-	                                신용/체크카드
-	                            </div>
-	                        </label>
-	                        <label class="payment-option">
-	                            <input type="radio" name="payment">
-	                            <div class="payment-box">
-	                                <span class="material-symbols-outlined">bolt</span>
-	                                RE:PAY
-	                            </div>
-	                        </label>
-	                    </div>
-	                </section>
-	            </div>
+                <section class="card">
+                    <h2 class="card-title">
+                        <span class="material-symbols-outlined icon-primary">payments</span>
+                        결제 수단
+                    </h2>
+                    <div class="payment-methods">
+                        <label class="payment-option">
+                            <input type="radio" name="paymentType" value="CARD" checked>
+                            <div class="payment-box">
+                                <span class="material-symbols-outlined">credit_card</span>
+                                신용/체크카드
+                            </div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentType" value="REPAY">
+                            <div class="payment-box">
+                                <span class="material-symbols-outlined">bolt</span>
+                                RE:PAY 
+                                <small style="display:block; color:#666;" 
+                                       th:text="'(잔액: ' + ${#numbers.formatInteger(walletInfo?.balance ?: 0, 0, 'COMMA')} + '원)'">
+                                </small>
+                            </div>
+                        </label>
+                    </div>
+                </section>
+            </div>
 
-	            <aside class="checkout-sidebar">
-	                <div class="sticky-wrapper">
-	                    <section class="card summary-card">
-	                        <h2 class="card-title">결제 금액</h2>
-	                        
-	                        <div class="price-list">
-	                            <div class="price-row">
-	                                <span>상품 금액</span>
-	                                <span>120,000원</span>
-	                            </div>
-	                            <div class="price-row">
-	                                <span>배송비</span>
-	                                <span>+ 4,000원</span>
-	                            </div>
-	                            <div class="price-row">
-	                                <span>할인 금액</span>
-	                                <span class="text-primary">- 0원</span>
-	                            </div>
-	                        </div>
+            <aside class="checkout-sidebar">
+                <div class="sticky-wrapper">
+                    <section class="card summary-card">
+                        <h2 class="card-title">결제 금액</h2>
+                        
+                        <div class="price-list">
+                            <div class="price-row">
+                                <span>상품 금액</span>
+                                <span th:text="${#numbers.formatInteger(product.price, 0, 'COMMA') + '원'}">0원</span>
+                            </div>
+                            <div class="price-row">
+                                <span>배송비</span>
+                                <span>+ 0원</span> </div>
+                            <div class="price-row">
+                                <span>할인 금액</span>
+                                <span class="text-primary">- 0원</span>
+                            </div>
+                        </div>
 
-	                        <div class="total-row">
-	                            <span>최종 결제 금액</span>
-	                            <span class="total-price">124,000원</span>
-	                        </div>
+                        <div class="total-row">
+                            <span>최종 결제 금액</span>
+                            <span class="total-price" th:text="${#numbers.formatInteger(product.price, 0, 'COMMA') + '원'}">0원</span>
+                        </div>
 
-	                        <div class="terms-check">
-	                            <input type="checkbox" id="terms">
-	                            <label for="terms">주문 내용을 확인하였으며, 정보 제공 등에 동의합니다.</label>
-	                        </div>
-
-	                        <button type="submit" class="btn-primary">
-	                            결제하기
-	                        </button>
-	                    </section>
-
-	                    <div class="safe-notice">
-	                        <p class="notice-title">
-	                            <span class="material-symbols-outlined filled">verified_user</span>
-	                            안전한 거래를 위해 RE:GO 안전결제가 적용됩니다.
-	                        </p>
-	                        <p class="notice-desc">
-	                            구매자가 상품을 받고 '구매확정'을 눌러야 판매자에게 입금됩니다.
-	                        </p>
-	                    </div>
-	                </div>
-	            </aside>
-
-	        </form>
-	    </main>
+                        <div class="terms-check">
+                            <input type="checkbox" id="terms" required>
+                            <label for="terms">주문 내용을 확인하였으며, 정보 제공 등에 동의합니다.</label>
+                        </div>
+						<input type="hidden" name="totalAmount" th:value="${product.price}">
+                        <button type="submit" class="btn-primary">
+                            <span th:text="${#numbers.formatInteger(product.price, 0, 'COMMA') + '원'}">0원</span> 결제하기
+                        </button>
+                    </section>
+                </div>
+            </aside>
+        </form>
+    </main>
 </div>
-</html>
