@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.itwillbs.domain.user.UserVO;
-import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.security.util.SecurityUtil;
 import com.itwillbs.service.CategoryService;
 import com.itwillbs.service.ChatService;
@@ -15,16 +14,17 @@ import lombok.RequiredArgsConstructor;
 
 @ControllerAdvice
 @RequiredArgsConstructor
-public class GlobalViewControllerAdvice  {
+public class GlobalViewControllerAdvice {
 
-    private final CategoryService categoryService;	
-    private final ChatService chatService;	
+    private final CategoryService categoryService;
+    private final ChatService chatService;
 
     @ModelAttribute("headerCategoryListVO")
     public HeaderCategoryListVO headerCategories(HttpSession session) {
 
-        HeaderCategoryListVO cached =
-                (HeaderCategoryListVO) session.getAttribute("headerCategoryListVO");
+        try {
+            HeaderCategoryListVO cached =
+                    (HeaderCategoryListVO) session.getAttribute("headerCategoryListVO");
 
             if (cached != null) {
                 return cached;
@@ -45,30 +45,28 @@ public class GlobalViewControllerAdvice  {
             // 🔥 에러 페이지에서도 살아야 함
             return HeaderCategoryListVO.empty();
         }
-
-        HeaderCategoryListVO categoryList =
-                categoryService.getHeaderCategories();
-
-        session.setAttribute("headerCategoryListVO", categoryList);
-        return categoryList;
     }
-    
-    
+
     @ModelAttribute("loginUser")
     public UserVO loginUser() {
-    	  System.out.println("🔐 loginUser = " + SecurityUtil.getCurrentUserVO());
-        return SecurityUtil.getCurrentUserVO();
+        try {
+            return SecurityUtil.getCurrentUserVO();
+        } catch (Exception e) {
+            return null;
+        }
     }
-    
+
     @ModelAttribute("hasUnreadChat")
     public boolean hasUnreadChat() {
 
-        Long userId = SecurityUtil.getCurrentUserId();
-        if (userId == null) {
+        try {
+            Long userId = SecurityUtil.getCurrentUserId();
+            if (userId == null) {
+                return false;
+            }
+            return chatService.hasUnreadChat(userId);
+        } catch (Exception e) {
             return false;
         }
-
-        boolean hasUnread = chatService.hasUnreadChat(userId);
-        return hasUnread;
     }
 }
