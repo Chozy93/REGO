@@ -37,7 +37,7 @@ public class GlobalViewControllerAdvice {
             if (categoryList == null) {
                 return HeaderCategoryListVO.empty();
             }
-
+        	System.out.println("카테고리리스트"+categoryList);
             session.setAttribute("headerCategoryListVO", categoryList);
             return categoryList;
 
