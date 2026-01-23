@@ -26,8 +26,24 @@ public class GlobalViewControllerAdvice  {
         HeaderCategoryListVO cached =
                 (HeaderCategoryListVO) session.getAttribute("headerCategoryListVO");
 
-        if (cached != null) {
-            return cached;
+            if (cached != null) {
+                return cached;
+            }
+
+            HeaderCategoryListVO categoryList =
+                    categoryService.getHeaderCategories();
+
+            // 🚨 절대 null 금지
+            if (categoryList == null) {
+                return HeaderCategoryListVO.empty();
+            }
+        	System.out.println("카테고리리스트"+categoryList);
+            session.setAttribute("headerCategoryListVO", categoryList);
+            return categoryList;
+
+        } catch (Exception e) {
+            // 🔥 에러 페이지에서도 살아야 함
+            return HeaderCategoryListVO.empty();
         }
 
         HeaderCategoryListVO categoryList =
