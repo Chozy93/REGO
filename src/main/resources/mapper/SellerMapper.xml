@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itwillbs.mapper.SellerMapper">
+
+  <!-- =========================
+       판매자 프로필 요약
+       ※ seller_profile 캐시 컬럼 사용
+  ========================= -->
+  <select id="selectSellerProfile"
+          parameterType="long"
+          resultType="com.itwillbs.view.seller.SellerProfileViewVO">
+    SELECT
+        u.user_id        AS sellerId,
+        u.nickname       AS nickname,
+        u.profile_img    AS profileImg,
+
+        sp.description   AS description,
+        sp.rating_avg    AS ratingAvg,
+        sp.total_reviews AS totalReviews,
+        sp.total_sales   AS totalSales
+    FROM users u
+    JOIN seller_profile sp
+      ON sp.seller_id = u.user_id
+    WHERE u.user_id = #{sellerId}
+  </select>
+
+  <!-- =========================
+       판매중 상품 (최대 15)
+  ========================= -->
+ <select id="selectSellingProducts"
+        parameterType="long"
+        resultType="com.itwillbs.view.seller.SellerProductCardViewVO">
+  SELECT
+      p.product_id       AS productId,
+      p.product_name     AS title,
+      p.price            AS price,
+      p.main_image_url   AS thumbnailUrl,
+      p.created_at       AS createdAt
+  FROM products p
+  WHERE p.seller_id = #{sellerId}
+    AND p.sales_status = 'ON_SALE'
+  ORDER BY p.created_at DESC
+  LIMIT 15
+</select>
+
+
+  <!-- =========================
+       거래완료 상품 (최대 15)
+  ========================= -->
+ <select id="selectCompletedProducts"
+        parameterType="long"
+        resultType="com.itwillbs.view.seller.SellerProductCardViewVO">
+  SELECT
+      p.product_id       AS productId,
+      p.product_name     AS title,
+      p.price            AS price,
+      p.main_image_url   AS thumbnailUrl,
+      p.updated_at       AS createdAt
+  FROM products p
+  WHERE p.seller_id = #{sellerId}
+    AND p.sales_status = 'SOLD'
+  ORDER BY p.updated_at DESC
+  LIMIT 15
+</select>
+
+
+  <!-- =========================
+       판매자 후기 목록
+       - reviews 테이블
+       - 정렬 4종
+       - offset / size
+  ========================= -->
+  <select id="selectSellerReviews"
+        resultType="com.itwillbs.view.seller.SellerReviewViewVO">
+
+  SELECT
+      r.id                 AS reviewId,
+      r.rating             AS rating,
+      r.content            AS content,
+      r.created_at         AS createdAt,
+
+      bu.nickname          AS buyerNickname,
+      bu.profile_img       AS buyerProfileImg,
+
+      p.product_id         AS productId,
+      p.product_name       AS productTitle,
+      p.main_image_url     AS productThumbnailImg
+
+  FROM reviews r
+  JOIN users bu
+    ON bu.user_id = r.buyer_id
+  JOIN products p
+    ON p.product_id = r.product_id
+  WHERE r.seller_id = #{sellerId}
+
+  <choose>
+    <when test="condition.sortType.name() == 'LATEST'">
+      ORDER BY r.created_at DESC
+    </when>
+    <when test="condition.sortType.name() == 'OLDEST'">
+      ORDER BY r.created_at ASC
+    </when>
+    <when test="condition.sortType.name() == 'RATING_DESC'">
+      ORDER BY r.rating DESC
+    </when>
+    <otherwise>
+      ORDER BY r.rating ASC
+    </otherwise>
+  </choose>
+
+  LIMIT #{size} OFFSET #{offset}
+</select>
+
+
+</mapper>

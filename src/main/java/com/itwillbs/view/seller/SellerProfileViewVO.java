@@ -1,6 +1,5 @@
 package com.itwillbs.view.seller;
 
-import com.itwillbs.domain.SellerProfileVO;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -8,24 +7,37 @@ import lombok.ToString;
 @ToString
 public class SellerProfileViewVO {
 
+    /* =========================
+       seller
+    ========================= */
     private final Long sellerId;
+    private final String nickname;
+    private final String profileImg;
 
     private final String description;
 
     private final double ratingAvg;
-    private final int ratingCount;
-    private final int totalSales;
     private final int totalReviews;
+    private final int totalSales;
 
-    private final String sellerStatusLabel;
-
-    public SellerProfileViewVO(SellerProfileVO vo) {
-        this.sellerId = vo.getSellerId();
-        this.description = vo.getDescription();
-        this.ratingAvg = vo.getRatingAvg();
-        this.ratingCount = vo.getRatingCount();
-        this.totalSales = vo.getTotalSales();
-        this.totalReviews = vo.getTotalReviews();
-        this.sellerStatusLabel = vo.getSellerStatusLabel();
+    /* =========================
+       생성자 (MyBatis 직행)
+    ========================= */
+    public SellerProfileViewVO(
+            Long sellerId,
+            String nickname,
+            String profileImg,
+            String description,
+            double ratingAvg,
+            int totalReviews,
+            int totalSales
+    ) {
+        this.sellerId = sellerId;
+        this.nickname = nickname;
+        this.profileImg = profileImg;
+        this.description = description;
+        this.ratingAvg = ratingAvg;
+        this.totalReviews = totalReviews;
+        this.totalSales = totalSales;
     }
 }

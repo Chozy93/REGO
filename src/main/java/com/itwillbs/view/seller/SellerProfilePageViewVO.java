@@ -5,21 +5,22 @@ import java.util.List;
 import lombok.Getter;
 import lombok.ToString;
 
+
 @Getter
 @ToString
 public class SellerProfilePageViewVO {
 
     private final SellerProfileViewVO profile;
 
-    private final List<SellerSellingProductViewVO> sellingProducts;
-    private final List<SellerCompletedProductViewVO> completedProducts;
+    private final List<SellerProductCardViewVO> sellingProducts;
+    private final List<SellerProductCardViewVO> completedProducts;
 
     private final List<SellerReviewViewVO> reviews;
 
     public SellerProfilePageViewVO(
             SellerProfileViewVO profile,
-            List<SellerSellingProductViewVO> sellingProducts,
-            List<SellerCompletedProductViewVO> completedProducts,
+            List<SellerProductCardViewVO> sellingProducts,
+            List<SellerProductCardViewVO> completedProducts,
             List<SellerReviewViewVO> reviews
     ) {
         this.profile = profile;
