@@ -50,6 +50,20 @@
           </div>
         </div>
       </section>
+	  
+	  <div class="filter-indicator-container" th:if="${currentRegion != null and currentRegion != ''}" 
+	       style="margin: 20px 0; padding: 15px 20px; background: #fff; border: 1px solid #eee; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+	      <div style="display: flex; align-items: center; gap: 8px;">
+	          <span class="material-symbols-outlined" style="color: #ff5a5f;">location_on</span>
+	          <span style="font-size: 1.1em;">
+	              <strong th:text="${currentRegion}" style="color: #333;">서울특별시 강남구</strong> 지역 상품 결과입니다.
+	          </span>
+	      </div>
+	      <a th:href="@{/(sort=${sort})}" class="filter-reset-btn" 
+	         style="display: flex; align-items: center; gap: 4px; color: #888; text-decoration: none; font-size: 0.9em; padding: 6px 12px; border-radius: 20px; background: #f0f0f0; transition: all 0.2s;">
+	          전체 지역 보기 <span class="material-symbols-outlined" style="font-size: 18px;">close</span>
+	      </a>
+	  </div>
 
       <!-- =========================
            AI 맞춤 상품
@@ -102,6 +116,8 @@
           <div class="swiper-button-next"></div>
         </div>
       </section>
+	  
+
 
       <!-- =========================
            최근 등록 상품

@@ -1,12 +1,21 @@
 package com.itwillbs.entity;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.itwillbs.domain.RegionVO;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.Getter;
 
 @Entity
 @Table(
@@ -36,6 +45,7 @@ public class Region {
     /* =========================
        상위 행정구역 (자기참조)
     ========================= */
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "parent_code",

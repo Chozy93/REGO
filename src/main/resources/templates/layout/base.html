@@ -42,6 +42,7 @@
     <link rel="stylesheet" th:href="@{/css/fragments/header.css}">
     <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">
     <link rel="stylesheet" th:href="@{/css/fragments/category-modal.css}">
+	<link rel="stylesheet" th:href="@{/css/fragments/region.css}">
 
 <!--    <link rel="stylesheet" th:href="@{/css/modal.css}">-->
 
@@ -81,7 +82,7 @@
 ================================================== -->
 <!--<th:block th:replace="fragments/login-modal :: loginModal"></th:block>-->
 <div th:replace="fragments/category-modal :: category-modal"></div>
-
+<div th:replace="~{fragments/region-modal :: region-modal}"></div>
 
 <!-- ==================================================
      Global JS
@@ -89,6 +90,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script th:src="@{/js/common.js}"></script>
 <script th:src="@{/js/fragments/header.js}"></script>
+<script th:src="@{/js/region/region.js}"></script>
 
 <!-- ==================================================
      Page JS Slot
