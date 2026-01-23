@@ -1,5 +1,5 @@
 /**
- * 결제 성공 페이지에서 판매자에게 채팅하기 버튼 클릭 시 호출
+ * 판매자에게 채팅하기 버튼 클릭 시 호출
  */
 function goToChat(productId) {
     if (!productId) {
