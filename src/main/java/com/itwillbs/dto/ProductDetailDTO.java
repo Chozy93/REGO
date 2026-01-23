@@ -35,6 +35,13 @@ public class ProductDetailDTO {
     private int likeCount;
     private boolean liked;
     
+    // ✅ 카테고리용 (추가)
+    private Long categoryId;          // 소분류 ID
+    private String categoryName;      // 소분류 이름
+
+    private Long parentCategoryId;    // 대분류 ID
+    private String parentCategoryName;// 대분류 이름
+    
     /* ====== 판매 상태 ====== */
     private ProductSalesStatus salesStatus;   // DTO에서는 enum 허용
 

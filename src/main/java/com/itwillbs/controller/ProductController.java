@@ -9,18 +9,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.itwillbs.entity.User;
 import com.itwillbs.repository.UserRepository;
 import com.itwillbs.security.util.SecurityUtil;
+import com.itwillbs.service.ProductCategoryService;
 import com.itwillbs.service.ProductDetailService;
 import com.itwillbs.service.ProductListService;
 import com.itwillbs.service.ProductReportService;
 import com.itwillbs.service.ProductService;
+import com.itwillbs.view.CategoryPageVO;
 import com.itwillbs.view.ProductDetailPageVO;
-import com.itwillbs.view.ProductListPageVO;
-import com.itwillbs.view.condition.ProductListConditionVO;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 // 상품과 관련된 모든 것(등록, 조회, 검색, 수정, 삭제)
@@ -33,6 +32,7 @@ public class ProductController {
     private final ProductListService productListService;
     private final ProductReportService productReportService;
     private final UserRepository userRepository;
+    private final ProductCategoryService productCategoryService;
 
     // TODO: 상품 등록 기능 (2차 구현)
 	@GetMapping("/product/write")
@@ -79,6 +79,23 @@ public class ProductController {
 	                    !alreadyViewed,
 	                    loginUserId   // ✅ Long
 	            );
+	    
+	    System.out.println(
+	    		  "loginUserId=" + loginUserId +
+	    		  ", sellerId=" + page.getSellerInfo().getSellerId() +
+	    		  ", mine=" + page.isMine()
+	    		);
+ 
+	 // 🔥 본인 상품 여부 판단 (Controller 책임)
+	    boolean isMine =
+	    	    loginUserId != null
+	    	    && page.getSellerInfo() != null
+	    	    && loginUserId.equals(
+	    	        Long.valueOf(page.getSellerInfo().getSellerId())
+	    	    );
+
+	    // 👉 PageVO에 결과만 세팅
+	    page.setMine(isMine);
 
 	    model.addAttribute("page", page);
 	    return "product/detail";
@@ -87,15 +104,16 @@ public class ProductController {
 	// ✅ 카테고리별 상품 목록
 	@GetMapping("/products")
 	public String productList(
-	        ProductListConditionVO condition,
-	        Model model
+	    @RequestParam(name = "categoryId", required = false) Long categoryId,
+	    Model model
 	) {
-
-	    ProductListPageVO page =
-	            productListService.getProductListPage(condition);
+	    CategoryPageVO page =
+	        productCategoryService.getCategoryPage(categoryId);
 
 	    model.addAttribute("page", page);
 	    return "product/list";
 	}
+
+
 
 }

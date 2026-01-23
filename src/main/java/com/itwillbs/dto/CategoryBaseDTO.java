@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class CategoryDTO {
+public class CategoryBaseDTO {
 
     private final Long categoryId;
     private final String name;
+    private final Long parentId;
+    private final int level;
 }

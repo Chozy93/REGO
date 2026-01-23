@@ -1,7 +1,10 @@
-// /js/product/detail-report.js
+// detail-report.js
+
 document.addEventListener("click", (e) => {
 
-  /* 신고 모달 열기 */
+  /* =========================
+     신고 모달 열기
+  ========================= */
   const openBtn = e.target.closest("[data-action='open-report-modal']");
   if (openBtn) {
 
@@ -12,12 +15,18 @@ document.addEventListener("click", (e) => {
       return;
     }
 
-    document.getElementById("reportModal")
-      ?.classList.remove("is-hidden");
+    const modal = document.getElementById("reportModal");
+    modal?.classList.remove("is-hidden");
+
+    modal.dataset.productId = openBtn.dataset.productId;
+    modal.dataset.triggerBtnId = "report-btn";
+
     return;
   }
 
-  /* 모달 닫기 (X, 취소) */
+  /* =========================
+     모달 닫기
+  ========================= */
   const closeBtn = e.target.closest("[data-action='close-report-modal']");
   if (closeBtn) {
     document.getElementById("reportModal")
@@ -25,7 +34,6 @@ document.addEventListener("click", (e) => {
     return;
   }
 
-  /* backdrop 클릭 닫기 */
   if (e.target.classList.contains("modal-backdrop")) {
     document.getElementById("reportModal")
       ?.classList.add("is-hidden");
@@ -33,61 +41,66 @@ document.addEventListener("click", (e) => {
   }
 
   /* =========================
-     신고 접수 (서버 연동)
+     신고 접수
   ========================= */
   const submitBtn = e.target.closest("[data-action='submit-report']");
   if (submitBtn) {
 
-    const modal   = document.getElementById("reportModal");
-    const openBtn = document.querySelector("[data-action='open-report-modal']");
+    const modal = document.getElementById("reportModal");
 
-    const reasonEl = modal.querySelector("input[name='report-reason']:checked");
+    const reasonEl =
+      modal.querySelector("input[name='report-reason']:checked");
+
     if (!reasonEl) {
       alert("신고 사유를 선택해주세요.");
       return;
     }
 
-    const productId = openBtn.dataset.productId;
+    const productId = modal.dataset.productId;
 
     fetch(`/product/${productId}/report`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        reasonCode: reasonEl.value
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reasonCode: reasonEl.value })
     })
       .then(res => res.json())
       .then(result => {
 
-        if (!result.success) {
-          alert(result.message);
-
-          // 실패여도 모달 닫기
-          modal.classList.add("is-hidden");
-
-          openBtn.textContent = "신고 완료";
-          openBtn.disabled = true;
-          openBtn.classList.add("is-disabled");
-          return;
-        }
-
-        // 정상 신고
-        alert("신고가 접수되었습니다.");
+        alert(result.message || "신고가 접수되었습니다.");
 
         modal.classList.add("is-hidden");
 
-        openBtn.textContent = "신고 완료";
-        openBtn.disabled = true;
-        openBtn.classList.add("is-disabled");
+        const openBtn =
+          document.querySelector("[data-action='open-report-modal']");
+        if (openBtn) {
+          openBtn.textContent = "신고 완료";
+          openBtn.disabled = true;
+          openBtn.classList.add("is-disabled");
+        }
       })
-      .catch(err => {
-        console.error(err);
+      .catch(() => {
         alert("신고 처리 중 오류가 발생했습니다.");
       });
 
     return;
   }
-
 });
+
+/* =========================
+   신고 사유 선택 시 버튼 활성화
+========================= */
+document.addEventListener("change", (e) => {
+  if (e.target.name === "report-reason") {
+
+    const modal = document.getElementById("reportModal");
+    if (!modal) return;
+
+    const submitBtn =
+      modal.querySelector("[data-action='submit-report']");
+    if (!submitBtn) return;
+
+    submitBtn.disabled = false;
+    submitBtn.classList.remove("is-disabled");
+  }
+});
+
