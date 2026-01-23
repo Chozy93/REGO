@@ -193,8 +193,13 @@ public class OrderController {
     @GetMapping("/direct/success/{orderId}")
     public String orderSuccess(@PathVariable("orderId") Long orderId, 
                                Model model) {
+    	
+    	// 상품 상태를 변경하고 구매자를 등록하는 코드
+    	orderService.completeProductSales(orderId);
+    	
         // 주문 정보를 DB에서 조회 (상품 정보와 연관관계가 맺어져 있어야 함)
         // 예: Order 엔티티 내부에 Product 정보가 포함된 형태
+    	// 화면에 보여줄 주문 상세 정보 조회용 코드
         ProductOrder order = orderService.getOrderById(orderId); 
         
         // HTML에 "order"라는 이름으로 전달
