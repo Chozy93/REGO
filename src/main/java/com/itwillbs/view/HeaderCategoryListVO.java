@@ -22,4 +22,3 @@ public class HeaderCategoryListVO {
         this.categories = categories;
     }
 }
-

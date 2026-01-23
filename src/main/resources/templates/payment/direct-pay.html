@@ -10,8 +10,45 @@ layout:decorate="~{layout/base}">
 </th:block>
 
 <th:block th:fragment="pageJs">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script src="/js/payment/postcode.js"></script>
+	<script src="/js/payment/direct-pay.js"></script>
+	<!--javascript 파일로 현재 페이지 데이터 값 받기-->
+	<script th:inline="javascript">
+	    // 버튼에서 호출할 매개체 함수
+	    function initPayment() {
+	        // /*[[...]]*/ 문법은 Thymeleaf가 자바스크립트 문법 오류를 내지 않도록 보호해줍니다.
+	        const paymentData = {
+	            impCode: /*[[${impCode}]]*/ null,
+	            productName: /*[[${product.productName}]]*/ '상품명',
+	            price: /*[[${product.price}]]*/ 0,
+	            userEmail: /*[[${userInfo?.email}]]*/ '',
+	            userName: /*[[${userInfo?.username}]]*/ ''
+	        };
+	        
+	        console.log("결제 데이터 확인:", paymentData); // 데이터가 잘 들어오는지 확인용
+
+	        // 외부 파일의 함수 호출
+	        if (typeof handlePayment === 'function') {
+	            handlePayment(paymentData);
+	        } else {
+	            console.error("handlePayment 함수를 찾을 수 없습니다. 외부 JS 파일 로드 여부를 확인하세요.");
+	        }
+	    }
+	</script>
+	<!--에러 메시지 출력용-->
+	<script th:inline="javascript">
+	        /*<![CDATA[*/
+	        const errorMessage = /*[[${errorMessage}]]*/ null;
+	        if (errorMessage) {
+	            alert(errorMessage);
+	        }
+	        /*]]>*/
+	    </script>
+	
+	
 </th:block>
 
 
@@ -27,7 +64,7 @@ layout:decorate="~{layout/base}">
     </header>
 
     <main class="container">
-        <form class="checkout-layout" th:action="@{/direct}" method="post">
+        <form id="checkoutForm" class="checkout-layout" th:action="@{/direct}" method="post">
             <input type="hidden" name="productId" th:value="${product.productId}">
 			<input type="hidden" name="sellerId" th:value="${product.seller.userId}">
 			<input type="hidden" name="dealType" value="DELIVERY">
@@ -157,7 +194,7 @@ layout:decorate="~{layout/base}">
                             <label for="terms">주문 내용을 확인하였으며, 정보 제공 등에 동의합니다.</label>
                         </div>
 						<input type="hidden" name="totalAmount" th:value="${product.price}">
-                        <button type="submit" class="btn-primary">
+                        <button type="button" onclick="initPayment()" class="btn-primary">
                             <span th:text="${#numbers.formatInteger(product.price, 0, 'COMMA') + '원'}">0원</span> 결제하기
                         </button>
                     </section>
@@ -166,3 +203,5 @@ layout:decorate="~{layout/base}">
         </form>
     </main>
 </div>
+
+

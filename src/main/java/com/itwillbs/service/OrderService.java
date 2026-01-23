@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import com.itwillbs.dto.OrderRequestDTO;
 import com.itwillbs.entity.Product;
 import com.itwillbs.entity.ProductOrder;
+import com.itwillbs.entity.User;
 import com.itwillbs.entity.UserAddress;
+import com.itwillbs.entity.enumtype.ProductSalesStatus;
 import com.itwillbs.mapper.OrderMapper;
 import com.itwillbs.repository.OrderRepository;
 import com.itwillbs.repository.ProductRepository;
@@ -81,6 +83,23 @@ public class OrderService {
 
         // 생성된 order_id 반환 (MyBatis의 selectKey 또는 generatedKeys 사용)
         return (Long) orderParams.get("orderId");
+    }
+    
+    // 결제 후 product 상태 바꾸는 메서드
+    @Transactional
+    public void completeProductSales(Long orderId) {
+        // 1. 주문서 조회 (주문서에 이미 buyer 정보와 product 정보가 매핑되어 있어야 함)
+        ProductOrder order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문 내역을 찾을 수 없습니다."));
+
+        // 2. 주문서에서 상품과 구매자(현재 결제한 사람) 추출
+        Product product = order.getProduct();
+        User buyer = order.getBuyer();
+
+        // 3. 엔티티 메서드 실행 (상태 SOLD_OUT으로 변경 + 구매자 ID 세팅)
+        product.changeSalesStatus(ProductSalesStatus.RESERVED, buyer);
+        
+        // 💡 별도의 save() 없이도 @Transactional에 의해 메서드 종료 시 자동 업데이트됨
     }
     
     

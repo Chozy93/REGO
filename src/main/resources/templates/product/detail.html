@@ -134,7 +134,8 @@
 
 		  <!-- 바로구매 -->
 		  <button class="btn-dark"
-		          th:disabled="${page.mine}">
+		          th:disabled="${page.mine}"
+				  th:onclick="|location.href='@{/direct(productId=${page.product.productId})}'|">
 		    바로구매
 		  </button>
 

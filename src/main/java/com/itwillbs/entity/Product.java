@@ -177,8 +177,10 @@ private User buyer;
         if (this.likeCount > 0) this.likeCount--;
     }
 
-    public void changeSalesStatus(ProductSalesStatus status) {
+    public void changeSalesStatus(ProductSalesStatus status, User buyer) {
         this.salesStatus = status;
+        this.buyer = buyer;
+        this.updatedAt = LocalDateTime.now();
     }
 
 }
