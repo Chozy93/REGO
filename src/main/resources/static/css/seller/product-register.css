@@ -424,6 +424,7 @@
   transition:
     border-color .15s ease,
     box-shadow .15s ease;
+  height: 117px;
 }
 
 .spr-tx__card:has(input:checked) {
@@ -432,6 +433,7 @@
    box-shadow: 0 0 0 1px var(--color-primary);
    font-size: var(--fs-16);
    background-color: var(--color-primary-soft);
+   height: 130px;
 }
 
 /* 아이콘만 강조 */

@@ -84,7 +84,6 @@ public class SellerProfile {
     ========================= */
     public SellerProfile(User seller, SellerProfileVO vo) {
         this.seller = seller;
-        this.sellerId = seller.getUserId();
 
         this.description = vo.getDescription();
 

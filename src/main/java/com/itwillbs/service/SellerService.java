@@ -7,6 +7,7 @@ import com.itwillbs.domain.SellerProfileVO;
 import com.itwillbs.entity.SellerProfile;
 import com.itwillbs.entity.User;
 import com.itwillbs.repository.SellerProfileRepository;
+import com.itwillbs.repository.UserRepository;
 import com.itwillbs.view.condition.SellerRegisterConditionVO;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class SellerService {
 
     private final SellerProfileRepository sellerProfileRepository;
+    private final UserRepository userRepository;
     
     /* =========================
 	    판매자 프로필 존재 여부
@@ -26,21 +28,27 @@ public class SellerService {
 	 }
     
     
-    @Transactional
-    public void createSellerProfile(User user,
-                                    SellerRegisterConditionVO conditionVO) {
+	 @Transactional
+	 public void createSellerProfile(User user,
+	                                 SellerRegisterConditionVO conditionVO) {
 
-        if (sellerProfileRepository.existsById(user.getUserId())) {
-            throw new IllegalStateException("이미 판매자 프로필이 존재합니다.");
-        }
+	     Long userId = user.getUserId();
 
-        /* Condition VO → Domain VO (Service 책임) */
-        SellerProfileVO sellerProfileVO =
-                new SellerProfileVO(conditionVO);
+	     if (sellerProfileRepository.existsBySeller_UserId(userId)) {
+	         throw new IllegalStateException("이미 판매자 프로필이 존재합니다.");
+	     }
 
-        SellerProfile sellerProfile =
-                new SellerProfile(user, sellerProfileVO);
+	     // 🔑 FK 용도 → 프록시가 베스트
+	     User managedUser = userRepository.getReferenceById(userId);
 
-        sellerProfileRepository.save(sellerProfile);
-    }
+	     SellerProfileVO sellerProfileVO =
+	             new SellerProfileVO(conditionVO);
+
+	     SellerProfile sellerProfile =
+	             new SellerProfile(managedUser, sellerProfileVO);
+
+	     sellerProfileRepository.save(sellerProfile);
+	 }
+
+
 }

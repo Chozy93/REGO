@@ -5,10 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.itwillbs.domain.SellerProfileVO;
 import com.itwillbs.entity.User;
 import com.itwillbs.security.util.SecurityUtil;
-import com.itwillbs.service.MainPageService;
 import com.itwillbs.service.SellerService;
 import com.itwillbs.view.condition.SellerRegisterConditionVO;
 
@@ -54,8 +52,9 @@ public class SellerController {
 
 		     sellerService.createSellerProfile(loginUser, conditionVO);
 
-		     return "redirect:/";
+		     return "seller/register-complete";
 		 }
+		 
 		 @GetMapping("/register/complete")
 		 public String registerComplete() {
 		     return "seller/register-complete";
@@ -68,4 +67,20 @@ public class SellerController {
 		 public String productRegister() {
 		     return "seller/product-register";
 		 }
+		 
+		 @GetMapping("/entry")
+		 public String sellerEntry(
+		 ) {
+			 User user = SecurityUtil.getCurrentUser();
+
+		     boolean hasSellerProfile =
+		         sellerService.hasSellerProfile(user);
+
+		     if (hasSellerProfile) {
+		         return "redirect:/seller/product/register";
+		     } else {
+		         return "redirect:/seller/register";
+		     }
+		 }
+
 }

@@ -93,16 +93,29 @@
 
 				    <span class="chat-label">채팅</span>
 				  </a>
+				  <a sec:authorize="hasRole('USER')"
+				     href="/seller/profile"
+				     class="my-shop">
+
+				    <span class="material-symbols-outlined my-shop-icon">
+				      storefront
+				    </span>
+
+				    <span class="my-shop-label">
+				      내 상점
+				    </span>
+				  </a>
 
 				  <!-- 구분선 (일반 회원만) -->
 				  <span sec:authorize="hasRole('USER')" class="header-divider"></span>
 
 				  <a sec:authorize="hasRole('USER')"
-				     href="/product/write"
+				     href="/seller/entry"
 				     class="btn btn-primary sell-btn">
 				    <span class="material-symbols-outlined">add</span>
 				    판매하기
 				  </a>
+
 
 			    </div>
 		</div>
