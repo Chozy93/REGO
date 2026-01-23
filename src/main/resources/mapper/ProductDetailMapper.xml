@@ -26,24 +26,39 @@
         resultType="com.itwillbs.dto.ProductDetailDTO">
 
     SELECT
+        /* ===== 상품 기본 ===== */
         p.product_id           AS productId,
         p.product_name         AS productName,
         p.price                AS price,
         p.description          AS description,
 
-        /* ✅ 대표 이미지 추가 */
+        /* 대표 이미지 */
         p.main_image_url       AS mainImageUrl,
 
+        /* 통계 */
         p.view_count           AS viewCount,
         p.like_count           AS likeCount,
         p.created_at           AS createdAt,
         p.condition_status     AS conditionStatus,
-        p.sales_status         AS salesStatus,      
-        p.region_display_name  AS sellerRegion
+        p.sales_status         AS salesStatus,
+        p.region_display_name  AS sellerRegion,
+
+        /* ===== 카테고리 (추가) ===== */
+        c.category_id          AS categoryId,
+        c.name                 AS categoryName,
+        pc.category_id         AS parentCategoryId,
+        pc.name                AS parentCategoryName
+
     FROM products p
+    JOIN categories c
+      ON p.category_id = c.category_id
+    LEFT JOIN categories pc
+      ON c.parent_id = pc.category_id
+
     WHERE p.product_id = #{productId}
 
 </select>
+
 
 <!-- ==================================================
      DETAIL01_SELLER_INFO

@@ -2,10 +2,14 @@ package com.itwillbs.view;
 
 import com.itwillbs.view.ProductSellerInfoVO;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class ProductDetailPageVO {
 
+	private boolean mine;
+	
     private final ProductDetailVO product;
     private final ProductSellerInfoVO sellerInfo;
     private final ProductSimilarListVO similar;

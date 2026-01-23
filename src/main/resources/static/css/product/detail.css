@@ -1,256 +1,551 @@
 /* =========================
-   DETAIL GRID (FINAL)
+   BASE
 ========================= */
-.product-detail-grid {
-  display: grid;
-  grid-template-columns: 7fr 5fr;   /* ✅ 시안 비율 */
-  grid-template-areas:
-    "left right"
-    "bottom right";
-  gap: var(--space-40);
-}
-
-.detail-left { grid-area: left; }
-.detail-right {
-  grid-area: right;
-  position: sticky;
-  top: 96px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-20);
-}
-.detail-bottom {
-  grid-area: bottom;
-  max-width: 760px; /* 시안처럼 설명 영역 폭 제한 */
-}
-
-/* 모바일 */
-@media (max-width: 1024px) {
-  .product-detail-grid {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "left"
-      "right"
-      "bottom";
-  }
-
-  .detail-right {
-    position: static;
-  }
-
-  .detail-bottom {
-    max-width: 100%;
-  }
+.container-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px;
 }
 
 /* =========================
-   PRODUCT IMAGE (FINAL)
+   GRID LAYOUT
 ========================= */
+.product-detail-grid {
+  display: grid;
+  grid-template-columns: 520px 1fr; /* 왼쪽 고정, 오른쪽 유동 */
+  gap: 40px;
+  align-items: stretch; /* 🔥 핵심 */
+}
+
+
+/* =========================
+   LEFT : IMAGE
+========================= */
+.detail-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+ }
+
 .product-detail-media {
   width: 100%;
 }
 
 .product-image-main {
-  background: var(--color-surface-2);
-  border-radius: var(--radius-xl);
-  padding: var(--space-24);
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #f4f6f5;
+}
+
+.left-bottom-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .product-image-main img {
   width: 100%;
-  max-height: 620px;        /* 🔥 중요 */
-  object-fit: cover;       /* 시안 느낌 */
-  border-radius: var(--radius-xl);
+  height: 100%;
+  object-fit: cover;
 }
 
 /* =========================
-   PRODUCT SUMMARY
+   RIGHT : SUMMARY / ACTION / SELLER
 ========================= */
-.product-summary {
-  padding: var(--space-24);
+.detail-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
 }
 
-.product-summary-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-12);
+/* 공통 카드 */
+.info-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px;
 }
+
+/* 상품 요약 */
+.product-summary-header{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 
 .product-title {
-  font-size: var(--fs-24);
-  font-weight: var(--fw-bold);
-  line-height: var(--lh-tight);
+  font-size: 22px;
+  font-weight: 700;
+  flex: 1;
 }
 
+.product-title-row{
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+
+.detail-right .product-summary {
+  flex: 0 0 auto;
+  min-height: 140px;
+}
+
+.detail-right .product-description {
+  flex: 1;              /* 🔥 가운데가 늘어나서 균형 맞춤 */
+}
+
+.detail-right .trade-info {
+  flex: 0 0 auto;
+  min-height: 120px;
+}
+
+
+.product-status-badge {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #e5f9ed;
+  color: #1fa463;
+}
+
+.badge-selling {
+  background: #e5f9ed;
+  color: #1fa463;
+}
+
+.badge-reserved {
+  background: #fff4e5;
+  color: #d97706;
+}
+
+.badge-sold {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+/* 신고 버튼 */
+.product-report-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* 가격 */
 .product-price {
-  margin-top: var(--space-12);
-  font-size: var(--fs-32);
-  font-weight: var(--fw-extrabold);
+  font-size: 28px;
+  font-weight: 800;
+  margin-top: 12px;
 }
 
+/* 메타 */
 .product-meta {
-  margin-top: var(--space-8);
-  font-size: var(--fs-13);
+  margin-top: 8px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.product-category-path{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  font-size: 12px;
+  color: var(--color-text-muted);
+
+  margin-bottom: 10px;   /* 제목과 간격 */
+  padding: 2px 6px;      /* 카드 안에 얹힌 느낌 */
+
+  border-radius: 6px;
+  background: var(--color-surface-2);
+}
+
+
+.product-category-path a{
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.product-category-path a:hover{
+  color: var(--color-primary);
+}
+
+
+.product-category-path .divider{
   color: var(--color-text-muted);
 }
 
+
 /* =========================
-   ACTION AREA
+   ACTION BUTTONS
 ========================= */
 .action-card {
-  display: grid;
-  grid-template-columns: 48px 1fr 1fr;
-  gap: var(--space-12);
-  padding: var(--space-16);
-  background: var(--color-surface);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-sm);
+  display: flex;
+  gap: 12px;
   align-items: center;
 }
 
 .product-card__like-btn {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .product-card__like-btn .filled {
-  color: var(--color-danger);
-}
-
-.btn-primary,
-.btn-dark {
-  height: 48px;
-  font-size: var(--fs-16);
-  font-weight: var(--fw-bold);
-  border-radius: var(--radius-xl);
+  color: #ef4444;
 }
 
 .btn-primary {
-  background: var(--color-primary);
-  color: var(--color-text);
+  flex: 1;
+  height: 44px;
+  border-radius: 10px;
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .btn-dark {
-  background: #111;
+  flex: 1;
+  height: 44px;
+  border-radius: 10px;
+  background: #111827;
   color: #fff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 /* =========================
    SELLER CARD
 ========================= */
 .seller-card {
-  padding: var(--space-20);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
 }
 
 .seller-header {
   display: flex;
   align-items: center;
-  gap: var(--space-10);
+  gap: 8px;
 }
 
 .seller-nickname {
-  font-weight: var(--fw-bold);
+  font-weight: 600;
 }
 
 .seller-badge {
-  margin-left: auto;
-  background: var(--color-success);
-  color: #fff;
-  padding: 2px 10px;
-  border-radius: var(--radius-pill);
-  font-size: var(--fs-12);
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #ecfeff;
+  color: #0891b2;
 }
 
 .seller-stats {
+  font-size: 13px;
+  color: #6b7280;
   display: flex;
-  justify-content: space-between;
-  margin-top: var(--space-16);
-  font-size: var(--fs-13);
-  color: var(--color-text-muted);
+  gap: 16px;
 }
 
 /* =========================
-   PRODUCT DESCRIPTION
+   SELLER CARD (UPGRADE)
 ========================= */
-.product-description {
-  padding: var(--space-24);
+
+.seller-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
 }
 
-.product-description h3 {
-  font-size: var(--fs-18);
-  font-weight: var(--fw-bold);
-  margin-bottom: var(--space-16);
+/* Header */
+.seller-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
 }
 
-.product-description p {
-  line-height: var(--lh-relaxed);
+.seller-card-profile {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seller-card-profile .material-symbols-outlined {
+  font-size: 28px;
   color: var(--color-text-muted);
+}
+
+.seller-card-name {
   font-size: var(--fs-15);
+  font-weight: var(--fw-semibold);
+}
+
+.seller-card-stats {
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.seller-card-stats .dot {
+  width: 3px;
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--color-text-muted);
+}
+
+/* Info */
+.seller-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.seller-card-info-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-13);
+}
+
+.seller-card-info-row .label {
+  color: var(--color-text-muted);
+}
+
+.seller-card-info-row .value {
+  font-weight: var(--fw-medium);
+}
+
+/* Actions */
+.seller-card-actions {
+  margin-top: var(--space-8);
+}
+
+.seller-card-actions .btn {
+  width: 100%;
+}
+
+.seller-card-info {
+  padding-top: var(--space-12);
+  border-top: 1px solid var(--color-divider);
+}
+
+.seller-type-badge {
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-12);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+}
+
+.seller-card {
+  margin-bottom: var(--space-4);
+}
+
+
+.seller-card-profile {
+  width: 52px;
+  height: 52px;
+}
+
+.seller-card-name {
+  font-size: var(--fs-16);
+}
+
+/* =========================
+   BOTTOM : DESCRIPTION / SIMILAR
+========================= */
+.detail-bottom {
+  grid-column: 1 / -1;
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* 상품 설명 */
+.product-description p {
+  margin-top: 12px;
+  line-height: 1.7;
+  color: #374151;
 }
 
 /* =========================
    SIMILAR PRODUCTS
 ========================= */
-.section {
-  margin-top: var(--space-64);
+.grid-products {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
 
-.section-title {
-  font-size: var(--fs-20);
-  font-weight: var(--fw-bold);
+.grid-products article {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
 }
+
+.grid-products img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.grid-products div {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+/* 하단 전체 */
+.similar-products {
+  grid-column: 1 / -1;
+  margin-top: 64px;
+}
+
+.info-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
 
 /* =========================
-   DETAIL01_STATUS : 판매 상태 뱃지
+   RESPONSIVE
 ========================= */
+@media (max-width: 1024px) {
+  .product-detail-grid {
+    grid-template-columns: 1fr;
+  }
 
-.product-status-badge {
-  display: inline-flex;
-  align-items: center;
+  .detail-right {
+    position: static;
+  }
 
-  margin-left: var(--space-8);
-  padding: 2px var(--space-10);
-
-  font-size: var(--fs-12);
-  font-weight: var(--fw-medium);
-
-  border-radius: var(--radius-pill);
-  line-height: 1;
-
-  white-space: nowrap;
+  .grid-products {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-/* 판매중 */
-.badge-selling {
-  background-color: var(--color-primary-soft);
-  color: var(--color-text);
+/* 🔥 카테고리 경로 핵폭탄 패치 (flex + width 완전 초기화) */
+.detail-right .product-category-path {
+  display: inline-flex !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  width: auto !important;
 }
 
-/* 예약중 */
-.badge-reserved {
-  background-color: var(--color-warning);
-  color: #fff;
+/* 🔥 a 태그가 한 줄 먹는 현상 차단 */
+.detail-right .product-category-path a {
+  display: inline !important;
+  width: auto !important;
+  flex: none !important;
 }
 
-/* 판매완료 */
-.badge-sold {
-  background-color: var(--color-surface-3);
+.category-separator {
+  margin: 0 4px;
   color: var(--color-text-muted);
 }
 
-.product-summary-header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
+.product-report-btn {
+  margin-left: auto;
+  padding: 6px 10px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  color: var(--color-text-sub);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+.product-report-btn:hover {
+  background: var(--color-surface-2);
+}
+
+.product-report-btn:disabled {
+  color: var(--color-text-disabled);
+  border-color: var(--color-border-light);
+  cursor: default;
+}
+
+.btn-report {
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text-muted);
+}
+
+.btn-report:hover {
+  background-color: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+/* =========================
+   신고하기 버튼 (텍스트 맞춤)
+========================= */
+.btn-report {
+	flex: 1;
+	  height: 44px;
+	  border-radius: 10px;
+	  background: #22c55e;
+	  color: #fff;
+	  border: none;
+	  font-weight: 600;
+	  cursor: pointer;
+	}
+
+/* hover */
+.btn-report:hover {
+  background: var(--color-primary-hover);
+}
+
+/* 신고 완료 상태 */
+.btn-report.is-disabled,
+.btn-report:disabled {
+  background: var(--color-surface-3);
+  color: var(--color-text-sub);
+  cursor: not-allowed;
+}
+
+.action-card button:disabled {
+  background: var(--color-surface-3);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.product-card__like-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.product-card__like-btn:disabled span {
+  color: #ccc;
 }
 
 

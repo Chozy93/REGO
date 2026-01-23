@@ -31,29 +31,33 @@
 
                 <label>
                     <input type="radio" name="report-reason" value="SPAM">
-                    광고 / 스팸
+                   <span>광고 / 스팸</span>
                 </label>
 
                 <label>
                     <input type="radio" name="report-reason" value="FRAUD">
-                    사기 의심
+                    <span>사기 의심</span>
                 </label>
 
                 <label>
                     <input type="radio" name="report-reason" value="ILLEGAL">
-                    불법 상품
+                    <span>불법 상품</span>
                 </label>
 
                 <label>
                     <input type="radio" name="report-reason" value="ABUSE">
-                    욕설 / 비매너
+                    <span>욕설 / 비매너</span>
                 </label>
 
                 <label>
                     <input type="radio" name="report-reason" value="ETC">
-                    기타
+                    <span>기타</span>
                 </label>
             </div>
+			
+			<p class="report-help">
+			  허위 신고 시 제재를 받을 수 있습니다.
+			</p>
 
             <!-- 상세 내용 -->
             <div class="report-field">
@@ -79,11 +83,12 @@
                 취소
             </button>
 
-            <button type="button"
-                    class="btn btn-primary"
-                    data-action="submit-report">
-                신고 접수
-            </button>
+			<button
+			  class="btn-primary report-submit-btn is-disabled"
+			  data-action="submit-report"
+			  disabled>
+			  신고 접수
+			</button>
 
         </footer>
 

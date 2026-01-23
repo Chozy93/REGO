@@ -67,7 +67,7 @@
             <th:block th:each="card : ${page.aiProducts}">
               <div class="swiper-slide">
                 <th:block
-                  th:replace="~{fragments/product-card :: card(card=${card})}" />
+                  th:replace="~{fragments/product-card :: productCard(${card})}" />
               </div>
             </th:block>
           </div>
@@ -93,7 +93,7 @@
             <th:block th:each="card : ${page.popularProducts}">
               <div class="swiper-slide">
                 <th:block
-                  th:replace="~{fragments/product-card :: card(card=${card})}" />
+                  th:replace="~{fragments/product-card :: productCard(${card})}" />
               </div>
             </th:block>
           </div>
@@ -119,7 +119,7 @@
             <th:block th:each="card : ${page.recentProducts}">
               <div class="swiper-slide">
                 <th:block
-                  th:replace="~{fragments/product-card :: card(card=${card})}" />
+                  th:replace="~{fragments/product-card :: productCard(${card})}" />
               </div>
             </th:block>
           </div>

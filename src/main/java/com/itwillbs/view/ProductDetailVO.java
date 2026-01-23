@@ -36,6 +36,13 @@ public class ProductDetailVO {
     private final int chatCount;
     private boolean liked;
     
+    /* ===== 카테고리 ===== */
+    private final String categoryId;           // 소분류 ID
+    private final String categoryName;         // 소분류 이름
+    private final String parentCategoryId;     // 대분류 ID
+    private final String parentCategoryName;   // 대분류 이름
+
+    
     /* ===== 판매 상태 ===== */
     private final String salesStatusCode;   // ON_SALE / RESERVED / SOLD
     private final String salesStatusLabel;  // 판매중 / 예약중 / 판매완료
@@ -97,6 +104,22 @@ public class ProductDetailVO {
         this.salesStatusLabel = status.getLabel();
 
         this.createdAtDisplay = dto.getCreatedAtDisplay();
+        
+        /* ===== 카테고리 ===== */
+        this.categoryId =
+                dto.getCategoryId() != null
+                        ? String.valueOf(dto.getCategoryId())
+                        : null;
+
+        this.categoryName = dto.getCategoryName();
+
+        this.parentCategoryId =
+                dto.getParentCategoryId() != null
+                        ? String.valueOf(dto.getParentCategoryId())
+                        : null;
+
+        this.parentCategoryName = dto.getParentCategoryName();
+
     }
 
     /* ===== getter / setter는 기존 그대로 유지 ===== */

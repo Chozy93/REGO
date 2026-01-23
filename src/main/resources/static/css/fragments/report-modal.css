@@ -45,7 +45,13 @@
   background: var(--color-surface);
   border-radius: var(--radius-lg);
   pointer-events: auto;
+
+  /* 🔽 UX 개선용 추가 */
+  width: 100%;
+  max-width: 360px;
+  box-shadow: var(--shadow-lg);
 }
+
 
 /* =========================
    Header
@@ -73,6 +79,8 @@
 .modal-close-btn:hover {
   color: var(--color-text);
 }
+
+
 
 /* =========================
    Body
@@ -104,7 +112,19 @@
 
   font-size: var(--fs-14);
   cursor: pointer;
-}
+  
+  padding: var(--space-10) var(--space-12);
+  border-radius: var(--radius-md);
+ }
+ 
+ .report-field label:hover {
+   background: var(--color-surface-2);
+ }
+
+ .report-field input[type="radio"]:checked + span {
+   font-weight: var(--fw-semibold);
+ }
+
 
 .report-field input[type="radio"] {
   accent-color: var(--color-primary);
@@ -127,6 +147,25 @@
   outline: none;
   box-shadow: 0 0 0 3px var(--color-focus-ring);
   border-color: var(--color-primary);
+}
+
+.report-submit-btn.is-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.modal-footer .btn {
+  min-width: 88px;
+}
+
+.modal-footer .btn:not(.btn-primary) {
+  background: transparent;
+  color: var(--color-text-muted);
+}
+
+.report-help {
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
 }
 
 /* =========================
