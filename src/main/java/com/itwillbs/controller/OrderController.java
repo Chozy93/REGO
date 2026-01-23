@@ -119,6 +119,7 @@ public class OrderController {
         return "payment/direct-pay"; // 작성하신 HTML 경로
     }
     
+    
     // 바로결제 클릭시 주문 생성
     @PostMapping("/direct")
     public String processOrder(@ModelAttribute OrderRequestDTO checkoutDTO,

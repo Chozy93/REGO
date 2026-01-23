@@ -17,20 +17,20 @@ public class MainPageService {
     private final MainProductListService mainProductListService;
     private final MainRecentViewService mainRecentViewService;
 
-    public MainPageVO getMainPage(String sort, String recentIds) {
+    public MainPageVO getMainPage(String sort, String recentIds, String region) {
 
         Long userId = SecurityUtil.getCurrentUserId(); // 로그인 아니면 null
 
         MainProductSortConditionVO condition = new MainProductSortConditionVO(sort);
 
         List<MainProductCardVO> aiProducts =
-                mainProductListService.getPopularProducts(userId);
+                mainProductListService.getPopularProducts(userId, sort, region);
 
         List<MainProductCardVO> popularProducts =
-                mainProductListService.getPopularProducts(userId);
+                mainProductListService.getPopularProducts(userId, sort, region);
 
         List<MainProductCardVO> recentProducts =
-                mainProductListService.getRecentProducts(userId, condition);
+                mainProductListService.getRecentProducts(userId, condition, region);
 
         boolean isLogin = SecurityUtil.isAuthenticated();
 
