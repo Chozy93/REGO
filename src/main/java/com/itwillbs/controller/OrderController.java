@@ -2,6 +2,7 @@ package com.itwillbs.controller;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -17,25 +18,33 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.itwillbs.dto.OrderRequestDTO;
 import com.itwillbs.dto.PaymentRequestDto;
 import com.itwillbs.dto.WalletViewDTO;
+import com.itwillbs.entity.PgPaymentLog;
 import com.itwillbs.entity.Product;
 import com.itwillbs.entity.ProductOrder;
-import com.itwillbs.entity.User;
-import com.itwillbs.entity.UserAddress;
+import com.itwillbs.repository.PaymentLogRepository;
 import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.service.ChatPaymentService;
 import com.itwillbs.service.OrderService;
 import com.itwillbs.service.PaymentService;
+import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.request.CancelData;
+import com.siot.IamportRestClient.response.IamportResponse;
+import com.siot.IamportRestClient.response.Payment;
 
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
 public class OrderController {
+	@Value("${iamport.imp_code}")
+    private String impCode;
 
     private final PaymentService paymentService;
 	
 	private final ChatPaymentService chatPaymentService;
 	private final OrderService orderService;
+	private final IamportClient iamportClient;
+	private final PaymentLogRepository paymentLogRepository;
 	
 
 	
@@ -115,6 +124,8 @@ public class OrderController {
         // 3. 상품 정보 조회 
         Product product = orderService.getProductById(productId);
         model.addAttribute("product", product);
+        // 아임퐤트 식별코드를 모델에 추가
+        model.addAttribute("impCode", impCode);
  
         return "payment/direct-pay"; // 작성하신 HTML 경로
     }
@@ -125,17 +136,54 @@ public class OrderController {
     public String processOrder(@ModelAttribute OrderRequestDTO checkoutDTO,
                                @AuthenticationPrincipal CustomUserDetails userDetails,
                                RedirectAttributes redirectAttributes) {
+        // 나중에 로그 저장 시 사용하기 위해 변수를 밖으로 뺍니다.
+        Payment payment = null; 
+
         try {
-        	System.out.println("바로결제 주문 생성");
+            System.out.println("바로결제 주문 처리 시작: " + checkoutDTO.getPaymentType());
             Long buyerId = userDetails.getUserId();
+
+            // 1. [검증] 카드 결제(CARD)인 경우 위변조 검증 실행
+            if ("CARD".equals(checkoutDTO.getPaymentType())) {
+                IamportResponse<Payment> ir = iamportClient.paymentByImpUid(checkoutDTO.getImpUid());
+                payment = ir.getResponse(); // 검증 성공 시 결제 정보 객체 확보
+
+                if (payment == null) {
+                    throw new RuntimeException("결제 정보를 찾을 수 없습니다.");
+                }
+
+                Product product = orderService.getProductById(checkoutDTO.getProductId());
+                if (payment.getAmount().longValue() != product.getPrice()) {
+                    iamportClient.cancelPaymentByImpUid(new CancelData(checkoutDTO.getImpUid(), true));
+                    throw new RuntimeException("결제 금액 불일치! 위변조가 의심되어 취소되었습니다.");
+                }
+                System.out.println("검증 완료: 카드 결제 금액 일치");
+            }
+            
+            // 2. [주문 생성] 여기서 orderId가 생성됩니다.
             Long orderId = orderService.createOrder(checkoutDTO, buyerId);
             
-            // 성공 시 완료 페이지로 주문 번호를 가지고 이동
+            // 🚩 3. [로그 저장] 카드 결제였다면, 생성된 orderId와 함께 DB에 기록
+            if ("CARD".equals(checkoutDTO.getPaymentType()) && payment != null) {
+                PgPaymentLog log = PgPaymentLog.builder()
+                        .impUid(payment.getImpUid())
+                        .merchantUid(payment.getMerchantUid())
+                        .orderId(orderId)  // 👈 방금 생성된 주문 ID (FK 만족!)
+                        .userId(buyerId)
+                        .amount(payment.getAmount())
+                        .pgProvider(payment.getPgProvider())
+                        .payMethod(payment.getPayMethod())
+                        .status(payment.getStatus())
+                        .build();
+
+                paymentLogRepository.save(log);
+                System.out.println("결제 로그(pg_payment_log) 저장 완료");
+            }
+            
             return "redirect:/direct/success/" + orderId;
+
         } catch (Exception e) {
-            // 실패 시 에러 메시지와 함께 이전 페이지로 리다이렉트
-        	System.out.println("바로결제 error");
-        	System.out.println(e.getMessage());
+            System.err.println("결제 처리 중 오류 발생: " + e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/direct?productId=" + checkoutDTO.getProductId();
         }
