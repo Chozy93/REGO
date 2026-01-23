@@ -1,4 +1,4 @@
-package com.itwillbs.view;
+package com.itwillbs.view.seller;
 
 import com.itwillbs.domain.ReviewVO;
 import lombok.Getter;

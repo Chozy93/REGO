@@ -10,7 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.itwillbs.service.ChatService;
-import com.itwillbs.view.ChatMessageItemVO;
+import com.itwillbs.view.chat.ChatMessageItemVO;
 import com.itwillbs.view.condition.ChatMessageSendConditionVO;
 
 import lombok.RequiredArgsConstructor;

@@ -16,7 +16,7 @@ import com.itwillbs.domain.ChatRoomVO;
 import com.itwillbs.security.util.SecurityUtil;
 import com.itwillbs.service.ChatService;
 import com.itwillbs.view.ChatListViewVO;
-import com.itwillbs.view.ChatRoomPageVO;
+import com.itwillbs.view.chat.ChatRoomPageVO;
 
 import lombok.RequiredArgsConstructor;
 
