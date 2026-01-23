@@ -1,6 +1,7 @@
 package com.itwillbs.regionManage;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -39,4 +40,7 @@ public interface RegionRepository extends JpaRepository<Region, String> {
            "OR r.regionName LIKE %:keyword%) " +
            "AND r.isActive = true")
     List<Region> findByCombinedRegionName(@Param("keyword") String keyword);
+    
+    // 코드 -> string 변환
+    Optional<Region> findByRegionCodeAndIsActive(String regionCode, Boolean isActive);
 }

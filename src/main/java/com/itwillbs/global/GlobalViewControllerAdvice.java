@@ -1,5 +1,6 @@
 package com.itwillbs.global;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -16,8 +17,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GlobalViewControllerAdvice {
 
-    private final CategoryService categoryService;
-    private final ChatService chatService;
+
+
+    private final CategoryService categoryService;	
+    private final ChatService chatService;	
+    
+    @Value("${kakao.js.key}")
+    private String kakaoKey;
+
 
     @ModelAttribute("headerCategoryListVO")
     public HeaderCategoryListVO headerCategories(HttpSession session) {
@@ -69,4 +76,12 @@ public class GlobalViewControllerAdvice {
             return false;
         }
     }
+    
+    
+   // kakaoKey
+    @ModelAttribute("kakaoKey")
+    public String addKakaoKey() {
+        return kakaoKey;
+    }
+    
 }
