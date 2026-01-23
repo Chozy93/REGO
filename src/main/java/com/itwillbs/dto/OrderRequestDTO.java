@@ -18,7 +18,8 @@ public class OrderRequestDTO {
     private String deliveryRequestDirect; // 직접입력 값
     private Long totalAmount;
     private String paymentType;           // REPAY or CARD
-
+    private String impUid; // 아임포트 결제 고유 번호
+    
     // 배송 메시지 최종 결정 로직
     public String getFinalDeliveryMessage() {
         if ("직접 입력".equals(this.deliveryRequest)) {

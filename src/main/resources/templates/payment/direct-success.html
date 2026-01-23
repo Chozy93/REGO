@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="/css/payment/direct-success.css">
 </th:block>
 
+<th:block th:fragment="pageJs">
+	<script src="/js/payment/success-chat.js"></script>
+</th:block>
+
 <div layout:fragment="content">
     <main class="success-container">
         <div class="success-header animate-up">
@@ -47,10 +51,12 @@
                     <span class="material-symbols-outlined">home</span>
                     메인으로 돌아가기
                 </a>
-				<a th:href="@{/chat/start/{id}(id=${order.product.productId})}" class="btn-secondary">
+				<button type="button" 
+				        th:onclick="goToChat([[${order.product.productId}]])" 
+				        class="btn-secondary">
 				    <span class="material-symbols-outlined">chat</span>
 				    판매자에게 채팅하기
-				</a>
+				</button>
             </div>
         </div>
     </main>
