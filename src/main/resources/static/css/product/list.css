@@ -1,24 +1,12 @@
-/* ==========================================================================
-   PRODUCT LIST PAGE (list.css)
-   - RE:GO 헌법 준수
-   - list.html 전용
-   ========================================================================== */
-
-/* ==========================================================================
-   1) CATEGORY BAR
-   ========================================================================== */
+/* =========================
+   CATEGORY BAR (list only)
+========================= */
 
 .category-bar {
-  margin: var(--space-32) auto var(--space-24);
+  margin: var(--space-32) 0 var(--space-24);
 }
 
-/* 드롭다운 래퍼 */
-.category-dropdown {
-  position: relative;
-  display: inline-block;
-}
 
-/* 대분류 버튼 */
 .category-dropdown-toggle {
   display: inline-flex;
   align-items: center;
@@ -31,31 +19,113 @@
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-
   cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-out);
 }
 
 .category-dropdown-toggle:hover {
   background-color: var(--color-surface-2);
 }
 
-.category-dropdown-toggle svg {
-  fill: var(--color-text-muted);
+
+.subcategory-grid li a {
+  display: block;
+  padding: var(--space-10) var(--space-12);
+
+  font-size: var(--fs-14);
+  color: var(--color-text);
+  border-radius: var(--radius-sm);
 }
 
-/* ==========================================================================
-   2) CATEGORY DROPDOWN PANEL
-   ========================================================================== */
+.subcategory-grid li a:hover {
+  background-color: var(--color-primary-soft);
+}
 
-.category-dropdown-panel {
+/* 선택된 카테고리 */
+.subcategory-grid li.is-active a {
+  font-weight: var(--fw-semibold);
+  background-color: var(--color-primary-soft);
+}
+
+/* =========================
+   PRODUCT GRID
+========================= */
+
+.grid-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* =========================
+   PRODUCT CARD
+========================= */
+
+.product-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* 이미지 영역 */
+.product-card__image {
+  position: relative;
+  overflow: hidden;
+}
+
+.product-card__image img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ❤️ LIKE BUTTON */
+.product-card__like-btn {
   position: absolute;
-  top: calc(100% + var(--space-8));
-  left: 0;
-  z-index: var(--z-dropdown);
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
 
-  min-width: 360px;
-  padding: var(--space-16);
+.product-card__like-btn:hover {
+  transform: scale(1.08);
+}
+
+.product-card__like-btn .material-symbols-outlined {
+  font-size: 20px;
+  color: #999;
+}
+
+.product-card__like-btn.liked .material-symbols-outlined {
+  color: #ff4d4f;
+  font-variation-settings: 'FILL' 1;
+}
+
+/* 메가 드롭다운 기준 래퍼 */
+.category-nav {
+  position: relative;
+}
+
+/* 🔥 전체 너비 패널 */
+.category-mega-panel {
+  position: absolute;
+  top: calc(100% + var(--space-12));
+  left: 0;
+
+  width: 100%;
+  padding: var(--space-24);
 
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -63,87 +133,85 @@
   box-shadow: var(--shadow-md);
 
   display: none;
+  z-index: var(--z-dropdown);
 }
 
-/* hover 시 열림 (JS ❌) */
-.category-dropdown:hover .category-dropdown-panel {
+/* hover 시 펼쳐짐 */
+.category-nav:hover .category-mega-panel {
   display: block;
 }
 
-/* ==========================================================================
-   3) SUB CATEGORY GRID (2열)
-   ========================================================================== */
-
+/* 🔥 소분류 넓게 배치 */
 .subcategory-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-12);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-16);
 
   list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
 
-.subcategory-grid li a {
-  display: block;
-  padding: var(--space-10) var(--space-12);
 
-  font-size: var(--fs-14);
-  font-weight: var(--fw-medium);
-  color: var(--color-text);
-
-  border-radius: var(--radius-sm);
-  transition:
-    background-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
-}
-
-.subcategory-grid li a:hover {
-  background-color: var(--color-primary-soft);
-  color: var(--color-text);
-}
-
-/* 선택된 소분류 */
-.subcategory-grid li.is-active a {
-  background-color: var(--color-primary-soft);
-  font-weight: var(--fw-semibold);
-}
-
-/* ==========================================================================
-   4) PRODUCT LIST
-   ========================================================================== */
+/* =========================
+   PRODUCT GRID
+========================= */
 
 .product-list {
   margin-top: var(--space-24);
 }
 
-/* 빈 결과 */
-.empty-result {
-  padding: var(--space-64) 0;
-  text-align: center;
-  font-size: var(--fs-16);
-  color: var(--color-text-muted);
-}
-
-/* ==========================================================================
-   5) PRODUCT GRID
-   ========================================================================== */
-
+/* 🔥 상품 카드 그리드 (단일 기준) */
 .product-grid {
+  margin-top: var(--space-20);
+
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-24);
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-20);
 }
+
+
+/* =========================
+   PRODUCT GRID
+========================= */
+
+.product-list-section {
+  margin-top: 24px;
+}
+
+/* 제목 */
+.category-title {
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.product-count {
+  font-size: 14px;
+  font-weight: 400;
+  color: #9ca3af;
+}
+
 
 /* 반응형 */
 @media (max-width: 1200px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
   .product-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .product-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+

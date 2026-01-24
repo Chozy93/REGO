@@ -1,13 +1,21 @@
 package com.itwillbs.service;
 
 import com.itwillbs.security.util.SecurityUtil;
+
+import com.itwillbs.view.MainAiProductListVO;
 import com.itwillbs.view.MainPageVO;
+import com.itwillbs.view.MainPopularProductListVO;
 import com.itwillbs.view.MainProductCardVO;
+import com.itwillbs.view.MainRecentProductListVO;
+import com.itwillbs.view.MainRecentViewProductListVO;
 import com.itwillbs.view.condition.MainProductSortConditionVO;
+
+import com.itwillbs.ai.AIRecommendProductService;
+import com.itwillbs.ai.AIRecommendProductVO;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -16,15 +24,19 @@ public class MainPageService {
 
     private final MainProductListService mainProductListService;
     private final MainRecentViewService mainRecentViewService;
+    private final AIRecommendProductService aiRecommendProductService;
 
     public MainPageVO getMainPage(String sort, String recentIds, String region) {
 
-        Long userId = SecurityUtil.getCurrentUserId(); // 로그인 아니면 null
+        Long userId = SecurityUtil.getCurrentUserId();
+        boolean isLogin = SecurityUtil.isAuthenticated();
 
-        MainProductSortConditionVO condition = new MainProductSortConditionVO(sort);
+        MainProductSortConditionVO condition =
+                new MainProductSortConditionVO(sort);
 
+        // ✅ AI 추천 상품 (MainProductCardVO로 받는다)
         List<MainProductCardVO> aiProducts =
-                mainProductListService.getPopularProducts(userId, sort, region);
+                aiRecommendProductService.getRecommend(recentIds);
 
         List<MainProductCardVO> popularProducts =
                 mainProductListService.getPopularProducts(userId, sort, region);
@@ -32,22 +44,15 @@ public class MainPageService {
         List<MainProductCardVO> recentProducts =
                 mainProductListService.getRecentProducts(userId, condition, region);
 
-        boolean isLogin = SecurityUtil.isAuthenticated();
-
         List<MainProductCardVO> recentView =
-        	    mainRecentViewService.getRecentView(recentIds);
+                mainRecentViewService.getRecentView(recentIds);
 
-        	MainPageVO page =
-        	    new MainPageVO(
-        	        isLogin,
-        	        aiProducts,
-        	        popularProducts,
-        	        recentProducts, // 최근 등록
-        	        recentView      // 최근 본
-        	    );
-
-        	return page;
-
+        return new MainPageVO(
+                isLogin,
+                new MainAiProductListVO(aiProducts),
+                new MainPopularProductListVO(popularProducts),
+                new MainRecentProductListVO(recentProducts),
+                new MainRecentViewProductListVO(recentView)
+        );
     }
-    
 }

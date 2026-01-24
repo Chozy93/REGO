@@ -5,8 +5,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.itwillbs.mapper")
+@MapperScan({
+    "com.itwillbs.mapper",
+    "com.itwillbs.ai"
+})
 public class RegoApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(RegoApplication.class, args);
     }

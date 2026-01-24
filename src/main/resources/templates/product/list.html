@@ -14,37 +14,38 @@
   <!-- CATEGORY BAR -->
   <section class="category-bar">
 
-    <div class="category-dropdown">
+    <!-- 🔥 hover 기준 래퍼 -->
+    <div class="category-nav-wrap">
 
-      <!-- 대분류 버튼 -->
-      <button type="button" class="category-dropdown-toggle">
-        <span th:text="${page.categoryGroup.parentCategoryName}">
-          디지털기기
-        </span>
-        <svg width="14" height="14" viewBox="0 0 24 24">
-          <path d="M7 10l5 5 5-5z"/>
-        </svg>
-      </button>
+      <!-- 대분류 영역 -->
+      <div class="category-nav">
+        <div class="category-dropdown">
+          <a class="category-dropdown-toggle"
+             th:href="@{/products(categoryId=${page.categoryGroup.parentCategoryId})}">
+            <span th:text="${page.categoryGroup.parentCategoryName}">
+              디지털기기
+            </span>
+            <svg width="14" height="14" viewBox="0 0 24 24">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
 
-      <!-- 🔥 드롭다운 패널 -->
-      <div class="category-dropdown-panel">
-
+      <!-- 🔥 메가 드롭다운 패널 (같은 래퍼 안) -->
+      <div class="category-mega-panel">
         <ul class="subcategory-grid">
           <li th:each="sub : ${page.categoryGroup.subCategories}"
               th:classappend="${sub.selected} ? 'is-active'">
-
             <a th:href="@{/products(categoryId=${sub.categoryId})}"
                th:text="${sub.categoryName}">
               소분류
             </a>
-
           </li>
         </ul>
-
       </div>
 
     </div>
-
   </section>
 
   <!-- PRODUCT LIST -->
