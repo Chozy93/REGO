@@ -278,7 +278,7 @@
 .seller-card-header {
   display: flex;
   align-items: center;
-  gap: var(--space-12);
+  gap: 12px;
 }
 
 .seller-card-profile {
@@ -373,6 +373,12 @@
 .seller-card-name {
   font-size: var(--fs-16);
 }
+
+.seller-card-meta {
+  flex: 1;          /* ⭐ 이게 핵심 */
+}
+
+
 
 /* =========================
    BOTTOM : DESCRIPTION / SIMILAR
@@ -547,6 +553,56 @@
 .product-card__like-btn:disabled span {
   color: #ccc;
 }
+
+.product-image-slider {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.slider-track {
+  display: flex;
+  transition: transform 0.3s ease;
+}
+
+.slider-track img {
+  width: 100%;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+/* dots */
+.slider-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+}
+
+.slider-dots .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.4);
+}
+
+.slider-dots .dot.active {
+  background: #fff;
+}
+
+.product-image-slider {
+  border: 1px solid #e5e7eb;   /* 연한 회색 */
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+}
+
+
+
+
+
 
 
 

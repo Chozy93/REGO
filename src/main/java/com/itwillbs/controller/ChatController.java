@@ -34,24 +34,27 @@ public class ChatController {
     
     @GetMapping("/list")
     public String chatList(
-            @RequestParam(value = "unreadOnly", required = false) Boolean unreadOnly,
-            Model model,
-            HttpServletRequest request
+        @RequestParam(value = "unreadOnly", required = false) Boolean unreadOnly,
+        @RequestParam(value = "roomId", required = false) Long roomId, 
+        Model model,
+        HttpServletRequest request
     ) {
         request.setAttribute("CURRENT_VIEW_NAME", "chat/chat-list");
-        
+
         Long userId = SecurityUtil.getCurrentUserId();
         if (userId == null) {
-            return "redirect:/?error=login_required";
+            return "redirect:/error-login_required";
         }
 
         ChatListViewVO chatListItems =
-                chatService.getMyChatRooms(unreadOnly,userId);
+            chatService.getMyChatRooms(unreadOnly, userId);
 
         model.addAttribute("chatListItems", chatListItems);
+        model.addAttribute("initialRoomId", roomId);
 
         return "chat/chat-list";
     }
+
 
     
   
@@ -84,6 +87,8 @@ public class ChatController {
             @PathVariable("productId") Long productId,
             HttpServletRequest request
     ) {
+    	System.out.println("🔥🔥🔥 startChat 진입, productId=" + productId);
+        
         Long buyerId = SecurityUtil.getCurrentUserId();
 
         // 이전 페이지 (확장성 핵심)
@@ -101,7 +106,7 @@ public class ChatController {
 
         ChatRoomVO roomVO = chatService.getOrCreateRoom(productId, buyerId);
 
-        return "redirect:/chat/room/" + roomVO.getRoomId();
+        return "redirect:/chat/list?roomId=" + roomVO.getRoomId();
     }
 
 
