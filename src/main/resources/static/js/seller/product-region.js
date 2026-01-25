@@ -92,6 +92,8 @@ $(document).ready(function () {
         // 화면 표시
         $('#selectedRegionLabel').text(fullName);
 
+		// 선택 완료 상태 표시 ★
+		$('.spr-place__map').addClass('is-selected');
         // hidden input 세팅 (Product 테이블 그대로 대응)
         $('#regionSidoCode').val($(this).data('sido'));
         $('#regionSigunguCode').val($(this).data('sigungu'));
@@ -100,4 +102,12 @@ $(document).ready(function () {
 
         closeProductRegionModal();
     });
+	
+	// =========================
+	// 초기 로드 시 선택 상태 복원
+	// (수정 페이지 / 뒤로가기 대응)
+	// =========================
+	if ($('#regionDisplayName').val()) {
+	    $('.spr-place__map').addClass('is-selected');
+	}
 });

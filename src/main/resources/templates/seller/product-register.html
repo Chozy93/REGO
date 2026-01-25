@@ -290,25 +290,22 @@
 
 
 	  <!-- 거래 희망 장소 -->
+	  <!-- 거래 희망 장소 -->
 	  <div class="spr-panel">
+
 	    <div class="spr-place__head">
 	      <h2 class="spr-section__title">거래 희망 장소</h2>
-	      <button type="button"
-	              class="spr-place__btn"
-	              onclick="openProductRegionModal()">
-	        장소 변경
-	      </button>
+	      <span class="spr-place__hint">클릭해서 장소를 선택하세요</span>
 	    </div>
 
 	    <div class="spr-place">
-	      <div class="spr-place__map">
-	        <div class="spr-place__pin">
-	          <span class="material-symbols-outlined">location_on</span>
-	          <!-- 화면 표시용 -->
-	          <span class="spr-place__label" id="selectedRegionLabel">
-	            지역을 선택해주세요
-	          </span>
-	        </div>
+	      <div class="spr-place__map" onclick="openProductRegionModal()">
+	        <span class="material-symbols-outlined spr-place__icon">location_on</span>
+
+	        <!-- 화면 표시용 -->
+	        <span class="spr-place__label" id="selectedRegionLabel">
+	          지역을 선택해주세요
+	        </span>
 	      </div>
 	    </div>
 
@@ -324,7 +321,9 @@
 	    <input type="hidden" name="regionSigunguCode" id="regionSigunguCode">
 	    <input type="hidden" name="regionEupmyeondongCode" id="regionEupmyeondongCode">
 	    <input type="hidden" name="regionDisplayName" id="regionDisplayName">
+
 	  </div>
+
 
     </section>
 
