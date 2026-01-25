@@ -1,49 +1,38 @@
-/* =========================
-   CATEGORY BAR (list only)
-========================= */
 
-.category-bar {
-  margin: var(--space-32) 0 var(--space-24);
+/* ==========================================================================
+   PRODUCT LIST
+   ========================================================================== */
+
+.product-list {
+  margin-top: var(--space-24);
 }
 
+/* 상품 카드 그리드 */
+.product-grid {
+  margin-top: var(--space-20);
 
-.category-dropdown-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-6);
-
-  padding: var(--space-10) var(--space-14);
-  font-size: var(--fs-16);
-  font-weight: var(--fw-semibold);
-
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  cursor: pointer;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-20);
 }
 
-.category-dropdown-toggle:hover {
-  background-color: var(--color-surface-2);
+/* 반응형 */
+@media (max-width: 1200px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
-
-.subcategory-grid li a {
-  display: block;
-  padding: var(--space-10) var(--space-12);
-
-  font-size: var(--fs-14);
-  color: var(--color-text);
-  border-radius: var(--radius-sm);
+@media (max-width: 900px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
-.subcategory-grid li a:hover {
-  background-color: var(--color-primary-soft);
-}
-
-/* 선택된 카테고리 */
-.subcategory-grid li.is-active a {
-  font-weight: var(--fw-semibold);
-  background-color: var(--color-primary-soft);
+@media (max-width: 640px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* =========================
@@ -113,105 +102,244 @@
   font-variation-settings: 'FILL' 1;
 }
 
-/* 메가 드롭다운 기준 래퍼 */
-.category-nav {
-  position: relative;
-}
 
-/* 🔥 전체 너비 패널 */
-.category-mega-panel {
-  position: absolute;
-  top: calc(100% + var(--space-12));
-  left: 0;
+   /* ==========================================================================
+      LIST CATEGORY BAR
+      - list.html 전용
+      - header / fragment와 완전 분리
+      ========================================================================== */
 
-  width: 100%;
-  padding: var(--space-24);
+   /* 전체 바 */
+   .list-category-bar {
+     margin-bottom: var(--space-32);
+   }
 
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+   /* 드롭다운 래퍼 */
+   .list-category-dropdown {
+     position: relative;
+     display: inline-block;
+   }
 
-  display: none;
-  z-index: var(--z-dropdown);
-}
+   /* 대분류 버튼 */
+   .list-category-toggle {
+     display: inline-flex;
+     align-items: center;
+     gap: var(--space-8);
 
-/* hover 시 펼쳐짐 */
-.category-nav:hover .category-mega-panel {
-  display: block;
-}
+     padding: var(--space-10) var(--space-14);
+     border-radius: var(--radius-md);
+     border: 1px solid var(--color-border);
 
-/* 🔥 소분류 넓게 배치 */
-.subcategory-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-16);
+     background-color: var(--color-surface);
+     font-size: var(--fs-16);
+     font-weight: var(--fw-semibold);
+     color: var(--color-text);
 
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
+     transition:
+       background-color var(--duration-normal) var(--ease-out),
+       border-color var(--duration-normal) var(--ease-out);
+   }
+
+   .list-category-toggle:hover {
+     background-color: var(--color-surface-2);
+   }
+
+   /* 화살표 */
+   .list-category-arrow {
+     fill: currentColor;
+     transition: transform var(--duration-normal) var(--ease-out);
+   }
+
+   /* 열림 상태 (JS에서 제어) */
+   .list-category-dropdown.is-open .list-category-arrow {
+     transform: rotate(180deg);
+   }
+
+   /* 소분류 메뉴 (기본: 숨김) */
+   .list-category-menu {
+     position: fixed;
+     top: 160px;
+     left: 50%;
+     transform: translateX(-50%);
+
+     z-index: var(--z-dropdown);
+
+     min-width: 360px;
+     padding: var(--space-16);
+     margin: 0;
+
+     display: none; /* 🔴 핵심 */
+
+     gap: var(--space-8);
+
+     list-style: none;
+
+     background-color: var(--color-surface);
+     border: 1px solid var(--color-border);
+     border-radius: var(--radius-lg);
+     box-shadow: var(--shadow-md);
+   }
+
+   /* 열림 상태 */
+   .list-category-dropdown.is-open .list-category-menu {
+     display: grid;
+   }
 
 
-/* =========================
-   PRODUCT GRID
-========================= */
+   /* 개별 소분류 */
+   .list-category-item {
+     border-radius: var(--radius-sm);
+   }
 
-.product-list {
-  margin-top: var(--space-24);
-}
+   /* 링크 */
+   .list-category-link {
+     display: block;
+     padding: var(--space-10) var(--space-12);
 
-/* 🔥 상품 카드 그리드 (단일 기준) */
-.product-grid {
-  margin-top: var(--space-20);
+     font-size: var(--fs-14);
+     font-weight: var(--fw-medium);
+     color: var(--color-text);
 
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: var(--space-20);
-}
+     border-radius: var(--radius-sm);
+     transition:
+       background-color var(--duration-fast) var(--ease-out),
+       color var(--duration-fast) var(--ease-out);
+   }
 
+   /* hover */
+   .list-category-link:hover {
+     background-color: var(--color-surface-2);
+   }
 
-/* =========================
-   PRODUCT GRID
-========================= */
+   /* 선택된 소분류 */
+   .list-category-item.is-active .list-category-link {
+     background-color: var(--color-primary-soft);
+     color: var(--color-text);
+     font-weight: var(--fw-semibold);
+   }
+   
+   /* =========================
+      MEGA CATEGORY MENU (LIST)
+   ========================= */
 
-.product-list-section {
-  margin-top: 24px;
-}
+   .list-category-dropdown {
+     position: relative;
+     overflow: visible;
+   }
 
-/* 제목 */
-.category-title {
-  font-size: 20px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+   .list-category-panel {
+	 align-items: start;               /* ✅ 핵심 */
+     position: fixed;                 /* 🔥 잘림 방지 */
+     top: 160px;
+     left: 50%;
+     transform: translateX(-50%);
+	
+	 max-width: 960px;   /* ⬅ 핵심 */
+     width: 100%;
+     padding: 20px;
+	 margin-top: 8px;
 
-.product-count {
-  font-size: 14px;
-  font-weight: 400;
-  color: #9ca3af;
-}
+     display: none;
+     grid-template-columns: 220px 1fr;
+     gap: 24px;
 
+     background: #fff;
+     border-radius: 16px;
+     box-shadow: var(--shadow-md);
+     z-index: 9999;
+   }
 
-/* 반응형 */
-@media (max-width: 1200px) {
-  .product-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
+   .list-category-dropdown.is-open .list-category-panel {
+     display: grid;
+   }
 
-@media (max-width: 900px) {
-  .product-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+   /* 왼쪽 대분류 */
+   .list-category-main {
+     list-style: none;
+     padding: 0;
+     margin: 0;
+     border-right: 1px solid #eee;
+   }
 
-@media (max-width: 640px) {
-  .product-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+   .list-category-main li {
+     padding: 10px 12px;
+     font-weight: 600;
+     background: #f7f7f7;
+     border-radius: 8px;
+   }
 
+   /* 오른쪽 소분류 */
+   .list-category-sub {
+     grid-template-columns: repeat(3, max-content);
+
+     column-gap: 48px;   /* ⬅ 기존 64px → 48px */
+     row-gap: 14px;
+
+     justify-content: start;
+     align-content: start;
+   }
+
+   .list-category-sub,
+   .list-category-sub li {
+     list-style: none;
+     padding: 0;
+     margin: 0;
+   }
+
+   .list-category-item {
+     line-height: 1.6;
+   }
+
+   .list-category-link {
+     font-size: 13.5px;   /* 중고나라랑 거의 동일 */
+     color: #333;
+     text-decoration: none;
+   }
+
+   .list-category-link:hover {
+     color: #16c784;
+     text-decoration: underline;
+   }
+
+   .list-category-item.is-active .list-category-link {
+     color: #16c784;
+     font-weight: 600;
+   }
+
+   /* =========================
+      PARENT CATEGORY TABS
+   ========================= */
+   .list-parent-category {
+     margin-bottom: 24px;
+     border-bottom: 1px solid #eee;
+   }
+
+   .list-parent-tabs {
+     display: flex;
+     gap: 10px;
+     padding: 12px 0;
+     overflow-x: auto;
+   }
+
+   .list-parent-tabs li {
+     list-style: none;
+   }
+
+   .list-parent-tabs a {
+     padding: 8px 14px;
+     border-radius: 999px;
+     background: #f4f5f6;
+     font-size: 14px;
+     color: #444;
+     text-decoration: none;
+     white-space: nowrap;
+   }
+
+   .list-parent-tabs a.active {
+     background: #111;
+     color: #fff;
+     font-weight: 600;
+   }
+   
+   
 

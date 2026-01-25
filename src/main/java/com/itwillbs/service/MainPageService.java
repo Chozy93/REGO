@@ -39,7 +39,7 @@ public class MainPageService {
                 aiRecommendProductService.getRecommend(recentIds);
 
         List<MainProductCardVO> popularProducts =
-                mainProductListService.getPopularProducts(userId, sort, region);
+                mainProductListService.getPopularProducts(userId, region);
 
         List<MainProductCardVO> recentProducts =
                 mainProductListService.getRecentProducts(userId, condition, region);

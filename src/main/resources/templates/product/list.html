@@ -3,59 +3,111 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
 
-<!-- PAGE CSS -->
+<!-- =========================
+     PAGE CSS
+========================= -->
 <th:block th:fragment="pageCss">
-  <link rel="stylesheet" th:href="@{/css/product/product-card.css}">
+  <link rel="stylesheet" th:href="@{/css/fragments/product-card.css}">
   <link rel="stylesheet" th:href="@{/css/product/list.css}">
 </th:block>
 
+<!-- =========================
+     CONTENT
+========================= -->
 <div class="container-content" layout:fragment="content">
 
-  <!-- CATEGORY BAR -->
-  <section class="category-bar">
+  <!-- ==================================================
+       🔥 PARENT CATEGORY TABS (중고나라 핵심 UX)
+       → 여기서 대분류 페이지 이동 가능
+  ================================================== -->
+  <nav class="list-parent-category">
+    <ul class="list-parent-tabs">
 
-    <!-- 🔥 hover 기준 래퍼 -->
-    <div class="category-nav-wrap">
+      <li th:each="parent : ${parentCategoryList}">
+        <a th:href="@{/products(categoryId=${parent.categoryId})}"
+           th:text="${parent.name}"
+           th:classappend="
+             ${parent.categoryId == page.categoryGroup.parentCategoryId}
+             ? ' active'">
+          대분류명
+        </a>
+      </li>
 
-      <!-- 대분류 영역 -->
-      <div class="category-nav">
-        <div class="category-dropdown">
-          <a class="category-dropdown-toggle"
-             th:href="@{/products(categoryId=${page.categoryGroup.parentCategoryId})}">
-            <span th:text="${page.categoryGroup.parentCategoryName}">
-              디지털기기
-            </span>
-            <svg width="14" height="14" viewBox="0 0 24 24">
-              <path d="M7 10l5 5 5-5z"/>
-            </svg>
-          </a>
-        </div>
-      </div>
+    </ul>
+  </nav>
 
-      <!-- 🔥 메가 드롭다운 패널 (같은 래퍼 안) -->
-      <div class="category-mega-panel">
-        <ul class="subcategory-grid">
-          <li th:each="sub : ${page.categoryGroup.subCategories}"
-              th:classappend="${sub.selected} ? 'is-active'">
-            <a th:href="@{/products(categoryId=${sub.categoryId})}"
-               th:text="${sub.categoryName}">
-              소분류
-            </a>
+  <!-- =========================
+       CATEGORY BAR (LIST PAGE)
+       → 소분류 탐색용
+  ========================= -->
+  <section class="list-category-bar">
+
+    <div class="list-category-dropdown"
+         id="listCategoryDropdown">
+
+      <!-- 대분류 버튼 (현재 선택 상태 표시용) -->
+      <button type="button"
+              class="list-category-toggle"
+              id="listCategoryToggle">
+
+        <span class="list-category-selected"
+              th:text="${page.categoryGroup.parentCategoryName}">
+          대분류명
+        </span>
+
+        <svg class="list-category-arrow"
+             width="14" height="14" viewBox="0 0 24 24">
+          <path d="M7 10l5 5 5-5z"/>
+        </svg>
+      </button>
+
+      <!-- =========================
+           MEGA MENU PANEL (소분류)
+      ========================= -->
+      <div class="list-category-panel"
+           id="listCategoryMenu">
+
+        <!-- LEFT : 현재 대분류 (표시용) -->
+        <ul class="list-category-main">
+          <li class="is-active"
+              th:text="${page.categoryGroup.parentCategoryName}">
+            대분류명
           </li>
         </ul>
-      </div>
 
+        <!-- RIGHT : 소분류 리스트 -->
+        <ul class="list-category-sub">
+
+          <li class="list-category-item"
+              th:each="sub : ${page.categoryGroup.subCategories}"
+              th:classappend="${sub.selected} ? ' is-active'">
+
+            <a class="list-category-link"
+               th:href="@{/products(categoryId=${sub.categoryId})}"
+               th:text="${sub.categoryName}">
+              소분류명
+            </a>
+
+          </li>
+
+        </ul>
+
+      </div>
     </div>
   </section>
 
-  <!-- PRODUCT LIST -->
+  <!-- =========================
+       PRODUCT LIST
+  ========================= -->
   <section class="product-list">
 
+    <!-- 결과 없음 -->
     <div class="empty-result"
          th:if="${#lists.isEmpty(page.productList.products)}">
       등록된 상품이 없습니다.
     </div>
 
+    <!-- 상품 카드 -->
     <div class="product-grid"
          th:if="${!#lists.isEmpty(page.productList.products)}">
 
@@ -70,4 +122,12 @@
   </section>
 
 </div>
+
+<!-- =========================
+     PAGE JS
+========================= -->
+<th:block th:fragment="pageJs">
+  <script th:src="@{/js/product/list-category.js}"></script>
+</th:block>
+
 </html>

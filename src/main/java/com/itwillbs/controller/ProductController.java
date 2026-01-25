@@ -107,13 +107,20 @@ public class ProductController {
 	    @RequestParam(name = "categoryId", required = false) Long categoryId,
 	    Model model
 	) {
+	    // 1️⃣ 카테고리 페이지 데이터 (기존)
 	    CategoryPageVO page =
 	        productCategoryService.getCategoryPage(categoryId);
 
+	    // 2️⃣ 🔥 전체 부모 카테고리 리스트 (추가)
+	    model.addAttribute(
+	        "parentCategoryList",
+	        productCategoryService.getParentCategoryList()
+	    );
+
+	    // 3️⃣ 페이지 데이터
 	    model.addAttribute("page", page);
+
 	    return "product/list";
 	}
-
-
 
 }
