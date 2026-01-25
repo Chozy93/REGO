@@ -43,6 +43,11 @@
   justify-content: center;
   flex: 0 0 auto;
 }
+.profie-avatar{
+	width: 120px;
+	 height: 120px;
+	 border-radius: 50%;
+}
 
 .seller-info {
   flex: 1;
@@ -66,13 +71,10 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  max-width: 200px;
-  margin-top: 10px;
-  margin-bottom: 12px;
-  font-size: 10px;
-  padding: 8px 14px;
+  padding: 5px;
 
-  min-width: 220px;              /* 너가 말한 min-width */
+  
+  width: 180px;              /* 너가 말한 min-width */
   background: var(--color-bg-soft);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
@@ -81,7 +83,7 @@
 .seller-stars {
   position: relative;
   display: inline-block;
-  font-size: 14px;
+  font-size: var(--fs-12);
   line-height: 1;
   letter-spacing: 1px;
 }
@@ -111,13 +113,13 @@
 }
 
 .seller-rating-value {
-  font-size: var(--fs-14);
+  font-size: var(--fs-12);
   font-weight: var(--fw-bold);
   color: var(--color-text-base);
 }
 
 .seller-review-count {
-  font-size: var(--fs-13);
+  font-size: var(--fs-12);
   color: var(--color-text-muted);
 }
 
@@ -230,6 +232,9 @@
   font-size: var(--fs-13);
   font-weight: var(--fw-semibold);
   color: var(--color-text-muted);
+}
+.seller-tabs-wrap{
+	border: none !important;
 }
 
 .seller-tabs-wrap .ui-tabs-active .tab-btn {
@@ -498,9 +503,6 @@
   min-height: 180px;
   padding: var(--space-32);
 
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
 
   color: var(--color-text-muted);
   text-align: center;

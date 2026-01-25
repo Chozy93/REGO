@@ -82,7 +82,7 @@
 ================================================== -->
 <!--<th:block th:replace="fragments/login-modal :: loginModal"></th:block>-->
 <div th:replace="fragments/category-modal :: category-modal"></div>
-<div th:replace="~{fragments/region-modal :: region-modal}"></div>
+<div th:replace="fragments/region-modal :: region-modal"></div>
 
 <!-- ==================================================
      Global JS
@@ -104,6 +104,7 @@
         th:src="'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${kakaoKey} + '&libraries=services'"></script>
 		
 <script th:src="@{/js/region/region.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/autonumeric@4.10.5"></script>
 
 
 <!-- ==================================================

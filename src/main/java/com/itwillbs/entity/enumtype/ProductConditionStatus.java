@@ -19,4 +19,8 @@ public enum ProductConditionStatus {
     public String getLabel() {
         return label;
     }
+    
+    public static ProductConditionStatus from(String code) {
+        return ProductConditionStatus.valueOf(code);
+    }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.itwillbs.dto.ProductRegionDTO;
 import com.itwillbs.view.seller.ReviewFilterConditionVO;
 import com.itwillbs.view.seller.SellerProductCardViewVO;
 import com.itwillbs.view.seller.SellerProfileViewVO;
@@ -43,4 +44,6 @@ public interface SellerMapper {
             @Param("offset") int offset,
             @Param("size") int size
     );
+    //상품 직거래 장소 검색
+    List<ProductRegionDTO> searchProductRegions(@Param("keyword") String keyword);
 }

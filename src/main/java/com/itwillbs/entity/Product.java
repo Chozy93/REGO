@@ -9,6 +9,7 @@ import com.itwillbs.domain.ProductVO;
 import com.itwillbs.entity.enumtype.ProductConditionStatus;
 import com.itwillbs.entity.enumtype.ProductSalesStatus;
 import com.itwillbs.entity.enumtype.TradeType;
+import com.itwillbs.view.condition.SellerProductRegisterConditionVO;
 
 @Entity
 @Table(name = "products")
@@ -108,7 +109,7 @@ private User buyer;
     /* =========================
        이미지
     ========================= */
-    @Column(name = "main_image_url", length = 500, nullable = false)
+    @Column(name = "main_image_url", length = 500, nullable = true)
     private String mainImageUrl;
 
     /* =========================
@@ -154,6 +155,69 @@ private User buyer;
         this.createdAt = LocalDateTime.now();
     }
 
+    public static Product createByRegisterCondition(
+            User seller,
+            Category category,
+            SellerProductRegisterConditionVO conditionVO,
+            String mainImageUrl
+    ) {
+        Product product = new Product();
+
+        /* =========================
+           연관 엔티티
+        ========================= */
+        product.seller = seller;
+        product.category = category;
+
+        /* =========================
+           상품 기본 정보
+        ========================= */
+        product.productName = conditionVO.getTitle();
+        product.description = conditionVO.getDescription();
+        product.price = conditionVO.getPrice();
+
+        /* =========================
+           상품 상태 (문자열 → Enum)
+           - label/code 비교는 enum 내부에서
+        ========================= */
+        product.conditionStatus =
+            ProductConditionStatus.from(conditionVO.getConditionStatus());
+
+        product.tradeType =
+            TradeType.from(conditionVO.getTradeType());
+
+        /* =========================
+           판매 상태 (초기값)
+        ========================= */
+        product.salesStatus = ProductSalesStatus.ON_SALE;
+
+        /* =========================
+           지역 정보
+        ========================= */
+        product.regionSidoCode = conditionVO.getRegionSidoCode();
+        product.regionSigunguCode = conditionVO.getRegionSigunguCode();
+        product.regionEupmyeondongCode = conditionVO.getRegionEupmyeondongCode();
+        product.regionDisplayName = conditionVO.getRegionDisplayName();
+
+        /* =========================
+           이미지 (대표 이미지)
+           - nullable=false 이므로 반드시 필요
+        ========================= */
+        product.mainImageUrl = mainImageUrl;
+
+        /* =========================
+           통계 초기값
+        ========================= */
+        product.viewCount = 0;
+        product.likeCount = 0;
+
+        /* =========================
+           생성 시각
+        ========================= */
+        product.createdAt = LocalDateTime.now();
+
+        return product;
+    }
 
     /* =========================
        Entity → VO

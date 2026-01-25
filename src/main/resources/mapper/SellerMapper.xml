@@ -114,5 +114,49 @@
   LIMIT #{size} OFFSET #{offset}
 </select>
 
+<!--	상품 지역 검색 -->
+  <select id="searchProductRegions"
+          resultType="com.itwillbs.dto.ProductRegionDTO">
+
+  SELECT
+  r.region_code AS regionCode,
+
+  CASE
+    WHEN r.region_level = 1 THEN r.region_code
+    WHEN p1.region_level = 1 THEN p1.region_code
+    WHEN p2.region_level = 1 THEN p2.region_code
+  END AS sidoCode,
+
+  CASE
+    WHEN r.region_level = 2 THEN r.region_code
+    WHEN p1.region_level = 2 THEN p1.region_code
+  END AS sigunguCode,
+
+  CASE
+    WHEN r.region_level = 3 THEN r.region_code
+  END AS eupmyeondongCode,
+
+  CONCAT_WS(' ',
+    p2.region_name,
+    p1.region_name,
+    r.region_name
+  ) AS displayName
+
+    FROM region r
+    LEFT JOIN region p1 ON r.parent_code = p1.region_code
+    LEFT JOIN region p2 ON p1.parent_code = p2.region_code
+
+    WHERE r.is_active = 1
+      AND (
+        r.region_name LIKE CONCAT('%', #{keyword}, '%')
+        OR p1.region_name LIKE CONCAT('%', #{keyword}, '%')
+        OR p2.region_name LIKE CONCAT('%', #{keyword}, '%')
+      )
+
+    ORDER BY r.region_level ASC
+    LIMIT 30
+
+  </select>
+
 
 </mapper>

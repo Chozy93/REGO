@@ -1,16 +1,25 @@
 package com.itwillbs.controller;
 
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.itwillbs.dto.ProductRegionDTO;
 import com.itwillbs.entity.User;
 import com.itwillbs.security.util.SecurityUtil;
 import com.itwillbs.service.SellerService;
+import com.itwillbs.view.condition.SellerProductRegisterConditionVO;
 import com.itwillbs.view.condition.SellerRegisterConditionVO;
 import com.itwillbs.view.seller.ReviewFilterConditionVO;
 import com.itwillbs.view.seller.ReviewSortType;
@@ -125,5 +134,43 @@ public class SellerController {
 		         return "redirect:/seller/register";
 		     }
 		 }
+		 /* =========================
+	    	판매 상품 지역 검색 
+	 	========================= */
+		 
+		 @GetMapping("/product/regions/search")
+		 @ResponseBody
+		 public List<ProductRegionDTO> searchRegions(@RequestParam("keyword") String keyword) {
+			    return sellerService.searchProductRegions(keyword);
+			}
+		 
+		 
+		 
+		 /* =========================
+		      상품 등록 처리
+		     ========================= */
+		 @PostMapping("/product/register")
+		 public String registerProduct(
+		         @ModelAttribute SellerProductRegisterConditionVO conditionVO,
+		         @RequestParam(name = "images", required = false) List<MultipartFile> images,
+		         RedirectAttributes redirectAttributes
+		 ) {
+			 if (images != null) {
+				    images = images.stream()
+				        .filter(file -> !file.isEmpty())
+				        .toList();
+
+				    if (images.isEmpty()) {
+				        images = null;
+				    }
+				}
+
+		     Long productId = sellerService.productRegister(conditionVO, images);
+
+		     redirectAttributes.addFlashAttribute("successMessage", "상품이 등록되었습니다.");
+
+		     return "redirect:/product/" + productId;
+		 }
+
 
 }

@@ -1,0 +1,56 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="product-region-modal"
+     id="productRegionModal"
+     class="product-region-modal-overlay"
+     style="display: none;">
+
+  <div class="product-region-modal-container">
+
+    <!-- =========================
+         Header
+    ========================= -->
+    <div class="product-region-modal-header">
+      <h2 class="product-region-modal-title">거래 희망 지역 선택</h2>
+      <button type="button"
+              class="product-region-close-btn"
+              onclick="closeProductRegionModal()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <!-- =========================
+         Search
+    ========================= -->
+    <div class="product-region-search-section">
+      <div class="product-region-search-input-wrapper">
+        <span class="material-symbols-outlined product-region-search-icon">
+          search
+        </span>
+        <input type="text"
+               class="product-region-search-input"
+               placeholder="지역명을 검색하세요">
+      </div>
+    </div>
+
+    <!-- =========================
+         Result List
+    ========================= -->
+    <div class="product-region-list" id="productRegionDataContainer">
+      <p class="product-region-initial-text"
+         style="text-align:center; padding:20px; color:#888;">
+        거래 희망 지역을 입력해주세요.
+      </p>
+    </div>
+
+    <!-- =========================
+         Footer
+    ========================= -->
+    <div class="product-region-modal-footer">
+      <p class="product-region-footer-text">
+        직거래 선택 시, 설정한 지역 기준으로 거래가 진행됩니다.
+      </p>
+    </div>
+
+  </div>
+</div>
+</html>
