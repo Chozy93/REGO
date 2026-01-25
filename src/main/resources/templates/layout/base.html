@@ -43,6 +43,7 @@
     <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">
     <link rel="stylesheet" th:href="@{/css/fragments/category-modal.css}">
 	<link rel="stylesheet" th:href="@{/css/fragments/region.css}">
+	<link rel="stylesheet" th:href="@{/css/fragments/login-modal.css}">
 
 <!--    <link rel="stylesheet" th:href="@{/css/modal.css}">-->
 
@@ -83,13 +84,16 @@
 <!--<th:block th:replace="fragments/login-modal :: loginModal"></th:block>-->
 <div th:replace="fragments/category-modal :: category-modal"></div>
 <div th:replace="fragments/region-modal :: region-modal"></div>
-
+<th:block sec:authorize="isAnonymous()">
+<div th:replace="fragments/login-modal :: login-modal"></div>
+</th:block>
 <!-- ==================================================
      Global JS
 ================================================== -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script th:src="@{/js/common.js}"></script>
 <script th:src="@{/js/fragments/header.js}"></script>
+<script th:src="@{/js/fragments/login-modal.js}"></script>
 <script th:inline="javascript">
     /* 컨트롤러의 변수를 JS 전역 변수로 할당 */
 	/*<![CDATA[*/

@@ -1,0 +1,263 @@
+/* ===============================
+   Login Modal
+=============================== */
+
+.login-modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* backdrop */
+.login-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* panel */
+.login-modal__panel {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+
+  padding: calc(var(--space-24) + 4px);   /* 전체 여백 + */
+  gap: calc(var(--space-16) + 4px);
+
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+/* close */
+.login-modal__close {
+  position: absolute;
+  top: var(--space-12);
+  right: var(--space-12);
+  color: var(--color-text-muted);
+}
+
+.login-modal__close:hover {
+  color: var(--color-text);
+}
+
+/* ===============================
+   Header
+=============================== */
+
+.login-modal__header {
+  gap: var(--space-8);
+}
+
+.login-modal__title {
+  font-size: var(--fs-20);
+  font-weight: var(--fw-bold);
+}
+
+.login-modal__desc {
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+}
+
+/* error */
+.login-modal__error {
+  margin-top: var(--space-8);
+  padding: var(--space-10);
+  border-radius: var(--radius-md);
+
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--color-danger);
+  font-size: var(--fs-12);
+}
+
+/* ===============================
+   Form / Field
+=============================== */
+
+.login-modal__form {
+  gap: var(--space-16);
+}
+
+.login-modal__field {
+  gap: 7px; /* 오목조목함 해결 포인트 */
+}
+
+.login-modal__field label {
+  font-size: var(--fs-13);
+  font-weight: var(--fw-medium);
+}
+
+/* input (checkbox 제외) */
+.login-modal input:not([type="checkbox"]) {
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-12);
+  padding-right: 44px;
+
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.login-modal input::placeholder {
+  color: var(--color-accent-text);
+}
+
+/* password */
+.password-field {
+  position: relative;
+  width: 100%;
+}
+
+.password-toggle {
+  position: absolute;
+  right: var(--space-12);
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 28px;
+  height: 28px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-text-muted);
+}
+
+.password-toggle:hover {
+  color: var(--color-text);
+}
+
+/* ===============================
+   Options
+=============================== */
+
+.login-modal__options {
+  font-size: var(--fs-12);
+  padding: calc(var(--space-8) + 2px) 0;
+}
+
+.find-links span {
+  margin: 0 var(--space-6);
+  color: var(--color-divider);
+}
+
+/* remember checkbox */
+.remember {
+  gap: var(--space-8);
+  font-size: var(--fs-13);
+}
+
+.remember input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 4px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.remember input[type="checkbox"]:checked {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.remember input[type="checkbox"]:checked::after {
+  content: "✓";
+  font-size: 12px;
+  font-weight: var(--fw-bold);
+  color: #102216;
+  line-height: 1;
+}
+
+/* ===============================
+   Submit
+=============================== */
+
+.login-modal__submit {
+  height: 44px;
+  font-size: var(--fs-14);
+  border-radius: var(--radius-md);
+  margin-top: 6px;
+}
+
+/* signup */
+.login-modal__signup {
+  font-size: var(--fs-13);
+}
+
+.login-modal__signup a {
+  color: var(--color-primary);
+  font-weight: var(--fw-medium);
+}
+
+/* ===============================
+   Divider / SNS
+=============================== */
+
+.login-modal__divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+  margin-top: calc(var(--space-12) + 4px);
+}
+
+.login-modal__divider::before,
+.login-modal__divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-divider);
+}
+
+.login-modal__sns {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-12);
+}
+
+.sns {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--color-surface-2);
+}
+
+.sns img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* brand */
+.sns.kakao {
+  background: #FEE500;
+}
+
+.sns.naver {
+  background: #03C75A;
+}
+
+.sns.google {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+}

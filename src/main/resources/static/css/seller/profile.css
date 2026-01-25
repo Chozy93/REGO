@@ -519,3 +519,13 @@
   font-size: var(--fs-14);
   line-height: 1.6;
 }
+
+/* =========================
+   Seller Profile - Hide Like Button
+========================= */
+
+/* 판매자 마이프로필에서는 찜(하트) 버튼 완전 제거 */
+.seller-profile .product-card__like-btn {
+  display: none !important;
+}
+
