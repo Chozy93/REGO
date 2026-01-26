@@ -7,7 +7,7 @@
         u.user_id as userId,
         u.email,
         u.nickname,
-        u.bio,
+        u.introduction,
         u.phone_number as phoneNumber,
         u.gender,
         u.profile_img as profileImg,
@@ -30,7 +30,7 @@
 <update id="updateUser">
     UPDATE users 
     SET nickname = #{vo.nickname},
-        bio = #{vo.bio},
+        introduction = #{vo.introduction},
         phone_number = #{vo.phoneNumber}
     WHERE user_id = #{userId}
 </update>

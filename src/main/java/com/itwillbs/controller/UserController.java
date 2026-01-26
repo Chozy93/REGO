@@ -154,7 +154,7 @@ public class UserController {
         
         // 세션 정보 업데이트
         loginUser.setNickname(updateData.getNickname());
-        loginUser.setBio(updateData.getBio());
+        loginUser.setIntroduction(updateData.getIntroduction());
         loginUser.setAddress(updateData.getAddress());
         loginUser.setPhoneNumber(updateData.getPhoneNumber());
         

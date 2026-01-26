@@ -12,7 +12,7 @@ public class MyPageDTO {
     private String password;  
     private String phoneNumber; 
     private String gender;
-    private String bio;     
+    private String introduction;     
     
 
     private String address;    
