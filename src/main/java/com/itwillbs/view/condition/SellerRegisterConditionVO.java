@@ -1,6 +1,7 @@
 package com.itwillbs.view.condition;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -11,6 +12,7 @@ import lombok.ToString;
  * - Domain / Entity와 분리
  */
 @Getter
+@Setter
 @ToString
 public class SellerRegisterConditionVO {
 

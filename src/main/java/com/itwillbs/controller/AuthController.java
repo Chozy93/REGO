@@ -242,7 +242,7 @@ public class AuthController {
 				model.addAttribute("userPhone", phone);
 			}
 		}
-		return "auth/completeInfo";
+		return "auth2/complete-Info";
 	}
 
 	@PostMapping("/auth/update-phone")

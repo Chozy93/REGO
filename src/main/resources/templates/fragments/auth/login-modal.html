@@ -13,10 +13,7 @@
 	     <h2 class="login-modal__title">로그인</h2>
 	     <p class="login-modal__desc">중고 거래를 시작해보세요</p>
 
-	     <div th:if="${param.error != null and param.exception != null}"
-	          class="login-modal__error">
-	       <span th:text="${param.exception}"></span>
-	     </div>
+	<div class="login-modal__error is-hidden" id="loginError"></div>
 	   </header>
 
 	   <!-- Form -->

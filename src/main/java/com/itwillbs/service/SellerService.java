@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.itwillbs.domain.SellerProfileVO;
 import com.itwillbs.dto.ProductRegionDTO;
 import com.itwillbs.entity.Category;
 import com.itwillbs.entity.Product;
@@ -63,11 +62,9 @@ public class SellerService {
 	     // 🔑 FK 용도 → 프록시가 베스트
 	     User managedUser = userRepository.getReferenceById(userId);
 
-	     SellerProfileVO sellerProfileVO =
-	             new SellerProfileVO(conditionVO);
 
 	     SellerProfile sellerProfile =
-	             new SellerProfile(managedUser, sellerProfileVO);
+	             new SellerProfile(managedUser, conditionVO);
 
 	     sellerProfileRepository.save(sellerProfile);
 	 }

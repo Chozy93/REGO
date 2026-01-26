@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/auth/complete-info.css">
+</th:block>
+
+<div layout:fragment="content" class="complete-info">
+
+
+ 
+
+  <section class="complete-card">
+
+    <!-- intro -->
+    <header class="complete-intro text-center">
+      <div class="complete-logo">RE</div>
+      <p class="text-muted">마지막 단계입니다</p>
+    </header>
+
+    <!-- title -->
+    <div class="complete-title">
+      <h1>본인인증 후 계정 정보를 입력해주세요</h1>
+      <p class="text-muted">
+        안전한 거래를 위해 추가 정보 입력이 필요합니다.
+      </p>
+    </div>
+
+    <!-- form -->
+    <form id="completeInfoForm"
+          class="complete-form">
+
+      <!-- =========================
+           로그인 계정 표시
+      ========================== -->
+      <div class="form-section">
+        <h2 class="form-section-title">로그인 계정</h2>
+
+        <div class="form-group">
+          <input type="text"
+                 th:value="${loginUser.email}"
+                 readonly
+                 class="input-readonly">
+        </div>
+      </div>
+
+      <!-- =========================
+           본인인증
+      ========================== -->
+      <div class="form-section">
+        <h2 class="form-section-title">본인인증</h2>
+
+        <div class="form-group inline">
+          <input type="tel"
+                 id="phoneNumber"
+                 placeholder="휴대폰 번호 (- 없이)">
+          <button type="button"
+                  id="requestCertBtn"
+                  class="btn btn-primary auth-btn">
+            인증하기
+          </button>
+        </div>
+      </div>
+
+      <!-- =========================
+           비밀번호 설정
+      ========================== -->
+      <div class="form-section">
+        <h2 class="form-section-title">비밀번호 설정</h2>
+
+        <div class="form-group">
+          <input type="password"
+                 id="newPassword"
+                 placeholder="비밀번호 입력">
+        </div>
+
+        <div class="form-group">
+          <input type="password"
+                 id="confirmPassword"
+                 placeholder="비밀번호 확인">
+          <p id="pwError" class="form-msg error is-hidden">
+          </p>
+        </div>
+      </div>
+
+      <button type="button"
+              id="submitBtn"
+              class="btn btn-primary btn-submit"
+              disabled>
+        인증 완료하고 시작하기
+      </button>
+
+    </form>
+
+  </section>
+</div>
+
+<th:block th:fragment="pageJs">
+  <script th:src="@{/js/auth/complete-info.js}"></script>
+</th:block>
+
+</html>

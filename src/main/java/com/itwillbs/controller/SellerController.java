@@ -112,7 +112,7 @@ public class SellerController {
 	       판매자 등록 처리
 	    ========================= */
 		 @PostMapping("/register")
-		 public String registerSeller(SellerRegisterConditionVO conditionVO) {
+		 public String registerSeller(@ModelAttribute SellerRegisterConditionVO conditionVO) {
 
 		     User loginUser = SecurityUtil.getCurrentUser();
 
