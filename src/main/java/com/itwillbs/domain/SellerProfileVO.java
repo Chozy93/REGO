@@ -14,7 +14,6 @@ public class SellerProfileVO {
 
     private final Long sellerId;
 
-    private final String description;
 
     private final Double ratingAvg;
     private final Integer totalSales;
@@ -44,7 +43,6 @@ public class SellerProfileVO {
     public SellerProfileVO(SellerProfile entity) {
 
         this.sellerId = entity.getSellerId();
-        this.description = entity.getDescription();
 
         this.ratingAvg = entity.getRatingAvg();
         this.totalSales = entity.getTotalSales();
