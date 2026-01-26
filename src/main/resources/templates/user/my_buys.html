@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
+	
 <head>
     <th:block layout:fragment="pageCss">
         <link rel="stylesheet" href="/css/main/main.css">
@@ -16,6 +17,7 @@
                     }
                 }
             }
+			
         </script>
         <style>
             #tailwind-zone { font-family: 'Manrope', 'Noto Sans KR', sans-serif; background-color: #f8faf9; min-height: 100vh; }
@@ -25,6 +27,10 @@
             .rego-card { border: none !important; }
         </style>
     </th:block>
+	<th:block layout:fragment="pageJs">
+	    <link rel="stylesheet" th:href="@{/css/fragments/review-modal.css}"> 
+	    <script th:src="@{/js/fragments/review-modal.js}"></script>
+	</th:block>
 </head>
 
 <body>
@@ -126,13 +132,16 @@
 								            <span th:text="${item.sellerNickname}" class="text-[11px] font-medium text-gray-600 dark:text-gray-400">판매자</span>
 								        </div>
 								        
-								        <div class="flex gap-1">
-								            <button th:if="${item.salesStatusCode == 'SOLD'}" 
-								                    th:onclick="|event.stopPropagation(); location.href='/mypage/review/write?productId=${item.productId}'|" 
-								                    class="px-2 py-1 bg-primary text-[#111813] text-[10px] font-bold rounded-lg hover:bg-primary/90 transition-colors">
-								                리뷰 작성
-								            </button>
-								        </div>
+											<div class="flex gap-1">
+												<button th:if="${item.salesStatusCode == 'SOLD'}" 
+												        type="button"
+												        class="btn-review px-2 py-1 bg-primary text-[#111813] text-[10px] font-bold rounded-lg hover:bg-primary/90 transition-colors"
+												        th:data-product-id="${item.productId}"
+												        th:data-seller-id="${item.sellerId}"
+												        th:data-product-title="${item.productName}"
+												        th:data-seller-name="${item.sellerNickname}"> 리뷰 작성
+												</button>
+											</div>
                                     </div>
                                 </div>
                             </div>
@@ -213,7 +222,45 @@
             });
             updateUI();
         });
+		
+		function openReviewModal(btn, event) {
+		    event.stopPropagation();
+		    
+		    const $modal = $('#reviewWriteModal');
+		    const $form = $('#reviewWriteForm');
+		    
+		    if ($modal.length) {
+		        // 1. 데이터 세팅 
+		        const productId = $(btn).data('product-id');
+		        const sellerId = $(btn).data('seller-id');
+		        const productTitle = $(btn).data('product-title');
+		        const sellerName = $(btn).data('seller-name');
+
+		        $form.find('input[name="productId"]').val(productId);
+		        $form.find('input[name="sellerId"]').val(sellerId);
+		        $('.review-product__title').text(productTitle);
+		        $('.review-product__seller-name').text(sellerName);
+
+		        const $footer = $modal.find('.review-modal__footer');
+		        $footer.attr('style', 'display: flex !important; visibility: visible !important; opacity: 1 !important;');
+		        
+		        // 3. 모달 나타내기
+		        $modal.removeClass('is-hidden');
+		        $('body').css('overflow', 'hidden');
+
+		        // 4. 닫기 버튼 이벤트 재연결 
+		        $modal.find('.review-modal__back-btn, .review-modal__backdrop').off('click').on('click', function() {
+		            $modal.addClass('is-hidden');
+		            $('body').css('overflow', '');
+		        });
+
+		        console.log("리뷰 모달 활성화 성공!");
+		    } else {
+		        console.error("모달 요소를 찾을 수 없어! th:replace 부분을 확인해봐.");
+		    }
+		}
         </script>
+		<div th:replace="~{fragments/review-write-modal :: #reviewWriteModal}"></div>
     </div>
 </body>
 </html>
