@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/auth/signup-terms.css">
+</th:block>
+
+<div layout:fragment="content" class="signup-terms">
+
+  <!-- ===============================
+       Back
+  =============================== -->
+  <div class="signup-terms__back">
+    <a th:href="@{/}" class="signup-terms__back-link">
+      <span class="material-symbols-outlined">arrow_back</span>
+      메인으로 돌아가기
+    </a>
+  </div>
+
+  <!-- ===============================
+       Card
+  =============================== -->
+  <section class="signup-terms-card">
+
+    <!-- Intro -->
+    <header class="signup-terms-intro">
+      <div class="signup-terms-logo">RE</div>
+      <p class="signup-terms-sub">새로운 시작, RE: GO와 함께</p>
+    </header>
+
+    <!-- Progress -->
+    <div class="signup-progress">
+      <div class="signup-progress-head">
+        <span class="signup-progress-step">약관동의</span>
+        <span class="signup-progress-count">1/3</span>
+      </div>
+      <div class="signup-progress-bar">
+        <div class="signup-progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="signup-terms-title">
+      <h1 class="signup-terms-h1">
+        환영합니다!<br>
+        거래 시작 전 약관에 동의해주세요.
+      </h1>
+      <p class="signup-terms-desc">
+        안전한 중고 거래 환경을 위해 꼭 필요한 절차입니다.
+      </p>
+    </div>
+
+    <!-- Terms -->
+    <div class="terms-box">
+
+      <!-- All Agree -->
+      <label class="terms-all">
+        <input type="checkbox" id="agreeAll" class="terms-checkbox">
+        <div class="terms-all-text">
+          <p class="terms-all-title">모두 동의합니다</p>
+          <p class="terms-all-sub">선택 동의 항목 포함</p>
+        </div>
+      </label>
+
+      <!-- Items -->
+      <ul class="terms-list">
+        <li class="terms-item">
+          <label class="terms-item-left">
+            <input type="checkbox" class="terms-checkbox required">
+            <span class="terms-item-text">
+              <span class="terms-tag is-required">필수</span>
+              만 14세 이상입니다
+            </span>
+          </label>
+          <a class="terms-item-right" href="/youth" target="_blank">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </a>
+        </li>
+
+        <li class="terms-item">
+          <label class="terms-item-left">
+            <input type="checkbox" class="terms-checkbox required">
+            <span class="terms-item-text">
+              <span class="terms-tag is-required">필수</span>
+              서비스 이용약관 동의
+            </span>
+          </label>
+          <a class="terms-item-right" href="/terms" target="_blank">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </a>
+        </li>
+
+        <li class="terms-item">
+          <label class="terms-item-left">
+            <input type="checkbox" class="terms-checkbox required">
+            <span class="terms-item-text">
+              <span class="terms-tag is-required">필수</span>
+              개인정보 수집 및 이용 동의
+            </span>
+          </label>
+          <a class="terms-item-right" href="/privacy" target="_blank">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </a>
+        </li>
+
+        <li class="terms-item">
+          <label class="terms-item-left">
+            <input type="checkbox" class="terms-checkbox">
+            <span class="terms-item-text">
+              <span class="terms-tag is-optional">선택</span>
+              위치기반 서비스 이용약관 동의
+            </span>
+          </label>
+          <a class="terms-item-right" href="/location" target="_blank">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </a>
+        </li>
+
+        <li class="terms-item">
+          <label class="terms-item-left">
+            <input type="checkbox" class="terms-checkbox">
+            <span class="terms-item-text">
+              <span class="terms-tag is-optional">선택</span>
+              이벤트 및 혜택 알림 수신 동의
+            </span>
+          </label>
+          <button type="button" class="terms-item-right">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+        </li>
+      </ul>
+
+    </div>
+
+    <!-- Next -->
+    <button type="button" class="btn btn-primary signup-terms-next" id="nextBtn">
+      다음
+    </button>
+
+  </section>
+</div>
+
+<th:block th:fragment="pageJs">
+  <script th:src="@{/js/auth/signup-terms.js}"></script>
+</th:block>
+
+</html>

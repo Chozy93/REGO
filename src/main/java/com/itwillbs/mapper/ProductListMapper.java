@@ -9,12 +9,10 @@ import com.itwillbs.dto.ProductListByCategoryDTO;
 
 @Mapper
 public interface ProductListMapper {
-	
-	List<ProductListByCategoryDTO> selectProductsByCategoryWithChildren(
-			@Param("categoryId") Long categoryId
-			);
-	
-	
-	
 
+    List<ProductListByCategoryDTO> selectProductsByCategoryWithChildren(
+        @Param("categoryId") Long categoryId,
+        @Param("loginUserId") Long loginUserId
+    );
 }
+

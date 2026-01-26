@@ -3,188 +3,262 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
 
-	  <head>
-	      <!-- ⚠️ 임시 우회 방식 -->
-	      <link rel="stylesheet" th:href="@{/css/product/detail.css}">
-	  </head>
+<!-- =========================
+     PAGE CSS
+========================= -->
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" th:href="@{/css/product/detail.css}">
+  <link rel="stylesheet" th:href="@{/css/fragments/report-modal.css}">
+</th:block>
 
-<!-- ===============================
-     Page Content
-=============================== -->
-<div layout:fragment="content">
+<!-- =========================
+     PAGE JS
+========================= -->
+<!-- PAGE JS -->
+<th:block th:fragment="pageJs">
+  <script src="/js/product/detail.js"></script>
+  <script src="/js/product/detail-report.js"></script>
+  <script src="/js/product/recent-view.js"></script>
+</th:block>
 
-    <main class="container-content">
+<!-- =========================
+     CONTENT
+========================= -->
+<div class="container-content" layout:fragment="content">
 
-        <!-- 상세페이지 2컬럼 레이아웃 -->
-        <div class="product-detail-grid">
+  <!-- 상품 ID -->
+  <input type="hidden"
+         id="productId"
+         th:value="${page.product.productId}"/>
 
-            <!-- 왼쪽: 상품 이미지 -->
-            <div class="product-detail-media">
-				
-				<div class="product-image-viewer">
-					
-					<div class="product-image-main">
-						<img th:if="${#lists.size(product.imageUrls) > 0}"
-						     th:src="${product.imageUrls[0]}"
-						     alt="상품 이미지"/>
+  <!-- =========================
+       GRID LAYOUT
+  ========================= -->
+  <section class="product-detail-grid">
 
-						<img th:if="${#lists.isEmpty(product.imageUrls)}"
-						     src="/images/no-image.png"
-						     alt="기본 이미지"/>
+    <!-- =========================
+         LEFT : 이미지 + 판매자 + 버튼
+    ========================= -->
+    <div class="detail-left">
 
-                   </div>
-				   
-				   <!-- (추후용) 썸네일 영역 -->
-				           <!--
-				           <div class="product-image-thumbs">
-				               <img th:each="img : ${product.imageUrls}"
-				                    th:src="${img}"
-				                    class="thumb">
-				           </div>
-					   <img th:if="${product != null and #lists.size(product.imageUrls) > 0}"
-					                th:src="${product.imageUrls[0]}"
-					                alt="상품 이미지">
+      <!-- 상품 이미지 -->
+      <section class="product-detail-media">
+        <div class="product-image-main">
+          <img th:if="${page.product.mainImageUrl != null}"
+               th:src="${page.product.mainImageUrl}"
+               alt="상품 이미지"/>
 
-					           <img th:if="${product == null or #lists.isEmpty(product.imageUrls)}"
-					                src="/images/no-image.png"
-					                alt="기본 이미지">				           -->
-					</div>
+          <img th:if="${page.product.mainImageUrl == null}"
+               src="/images/no-image.png"
+               alt="기본 이미지"/>
+        </div>
+      </section>
 
-          </div>
+      <!-- 🔽 이미지 아래 영역 -->
+      <div class="left-bottom-box">
+
+        <!-- 판매자 카드 -->
+		<section class="info-card seller-card"
+		         th:if="${page.sellerInfo != null}">
+
+		  <!-- 상단 -->
+		  <div class="seller-card-header">
+		    <div class="seller-card-profile">
+		      <span class="material-symbols-outlined">person</span>
+		    </div>
+
+		    <div class="seller-card-meta">
+		      <div class="seller-card-name"
+		           th:text="${page.sellerInfo.nickname}">
+		        판매자
+		      </div>
+
+		      <div class="seller-card-stats">
+		        <span>상품 <b th:text="${page.sellerInfo.productCount}">0</b></span>
+		        <span class="dot"></span>
+		        <span th:text="${page.sellerInfo.ratingLabel}">평점</span>
+		      </div>
+		    </div>
+		  </div>
+
+		  <!-- 중단: 신뢰 정보 -->
+		  <div class="seller-card-info">
+		    <div class="seller-card-info-row">
+		      <span class="label">판매자 유형</span>
+
+		      <span class="seller-type-badge"
+		            th:text="${page.sellerInfo.newSeller ? '신규 판매자' : '일반 판매자'}">
+		        일반 판매자
+		      </span>
+		    </div>
+		  </div>
+
+		  <!-- 하단: 액션 -->
+		  <div class="seller-card-actions">
+		    <a class="btn btn-primary"
+		       th:href="@{/seller/{id}(id=${page.sellerInfo.sellerId})}">
+		      판매자 상품 보기
+		    </a>
+		  </div>
+
+		</section>
+
+        <!-- 찜 / 채팅 / 구매 -->
+		<div class="action-card product-detail">
+
+		  <!-- 찜 버튼 (본인 상품이어도 가능) -->
+		  <button type="button"
+		          class="product-card__like-btn"
+		          th:data-product-id="${page.product.productId}"
+		          th:data-login="${page.login ? 'true' : 'false'}"
+		          th:data-mine="${page.isMine ? 'true' : 'false'}"
+		          th:disabled="${page.isMine}"
+		          th:title="${page.isMine ? '내 상품은 찜할 수 없습니다' : ''}">
+
+		    <span class="material-symbols-outlined"
+		          th:classappend="${page.product.liked} ? ' filled' : ''">
+		      favorite
+		    </span>
+		  </button>
+
+		  <!-- 채팅하기 -->
+		  <button type="button"
+		          id="dealBtn"
+		          class="btn-primary"
+		          th:disabled="${page.mine}"
+		          th:data-mine="${page.mine}"
+		          th:data-login="${page.login ? 'true' : 'false'}"
+		          th:text="${page.mine ? '내 상품입니다' : '채팅하기'}">
+		    채팅하기
+		  </button>
+
+		  <!-- 바로구매 -->
+		  <button class="btn-dark"
+		          th:disabled="${page.mine}"
+				  th:onclick="|location.href='@{/direct(productId=${page.product.productId})}'|">
+		    바로구매
+		  </button>
+
+		</div>
+      </div>
+    </div>
+
+    <!-- =========================
+         RIGHT : 상품 정보
+    ========================= -->
+    <div class="detail-right">
+
+      <!-- 상품명 / 가격 / 상태 -->
+      <div class="info-card product-summary">
+
+		<div class="product-summary-header">
+
+		  <!-- 카테고리 -->
+		  <div class="product-category-path"
+		       th:if="${page.product.parentCategoryName != null}">
+
+		    <!-- 대분류 -->
+		    <a th:href="@{/products(categoryId=${page.product.parentCategoryId})}"
+		       th:text="${page.product.parentCategoryName}">
+		      대분류
+		    </a>
+
+		    <span class="category-separator">›</span>
+
+		    <!-- 소분류 -->
+		    <a th:href="@{/products(categoryId=${page.product.categoryId})}"
+		       th:text="${page.product.categoryName}">
+		      소분류
+		    </a>
+		  </div>
 		  
-            <!-- 오른쪽: 상품 정보 -->
-            <div class="product-detail-info">
-				
-				<!-- 상품 헤더 카드 -->
-				    <div class="product-header-card">
+		  <!-- 상품명 라인 -->
+		  <div class="product-title-row">
+		    <h1 class="product-title"
+		        th:text="${page.product.productName}">
+		      상품명
+		    </h1>
 
-                <!-- 상품명 -->
-                <h1 class="product-title"
-                     th:text="${product.productName}">
-                    상품명
-                </h1>
+		    <span class="badge product-status-badge"
+		          th:text="${page.product.salesStatusLabel}">
+		      판매중
+		    </span>
 
-                <!-- 가격 -->
-                <div class="product-price"
-                     th:text="${product.priceDisplay}">
-                    120,000원
-                </div>
+			<button
+			  type="button"
+			  class="btn-primary btn-report"
+			  data-action="open-report-modal"
+			  th:data-login="${page.login}"
+			  th:data-product-id="${page.product.productId}"
+			  th:disabled="${page.login == true and page.alreadyReported == true}">
+			  <span th:text="${page.login == true and page.alreadyReported == true
+			      ? '신고 완료'
+			      : '신고하기'}">
+			    신고하기
+			  </span>
+			</button>
+		  </div>
 
-                <!-- 등록 시간 -->
-                <div class="product-time"
-                     th:text="${product.createdAtDisplay}">
-                    2시간 전
-                </div>
-				
-			</div>
+		</div>
 
-			<!-- 판매자 정보 -->
-			<div class="info-card">
-
-			    <div class="seller-card">
-			        <div class="seller-info">
-
-			            <div class="seller-profile">
-			                <span class="material-symbols-outlined">person</span>
-			                <span class="seller-temp"
-			                      th:text="${product.sellerTemperature} + '°'">
-			                    36.5°
-			                </span>
-			            </div>
-
-			            <div class="seller-text">
-			                <div class="seller-name"
-			                     th:text="${product.sellerNickname}">
-			                    판매자닉네임
-			                </div>
-			                <div class="seller-region"
-			                     th:text="${product.sellerRegion}">
-			                    서울 강남구
-			                </div>
-			            </div>
-
-			        </div>
-			    </div>
-
-			</div> <!-- ✅ info-card 닫힘 -->
-
-                <!-- 상태 / 통계 -->
-                <div class="product-meta">
-
-                    <span class="badge"
-                          th:text="${product.conditionLabel}">
-                        사용감 적음
-                    </span>
-
-                    <span class="meta-item">
-                        <span class="material-symbols-outlined">favorite</span>
-                        <span id="likeCount"
-                              th:text="${product.likeCount}">
-                        </span>
-                    </span>
-
-                    <span class="meta-item">
-                        <span class="material-symbols-outlined">visibility</span>
-                        <span th:text="${product.viewCount}"></span>
-                    </span>
-
-                    <span class="meta-item">
-                        <span class="material-symbols-outlined">chat_bubble</span>
-                        <span th:text="${product.chatCount}">5</span>
-                    </span>
-
-                </div>
-
-                <!-- 상품 설명 -->
-				<div class="info-card">
-
-				    <h3 class="info-card-title">
-				        상품 정보
-				    </h3>
-
-				    <div class="product-description"
-				         th:utext="${product.description}">
-				        상품 설명
-				    </div>
-
-				</div>
-
-                <!-- 하단 버튼 -->
-				<div class="action-card">
-
-				    <button type="button"
-				            class="product-card__like-btn"
-				            th:data-product-id="${product.productId}"
-				            aria-label="찜하기">
-
-				        <span class="material-symbols-outlined"
-				              th:classappend="${product.liked} ? ' filled' : ''">
-				            favorite
-				        </span>
-
-				    </button>
-
-                    <button class="btn btn-primary">
-                        채팅하기
-                    </button>
-
-                    <button class="btn btn-dark">
-                        바로구매
-                    </button>
-
-                </div>
-
-            </div>
+        <div class="product-price"
+             th:text="${#numbers.formatInteger(page.product.price, 3, 'COMMA')}">
+          0
         </div>
 
-    </main>
+        <div class="product-meta">
+          조회 <b th:text="${page.product.viewCount}">0</b>
+        </div>
+      </div>
+
+      <!-- 상품 정보 -->
+      <div class="info-card product-description">
+        <h3>상품 정보</h3>
+        <p th:text="${page.product.description}">
+          설명
+        </p>
+      </div>
+
+      <!-- 실거래 지역 -->
+      <div class="info-card trade-info">
+        <h3>거래 정보</h3>
+        <p th:text="${page.product.sellerRegion}">
+          지역 정보
+        </p>
+      </div>
+
+    </div>
+
+    <!-- =========================
+         BOTTOM : 비슷한 상품
+    ========================= -->
+    <div class="detail-bottom"
+         th:if="${!#lists.isEmpty(page.similar.items)}">
+
+      <section class="section">
+        <h3 class="section-title">이 상품과 비슷한 상품</h3>
+
+        <div class="grid grid-products">
+          <article th:each="item : ${page.similar.items}">
+            <a th:href="@{/product/{id}(id=${item.productId})}">
+              <img th:src="${item.thumbnailUrl}"
+                   th:alt="${item.productName}">
+              <div th:text="${item.productName}">상품명</div>
+              <div th:text="${item.price}">0</div>
+            </a>
+          </article>
+        </div>
+      </section>
+
+    </div>
+
+  </section>
+
+  <!-- 신고 모달 -->
+  <th:block th:replace="fragments/report-modal :: report-modal"></th:block>
+
 </div>
 
-<!-- ===============================
-     Page JS
-=============================== -->
-<th:block th:fragment="pageJs">
-    <script th:src="@{/js/product/detail.js}"></script>
-</th:block>
+<script src="/js/product/detail.js"></script>
 
 </html>

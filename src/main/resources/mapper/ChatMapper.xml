@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itwillbs.mapper.ChatMapper">
+	<resultMap id="ChatListMap"
+           type="com.itwillbs.dto.ChatListDTO">
+
+    <id property="roomId" column="roomId"/>
+
+    <result property="opponentUserId" column="opponentUserId"/>
+    <result property="opponentNickName" column="opponentNickName"/>
+    <result property="opponentProfileImg" column="opponentProfileImg"/>
+
+    <result property="lastMessage" column="lastMessage"/>
+    <result property="lastSentAt" column="lastSentAt"/>
+
+    <result property="unreadCount" column="unreadCount"/>
+</resultMap>
+<!--	새채팅 알림-->
+	<select id="existsUnreadChat"
+	        parameterType="long"
+	        resultType="boolean">
+	    SELECT EXISTS (
+	        SELECT 1
+	        FROM chat_message m
+	        JOIN chat_room r ON r.room_id = m.room_id
+	        WHERE m.is_read = 0
+	          AND m.sender_id != #{userId}
+	          AND (
+	                r.buyer_id = #{userId}
+	             OR r.seller_id = #{userId}
+	          )
+	    )
+	</select>
+
+	
+    <!-- =========================================================
+         내 채팅방 리스트 조회
+         - 화면 전용 (ChatListDTO)
+         - 상대방 정보 + 마지막 메시지 + 안읽은 수
+    ========================================================= -->
+    <select id="selectMyChatList"
+          resultMap="ChatListMap">
+
+    SELECT
+        r.room_id AS roomId,
+
+        /* =========================
+           상대방 정보 (DTO 필드명에 맞춤)
+        ========================= */
+        CASE
+            WHEN r.buyer_id = #{userId} THEN s.user_id
+            ELSE b.user_id
+        END AS opponentUserId,
+
+        CASE
+            WHEN r.buyer_id = #{userId} THEN s.nickname
+            ELSE b.nickname
+        END AS opponentNickName,
+
+        CASE
+            WHEN r.buyer_id = #{userId} THEN s.profile_img
+            ELSE b.profile_img
+        END AS opponentProfileImg,
+
+        /* =========================
+           마지막 메시지
+        ========================= */
+        lm.content    AS lastMessage,
+        lm.created_at AS lastSentAt,
+
+        /* =========================
+           안 읽은 메시지 수 (서브쿼리)
+        ========================= */
+        (
+            SELECT COUNT(*)
+            FROM chat_message m
+            WHERE m.room_id = r.room_id
+              AND m.is_read = 0
+              AND m.sender_id != #{userId}
+        ) AS unreadCount
+
+    FROM chat_room r
+
+    JOIN users b ON b.user_id = r.buyer_id
+    JOIN users s ON s.user_id = r.seller_id
+
+    /* 마지막 메시지 */
+    LEFT JOIN chat_message lm
+      ON lm.message_id = (
+          SELECT message_id
+          FROM chat_message
+          WHERE room_id = r.room_id
+          ORDER BY created_at DESC
+          LIMIT 1
+      )
+
+    WHERE r.buyer_id = #{userId}
+       OR r.seller_id = #{userId}
+
+    <if test="unreadOnly != null and unreadOnly">
+        HAVING unreadCount > 0
+    </if>
+
+    ORDER BY lm.created_at DESC
+
+	</select>
+
+    
+    
+	<!--    채팅방 상대방 정보-->
+	<select id="selectChatRoomHeader"
+	        resultType="com.itwillbs.dto.ChatRoomHeaderDTO">
+	
+	    SELECT
+	        cr.room_id                         AS roomId,
+	
+	        /* 상대방 정보 */
+	        CASE
+	            WHEN cr.buyer_id = #{loginUserId}
+	                THEN seller.user_id
+	            ELSE buyer.user_id
+	        END                                 AS opponentUserId,
+	
+	        CASE
+	            WHEN cr.buyer_id = #{loginUserId}
+	                THEN seller.nickname
+	            ELSE buyer.nickname
+	        END                                 AS opponentUserNickName,
+	
+	        CASE
+	            WHEN cr.buyer_id = #{loginUserId}
+	                THEN seller.profile_img
+	            ELSE buyer.profile_img
+	        END                                 AS opponentProfileImg,
+	
+	        /* 채팅방 상태 */
+	        cr.room_status                      AS roomStatusCode,
+	        CASE cr.room_status
+	            WHEN 'ACTIVE' THEN '진행중'
+	            WHEN 'CLOSED' THEN '종료됨'
+	        END                                 AS roomStatusLabel
+	
+	    FROM chat_room cr
+	        JOIN users buyer  ON cr.buyer_id  = buyer.user_id
+	        JOIN users seller ON cr.seller_id = seller.user_id
+	
+	    WHERE cr.room_id = #{roomId}
+	
+	</select>
+	
+	<!--	채팅방 메세지들-->
+	<select id="selectMessagesByRoomId"
+	        resultType="com.itwillbs.dto.ChatMessageDTO">
+	
+	    SELECT
+	        cm.message_id            AS messageId,
+	        cm.room_id               AS roomId,
+	        cm.sender_id             AS senderUserId,
+	        cm.content               AS content,
+	
+	        /* 메시지 타입 */
+	        cm.message_type          AS messageTypeCode,
+	        CASE cm.message_type
+	            WHEN 'TEXT'  THEN '텍스트'
+	            WHEN 'IMAGE' THEN '이미지'
+	        END                      AS messageTypeLabel,
+	
+	        cm.is_read               AS isRead,
+	        cm.created_at            AS createdAt
+	
+	    FROM chat_message cm
+	
+	    WHERE cm.room_id = #{roomId}
+	
+	    ORDER BY cm.created_at ASC
+	
+	</select>
+
+
+
+    <!-- =========================
+         채팅 메시지 읽음 처리
+    ========================== -->
+    <update id="markMessagesAsRead">
+        UPDATE chat_message
+        SET
+            is_read = 1,
+            read_at = NOW()
+        WHERE room_id = #{roomId}
+          AND sender_id != #{loginUserId}
+          AND is_read = 0
+    </update>
+
+
+</mapper>

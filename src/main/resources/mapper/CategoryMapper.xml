@@ -11,6 +11,75 @@
     SELECT name
     FROM categories
     WHERE category_id = #{categoryId}
+    
+</select>
+
+<!-- LIST00_CATEGORY_BAR : 부모 카테고리 기준 자식 조회 -->
+    <select id="selectChildrenByParentId"
+        parameterType="long"
+        resultType="com.itwillbs.dto.CategoryDTO">
+
+    SELECT
+        category_id AS categoryId,
+        name
+    FROM categories
+    WHERE parent_id = #{parentId}
+      AND is_active = 1
+    ORDER BY sort_order
+
+</select>
+
+    
+    <select id="selectSubCategories"
+        parameterType="long"
+        resultType="com.itwillbs.dto.CategoryDTO">
+    SELECT
+        category_id AS categoryId,
+        name
+    FROM categories
+    WHERE parent_id = #{parentCategoryId}
+      AND level = 2
+      AND is_active = 1
+    ORDER BY sort_order ASC
+</select>
+
+<select id="selectCategoryBase"
+        parameterType="long"
+        resultType="com.itwillbs.dto.CategoryBaseDTO">
+    SELECT
+        category_id AS categoryId,
+        name,
+        parent_id AS parentId,
+        level
+    FROM categories
+    WHERE category_id = #{categoryId}
+      AND is_active = 1
+</select>
+
+<select id="selectParentCategory"
+        parameterType="long"
+        resultType="com.itwillbs.dto.CategoryDTO">
+    SELECT
+        category_id AS categoryId,
+        name
+    FROM categories
+    WHERE category_id = #{categoryId}
+      AND level = 1
+      AND is_active = 1
+</select>
+
+<select id="selectDefaultCategory"
+        resultType="com.itwillbs.dto.CategoryBaseDTO">
+    SELECT
+        category_id AS categoryId,
+        name,
+        parent_id AS parentId,
+        level
+    FROM categories
+    WHERE level = 1
+      AND is_active = 1
+    ORDER BY sort_order
+    LIMIT 1
 </select>
 
 

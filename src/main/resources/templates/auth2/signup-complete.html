@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/auth/signup-complete.css">
+</th:block>
+
+<div layout:fragment="content" class="signup-complete">
+
+  <section class="signup-complete-card">
+
+    <!-- icon -->
+    <div class="signup-complete-icon">
+      <span class="material-symbols-outlined">check_circle</span>
+    </div>
+
+    <!-- title -->
+    <h1 class="signup-complete-title">회원가입 완료!</h1>
+
+    <!-- desc -->
+    <p class="signup-complete-desc">
+      계정이 성공적으로 생성되었습니다.<br>
+      소셜 계정을 연동하면 다음 로그인 시<br>
+      더 편리하게 이용할 수 있어요.
+    </p>
+
+    <!-- social -->
+    <div class="signup-social">
+
+      <a href="/oauth2/authorization/kakao"
+         class="signup-social-btn kakao">
+        <span class="signup-social-icon">K</span>
+        카카오로 연동하기
+      </a>
+
+      <a href="/oauth2/authorization/naver"
+         class="signup-social-btn naver">
+        <span class="signup-social-icon">N</span>
+        네이버로 연동하기
+      </a>
+
+      <a href="/oauth2/authorization/google"
+         class="signup-social-btn google">
+        <span class="signup-social-icon">G</span>
+        Google로 연동하기
+      </a>
+
+    </div>
+
+    <!-- skip -->
+    <a href="/" class="signup-skip">
+      지금은 연동하지 않고 건너뛰기
+    </a>
+
+    <div class="signup-divider"></div>
+
+    <!-- start -->
+    <a href="/" class="btn btn-primary signup-start">
+      RE: GO 시작하기
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+
+  </section>
+
+</div>
+
+<th:block th:fragment="pageJs">
+  <script th:src="@{/js/auth/signup-complete.js}"></script>
+</th:block>
+
+</html>

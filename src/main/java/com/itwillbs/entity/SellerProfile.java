@@ -6,6 +6,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 import com.itwillbs.domain.SellerProfileVO;
+import com.itwillbs.entity.enumtype.SellerStatus;
 
 @Entity
 @Table(name = "seller_profile")
@@ -54,8 +55,15 @@ public class SellerProfile {
     /* =========================
        판매자 상태
     ========================= */
-    @Column(name = "seller_status", length = 20, nullable = false)
-    private String sellerStatus; // ACTIVE / SUSPENDED
+    @Enumerated(EnumType.STRING)
+    @Column(name = "seller_status", nullable = false)
+    private SellerStatus sellerStatus; // ACTIVE / SUSPENDED
+
+    /* =========================
+       약관 동의
+    ========================= */
+    @Column(name = "terms_agreed_at", nullable = false, updatable = false)
+    private LocalDateTime termsAgreedAt;
 
     /* =========================
        날짜
@@ -72,26 +80,27 @@ public class SellerProfile {
     protected SellerProfile() {}
 
     /* =========================
-       생성자 (VO → Entity)
+       생성자 (Domain VO → Entity)
     ========================= */
     public SellerProfile(User seller, SellerProfileVO vo) {
         this.seller = seller;
-        this.sellerId = seller.getUserId();
+
         this.description = vo.getDescription();
-        this.ratingAvg = vo.getRatingAvg();
-        this.ratingCount = vo.getRatingCount();
-        this.totalSales = vo.getTotalSales();
-        this.totalReviews = vo.getTotalReviews();
-        this.sellerStatus = vo.getSellerStatus();
+
+        /* 초기 통계값 */
+        this.ratingAvg = 0.0;
+        this.ratingCount = 0;
+        this.totalSales = 0;
+        this.totalReviews = 0;
+
+        /* 기본 상태는 Entity 내부에서 결정 */
+        this.sellerStatus = SellerStatus.ACTIVE;
+
+        /* 약관 동의 시점 (등록 시점 기준) */
+        this.termsAgreedAt = LocalDateTime.now();
+
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
-    }
-
-    /* =========================
-       Entity → VO
-    ========================= */
-    public SellerProfileVO toVO() {
-        return new SellerProfileVO(this);
     }
 
     /* =========================
@@ -113,8 +122,16 @@ public class SellerProfile {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void changeStatus(String status) {
-        this.sellerStatus = status;
+    /* =========================
+       판매 상태 변경 (행위 메서드)
+    ========================= */
+    public void suspend() {
+        this.sellerStatus = SellerStatus.SUSPENDED;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void activate() {
+        this.sellerStatus = SellerStatus.ACTIVE;
         this.updatedAt = LocalDateTime.now();
     }
 }

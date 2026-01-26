@@ -36,6 +36,9 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
         return (String) attributes.get("email"); 
     }
     
+    public Long getUserId() {
+        return user.getUserId();
+    }
     /* =========================
        권한
     ========================= */
@@ -50,6 +53,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
     /* =========================
        인증 정보
     ========================= */
+    
     @Override
     public String getPassword() {
         return user.getPassword();

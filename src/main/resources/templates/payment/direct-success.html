@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+    <link rel="stylesheet" href="/css/payment/direct-success.css">
+</th:block>
+
+<th:block th:fragment="pageJs">
+	<script src="/js/payment/success-chat.js"></script>
+</th:block>
+
+<div layout:fragment="content">
+    <main class="success-container">
+        <div class="success-header animate-up">
+            <div class="check-icon-circle">
+                <span class="material-symbols-outlined">check_circle</span>
+            </div>
+            <h2 class="success-title">결제가 성공적으로<br/>완료되었습니다!</h2>
+            <p class="success-subtitle">주문하신 상품의 결제가 정상적으로 처리되었습니다.</p>
+        </div>
+
+        <section class="order-summary-card">
+            <h3 class="card-label">
+                <span class="material-symbols-outlined">receipt_long</span>
+                결제 상품 요약
+            </h3>
+            
+            <div class="product-info-box">
+                <div class="product-img">
+                    <img th:src="${order.product.mainImageUrl ?: '/images/default-product.png'}" alt="상품 이미지">
+                </div>
+                <div class="product-details">
+                    <span class="category-text" th:text="${order.product.category.name}">카테고리</span>
+                    <h4 class="product-name" th:text="${order.product.productName}">상품명</h4>
+                    <div class="product-price" th:text="${#numbers.formatInteger(order.totalAmount, 0, 'COMMA') + '원'}">0원</div>
+                </div>
+            </div>
+
+            <div class="total-price-row">
+                <span class="total-label">총 결제 금액</span>
+                <span class="total-amount" th:text="${#numbers.formatInteger(order.totalAmount, 0, 'COMMA') + '원'}">0원</span>
+            </div>
+        </section>
+
+        <div class="button-group">
+            <a th:href="@{/mypage/orders}" class="btn-primary">구매 내역 확인</a>
+            <div class="button-row">
+                <a th:href="@{/}" class="btn-outline">
+                    <span class="material-symbols-outlined">home</span>
+                    메인으로 돌아가기
+                </a>
+				<button type="button" 
+				        th:onclick="goToChat([[${order.product.productId}]])" 
+				        class="btn-secondary">
+				    <span class="material-symbols-outlined">chat</span>
+				    판매자에게 채팅하기
+				</button>
+            </div>
+        </div>
+    </main>
+</div>
+</html>

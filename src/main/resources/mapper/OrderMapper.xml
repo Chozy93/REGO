@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itwillbs.mapper.OrderMapper">
+
+<insert id="insertOrder" parameterType="com.itwillbs.dto.OrderRequestDTO">
+    <selectKey keyProperty="orderId" resultType="long" order="AFTER">
+        SELECT LAST_INSERT_ID()
+    </selectKey>
+        INSERT INTO product_orders (
+            product_id, 
+            buyer_id, 
+            seller_id, 
+            receiver_name, 
+            receiver_phone, 
+            zip_code, 
+            address, 
+            address_detail, 
+            delivery_request, 
+            payment_type, 
+            total_amount, 
+            escrow_status, 
+            deal_type, 
+            created_at
+        ) VALUES (
+            #{productId}, 
+            #{buyerId}, 
+            #{sellerId}, 
+            #{receiverName}, 
+            #{receiverPhone}, 
+            #{zipCode}, 
+            #{address}, 
+            #{addressDetail}, 
+            #{deliveryRequest}, 
+            #{paymentType}, 
+            #{totalAmount}, 
+            'PENDING', 
+            #{dealType}, 
+            NOW()
+        )
+    </insert>
+
+
+</mapper>

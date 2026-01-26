@@ -94,6 +94,17 @@ public class ChatRoom {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
+    /* =========================
+    생성자 (내부 생성용)
+ ========================= */
+ public ChatRoom(Product product, User buyer, User seller) {
+     this.product = product;
+     this.buyer = buyer;
+     this.seller = seller;
+     this.roomStatus = ChatRoomStatus.ACTIVE;
+     this.createdAt = LocalDateTime.now();
+     this.updatedAt = LocalDateTime.now();
+ }
 
     /* =========================
        Entity → VO

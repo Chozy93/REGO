@@ -1,111 +1,122 @@
 <!-- =========================
      Chat Room Fragment
 ========================= -->
-<div class="chat-room" th:fragment="chat-room">
+<div id="chat-room-content"
+     th:fragment="chatRoomContent"
+     th:attr="data-room-id=${chatRoom.header.roomId}">
 
-    <!-- =========================
-         Chat Header
-    ========================== -->
-    <header class="chat-room-header">
-        <div class="chat-room-partner">
-            <img class="chat-room-avatar"
-                 th:src="${partnerUser.profileImg}"
-                 alt="">
-
-            <div class="chat-room-partner-info">
-                <strong class="chat-room-partner-name"
-                        th:text="${partnerUser.nickname}">
-                    상대방닉네임
-                </strong>
-            </div>
-        </div>
-
-        <div class="chat-room-actions">
-            <button class="btn btn-outline"
-                    id="open-appointment-modal">
-                약속잡기
-            </button>
-
-            <button class="btn btn-outline"
-                    id="open-payment-modal">
-                송금하기
-            </button>
-
-            <button class="btn btn-outline">
-                상품 보기
-            </button>
-        </div>
-    </header>
-
-    <!-- =========================
-         Message Area
-    ========================== -->
-    <section class="chat-room-messages">
-
-        <!-- 날짜 구분 (방 생성일 or 메시지 기준일) -->
-        <div class="chat-room-date">
-            <span th:text="${chatRoomVO.createdAt}">
-                2023년 12월 17일
-            </span>
-        </div>
+    <div class="chat-room">
 
         <!-- =========================
-             Message List
+             Chat Header
         ========================== -->
-        <div th:each="message : ${messages}"
-             th:class="'chat-room-message ' 
-                        + (${message.senderId} == ${loginUserId} 
-                           ? 'chat-room-message-me' 
-                           : '')">
+        <header class="chat-room-header">
+            <div class="chat-room-partner">
+                <img class="chat-room-avatar"
+                     th:src="${chatRoom.header.opponentProfileImageUrl}"
+                     alt="">
 
-            <!-- 상대 메시지일 때만 아바타 -->
-            <img th:if="${message.senderId} != ${loginUserId}"
-                 class="chat-room-message-avatar"
-                 th:src="${partnerUser.profileImg}"
-                 alt="">
-
-            <div th:class="'chat-room-bubble '
-                           + (${message.senderId} == ${loginUserId}
-                              ? 'chat-room-bubble-me'
-                              : 'chat-room-bubble-other')">
-
-                <p th:text="${message.content}">
-                    메시지 내용
-                </p>
-
-                <span class="chat-room-time"
-                      th:text="${#temporals.format(message.createdAt, 'a h:mm')}">
-                    오후 2:15
-                </span>
+                <div class="chat-room-partner-info">
+                    <strong class="chat-room-partner-name"
+                            th:text="${chatRoom.header.opponentUserName}">
+                        상대방닉네임
+                    </strong>
+                </div>
             </div>
-        </div>
 
-    </section>
+            <div class="chat-room-actions">
+                <button class="btn btn-outline"
+                        id="open-appointment-modal">
+                    약속잡기
+                </button>
 
+                <button class="btn btn-outline"
+                        id="open-payment-modal">
+                    송금하기
+                </button>
+
+                <button class="btn btn-outline">
+                    상품 보기
+                </button>
+            </div>
+        </header>
+
+        <!-- =========================
+             Message Area
+        ========================== -->
+        <section class="chat-room-messages" id="chatMessages">
+
+            <!-- =========================
+                 Message List
+            ========================== -->
+			<div th:each="message : ${chatRoom.messages}"
+			     class="chat-room-message"
+			     th:classappend="${message.isMine} ? ' chat-room-message-me' : ''">
+
+<!--			    <img th:if="${!message.isMine}"-->
+<!--			         class="chat-room-message-avatar"-->
+<!--			         th:src="${chatRoom.header.opponentProfileImageUrl}"-->
+<!--			         alt="">-->
+
+			    <div class="chat-room-bubble"
+			         th:classappend="${message.isMine}
+			                          ? ' chat-room-bubble-me'
+			                          : ' chat-room-bubble-other'">
+
+			        <p th:text="${message.content}"></p>
+
+			        <span class="chat-room-time"
+			              th:text="${message.createdAtText}"></span>
+			    </div>
+			</div>
+
+
+            <!-- 메시지 없음 -->
+            <div class="chat-room-empty"
+                 th:if="${#lists.isEmpty(chatRoom.messages)}">
+                아직 메시지가 없습니다.
+            </div>
+
+        </section>
+
+        <!-- =========================
+             Input Area
+        ========================== -->
+		<footer class="chat-room-input">
+		  <div class="chat-room-input-box">
+
+		    <button class="chat-room-input-btn">
+		      +
+		    </button>
+
+		    <textarea id="chatMessageInput"
+		              class="chat-room-textarea"
+		              placeholder="메시지를 입력하세요"
+		              rows="1"></textarea>
+
+		    <button id="chatSendBtn"
+		            class="chat-room-send-btn">
+		      전송
+		    </button>
+
+		  </div>
+		</footer>
+
+    </div>
+	
     <!-- =========================
-         Input Area
+         Chat Modals
     ========================== -->
-    <footer class="chat-room-input">
-        <div class="chat-room-input-box">
-            <button class="chat-room-input-btn">+</button>
 
-            <textarea class="chat-room-textarea"
-                      placeholder="메시지를 입력하세요"
-                      rows="1"></textarea>
+    <!-- 약속 잡기 모달 -->
+    <th:block th:replace="~{fragments/chat-appointment-modal :: chat-appointment-modal}">
+    </th:block>
 
-            <button class="chat-room-send-btn">
-                전송
-            </button>
-        </div>
-    </footer>
-
+    <!-- 송금 모달 -->
+    <th:block th:replace="~{fragments/chat-payment-modal :: chat-payment-modal}">
+    </th:block>
+<script>
+	window.chatOpponentProfileImageUrl =
+	   /*[[${chatRoom.header.opponentProfileImageUrl}]]*/ '';
+</script>
 </div>
-<!-- =========================
-     Chat Modals
-========================= -->
-
-<th:block th:replace="~{fragments/chat-appointment-modal :: chat-appointment-modal}">
-</th:block>
-
-<th:block th:replace="~{fragments/chat-payment-modal :: chat-payment-modal}">
-</th:block>
