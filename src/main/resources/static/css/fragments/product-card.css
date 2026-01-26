@@ -1,7 +1,8 @@
 /* ==========================================================================
-   product-card.css (RE:GO aligned)
-   - variables.css 컬러 토큰 100% 사용
+   product-card.css (RE:GO aligned · FINAL)
+   - variables.css 토큰 100% 사용
    - 카드 밀도 유지
+   - 중복/충돌 제거
    ========================================================================== */
 
 
@@ -10,13 +11,33 @@
    ========================================================================== */
 
 .product-card {
+  position: relative;
+
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
 
+  width: 210px;
+  flex-shrink: 0;
+
+  background: #fff;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+
   color: var(--color-text);
   text-decoration: none;
   cursor: pointer;
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  border-color: rgba(0,0,0,0.12);
 }
 
 .product-card:hover .product-card__title {
@@ -54,7 +75,7 @@
 
 
 /* ==========================================================================
-   3) Badge (예약중)
+   3) Badge (예약중 등 상태)
    ========================================================================== */
 
 .product-card__badge {
@@ -65,7 +86,7 @@
   font-size: var(--fs-12);
   padding: 2px var(--space-8);
 
-  background-color: rgba(0, 0, 0, 0.4); /* 이미지 위 가독성용 */
+  background-color: rgba(0, 0, 0, 0.4);
   color: #fff;
 
   backdrop-filter: blur(4px);
@@ -82,32 +103,44 @@
   top: var(--space-8);
   right: var(--space-8);
   z-index: 3;
+
   width: 32px;
   height: 32px;
-
-  border-radius: var(--radius-pill);
-  background-color: rgba(255, 255, 255, 0.9);
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  color: var(--color-text-subtle);
+  background: rgba(255,255,255,0.95);
+  border-radius: 50%;
+  border: none;
+
   box-shadow: var(--shadow-sm);
+  cursor: pointer;
+
+  color: var(--color-text-subtle);
 
   transition:
     transform var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out),
-    background-color var(--duration-fast) var(--ease-out);
+    color var(--duration-fast) var(--ease-out);
 }
 
 .product-card__like-btn:hover {
   transform: scale(1.1);
-  color: var(--color-danger);
 }
 
 .product-card__like-btn:active {
   transform: scale(0.95);
+}
+
+/* ❤️ 찜한 상태 */
+.product-card__like-btn.liked {
+  color: var(--color-danger);
+}
+
+.product-card__like-btn .material-symbols-outlined {
+  font-size: 22px;
+  transition: color .2s ease;
 }
 
 
@@ -128,8 +161,8 @@
   font-weight: var(--fw-medium);
   line-height: var(--lh-tight);
 
-  color: var(--color-text);
- margin: var(--space-2);
+  margin-top: var(--space-2);
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -140,12 +173,28 @@
 
 /* 가격 */
 .product-card__price {
-  font-size: var(--fs-18);
+  margin-top: var(--space-1);
+
+  font-size: var(--fs-15);
   font-weight: var(--fw-bold);
-  color: var(--color-text);
-  margin: var(--space-2);
+  color: var(--color-text-strong);
+  position: relative;
 }
 
+.product-card__price::after {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 2px;
+  margin-top: 4px;
+
+  background: var(--color-primary);
+  opacity: 0.3;
+}
+
+.product-card:hover .product-card__price {
+  color: var(--color-primary);
+}
 
 /* 메타 정보 (지역 · 시간) */
 .product-card__meta {
@@ -153,58 +202,147 @@
   align-items: center;
   gap: var(--space-4);
 
-  margin: var(--space-2);
+  margin-top: var(--space-2);
 
   font-size: var(--fs-10);
   color: var(--color-text-muted);
+  
+  position: relative;
+  padding-top: 6px;
+}
+
+.product-card__meta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 1px;
+  background: rgba(0,0,0,0.08);
 }
 
 .product-card__meta .meta-dot {
   opacity: 0.6;
 }
 
-.product-card__like-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-}
 
-.product-card__like-btn .material-symbols-outlined {
-  font-size: 22px;
-  color: #bbb;
-  transition: color 0.2s ease;
-}
-
-/* ❤️ 찜한 상태 */
-.product-card__like-btn.liked .material-symbols-outlined,
-.material-symbols-outlined.filled {
-  color: #ff4d6d;
-  font-variation-settings: 'FILL' 1;
-}
+/* ==========================================================================
+   6) Grid (Seller / List)
+   ========================================================================== */
 
 .seller-product-list .product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
 }
 
-.product-card {
+
+/* ==========================================================================
+   7) AI Section Accent
+   ========================================================================== */
+
+.ai-section .product-card {
+  position: relative;
+  border: 1px solid #eef6f1;
+}
+
+.ai-section .product-card__price {
+  color: var(--color-primary);
+}
+
+.ai-section .product-card::before {
+  content: "AI 추천";
+  position: absolute;
+  top: 10px;
+  left: 10px;
+
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-primary);
+
+  background: #e9fdf0;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.ai-section {
+  padding: 28px 24px;
+  margin-top: 32px;
+
+  background: linear-gradient(
+    180deg,
+    #f6fdf9 0%,
+    #ffffff 75%
+  );
+
+  border-radius: 24px;
+}
+
+.section-head {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
 }
 
-.product-card {
-  width: 220px;
-  flex-shrink: 0;
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 18px;
+  font-weight: 700;
 }
 
+.section-title::before {
+  content: '';
+  width: 6px;
+  height: 18px;
+  border-radius: 3px;
+  background: var(--color-primary);
+}
 
+.product-grid {
+  padding: 12px 0;
+}
 
+.ai-section .product-grid {
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.04);
+}
 
+.product-swiper {
+  padding: 12px 0 28px;
+}
 
+.ai-section .product-swiper {
+  padding-bottom: 36px;
+}
 
+.swiper-button-prev,
+.swiper-button-next {
+  width: 40px;
+  height: 40px;
+
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+
+  color: #333;
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.recent-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
 
 
 

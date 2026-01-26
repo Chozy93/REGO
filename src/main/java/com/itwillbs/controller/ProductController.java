@@ -1,11 +1,15 @@
 package com.itwillbs.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.itwillbs.dto.ProductByCategoryResponse;
 import com.itwillbs.entity.User;
 import com.itwillbs.repository.UserRepository;
 import com.itwillbs.security.util.SecurityUtil;
@@ -15,6 +19,7 @@ import com.itwillbs.service.ProductListService;
 import com.itwillbs.service.ProductReportService;
 import com.itwillbs.service.ProductService;
 import com.itwillbs.view.CategoryPageVO;
+import com.itwillbs.view.MainProductCardVO;
 import com.itwillbs.view.ProductDetailPageVO;
 
 import jakarta.servlet.http.Cookie;
@@ -107,20 +112,33 @@ public class ProductController {
 	    @RequestParam(name = "categoryId", required = false) Long categoryId,
 	    Model model
 	) {
-	    // 1️⃣ 카테고리 페이지 데이터 (기존)
+	    // 🔥 기본 대분류 처리
+	    if (categoryId == null) {
+	        categoryId = productCategoryService.getDefaultParentCategoryId();
+	    }
+
 	    CategoryPageVO page =
 	        productCategoryService.getCategoryPage(categoryId);
 
-	    // 2️⃣ 🔥 전체 부모 카테고리 리스트 (추가)
 	    model.addAttribute(
 	        "parentCategoryList",
 	        productCategoryService.getParentCategoryList()
 	    );
 
-	    // 3️⃣ 페이지 데이터
 	    model.addAttribute("page", page);
 
 	    return "product/list";
 	}
+
+	
+//	// 🔥 [API] 대분류 변경 시 소분류 + 상품 목록 Ajax용
+//	// ProductController
+//	@GetMapping("/api/products/by-parent/{parentId}")
+//	@ResponseBody
+//	public List<MainProductCardVO> getProductsByParent(
+//	        @PathVariable("parentId") Long parentId
+//	) {
+//	    return productListService.getProductsByParent(parentId);
+//	}
 
 }

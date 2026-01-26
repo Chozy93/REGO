@@ -1,20 +1,29 @@
-
 /* ==========================================================================
    PRODUCT LIST
    ========================================================================== */
 
 .product-list {
-  margin-top: var(--space-24);
+   margin-top: var(--space-32);
+   padding-bottom: 80px; /* 페이지 끝 답답함 제거 */
+   
+   background: linear-gradient(
+       180deg,
+       #ffffff 0%,
+       #f9fafb 100%
+     );
+     border-radius: 24px;
+     padding: 32px 0 80px;
 }
 
 /* 상품 카드 그리드 */
 .product-grid {
-  margin-top: var(--space-20);
+  margin-top: var(--space-24);
 
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: var(--space-20);
+  gap: 24px; /* 기존 var(--space-20)보다 살짝 여유 */
 }
+
 
 /* 반응형 */
 @media (max-width: 1200px) {
@@ -32,8 +41,10 @@
 @media (max-width: 640px) {
   .product-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
   }
 }
+
 
 /* =========================
    PRODUCT GRID
@@ -45,301 +56,249 @@
   gap: 20px;
 }
 
+.product-list .product-card {
+  position: relative;
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease;
+}
+
+.product-list .product-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.6),
+    inset 0 0 0 2px rgba(0,0,0,0.02);
+}
+
+.product-list .product-card:hover {
+  transform: translateY(-6px);
+  outline: 2px solid rgba(0,198,93,0.18);
+  outline-offset: -2px;
+}
+
+
 /* =========================
-   PRODUCT CARD
+   CATEGORY MEGA (LIST PAGE)
 ========================= */
 
-.product-card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  overflow: hidden;
+.category-mega {
+  position: relative; /* 🔥 기준점 */
+  z-index: 2000;
+  display: inline-block;
+  margin-bottom: var(--space-20);
 }
 
-/* 이미지 영역 */
-.product-card__image {
-  position: relative;
-  overflow: hidden;
-}
-
-.product-card__image img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  display: block;
-}
-
-/* ❤️ LIKE BUTTON */
-.product-card__like-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 36px;
-  height: 36px;
+/* 버튼 */
+.category-mega-toggle {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.95);
-  border: none;
-  border-radius: 50%;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
   cursor: pointer;
-  z-index: 2;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s ease;
-}
-
-.product-card__like-btn:hover {
-  transform: scale(1.08);
-}
-
-.product-card__like-btn .material-symbols-outlined {
-  font-size: 20px;
-  color: #999;
-}
-
-.product-card__like-btn.liked .material-symbols-outlined {
-  color: #ff4d4f;
-  font-variation-settings: 'FILL' 1;
+  
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 
-   /* ==========================================================================
-      LIST CATEGORY BAR
-      - list.html 전용
-      - header / fragment와 완전 분리
-      ========================================================================== */
+.category-mega-toggle:hover {
+  background: #f9fafb;
+}
 
-   /* 전체 바 */
-   .list-category-bar {
-     margin-bottom: var(--space-32);
-   }
+.category-mega.is-open .category-mega-toggle {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(0,198,93,0.25);
+}
 
-   /* 드롭다운 래퍼 */
-   .list-category-dropdown {
-     position: relative;
-     display: inline-block;
-   }
+/* 패널 */
+.category-mega-panel {
+  position: absolute;
+  top: calc(100% + 12px);
 
-   /* 대분류 버튼 */
-   .list-category-toggle {
-     display: inline-flex;
-     align-items: center;
-     gap: var(--space-8);
+  /* 🔥 핵심 수정 */
+  left: 0%;
+  transform: none;      /* 🔥 제거 */
+  width: 1200px;
+  max-width: calc(100vw - 40px); /* 화면 밖 방지 */
 
-     padding: var(--space-10) var(--space-14);
-     border-radius: var(--radius-md);
-     border: 1px solid var(--color-border);
+  display: none;
+  min-height: 260px;
 
-     background-color: var(--color-surface);
-     font-size: var(--fs-16);
-     font-weight: var(--fw-semibold);
-     color: var(--color-text);
-
-     transition:
-       background-color var(--duration-normal) var(--ease-out),
-       border-color var(--duration-normal) var(--ease-out);
-   }
-
-   .list-category-toggle:hover {
-     background-color: var(--color-surface-2);
-   }
-
-   /* 화살표 */
-   .list-category-arrow {
-     fill: currentColor;
-     transition: transform var(--duration-normal) var(--ease-out);
-   }
-
-   /* 열림 상태 (JS에서 제어) */
-   .list-category-dropdown.is-open .list-category-arrow {
-     transform: rotate(180deg);
-   }
-
-   /* 소분류 메뉴 (기본: 숨김) */
-   .list-category-menu {
-     position: fixed;
-     top: 160px;
-     left: 50%;
-     transform: translateX(-50%);
-
-     z-index: var(--z-dropdown);
-
-     min-width: 360px;
-     padding: var(--space-16);
-     margin: 0;
-
-     display: none; /* 🔴 핵심 */
-
-     gap: var(--space-8);
-
-     list-style: none;
-
-     background-color: var(--color-surface);
-     border: 1px solid var(--color-border);
-     border-radius: var(--radius-lg);
-     box-shadow: var(--shadow-md);
-   }
-
-   /* 열림 상태 */
-   .list-category-dropdown.is-open .list-category-menu {
-     display: grid;
-   }
+  background: #fff;          /* 혹시 덮여 있던 경우 대비 */
+  overflow: hidden;          /* 안쪽 그리드 튐 방지 */
+  border: 1px solid #e5e5e5;
+  border-radius: 16px;
+  box-shadow: 0 24px 48px rgba(0,0,0,.14);
+  z-index: 2000;
+  align-items: stretch;
+  pointer-events: auto;
+  
+  font-weight: 500;
+}
 
 
-   /* 개별 소분류 */
-   .list-category-item {
-     border-radius: var(--radius-sm);
-   }
+/* 열렸을 때 */
+.category-mega.is-open .category-mega-panel {
+  display: block;
+  align-items: stretch;
+}
 
-   /* 링크 */
-   .list-category-link {
-     display: block;
-     padding: var(--space-10) var(--space-12);
+/* 소분류 2열 */
+/* 소분류: 가로 나열 + 줄바꿈 */
+.category-mega-sub-grid {
+  display: grid;
+  flex-wrap: wrap;          /* 🔥 2줄로 내려가게 */
+  gap: 12px;
+  padding: 20px;
+  
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  align-content: flex-start;
+  background:
+      linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #fafafa 100%
+      );
+  }
 
-     font-size: var(--fs-14);
-     font-weight: var(--fw-medium);
-     color: var(--color-text);
 
-     border-radius: var(--radius-sm);
-     transition:
-       background-color var(--duration-fast) var(--ease-out),
-       color var(--duration-fast) var(--ease-out);
-   }
+/* 소분류 아이템: 일정 폭 확보 */
+.category-sub-item {
+  display: inline-flex;
+  align-items: center;
+  min-width: 120px;         /* 여기로 한 줄에 몇 개 나올지 조절 */
+  padding: 10px 18px;
+  text-decoration: none;
+  color: #333;
 
-   /* hover */
-   .list-category-link:hover {
-     background-color: var(--color-surface-2);
-   }
+  border-radius: 999px;
+  background: #f9fafb;
+  border: 1px solid #eef0f2;
 
-   /* 선택된 소분류 */
-   .list-category-item.is-active .list-category-link {
-     background-color: var(--color-primary-soft);
-     color: var(--color-text);
-     font-weight: var(--fw-semibold);
-   }
-   
-   /* =========================
-      MEGA CATEGORY MENU (LIST)
-   ========================= */
+  font-size: 13.5px;
+  font-weight: 500;
 
-   .list-category-dropdown {
-     position: relative;
-     overflow: visible;
-   }
+  transition: all .15s ease;
+}
 
-   .list-category-panel {
-	 align-items: start;               /* ✅ 핵심 */
-     position: fixed;                 /* 🔥 잘림 방지 */
-     top: 160px;
-     left: 50%;
-     transform: translateX(-50%);
-	
-	 max-width: 960px;   /* ⬅ 핵심 */
-     width: 100%;
-     padding: 20px;
-	 margin-top: 8px;
 
-     display: none;
-     grid-template-columns: 220px 1fr;
-     gap: 24px;
+/* 전체보기는 맨 앞 고정 + 살짝 강조 */
+.category-sub-all {
+  font-weight: 700;
 
-     background: #fff;
-     border-radius: 16px;
-     box-shadow: var(--shadow-md);
-     z-index: 9999;
-   }
+  background: #00c65d;
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,198,93,.25);
+}
 
-   .list-category-dropdown.is-open .list-category-panel {
-     display: grid;
-   }
 
-   /* 왼쪽 대분류 */
-   .list-category-main {
-     list-style: none;
-     padding: 0;
-     margin: 0;
-     border-right: 1px solid #eee;
-   }
+/* hover */
+.category-sub-item:hover {
+  background: #ecfdf3;
+  border-color: #00c65d;
+  color: #00a550;
+  text-decoration: none;
+}
 
-   .list-category-main li {
-     padding: 10px 12px;
-     font-weight: 600;
-     background: #f7f7f7;
-     border-radius: 8px;
-   }
+.category-sub-all:hover {
+  background: #00b456;
+  color: #fff;
+}
 
-   /* 오른쪽 소분류 */
-   .list-category-sub {
-     grid-template-columns: repeat(3, max-content);
+/* =========================
+   DROPDOWN LAYOUT
+========================= */
 
-     column-gap: 48px;   /* ⬅ 기존 64px → 48px */
-     row-gap: 14px;
+.category-parent-list {
+  padding: 20px 12px;
+  margin: 0;
+  list-style: none;
 
-     justify-content: start;
-     align-content: start;
-   }
+  background: #f8f9fa;
+ }
 
-   .list-category-sub,
-   .list-category-sub li {
-     list-style: none;
-     padding: 0;
-     margin: 0;
-   }
+.category-parent-list li a {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background .15s ease;
+}
 
-   .list-category-item {
-     line-height: 1.6;
-   }
+.category-parent-list li a:hover,
+.category-parent-list li a.active {
+  background: #eef6f1; /* 팀 컬러로 바꿔도 됨 */
+  font-weight: 600;
+}
 
-   .list-category-link {
-     font-size: 13.5px;   /* 중고나라랑 거의 동일 */
-     color: #333;
-     text-decoration: none;
-   }
+/* 대분류 상단 영역 */
+.category-parent-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 한 줄 6개 */
+  gap: 8px;
 
-   .list-category-link:hover {
-     color: #16c784;
-     text-decoration: underline;
-   }
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+  background: #fafafa;
+}
 
-   .list-category-item.is-active .list-category-link {
-     color: #16c784;
-     font-weight: 600;
-   }
+.category-parent-grid::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: rgba(0,0,0,0.08);
+}
 
-   /* =========================
-      PARENT CATEGORY TABS
-   ========================= */
-   .list-parent-category {
-     margin-bottom: 24px;
-     border-bottom: 1px solid #eee;
-   }
+.category-parent-grid a {
+  padding: 8px 10px;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+}
 
-   .list-parent-tabs {
-     display: flex;
-     gap: 10px;
-     padding: 12px 0;
-     overflow-x: auto;
-   }
+.category-parent-grid a:hover {
+  background: #f0f2f5;
+}
 
-   .list-parent-tabs li {
-     list-style: none;
-   }
+.category-parent-grid a.active {
+  background: #ecfdf3;
+  color: #00c65d;
+  font-weight: 700;
+}
 
-   .list-parent-tabs a {
-     padding: 8px 14px;
-     border-radius: 999px;
-     background: #f4f5f6;
-     font-size: 14px;
-     color: #444;
-     text-decoration: none;
-     white-space: nowrap;
-   }
+.empty-result {
+  padding: 120px 0;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--fs-14);
+}
 
-   .list-parent-tabs a.active {
-     background: #111;
-     color: #fff;
-     font-weight: 600;
-   }
-   
-   
 
+
+
+
+
+
+
+
+
+
+
+ 

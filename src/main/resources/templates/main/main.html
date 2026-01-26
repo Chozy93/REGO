@@ -68,8 +68,9 @@
       <!-- =========================
            AI 맞춤 상품
       ========================= -->
-	  <section class="section"
-	  		th:if="${page.ai != null and #lists.size(page.ai.items) > 0}">
+	  <section class="section ai-section"
+	          th:if="${page.ai != null and #lists.size(page.ai.items) > 0}">
+
 
         <div class="section-head">
           <h2 class="section-title">🤖 AI 맞춤 상품</h2>

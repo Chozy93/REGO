@@ -160,5 +160,8 @@ public class ProductCategoryService {
      // level == 1 (대분류) 전체 조회
      return categoryMapper.selectParentCategoryList();
  }
+ public Long getDefaultParentCategoryId() {
+     return 1L; // 예: 디지털기기
+ }
 
 }

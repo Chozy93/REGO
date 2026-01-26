@@ -1,15 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const dropdown = document.getElementById("listCategoryDropdown");
-  const toggleBtn = document.getElementById("listCategoryToggle");
+  const mega = document.getElementById("categoryMega");
+  const toggle = mega?.querySelector(".category-mega-toggle");
 
-  if (!dropdown || !toggleBtn) return;
+  if (!mega || !toggle) return;
 
-  toggleBtn.addEventListener("click", (e) => {
+  toggle.addEventListener("click", (e) => {
     e.stopPropagation();
-    dropdown.classList.toggle("is-open");
+    mega.classList.toggle("is-open");
   });
 
   document.addEventListener("click", () => {
-    dropdown.classList.remove("is-open");
+    mega.classList.remove("is-open");
   });
 });
