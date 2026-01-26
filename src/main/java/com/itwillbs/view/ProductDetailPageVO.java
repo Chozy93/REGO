@@ -1,6 +1,5 @@
 package com.itwillbs.view;
 
-import com.itwillbs.view.ProductSellerInfoVO;
 import lombok.Getter;
 import lombok.Setter;
 

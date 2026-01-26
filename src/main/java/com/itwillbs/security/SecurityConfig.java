@@ -24,6 +24,8 @@ public class SecurityConfig {
     
     private final CustomAuthenticationFailureHandler customFailureHandler;
     
+    private final CustomAjaxLoginSuccessHandler customAjaxLoginSuccessHandler;
+    
 
     /* =========================
        AuthenticationManager
@@ -55,20 +57,18 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
             )
 
-            /* ---------- 일반 폼 로그인 ---------- */
+            /* ---------- 일반 폼 로그인 (SSR + 모달) ---------- */
             .formLogin(login -> login
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/", true)
-                //.failureUrl("/login?error")
-                .failureHandler(customFailureHandler)
-            )
+            	    .loginProcessingUrl("/login")
+            	    .usernameParameter("email")
+            	    .passwordParameter("password")
+            	    // ✅ 성공/실패 모두 핸들러로
+            	    .successHandler(customAjaxLoginSuccessHandler)   // 👈 새로 만들 것
+            	    .failureHandler(customFailureHandler)
+            	)
 
             /* ---------- 소셜 로그인 ---------- */
             .oauth2Login(oauth2 -> oauth2
-            	    .loginPage("/login") 
             	    .userInfoEndpoint(userInfo -> userInfo
             	        .userService(customOAuth2UserService)
             	    )

@@ -6,9 +6,18 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 import com.itwillbs.domain.ReviewVO;
+import com.itwillbs.view.condition.ReviewConditionVO;
 
 @Entity
-@Table(name = "reviews")
+@Table(
+	    name = "reviews",
+	    uniqueConstraints = {
+	        @UniqueConstraint(
+	            name = "uk_reviews_buyer_product",
+	            columnNames = {"buyer_id", "product_id"}
+	        )
+	    }
+	)
 @Getter
 public class Review {
 
@@ -23,13 +32,8 @@ public class Review {
     /* =========================
        상품
     ========================= */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "product_id",
-        nullable = false,
-        foreignKey = @ForeignKey(name = "fk_reviews_product")
-    )
-    private Product product;
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
 
     /* =========================
        구매자 (작성자)
@@ -77,8 +81,10 @@ public class Review {
     /* =========================
        생성자 (VO → Entity)
     ========================= */
-    public Review(Product product, User buyer, Long sellerId, ReviewVO vo) {
-        this.product = product;
+    public Review(Long productId, User buyer, Long sellerId, ReviewVO vo) {
+        validateRating(vo.getRating());
+
+        this.productId = productId;
         this.buyer = buyer;
         this.sellerId = sellerId;
         this.content = vo.getContent();
@@ -86,7 +92,23 @@ public class Review {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
+    /* =========================
+    최초 생성자 (도메인 규칙)
+    - buyer + conditionVO
+ ========================= */
+ public Review(
+         User buyer,
+         ReviewConditionVO conditionVO
+ ) {
+     this.productId = conditionVO.getProductId();
+     this.buyer = buyer;
 
+     this.sellerId = conditionVO.getSellerId();
+     this.rating   = conditionVO.getRating();
+     this.content  = conditionVO.getContent();
+
+     this.createdAt = LocalDateTime.now();
+ }
     /* =========================
        Entity → VO
     ========================= */
@@ -98,8 +120,17 @@ public class Review {
        수정
     ========================= */
     public void update(ReviewVO vo) {
+        validateRating(vo.getRating());
+
         this.content = vo.getContent();
         this.rating = vo.getRating();
         this.updatedAt = LocalDateTime.now();
+    }
+    
+    
+    private static void validateRating(int rating) {
+        if (rating < 1 || rating > 10) {
+            throw new IllegalArgumentException("별점은 1~10점 사이여야 합니다.");
+        }
     }
 }
