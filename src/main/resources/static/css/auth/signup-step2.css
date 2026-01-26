@@ -1,0 +1,273 @@
+/* ==================================================
+   Signup Step2
+================================================== */
+
+.signup-step2 {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: var(--space-32) var(--space-16) var(--space-64);
+}
+
+/* =========================
+   Back
+========================= */
+
+.signup-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  color: var(--color-text-muted);
+  font-size: var(--fs-14);
+  margin-bottom: var(--space-16);
+}
+
+/* =========================
+   Card
+========================= */
+
+.signup-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-32);
+  box-shadow: var(--shadow-sm);
+}
+
+/* =========================
+   Intro
+========================= */
+
+.signup-intro {
+  margin-bottom: var(--space-24);
+}
+
+.signup-logo {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-12);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: var(--fs-24);
+  font-weight: var(--fw-extrabold);
+  color: var(--color-primary);
+}
+
+/* =========================
+   Progress
+========================= */
+
+.signup-progress {
+  margin-bottom: var(--space-24);
+}
+
+.signup-progress .between {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--color-surface-3);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 66%;
+  height: 100%;
+  background: var(--color-primary);
+}
+
+/* =========================
+   Title
+========================= */
+
+.signup-title {
+  margin-bottom: var(--space-24);
+}
+
+.signup-title h1 {
+  margin: 0 0 var(--space-8);
+  font-size: var(--fs-28);
+  font-weight: var(--fw-bold);
+}
+
+.signup-title p {
+  font-size: var(--fs-14);
+  color: var(--color-text-muted);
+}
+
+/* =========================
+   Form
+========================= */
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.form-group label {
+  font-size: var(--fs-14);
+  font-weight: var(--fw-medium);
+}
+
+/* =========================
+   Input
+========================= */
+
+.form-group input {
+  height: 48px;
+  padding: 0 var(--space-16);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-size: var(--fs-14);
+}
+
+.form-group input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* readonly (본인인증 후) */
+.form-group input[readonly] {
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+/* =========================
+   Inline (input + button)
+========================= */
+
+.form-inline {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.form-inline input {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-inline .btn {
+  height: 48px;
+  padding: 0 var(--space-16);
+  font-size: var(--fs-13);
+  white-space: nowrap;
+}
+
+/* =========================
+   Messages
+========================= */
+
+.form-msg {
+  font-size: var(--fs-12);
+}
+
+.form-msg.success {
+  color: var(--color-success);
+}
+
+.form-msg.error {
+  color: var(--color-danger);
+}
+
+.form-help {
+  font-size: var(--fs-12);
+  color: var(--color-info);
+}
+
+/* =========================
+   Gender Select
+========================= */
+
+.gender-select {
+  display: flex;
+  gap: var(--space-12);
+}
+
+.gender-card {
+  flex: 1;
+  position: relative;
+  cursor: pointer;
+}
+
+.gender-card input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.gender-label {
+  height: 48px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: var(--fs-14);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+
+  transition:
+    border-color var(--duration-normal) var(--ease-out),
+    background-color var(--duration-normal) var(--ease-out),
+    color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.gender-card:hover .gender-label {
+  border-color: var(--color-primary);
+}
+
+.gender-card input:checked + .gender-label {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-text);
+  font-weight: var(--fw-bold);
+  box-shadow: 0 0 0 1px rgba(19, 236, 91, 0.25);
+}
+
+/* =========================
+   Buttons
+========================= */
+
+.btn-submit {
+  margin-top: var(--space-16);
+  height: 56px;
+  font-size: var(--fs-16);
+  font-weight: var(--fw-bold);
+}
+
+.btn.is-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.form-inline .btn.btn-outline {
+  border: 1px solid var(--color-border);
+  background: var(--color-primary);
+}

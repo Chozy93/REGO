@@ -10,9 +10,9 @@
   min-height: 860px;
 }
 
-/* =========================
+/* ==========================================================================
    Summary
-========================= */
+========================================================================== */
 
 .seller-summary {
   background: var(--color-surface);
@@ -23,17 +23,17 @@
   box-shadow: var(--shadow-sm);
 }
 
-.profile-card-btn{
-	border: 1px solid var(--color-border);	
-}
-
 .seller-summary-inner {
   display: flex;
+  align-items: flex-start; /* 소개글/버튼이 아래로 정상 배치되게 */
   gap: var(--space-32);
 }
 
+.profile-card-btn {
+  border: 1px solid var(--color-border);
+}
+
 .seller-avatar {
-  position: relative;
   width: 120px;
   height: 120px;
   border-radius: 50%;
@@ -41,63 +41,115 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 0 0 auto;
 }
-
-.seller-badge {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background: var(--color-primary);
-  color: var(--color-text);
-  font-size: var(--fs-10);
-  padding: 2px 6px;
-  border-radius: var(--radius-pill);
+.profie-avatar{
+	width: 120px;
+	 height: 120px;
+	 border-radius: 50%;
 }
 
 .seller-info {
   flex: 1;
+  min-width: 0; /* 긴 텍스트 잘림 방지 */
+  display: flex;
+  flex-direction: column;
 }
 
 .seller-name {
   font-size: var(--fs-24);
   font-weight: var(--fw-bold);
+  margin: 0;
 }
 
-.seller-rating {
-  margin: var(--space-8) 0;
+/* ==========================================================================
+   Rating (이름 밑 칩)
+   - 핵심: --rating 값(0~5) 기반으로 fill width 계산
+========================================================================== */
+
+.seller-rating-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+
+  
+  width: 180px;              /* 너가 말한 min-width */
+  background: var(--color-bg-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
+.seller-stars {
+  position: relative;
+  display: inline-block;
+  font-size: var(--fs-12);
+  line-height: 1;
+  letter-spacing: 1px;
+}
+
+.stars-bg {
+  color: var(--color-border);
+}
+
+.stars-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  /* 0점이면 0%라서 절대 색칠 안 됨 */
+  width: calc((var(--rating, 0) / 5) * 100%);
+  overflow: hidden;
+
+  color: #f5a623;
+  white-space: nowrap;
+}
+
+.seller-rating-score {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.seller-rating-value {
+  font-size: var(--fs-12);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-base);
+}
+
+.seller-review-count {
+  font-size: var(--fs-12);
   color: var(--color-text-muted);
 }
 
+/* 소개글은 별점칩 아래로 확실히 내려오게 */
 .seller-desc {
-  margin: var(--space-16) 0;
+  margin: 0 0 var(--space-16);
   color: var(--color-text-muted);
+  line-height: 1.6;
 }
 
+/* 버튼 */
 .seller-actions {
   display: flex;
   gap: var(--space-12);
+  margin-top: 2px;
 }
 
-.seller-stats {
-  display: flex;
-  border-left: 1px solid var(--color-border);
-}
-
-.seller-stats div {
-  padding: 0 var(--space-24);
-  text-align: center;
-}
 /* ==========================================================================
-   Seller Profile Stats (Count Style)
+   Stats
 ========================================================================== */
 
 .seller-stats {
   display: flex;
   align-items: center;
   gap: var(--space-32);
+  padding-left: var(--space-24);
+  border-left: 1px solid var(--color-border);
+  flex: 0 0 auto;
 }
 
-/* 각 카운트 블록 */
 .seller-stat {
   display: flex;
   flex-direction: column;
@@ -105,7 +157,6 @@
   min-width: 64px;
 }
 
-/* 숫자 */
 .seller-stat-value {
   font-size: var(--fs-20);
   font-weight: var(--fw-bold);
@@ -113,153 +164,20 @@
   color: var(--color-text-base);
 }
 
-/* 라벨 */
 .seller-stat-label {
   margin-top: 4px;
   font-size: var(--fs-12);
   color: var(--color-text-muted);
 }
 
-/* 가운데 구분선 */
 .seller-stat:not(:last-child) {
   padding-right: var(--space-24);
   border-right: 1px solid var(--color-border);
 }
 
-/* =========================
-   Seller Tabs
-========================= */
-
-.seller-tabs {
-  display: flex;
-  gap: var(--space-12);
-  margin-bottom: var(--space-24);
-}
-
-/* 탭 버튼 */
-.seller-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-8);
-  padding: 8px 14px;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  font-size: var(--fs-14);
-  font-weight: var(--fw-semibold);
-  color: var(--color-text-base);
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-/* 숫자 칩 */
-.seller-tab-count {
-  padding: 2px 8px;
-  border-radius: var(--radius-lg);
-  font-size: var(--fs-12);
-  font-weight: var(--fw-bold);
-  background: var(--color-surface-2);
-  color: var(--color-text-muted);
-}
-
-/* hover */
-.seller-tab:hover {
-  background: var(--color-bg-soft);
-}
-
-/* 활성 탭 */
-.seller-tab.is-active {
-  border-color: black;
-  color: black;
-  background: rgba(0, 200, 80, 0.08); /* primary 연한 배경 */
-}
-
-/* 활성 탭 숫자 */
-.seller-tab.is-active .seller-tab-count {
-  background: var(--color-primary);
-  color: #fff;
-}
-
-/* =========================
-   Products
-========================= */
-
-.section-title {
-  margin: var(--space-24) 0 var(--space-16);
-  font-size: var(--fs-18);
-  font-weight: var(--fw-bold);
-}
-
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-20);
-}
-
-.product-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-16);
-
-  box-shadow: var(--shadow-sm);
-  transition:
-    box-shadow var(--duration-normal) var(--ease-out),
-    transform var(--duration-normal) var(--ease-out);
-}
-
-.product-card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-.product-card.done {
-  background: var(--color-surface);
-  border-color: var(--color-border-soft);
-  box-shadow: none;
-}
-
-.product-card.done .product-title,
-.product-card.done .product-price {
-  color: var(--color-text-muted);
-}
-
-/* =========================
-   Reviews
-========================= */
-
-.seller-reviews {
-  margin-top: var(--space-40);
-}
-
-.review-card {
-  display: flex;
-  gap: var(--space-16);
-  padding: var(--space-24);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  margin-bottom: var(--space-16);
-}
-
-.review-head {
-  margin-bottom: var(--space-8);
-}
-
-.more-wrap {
-  text-align: center;
-  margin-top: var(--space-24);
-}
 /* ==========================================================================
-   Seller Tabs (jQuery UI Tabs - FULL RESET & CHIP STYLE)
+   Tabs (Underline Style)
 ========================================================================== */
-/* ==========================================================================
-   Seller Tabs (Underline Style)
-========================================================================== */
-
-/* =========================
-   Tabs Wrapper
-========================= */
 
 .seller-tabs-wrap.ui-tabs {
   padding: 0;
@@ -267,10 +185,6 @@
   border: none;
   background: transparent;
 }
-
-/* =========================
-   Tabs Nav
-========================= */
 
 .seller-tabs-wrap .ui-tabs-nav {
   display: flex;
@@ -290,16 +204,11 @@
   background: transparent;
 }
 
-/* jQuery UI 기본 제거 */
 .seller-tabs-wrap .ui-state-default,
 .seller-tabs-wrap .ui-state-active {
   border: none;
   background: transparent;
 }
-
-/* =========================
-   Tab Button
-========================= */
 
 .tab-btn {
   position: relative;
@@ -315,31 +224,24 @@
   transition: color 0.15s ease;
 }
 
-/* hover */
 .tab-btn:hover {
   color: var(--color-text-base);
 }
-
-/* =========================
-   Count
-========================= */
 
 .seller-tab-count {
   font-size: var(--fs-13);
   font-weight: var(--fw-semibold);
   color: var(--color-text-muted);
 }
-
-/* =========================
-   Active Tab
-========================= */
+.seller-tabs-wrap{
+	border: none !important;
+}
 
 .seller-tabs-wrap .ui-tabs-active .tab-btn {
   color: black;
   font-weight: var(--fw-bold);
 }
 
-/* 아래 두꺼운 줄 */
 .seller-tabs-wrap .ui-tabs-active .tab-btn::after {
   content: "";
   position: absolute;
@@ -351,60 +253,279 @@
   border-radius: 2px;
 }
 
-/* active count */
 .seller-tabs-wrap .ui-tabs-active .seller-tab-count {
   color: var(--color-primary);
 }
 
-/* =========================
-   Tabs Panel
-========================= */
-
 .seller-tabs-wrap .ui-tabs-panel {
   padding: 0;
   margin: 0;
-  border: none;
-  background: transparent;
-}
-
-/* =========================
-   Section Title 숨김
-========================= */
-
-.seller-tabs-wrap .section-title {
-  display: none;
-}
-
-
-
-/* =========================
-   탭 영역 외곽 보더 완전 제거
-========================= */
-
-/* jQuery UI 패널 */
-.seller-tabs-wrap .ui-tabs-panel {
   border: none !important;
   box-shadow: none !important;
   background: transparent !important;
 }
 
-/* 탭을 감싸는 section */
-.seller-tabs-wrap {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
+/* ==========================================================================
+   Products
+========================================================================== */
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-20);
 }
 
-/* 판매자 프로필 하위 섹션 공통 */
-.seller-profile section {
-  border: none !important;
-  box-shadow: none !important;
+.more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-24);
 }
 
-/* 판매중 / 거래완료 / 후기 영역 */
-.seller-products,
+/* 빈 상태(판매중/거래완료) */
+.seller-empty {
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.seller-empty-title {
+  font-size: var(--fs-15);
+  font-weight: var(--fw-semibold);
+}
+
+/* 거래완료 카드 처리 (기존 유지) */
+.seller-products.is-completed .product-card__like-btn {
+  display: none !important;
+}
+
+.seller-products.is-completed .product-card {
+  position: relative;
+  opacity: 0.65;
+  filter: grayscale(0.2);
+  box-shadow: none;
+  transform: none;
+}
+
+.seller-products.is-completed .product-card:hover {
+  box-shadow: none;
+  transform: none;
+}
+
+.seller-products.is-completed .product-card::after {
+  content: "거래완료";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-16);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.05em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.seller-products.is-completed .product-card__title,
+.seller-products.is-completed .product-card__price,
+.seller-products.is-completed .product-card__meta {
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   Reviews
+========================================================================== */
+
 .seller-reviews {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
+  margin-top: var(--space-32);
 }
+
+.review-filter {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.review-filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  padding: 10px 40px 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+
+  background-color: #fff;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-light);
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    0 1px 2px rgba(0, 0, 0, 0.04);
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 140px;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+}
+
+.review-filter-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow:
+    0 0 0 3px rgba(34, 197, 94, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.review-item {
+  display: grid;
+  grid-template-columns: 40px 1fr 120px;
+  gap: var(--space-16);
+  padding: var(--space-20) var(--space-24);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-16);
+}
+
+.review-left {
+  display: flex;
+  justify-content: center;
+}
+
+.review-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--color-border);
+}
+
+.review-center {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.review-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.review-writer {
+  font-size: var(--fs-14);
+  font-weight: var(--fw-semibold);
+}
+
+.review-date {
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+}
+
+.review-content {
+  font-size: var(--fs-14);
+  line-height: 1.5;
+}
+
+.review-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.review-stars {
+  font-size: 14px;
+  color: #f5a623;
+}
+
+/* 상품 박스 */
+.review-product-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 250px;
+  margin-top: 6px;
+  padding: 6px 10px;
+
+  background: #f5f7f5;
+  border-radius: 8px;
+
+  font-size: 13px;
+  text-decoration: none;
+  color: var(--color-text-base);
+
+  transition: background 0.15s ease;
+}
+
+.review-product-box:hover {
+  background: #e9f3ec;
+}
+
+.review-product-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.review-product-title {
+  max-width: 160px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+
+.review-more {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-24);
+}
+
+/* 후기 없음 카드 */
+.review-empty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 180px;
+  padding: var(--space-32);
+
+
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.review-empty-title {
+  font-size: var(--fs-16);
+  font-weight: var(--fw-semibold);
+  margin-bottom: 8px;
+  color: var(--color-text-base);
+}
+
+.review-empty-desc {
+  font-size: var(--fs-14);
+  line-height: 1.6;
+}
+
+/* =========================
+   Seller Profile - Hide Like Button
+========================= */
+
+/* 판매자 마이프로필에서는 찜(하트) 버튼 완전 제거 */
+.seller-profile .product-card__like-btn {
+  display: none !important;
+}
+

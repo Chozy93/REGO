@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/auth/signup-step2.css">
+</th:block>
+
+<div layout:fragment="content" class="signup-step2">
+
+  <!-- back -->
+  <a href="/" class="signup-back">
+    <span class="material-symbols-outlined">arrow_back</span>
+    메인으로 돌아가기
+  </a>
+
+  <section class="signup-card">
+
+    <!-- intro -->
+    <header class="signup-intro text-center">
+      <div class="signup-logo">RE</div>
+      <p class="text-muted">새로운 시작, RE:GO와 함께</p>
+    </header>
+
+    <!-- progress -->
+    <div class="signup-progress">
+      <div class="between">
+        <span class="text-muted fs-xs">정보입력</span>
+        <span class="text-primary fw-bold fs-xs">2 / 3</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- title -->
+    <div class="signup-title">
+      <h1>본인인증 후 계정 정보를 입력해주세요</h1>
+      <p class="text-muted">
+        안전한 서비스 이용을 위해 본인인증이 필요합니다.
+      </p>
+    </div>
+
+    <!-- form -->
+    <form action="/signup/step2"
+          method="post"
+          id="signupForm"
+          class="signup-form">
+
+      <!-- =========================
+           본인인증 섹션
+      ========================== -->
+      <div class="form-section">
+
+        <h2 class="form-section-title">본인인증</h2>
+
+        <!-- 인증 버튼 -->
+        <div class="form-group">
+          <button type="button"
+                  id="sendAuthBtn"
+                  class="btn btn-primary w-full">
+            휴대폰 본인인증 하기
+          </button>
+          <p class="form-help">
+            본인인증 완료 시 아래 정보가 자동으로 입력됩니다.
+          </p>
+        </div>
+
+        <!-- 이름 -->
+        <div class="form-group">
+          <label>이름</label>
+          <input type="text"
+                 name="username"
+                 id="username"
+                 placeholder="본인인증 후 자동 입력"
+                 readonly>
+        </div>
+
+        <!-- 휴대폰 -->
+        <div class="form-group">
+          <label>휴대폰 번호</label>
+          <input type="tel"
+                 name="phoneNumber"
+                 id="phoneNumber"
+                 placeholder="본인인증 후 자동 입력"
+                 readonly>
+        </div>
+
+        <!-- 생년월일 -->
+        <div class="form-group">
+          <label>생년월일</label>
+          <input type="text"
+                 name="birthDate"
+                 id="birthDate"
+                 placeholder="본인인증 후 자동 입력"
+                 readonly>
+        </div>
+
+        <!-- 성별 -->
+        <div class="form-group">
+          <label>성별</label>
+
+          <div class="gender-select">
+
+            <label class="gender-card">
+              <input type="radio" name="gender" value="M" disabled>
+              <span class="gender-label">남성</span>
+            </label>
+
+            <label class="gender-card">
+              <input type="radio" name="gender" value="F" disabled>
+              <span class="gender-label">여성</span>
+            </label>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- =========================
+           계정 정보 입력
+      ========================== -->
+      <div class="form-section">
+
+        <h2 class="form-section-title">계정 정보</h2>
+
+        <!-- 이메일 -->
+        <div class="form-group">
+          <label>이메일</label>
+          <div class="form-inline">
+            <input type="email"
+                   name="email"
+                   placeholder="example@re-go.com"
+                   required>
+            <button type="button"
+                    id="checkEmailBtn"
+                    class="btn btn-outline">
+              중복확인
+            </button>
+          </div>
+          <span id="emailMessage" class="form-msg"></span>
+        </div>
+
+        <!-- 비밀번호 -->
+        <div class="form-group">
+          <label>비밀번호</label>
+          <input type="password"
+                 name="password"
+                 placeholder="영문, 숫자, 특수문자 포함 8자 이상"
+                 required>
+        </div>
+
+        <div class="form-group">
+          <label>비밀번호 확인</label>
+          <input type="password"
+                 id="passwordConfirm"
+                 placeholder="비밀번호 확인"
+                 required>
+          <span id="pwMessage" class="form-msg"></span>
+        </div>
+
+        <!-- 닉네임 -->
+        <div class="form-group">
+          <label>닉네임</label>
+          <input type="text"
+                 name="nickname"
+                 id="nickname"
+                 required>
+          <span id="nicknameError" class="form-msg"></span>
+        </div>
+
+      </div>
+
+      <!-- submit -->
+      <button type="submit"
+              class="btn btn-primary btn-submit">
+        가입 완료
+      </button>
+
+    </form>
+
+  </section>
+</div>
+
+<th:block th:fragment="pageJs">
+  <script th:src="@{/js/auth/signup-step2.js}"></script>
+</th:block>
+
+</html>

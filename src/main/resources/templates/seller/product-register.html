@@ -5,6 +5,7 @@
 
 <th:block th:fragment="pageCss">
   <link rel="stylesheet" href="/css/seller/product-register.css">
+  <link rel="stylesheet" href="/css/seller/product-region.css">
 </th:block>
 
 <div layout:fragment="content" class="seller-product-register">
@@ -35,24 +36,32 @@
 	<section class="spr-section">
 	  <div class="spr-section__head">
 	    <h2 class="spr-section__title">상품 이미지</h2>
-	    <span class="spr-section__meta">(0/10)</span>
+	    <span class="spr-section__meta">
+	      (<span id="imageCount">0</span>/10)
+	    </span>
 	  </div>
 
 	  <div class="spr-images">
+	    <!-- 이미지 추가 버튼 -->
 	    <label class="spr-images__add">
 	      <input type="file"
 	             name="images"
 	             multiple
 	             accept="image/*"
-	             class="spr-images__input">
+	             class="spr-images__input"
+	             id="imageInput">
 	      <span class="material-symbols-outlined">camera_alt</span>
 	      <span class="spr-images__add-text">이미지 등록</span>
 	    </label>
+
+	    <!-- 🔥 미리보기 썸네일 영역 -->
+	    <div class="spr-images__list" id="imagePreview"></div>
 	  </div>
 
 	  <p class="spr-help">
 	    <span class="material-symbols-outlined">info</span>
 	    상품 이미지는 최대 10장까지 등록 가능합니다.
+	    <strong>첫 번째 이미지가 대표 이미지</strong>로 설정됩니다.
 	  </p>
 	</section>
 
@@ -136,31 +145,45 @@
     <!-- ===============================
          Condition
     =============================== -->
-    <section class="spr-section">
-      <h2 class="spr-section__title">상품 상태</h2>
+	<section class="spr-section">
+	  <h2 class="spr-section__title">상품 상태</h2>
 
-      <div class="spr-radio">
-        <label class="spr-radio__item">
-          <input type="radio" name="condition" value="NEW" class="spr-radio__input">
-          <span class="spr-radio__text">새 상품 (미사용)</span>
-        </label>
+	  <div class="spr-radio">
+	    <label class="spr-radio__item">
+	      <input type="radio"
+	             name="conditionStatus"
+	             value="NEW"
+	             class="spr-radio__input">
+	      <span class="spr-radio__text">새 상품 (미사용)</span>
+	    </label>
 
-        <label class="spr-radio__item">
-          <input type="radio" name="condition" value="TOP" class="spr-radio__input" checked>
-          <span class="spr-radio__text">사용감 없음 (최상)</span>
-        </label>
+	    <label class="spr-radio__item">
+	      <input type="radio"
+	             name="conditionStatus"
+	             value="LIKE_NEW"
+	             class="spr-radio__input"
+	             checked>
+	      <span class="spr-radio__text">거의 새 것 (사용감 거의 없음)</span>
+	    </label>
 
-        <label class="spr-radio__item">
-          <input type="radio" name="condition" value="GOOD" class="spr-radio__input">
-          <span class="spr-radio__text">사용감 적음 (좋음)</span>
-        </label>
+	    <label class="spr-radio__item">
+	      <input type="radio"
+	             name="conditionStatus"
+	             value="GOOD"
+	             class="spr-radio__input">
+	      <span class="spr-radio__text">사용감 있음</span>
+	    </label>
 
-        <label class="spr-radio__item">
-          <input type="radio" name="condition" value="NORMAL" class="spr-radio__input">
-          <span class="spr-radio__text">사용감 많음 (보통)</span>
-        </label>
-      </div>
-    </section>
+	    <label class="spr-radio__item">
+	      <input type="radio"
+	             name="conditionStatus"
+	             value="FAIR"
+	             class="spr-radio__input">
+	      <span class="spr-radio__text">사용감 많음</span>
+	    </label>
+	  </div>
+	</section>
+
 
     <hr class="spr-divider">
 
@@ -180,9 +203,10 @@
 	  <div class="spr-price">
 	    <div class="spr-price__field">
 	      <span class="spr-price__prefix">₩</span>
-	      <input type="number"
-	             class="spr-input spr-input--price"
-	             placeholder="가격을 입력해주세요">
+		  <input type="text"
+		         name="price"
+		         class="spr-input spr-input--price"
+		         placeholder="가격을 입력해주세요">
 	    </div>
 
 	  
@@ -222,9 +246,11 @@
         <h2 class="spr-section__title">거래 방식</h2>
 
 		<div class="spr-tx">
+
+		  <!-- 직거래 -->
 		  <label class="spr-tx__card">
-		    <input type="checkbox"
-		           name="transactionTypes"
+		    <input type="radio"
+		           name="tradeType"
 		           value="DIRECT"
 		           class="spr-tx__input">
 		    <div class="spr-tx__text">
@@ -234,9 +260,10 @@
 		    <span class="material-symbols-outlined spr-tx__icon">handshake</span>
 		  </label>
 
+		  <!-- 택배 -->
 		  <label class="spr-tx__card">
-		    <input type="checkbox"
-		           name="transactionTypes"
+		    <input type="radio"
+		           name="tradeType"
 		           value="DELIVERY"
 		           class="spr-tx__input">
 		    <div class="spr-tx__text">
@@ -245,31 +272,59 @@
 		    </div>
 		    <span class="material-symbols-outlined spr-tx__icon">local_shipping</span>
 		  </label>
+
+		  <!-- 직거래 + 택배 -->
+		  <label class="spr-tx__card">
+		    <input type="radio"
+		           name="tradeType"
+		           value="ALL"
+		           class="spr-tx__input">
+		    <div class="spr-tx__text">
+		      <p class="spr-tx__title">직거래 + 택배</p>
+		      <p class="spr-tx__desc">직거래와 택배 거래 모두 가능합니다.</p>
+		    </div>
+		    <span class="material-symbols-outlined spr-tx__icon">sync_alt</span>
+		  </label>
+
 		</div>
 
-      </div>
 
-      <!-- 거래 희망 장소 -->
-      <div class="spr-panel">
-        <div class="spr-place__head">
-          <h2 class="spr-section__title">거래 희망 장소</h2>
-          <button type="button" class="spr-place__btn">장소 변경</button>
-        </div>
+	  <!-- 거래 희망 장소 -->
+	  <!-- 거래 희망 장소 -->
+	  <div class="spr-panel">
 
-        <div class="spr-place">
-          <div class="spr-place__map">
-            <div class="spr-place__pin">
-              <span class="material-symbols-outlined">location_on</span>
-              <span class="spr-place__label">강남구 역삼동</span>
-            </div>
-          </div>
-        </div>
+	    <div class="spr-place__head">
+	      <h2 class="spr-section__title">거래 희망 장소</h2>
+	      <span class="spr-place__hint">클릭해서 장소를 선택하세요</span>
+	    </div>
 
-        <p class="spr-muted">* 직거래 선택 시, 설정한 지역 위주로 노출됩니다.</p>
+	    <div class="spr-place">
+	      <div class="spr-place__map" onclick="openProductRegionModal()">
+	        <span class="material-symbols-outlined spr-place__icon">location_on</span>
 
-        <input type="hidden" name="regionCode" value="">
-        <input type="hidden" name="regionName" value="강남구 역삼동">
-      </div>
+	        <!-- 화면 표시용 -->
+	        <span class="spr-place__label" id="selectedRegionLabel">
+	          지역을 선택해주세요
+	        </span>
+	      </div>
+	    </div>
+
+	    <p class="spr-muted">
+	      * 직거래 선택 시, 설정한 지역 기준으로 노출됩니다.
+	    </p>
+
+	    <!-- =========================
+	         서버 전송용 hidden inputs
+	         (Product 테이블 대응)
+	    ========================= -->
+	    <input type="hidden" name="regionSidoCode" id="regionSidoCode">
+	    <input type="hidden" name="regionSigunguCode" id="regionSigunguCode">
+	    <input type="hidden" name="regionEupmyeondongCode" id="regionEupmyeondongCode">
+	    <input type="hidden" name="regionDisplayName" id="regionDisplayName">
+
+	  </div>
+
+
     </section>
 
     <!-- ===============================
@@ -281,8 +336,10 @@
     </div>
 
   </form>
+  <th:block th:replace="seller/product-region-modal :: product-region-modal"/>
 </div>
 <th:block th:fragment="pageJs">
 	<script th:src="@{/js/seller/product-register.js}"></script>
+	<script th:src="@{/js/seller/product-region.js}"></script>
 </th:block>
 </html>

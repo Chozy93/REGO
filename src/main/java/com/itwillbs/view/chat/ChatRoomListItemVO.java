@@ -1,4 +1,4 @@
-package com.itwillbs.view;
+package com.itwillbs.view.chat;
 
 /**
  * 채팅방 리스트의 "1개 채팅방" 아이템 VO

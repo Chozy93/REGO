@@ -23,10 +23,10 @@ import com.itwillbs.repository.ProductRepository;
 import com.itwillbs.repository.UserRepository;
 import com.itwillbs.view.ChatListItemVO;
 import com.itwillbs.view.ChatListViewVO;
-import com.itwillbs.view.ChatMessageItemVO;
-import com.itwillbs.view.ChatMessageViewVO;
-import com.itwillbs.view.ChatRoomHeaderViewVO;
-import com.itwillbs.view.ChatRoomPageVO;
+import com.itwillbs.view.chat.ChatMessageItemVO;
+import com.itwillbs.view.chat.ChatMessageViewVO;
+import com.itwillbs.view.chat.ChatRoomHeaderViewVO;
+import com.itwillbs.view.chat.ChatRoomPageVO;
 import com.itwillbs.view.condition.ChatMessageSendConditionVO;
 import com.itwillbs.websocket.ChatSessionRegistry;
 

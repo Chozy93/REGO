@@ -1,4 +1,4 @@
-package com.itwillbs.view;
+package com.itwillbs.view.chat;
 
 import com.itwillbs.domain.ChatMessageVO;
 

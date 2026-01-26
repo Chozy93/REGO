@@ -17,10 +17,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GlobalViewControllerAdvice {
 
+    private final CategoryService categoryService;
+    private final ChatService chatService;
 
 
-    private final CategoryService categoryService;	
-    private final ChatService chatService;	
+
+  
     
     @Value("${kakao.js.key}")
     private String kakaoKey;

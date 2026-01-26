@@ -43,6 +43,9 @@
     <link rel="stylesheet" th:href="@{/css/fragments/footer.css}">
     <link rel="stylesheet" th:href="@{/css/fragments/category-modal.css}">
 	<link rel="stylesheet" th:href="@{/css/fragments/region.css}">
+	<link rel="stylesheet" th:href="@{/css/fragments/auth/login-modal.css}">
+	<link rel="stylesheet" th:href="@{/css/fragments/auth/find-id-modal.css}">
+	<link rel="stylesheet" th:href="@{/css/fragments/auth/find-password-modal.css}">
 
 <!--    <link rel="stylesheet" th:href="@{/css/modal.css}">-->
 
@@ -82,14 +85,21 @@
 ================================================== -->
 <!--<th:block th:replace="fragments/login-modal :: loginModal"></th:block>-->
 <div th:replace="fragments/category-modal :: category-modal"></div>
-<div th:replace="~{fragments/region-modal :: region-modal}"></div>
-
+<div th:replace="fragments/region-modal :: region-modal"></div>
+<th:block sec:authorize="isAnonymous()">
+<div th:replace="fragments/auth/login-modal :: login-modal"></div>
+<div th:replace="fragments/auth/find-id-modal :: find-id-modal"></div>
+<div th:replace="fragments/auth/find-password-modal :: find-password-modal"></div>
+</th:block>
 <!-- ==================================================
      Global JS
 ================================================== -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script th:src="@{/js/common.js}"></script>
 <script th:src="@{/js/fragments/header.js}"></script>
+<script th:src="@{/js/fragments/auth/login-modal.js}"></script>
+<script th:src="@{/js/fragments/auth/find-id-modal.js}"></script>
+<script th:src="@{/js/fragments/auth/find-password-modal.js}"></script>
 <script th:inline="javascript">
     /* 컨트롤러의 변수를 JS 전역 변수로 할당 */
 	/*<![CDATA[*/
@@ -104,7 +114,8 @@
         th:src="'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${kakaoKey} + '&libraries=services'"></script>
 		
 <script th:src="@{/js/region/region.js}"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/autonumeric@4.10.5"></script>
+<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
 
 <!-- ==================================================
      Page JS Slot
