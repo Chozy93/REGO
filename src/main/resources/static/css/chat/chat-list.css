@@ -1,3 +1,6 @@
+
+
+
 /* =========================
    Chat Layout
 ========================= */
@@ -12,15 +15,42 @@
   width: 380px;
   flex: 0 0 380px;
   border-right: 1px solid var(--color-divider);
+  z-index: 2;
 }
 
 /* 우측은 남는 영역 */
-.chat-room-container{
+.chat-room-container {
   flex: 1;
   min-width: 0;
-  display: flex;       /* 중요: 내부(.chat-room / .chat-empty)가 꽉 차게 */ 
-   
+  display: flex;
 }
+
+/* 🔥 stage가 진짜 메인 flex 아이템 */
+.chat-room-stage {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+
+/* empty / chatRoomArea는 겹쳐서 쓰는 개념 */
+.chat-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#chatRoomArea {
+  flex: 1;
+  min-width: 0;
+ display: flex;
+}
+
+#chatRoomArea .chat-room {
+  flex: 1;
+  min-width: 0;
+}
+
 
 /* =========================
    Sidebar
@@ -43,7 +73,7 @@
 }
 
 /* =========================
-   Filter
+   Chat Filter (Wrapper)
 ========================= */
 .chat-filter-wrap {
   position: relative;
@@ -51,6 +81,7 @@
   padding-bottom: 8px;
 }
 
+/* 오른쪽 페이드 아웃 */
 .chat-filter-wrap::after {
   content: "";
   position: absolute;
@@ -65,27 +96,40 @@
     transparent
   );
 }
+
+/* =========================
+   Filter Row (공통)
+========================= */
 .chat-filter {
   display: flex;
+  align-items: center;
   gap: var(--space-8);
   padding: 0 var(--space-20) var(--space-12);
+
   overflow-x: auto;
-  
-  /* 🔥 추가 */
   overflow-y: hidden;
   white-space: nowrap;
+
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none; /* Firefox */
 }
 
+.chat-filter::-webkit-scrollbar {
+  display: none; /* Chrome */
+}
+
+/* =========================
+   Chip Button (기존 필터)
+========================= */
 .chat-filter-btn {
   padding: 6px 14px;
   border-radius: var(--radius-pill);
   font-size: var(--fs-13);
+
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-text-muted);
-  /* 🔥 추가 */
+
   white-space: nowrap;
   word-break: keep-all;
 }
@@ -95,9 +139,44 @@
   color: var(--color-text);
   border-color: var(--color-primary);
 }
+
+/* =========================
+   Select Filter (텍스트형 ▼)
+========================= */
+.chat-filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  border: none;
+  background: transparent;
+
+  font-size: var(--fs-14);
+  font-weight: 600;
+  color: var(--color-text);
+
+  padding-right: 16px;
+  cursor: pointer;
+}
+
+.chat-filter-select:focus {
+  outline: none;
+}
+
+/* select wrapper */
 .chat-filter-option {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  padding: 8px 20px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ▼ 아이콘 */
+.chat-filter-arrow {
+  position: absolute;
+  right: 0;
+  pointer-events: none;
+  font-size: 10px;
+  color: var(--color-text-muted);
 }
 
 /* =========================
@@ -114,6 +193,24 @@
   padding: var(--space-16) var(--space-20);
   cursor: pointer;
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  z-index: 3;
+  height: 100px;
+}
+
+/* =========================
+   Active Chat Room Item
+========================= */
+.chat-room-item.is-active {
+  background: var(--color-primary-50);
+  border-left: 3px solid var(--color-primary);
+  
+  /* 볼록한 느낌 */
+   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+
+.chat-room-item.is-active:hover {
+  background: var(--color-primary-50);
 }
 
 .chat-room-item:hover {
@@ -156,11 +253,18 @@
   font-size: var(--fs-14);
 }
 
+/* 상대방 이름 강조 */
+.chat-room-item.is-active .chat-room-name {
+  font-size: calc(var(--fs-14) + 1px); /* 살짝만 */
+  font-weight: var(--fw-bold);
+}
+
+/* 🔥 시간을 항상 오른쪽 끝으로 */
 .chat-room-time {
+  margin-left: auto;
   font-size: var(--fs-12);
   color: var(--color-text-muted);
 }
-
 .chat-room-preview {
   flex: 1;
   font-size: 13px;
@@ -168,6 +272,10 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.chat-room-item.is-active .chat-room-preview {
+  display: none;
 }
 .chat-room-bottom {
   display: flex;
@@ -180,6 +288,11 @@
   gap: 4px;
   flex-shrink: 0;
 }
+
+.chat-room-item.is-active .chat-room-unread {
+  display: none;
+}
+
 
 .unread-dot {
   width: 8px;

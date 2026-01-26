@@ -1,0 +1,413 @@
+/* =========================================
+   1. 변수 및 기본 설정
+   ========================================= */
+:root {
+    --primary-color: #13ec5b;
+    --primary-hover: #0fd651;
+    --bg-light: #f6f8f6;
+    --text-dark: #111813;
+    --text-gray: #6b7280;
+    --text-light-gray: #9ca3af;
+    --border-color: #f0f4f2;
+    --white: #ffffff;
+    --radius-xl: 24px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Manrope', 'Noto Sans KR', sans-serif; background-color: var(--bg-light); color: var(--text-dark); }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+/* =========================================
+   2. 레이아웃
+   ========================================= */
+.layout-container { max-width: 1024px; margin: 0 auto; padding: 32px 16px; width: 100%; }
+
+.page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.btn-back { padding: 8px; border-radius: 50%; color: var(--text-gray); display: flex; }
+.btn-back:hover { background-color: #f3f4f6; color: var(--text-dark); }
+.page-header h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.025em; }
+
+.dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+
+/* 카드 공통 */
+.card {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    min-height: 240px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.card-header h3 { font-size: 14px; font-weight: bold; color: var(--text-gray); display: flex; align-items: center; gap: 8px; }
+
+/* =========================================
+   3. 지갑(Wallet) 섹션
+   ========================================= */
+.icon-circle {
+    width: 32px; height: 32px; background-color: rgba(19, 236, 91, 0.2);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: var(--primary-color);
+}
+.balance-display { font-size: 36px; font-weight: 900; margin-bottom: 32px; letter-spacing: -0.025em; }
+.balance-display span { font-size: 24px; font-weight: bold; color: var(--text-gray); margin-left: 4px; }
+
+.button-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; }
+.btn-lg { height: 56px; font-size: 18px; border-radius: var(--radius-md); font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s; }
+.btn-lg:hover { transform: translateY(-2px); }
+
+.btn-primary { background-color: var(--primary-color); color: var(--text-dark); box-shadow: 0 10px 15px -3px rgba(19, 236, 91, 0.2); }
+.btn-primary:hover { background-color: var(--primary-hover); }
+.btn-secondary { background-color: #f3f4f6; color: var(--text-dark); }
+.btn-secondary:hover { background-color: #e5e7eb; }
+
+/* =========================================
+   4. 계좌(Account) 섹션
+   ========================================= */
+.account-card { position: relative; }
+.btn-text-danger { font-size: 12px; font-weight: bold; color: #9ca3af; }
+.btn-text-danger:hover { color: #ef4444; }
+
+/* 계좌 있음 */
+.account-content-wrapper { flex: 1; display: flex; flex-direction: column; }
+.account-box { display: flex; align-items: center; gap: 16px; padding: 16px; background-color: #f9fafb; border-radius: var(--radius-md); margin-bottom: 16px; margin-top: auto; margin-bottom: auto;}
+.bank-icon { width: 48px; height: 48px; background-color: #dbeafe; color: #2563eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.bank-name { font-weight: bold; font-size: 18px; }
+.account-num { color: var(--text-gray); font-family: monospace; }
+.badge { background-color: #dbeafe; color: #1d4ed8; font-size: 12px; font-weight: bold; padding: 4px 8px; border-radius: 4px; }
+.btn-dashed { width: 100%; height: 56px; border: 2px dashed #e5e7eb; border-radius: var(--radius-md); color: var(--text-gray); font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-dashed:hover { border-color: var(--primary-color); color: var(--primary-color); }
+
+/* 계좌 없음 (Empty State) */
+.empty-state-wrapper { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.empty-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 16px 0; }
+.empty-icon-circle { width: 64px; height: 64px; background-color: #f9fafb; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #d1d5db; margin-bottom: 16px; }
+.empty-icon-circle span { font-size: 36px; }
+.empty-title { color: #9ca3af; font-weight: 500; margin-bottom: 4px; }
+.empty-desc { font-size: 12px; color: #9ca3af; }
+.btn-black-full { width: 100%; height: 56px; background-color: #111813; color: white; font-weight: bold; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: background-color 0.2s; }
+.btn-black-full:hover { background-color: #000000; }
+.mt-auto { margin-top: auto; }
+
+
+/* =========================================
+   5. 거래 내역(History) 섹션 (NEW 디자인 반영)
+   ========================================= */
+.history-card {
+    padding: 0; /* 내부 패딩 제거하고 자식에게 위임 */
+    overflow: hidden; /* 모서리 둥글게 유지 */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 헤더 영역 */
+.history-header {
+    padding: 24px;
+    border-bottom: 1px solid #f0f4f2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.history-header h2 {
+    font-size: 1.125rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    color: #111813;
+}
+
+/* 필터 셀렉트 박스 */
+.filter-group { display: flex; gap: 0.5rem; }
+.form-select {
+    font-size: 0.875rem;
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    cursor: pointer;
+    outline: none;
+}
+.form-select:focus { border-color: #13ec5b; }
+
+/* 리스트 스타일 */
+.history-list-wrapper { display: flex; flex-direction: column; }
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #f0f4f2;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+.history-item:hover { background-color: #f9fafb; }
+.history-item:last-child { border-bottom: none; }
+
+/* 좌측 (아이콘 + 날짜/제목) */
+.item-left { display: flex; align-items: center; gap: 1rem; }
+.item-icon {
+    width: 2.5rem; height: 2.5rem;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.icon-green { background-color: #f0fdf4; color: #16a34a; }
+.icon-red { background-color: #fef2f2; color: #ef4444; }
+
+.item-info { display: flex; flex-direction: column; }
+.item-date { font-size: 0.75rem; color: #9ca3af; margin-bottom: 0.125rem; }
+.item-title { font-size: 1rem; font-weight: 700; color: #111813; }
+
+/* 우측 (금액 + 잔액) */
+.item-right { text-align: right; }
+.item-amount { font-size: 1.125rem; font-weight: 800; margin-bottom: 0.125rem; }
+.text-primary { color: #13ec5b; } /* 충전/수입 색상 */
+.text-dark { color: #111813; }    /* 지출 색상 */
+.item-balance { font-size: 0.75rem; color: #9ca3af; }
+
+/* 내역 없을 때 */
+.empty-state { padding: 3rem; text-align: center; color: #9ca3af; }
+.empty-state span { font-size: 3rem; margin-bottom: 0.5rem; display: block; }
+
+/* 더보기 버튼 */
+.btn-more {
+    width: 100%; padding: 1rem;
+    background: transparent; border: none; border-top: 1px solid #f0f4f2;
+    color: #6b7280; font-weight: 700; font-size: 0.875rem;
+    cursor: pointer; transition: color 0.2s, background 0.2s;
+}
+.btn-more:hover { background-color: #f9fafb; color: #13ec5b; }
+
+
+/* =========================================
+   6. 모달 (Modal) 섹션
+   ========================================= */
+   /* 1. 모달 전체 배경 (어둡고 흐리게) */
+   /* 배경 레이어: 꽉 차게, 어둡게, 흐리게 */
+   /* =========================================
+      6. 모달 (Modal) 섹션
+      ========================================= */
+
+   /* [1] 모달 기본 레이아웃 & 배경 */
+   /* [1] 모달 오버레이 (배경) */
+   /* [1] 배경 레이어 */
+   .modal-overlay {
+       position: fixed !important;
+       inset: 0 !important;
+       z-index: 9999 !important;
+       background-color: rgba(0, 0, 0, 0.6) !important;
+       backdrop-filter: blur(4px) !important;
+       display: none; /* 기본은 숨김 */
+       align-items: center !important;
+       justify-content: center !important;
+       padding: 20px !important;
+   }
+
+   /* 활성화 시 */
+   .modal-overlay.active {
+       display: flex !important;
+   }
+
+   /* [2] 모달 본체 카드 (이미지처럼 쪼개지는 현상 방지) */
+   .modal-card {
+       background-color: #ffffff !important;
+       width: 100% !important;
+       max-width: 460px !important;
+       border-radius: 28px !important;
+       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+       display: flex !important;
+       flex-direction: column !important; /* 세로 정렬 강제 */
+       overflow: hidden !important;
+       position: relative !important;
+       animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+   }
+
+   /* [3] 모달 헤더 (왼쪽으로 튀어나가는 현상 해결) */
+   .modal-header {
+       padding: 20px 24px !important;
+       border-bottom: 1px solid #f0f4f2 !important;
+       display: flex !important;
+       justify-content: space-between !important;
+       align-items: center !important;
+       background-color: #ffffff !important;
+       width: 100% !important;
+       position: relative !important; /* 붕괴 방지 */
+       flex-shrink: 0 !important;
+   }
+
+   .modal-header h2 {
+       font-size: 1.25rem !important;
+       font-weight: 800 !important;
+       color: #111813 !important;
+       margin: 0 !important;
+   }
+
+   /* [4] 모달 바디 (스크롤 영역) */
+   .modal-body {
+       padding: 24px !important;
+       max-height: 450px !important;
+       overflow-y: auto !important;
+       background-color: #ffffff !important;
+       flex: 1 !important;
+   }
+
+   /* 계좌 리스트 아이템 */
+   .account-item {
+       position: relative !important;
+       margin-bottom: 12px !important;
+   }
+
+   .account-label {
+       display: flex !important;
+       align-items: center !important;
+       gap: 16px !important;
+       padding: 16px !important;
+       padding-right: 56px !important; /* 삭제 버튼 공간 */
+       border: 2px solid #f1f5f9 !important;
+       border-radius: 16px !important;
+       cursor: pointer !important;
+       background-color: #ffffff !important;
+   }
+
+   /* 체크 시 강조 */
+   input[type="radio"]:checked + .account-label {
+       border-color: #13ec5b !important;
+       background-color: rgba(19, 236, 91, 0.05) !important;
+   }
+
+   /* 라디오 버튼 숨김 */
+   .account-item input[type="radio"] {
+       display: none !important;
+   }
+
+   /* 휴지통 삭제 버튼 */
+   .delete-btn {
+       position: absolute !important;
+       right: 16px !important;
+       top: 50% !important;
+       transform: translateY(-50%) !important;
+       z-index: 10 !important;
+       color: #d1d5db !important;
+   }
+
+   /* [5] 모달 푸터 (하단 버튼) */
+   .modal-footer {
+       padding: 0 24px 24px !important;
+       display: flex !important;
+       flex-direction: column !important;
+       gap: 10px !important;
+       background-color: #ffffff !important;
+       flex-shrink: 0 !important;
+   }
+
+   .btn-save {
+       width: 100% !important;
+       height: 56px !important;
+       background-color: #13ec5b !important;
+       border-radius: 16px !important;
+       font-weight: 800 !important;
+       font-size: 18px !important;
+       color: #111813 !important;
+   }
+
+   /* [4] 충전 전용 섹션 (건드리지 않음) */
+   .input-group-lg { position: relative; margin: 30px 0; text-align: center; }
+   .form-input-lg { width: 100%; border: none; border-bottom: 2px solid #e5e7eb; font-size: 2.5rem; font-weight: 800; text-align: center; outline: none; padding: 10px 0; background: transparent; }
+   .form-input-lg:focus { border-bottom-color: #13ec5b; }
+   .unit-text { position: absolute; right: 20%; top: 50%; transform: translateY(-50%); font-size: 1.5rem; color: #9ca3af; font-weight: 700; }
+   .chip-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 24px; }
+   .btn-chip { padding: 10px; background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-weight: 700; color: #4b5563; cursor: pointer; transition: 0.2s; }
+   .btn-chip:hover { border-color: #13ec5b; color: #13ec5b; background-color: #f0fdf4; }
+   .expected-box { background-color: rgba(19, 236, 91, 0.1); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+   .expected-label { font-size: 14px; font-weight: 700; color: #6b7280; }
+   .expected-val { font-size: 16px; font-weight: 800; color: #111813; }
+
+   /* 애니메이션 */
+   @keyframes modalPop {
+       from { opacity: 0; transform: scale(0.95); }
+       to { opacity: 1; transform: scale(1); }
+   }
+   
+   .account-modal .btn-add {
+       width: 100%;
+       padding: 14px;
+	   margin-top: 10px;
+       border-radius: 10px;
+       border: 1px dashed #d1d5db;
+       background-color: #fff;
+       font-size: 14px;
+       font-weight: 700;
+       color: #374151;
+       cursor: pointer;
+       transition: 0.2s;
+   } 
+
+   .account-modal .btn-add:hover {
+       border-color: #13ec5b;
+       color: #13ec5b;
+       background-color: #f0fdf4;
+   }
+
+.bank-icon-sm { width: 40px; height: 40px; background: #e3f2fd; color: #1976d2; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.account-info { flex: 1; }
+.bank-name-row { display: flex; align-items: center; gap: 6px; }
+.badge-main { font-size: 10px; background: rgba(19, 236, 91, 0.2); color: #00a845; padding: 2px 6px; border-radius: 4px; font-weight: 800; }
+.account-number { font-size: 0.85rem; color: #888; font-family: monospace; }
+.radio-circle { width: 20px; height: 20px; border: 2px solid #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.radio-dot { width: 10px; height: 10px; background: #13ec5b; border-radius: 50%; display: none; }
+.account-option input:checked + .account-card-item .radio-circle { border-color: #13ec5b; }
+.account-option input:checked + .account-card-item .radio-dot { display: block; }
+
+.modal-footer { padding: 0 24px 24px; display: flex; flex-direction: column; gap: 8px; }
+.btn-primary-modal { width: 100%; padding: 16px; background: #13ec5b; border: none; border-radius: 16px; font-weight: 700; font-size: 1rem; cursor: pointer; }
+.btn-secondary-modal { width: 100%; padding: 12px; background: #f5f5f5; border: none; border-radius: 12px; font-weight: 600; color: #666; display: flex; justify-content: center; align-items: center; text-decoration: none; gap: 5px; }
+
+/* 모달 - 충전 전용 */
+.input-group-lg { position: relative; margin: 30px 0; text-align: center; }
+.form-input-lg { width: 100%; border: none; border-bottom: 2px solid #e5e7eb; font-size: 2.5rem; font-weight: 800; text-align: center; outline: none; padding: 10px 0; background: transparent; }
+.form-input-lg:focus { border-bottom-color: #13ec5b; }
+.unit-text { position: absolute; right: 20%; top: 50%; transform: translateY(-50%); font-size: 1.5rem; color: #9ca3af; font-weight: 700; }
+.chip-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 24px; }
+.btn-chip { padding: 10px; background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; font-weight: 700; color: #4b5563; cursor: pointer; transition: 0.2s; }
+.btn-chip:hover { border-color: #13ec5b; color: #13ec5b; background-color: #f0fdf4; }
+.expected-box { background-color: rgba(19, 236, 91, 0.1); padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.expected-label { font-size: 14px; font-weight: 700; color: #6b7280; }
+.expected-val { font-size: 16px; font-weight: 800; color: #111813; }
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+    .history-item { padding: 1rem; }
+    .item-icon { display: none; } /* 모바일에서 아이콘 숨김 */
+}
+
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* 계좌 선택 디자인 (체크 시 초록색 테두리) */
+.account-label {
+    display: flex; align-items: center; gap: 1rem; padding: 1rem;
+    border: 2px solid #f3f4f6; border-radius: 1rem; cursor: pointer;
+    background: white; transition: 0.2s;
+}
+
+input[type="radio"]:checked + .account-label {
+    border-color: #13ec5b !important;
+    background-color: rgba(19, 236, 91, 0.05) !important;
+}

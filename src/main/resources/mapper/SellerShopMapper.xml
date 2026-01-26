@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itwillbs.mapper.SellerShopMapper">
+
+    <!-- =========================
+         판매자 상점 - 판매중 상품 목록
+    ========================== -->
+    <select id="selectSellerProducts"
+            parameterType="long"
+            resultType="com.itwillbs.dto.SellerShopProductListDTO">
+
+        SELECT
+            p.product_id            AS productId,
+            p.seller_id             AS sellerId,
+            p.product_name          AS productName,
+            p.price                 AS price,
+            p.main_image_url        AS mainImageUrl,
+            p.region_display_name   AS regionDisplayName,
+            p.view_count            AS viewCount,
+            p.like_count            AS likeCount,
+            p.created_at            AS createdAt
+        FROM products p
+        WHERE p.seller_id = #{sellerId}
+          AND p.sales_status = 'ON_SALE'
+        ORDER BY p.created_at DESC
+
+    </select>
+    
+   <select id="selectSellerProfile"
+        parameterType="long"
+        resultType="com.itwillbs.view.SellerShopSellerProfileVO">
+
+    SELECT
+        u.user_id  AS sellerId,
+        u.nickname AS nickname,
+        NULL       AS regionName,
+        COUNT(p.product_id) AS productCount
+    FROM users u
+    LEFT JOIN products p
+           ON p.seller_id = u.user_id
+          AND p.sales_status = 'ON_SALE'
+    WHERE u.user_id = #{sellerId}
+    GROUP BY u.user_id, u.nickname
+
+</select>
+
+
+</mapper>

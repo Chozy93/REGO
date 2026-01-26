@@ -10,37 +10,36 @@
          MAIN01_RECENT
     ========================= -->
     <select id="selectRecentProducts"
-            resultType="com.itwillbs.dto.MainProductListDTO">
+        parameterType="long"
+        resultType="com.itwillbs.dto.MainProductListDTO">
 
-        SELECT
-            p.product_id               AS productId,
-            p.product_name             AS title,
-            p.price                    AS price,
-            p.main_image_url           AS thumbnailUrl,
-            p.region_display_name      AS regionName,
-            DATE_FORMAT(p.created_at, '%Y-%m-%d %H:%i') AS createdTime,
+    SELECT
+        p.product_id               AS productId,
+        p.product_name             AS title,
+        p.price                    AS price,
+        p.main_image_url           AS thumbnailUrl,
+        p.region_display_name      AS regionName,
+        DATE_FORMAT(p.created_at, '%Y-%m-%d %H:%i') AS createdTime,
 
-            /* ❤️ 찜 개수 */
-            (
-                SELECT COUNT(*)
-                FROM user_favorites uf
-                WHERE uf.product_id = p.product_id
-            ) AS likeCount,
+        (
+            SELECT COUNT(*)
+            FROM user_favorites uf
+            WHERE uf.product_id = p.product_id
+        ) AS likeCount,
 
-            /* ❤️ 내가 찜했는지 (임시 user_id = 1) */
-            EXISTS (
-                SELECT 1
-                FROM user_favorites uf
-                WHERE uf.product_id = p.product_id
-                  AND uf.user_id = 1
-            ) AS liked
+        EXISTS (
+            SELECT 1
+            FROM user_favorites uf
+            WHERE uf.product_id = p.product_id
+              AND uf.user_id = #{userId}
+        ) AS liked
 
-        FROM products p
-        WHERE p.sales_status = 'ON_SALE'
-        ORDER BY p.created_at DESC
-        LIMIT 12
+    FROM products p
+    WHERE p.sales_status = 'ON_SALE'
+    ORDER BY p.created_at DESC
+    LIMIT 12
+</select>
 
-    </select>
     
     <!-- =========================
      최근 등록 상품 (정렬)
@@ -76,6 +75,10 @@
     FROM products p
     WHERE p.sales_status = 'ON_SALE'
     
+    <if test="region != null and region != ''">
+        AND p.region_display_name LIKE CONCAT('%', #{region}, '%')
+    </if>
+    
     <choose>
         <!-- 최신순 -->
         <when test="sort == 'recent'">
@@ -106,7 +109,8 @@
          인기 상품
          MAIN01_POPULAR
     ========================= -->
-    <select id="selectPopularProducts"
+   <select id="selectPopularProducts"
+        parameterType="map"
         resultType="com.itwillbs.dto.MainProductListDTO">
 
     SELECT
@@ -117,35 +121,47 @@
         p.region_display_name      AS regionName,
         DATE_FORMAT(p.created_at, '%Y-%m-%d %H:%i') AS createdTime,
 
-        /* 👁 조회수 */
         p.view_count               AS viewCount,
 
-        /* ❤️ 찜 개수 */
+/* ❤️ 찜 개수 */
         (
             SELECT COUNT(*)
             FROM user_favorites uf
             WHERE uf.product_id = p.product_id
         ) AS likeCount,
-
-        /* ❤️ 내가 찜했는지 (임시 user_id = 1) */
+/* ❤️ 내가 찜했는지 */
         EXISTS (
             SELECT 1
             FROM user_favorites uf
             WHERE uf.product_id = p.product_id
-              AND uf.user_id = 1
+              AND uf.user_id = #{userId}
         ) AS liked
 
     FROM products p
     WHERE p.sales_status = 'ON_SALE'
+    
+    /* 1️⃣ 지역 필터 추가: 공백을 제거하고 비교하여 검색 정확도 향상 */
+    <if test="region != null and region != ''">
+        AND REPLACE(p.region_display_name, ' ', '') LIKE CONCAT('%', REPLACE(#{region}, ' ', ''), '%')
+    </if>
 
+/* 2️⃣ 정렬 조건: 인기 상품이므로 기본은 조회수/찜순이지만, 
+       최신순 정렬 요청(sort=recent)이 있을 경우를 대비해 분기 처리 */
     ORDER BY
-        p.view_count DESC,
-        likeCount DESC,
-        p.created_at DESC
+    <choose>
+        <when test="sort == 'recent'">
+            p.created_at DESC
+        </when>
+        <otherwise>
+            p.view_count DESC,
+            likeCount DESC,
+            p.created_at DESC
+        </otherwise>
+    </choose>
 
-    LIMIT 12
-
+    LIMIT #{limit}
 </select>
+
 
 
 </mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itwillbs.mapper.PaymentMapper">
+
+
+<!--id를 이용해 wallet 잔액 확인하기-->
+<select id="selectWalletWithAccount" resultType="com.itwillbs.dto.WalletViewDTO">
+        SELECT 
+            w.balance,
+            b.bank_name AS bankName,
+            b.account_num AS accountNum
+        FROM wallets w
+        LEFT JOIN bank_accounts b 
+            ON w.user_id = b.user_id
+        WHERE w.user_id = #{userId}
+        ORDER BY b.is_main DESC, b.account_id DESC 
+        LIMIT 1
+</select>
+
+<!--id를 이용해 bank_accounts 계좌 리스트 받아오기-->
+<select id="selectAccountList" resultType="com.itwillbs.dto.WalletViewDTO">
+    SELECT 
+        account_id AS accountId,
+        bank_name AS bankName,
+        account_num AS accountNumMasked,
+        is_main AS isMain
+    FROM bank_accounts
+    WHERE user_id = #{userId} AND is_active = 'Y'
+    ORDER BY is_main DESC, account_id DESC 
+</select>
+
+<!--주계좌 삭제하기-->
+<update id="resetMainAccount">
+    UPDATE bank_accounts 
+    SET is_main = 0
+    WHERE user_id = #{userId}
+</update>
+
+
+
+<!--주계좌 등록하기-->
+<update id="setMainAccount">
+    UPDATE bank_accounts 
+    SET is_main = 1
+    WHERE account_id = #{accountId} AND user_id = #{userId}
+</update>
+
+
+
+
+<!--re:pay 충전하기       ///////////// -->
+<!--DB에 wallet값 충전하기-->
+<update id="chargeBalance">
+    UPDATE wallets
+    SET balance = #{amount}
+    WHERE user_id = #{userId}
+</update>
+<!--wallet_transactions에 충전 기록 남기기-->
+<insert id="insertTransaction">
+        INSERT INTO wallet_transactions (
+            wallet_id, 
+            payment_type, 
+            amount, 
+            balance_snapshot, 
+            related_id, 
+            status, 
+            created_at
+        ) VALUES (
+            #{walletId}, 
+            #{paymentType},      #{amount}, 
+            #{balanceSnapshot}, 
+            #{relatedId}, 
+            #{status},           NOW()                )
+</insert>
+
+<!--wallet에서 user_id로 walletid와 충전금액 가져오기-->
+<select id="selectWalletInfo" resultType="com.itwillbs.dto.WalletViewDTO">
+        SELECT 
+            wallet_id AS walletId, balance
+        FROM wallets
+        WHERE user_id = #{userId}
+</select>
+
+<select id="selectHistoryList" resultType="com.itwillbs.dto.WalletTransactionDTO">
+    SELECT 
+        wt.wallet_trans_id   AS walletTransId,   wt.wallet_id         AS walletId,
+        wt.payment_type      AS paymentType,     
+        wt.amount            AS amount,
+        wt.balance_snapshot  AS balanceSnapshot,
+        wt.related_id        AS relatedId,
+        wt.status            AS status,
+        wt.created_at        AS createdAt        FROM 
+        wallet_transactions wt
+    JOIN 
+        wallets w ON wt.wallet_id = w.wallet_id
+    WHERE 
+        w.user_id = #{userId}
+    ORDER BY 
+        wt.created_at DESC
+</select>
+
+
+
+</mapper>

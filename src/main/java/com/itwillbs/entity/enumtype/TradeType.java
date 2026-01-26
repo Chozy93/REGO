@@ -18,4 +18,8 @@ public enum TradeType {
     public String getLabel() {
         return label;
     }
+    
+    public static TradeType from(String code) {
+        return TradeType.valueOf(code);
+    }
 }

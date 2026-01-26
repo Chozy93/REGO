@@ -15,19 +15,21 @@ public class MainController {
 
     @GetMapping("/")
     public String main(
-            @RequestParam(name = "sort", required = false, defaultValue = "recent")
-            String sort,
+            @RequestParam(name = "sort", required = false, defaultValue = "recent") String sort,
+            @RequestParam(name = "recentIds", required = false) String recentIds,
+            @RequestParam(name = "region", required = false) String region, // 지역 파라미터 추가
             Model model
     ) {
         model.addAttribute(
                 "page",
-                mainPageService.getMainPage(sort)
+                mainPageService.getMainPage(sort, recentIds, region) // region 전달
         );
 
-        // ✅ 이 한 줄이 핵심
         model.addAttribute("sort", sort);
+        model.addAttribute("currentRegion", region); // UI에서 표시하기 위해 추가
 
         return "main/main";
     }
-
+    
 }
+

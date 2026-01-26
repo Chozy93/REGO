@@ -10,7 +10,7 @@
 
 	       <!-- 비로그인 -->
 	       <th:block sec:authorize="isAnonymous()">
-	         <a href="/login" class="util-link">로그인</a>
+	         <a onclick="openLoginModal()" class="util-link">로그인</a>
 	         <span class="util-divider"></span>
 	         <a href="/signup/step1" class="util-link">회원가입</a>
 	       </th:block>
@@ -69,7 +69,7 @@
           <input type="text" placeholder="물품이나 동네를 검색해보세요">
         </div>
 		<!-- 지역 -->
-		      <button class="location-btn">
+		      <button class="location-btn" onclick="openRegionModal()">
 		        <span class="material-symbols-outlined">location_on</span>
 		        <span class="label">지역</span>
 		      </button>
@@ -79,28 +79,43 @@
 
 			      <!-- 채팅 (상태 아이템, 버튼 아님) / 로그인 했을때만 보임-->
 				  <a sec:authorize="isAuthenticated()"
-				     href="/chat"
+				     href="/chat/list"
 				     class="chat-status">
+
 				    <span class="material-symbols-outlined chat-icon">
 				      chat_bubble_outline
 				    </span>
 
 				    <!-- 알림 뱃지 -->
-				    <span class="chat-badge"></span>
+				    <span class="chat-badge"
+				          th:if="${hasUnreadChat}">
+				    </span>
 
 				    <span class="chat-label">채팅</span>
 				  </a>
+				  <a sec:authorize="hasRole('USER')"
+				     href="/seller/myprofile"
+				     class="my-shop">
 
+				    <span class="material-symbols-outlined my-shop-icon">
+				      storefront
+				    </span>
+
+				    <span class="my-shop-label">
+				      내 상점
+				    </span>
+				  </a>
 
 				  <!-- 구분선 (일반 회원만) -->
 				  <span sec:authorize="hasRole('USER')" class="header-divider"></span>
 
 				  <a sec:authorize="hasRole('USER')"
-				     href="/product/write"
+				     href="/seller/entry"
 				     class="btn btn-primary sell-btn">
 				    <span class="material-symbols-outlined">add</span>
 				    판매하기
 				  </a>
+
 
 			    </div>
 		</div>

@@ -6,6 +6,8 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 import com.itwillbs.domain.SellerProfileVO;
+import com.itwillbs.entity.enumtype.SellerStatus;
+import com.itwillbs.view.condition.SellerRegisterConditionVO;
 
 @Entity
 @Table(name = "seller_profile")
@@ -42,9 +44,6 @@ public class SellerProfile {
     @Column(name = "rating_avg", nullable = false)
     private double ratingAvg;
 
-    @Column(name = "rating_count", nullable = false)
-    private int ratingCount;
-
     @Column(name = "total_sales", nullable = false)
     private int totalSales;
 
@@ -54,8 +53,15 @@ public class SellerProfile {
     /* =========================
        판매자 상태
     ========================= */
-    @Column(name = "seller_status", length = 20, nullable = false)
-    private String sellerStatus; // ACTIVE / SUSPENDED
+    @Enumerated(EnumType.STRING)
+    @Column(name = "seller_status", nullable = false)
+    private SellerStatus sellerStatus; // ACTIVE / SUSPENDED
+
+    /* =========================
+       약관 동의
+    ========================= */
+    @Column(name = "terms_agreed_at", nullable = false, updatable = false)
+    private LocalDateTime termsAgreedAt;
 
     /* =========================
        날짜
@@ -72,39 +78,68 @@ public class SellerProfile {
     protected SellerProfile() {}
 
     /* =========================
-       생성자 (VO → Entity)
+       생성자 (Domain VO → Entity)
     ========================= */
     public SellerProfile(User seller, SellerProfileVO vo) {
         this.seller = seller;
-        this.sellerId = seller.getUserId();
+
         this.description = vo.getDescription();
-        this.ratingAvg = vo.getRatingAvg();
-        this.ratingCount = vo.getRatingCount();
-        this.totalSales = vo.getTotalSales();
-        this.totalReviews = vo.getTotalReviews();
-        this.sellerStatus = vo.getSellerStatus();
+
+        /* 초기 통계값 */
+        this.ratingAvg = 0.0;
+        this.totalSales = 0;
+        this.totalReviews = 0;
+
+        /* 기본 상태 */
+        this.sellerStatus = SellerStatus.ACTIVE;
+
+        /* 약관 동의 시점 */
+        this.termsAgreedAt = LocalDateTime.now();
+
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+    //conditonVO를 매개변수로받아 최초생성시 사용 생성자
+    public SellerProfile(User seller, SellerRegisterConditionVO conditionVO) {
+        this.seller = seller;
+
+        /* =========================
+           판매자 소개
+        ========================= */
+        this.description = conditionVO.getDescription();
+
+        /* =========================
+           초기 통계값
+        ========================= */
+        this.ratingAvg = 0.0;
+        this.totalReviews = 0;
+        this.totalSales = 0;
+
+        /* =========================
+           초기 판매자 상태
+        ========================= */
+        this.sellerStatus = SellerStatus.ACTIVE;
+
+        /* =========================
+           약관 동의 시점
+        ========================= */
+        this.termsAgreedAt = LocalDateTime.now();
+
+        /* =========================
+           생성/수정 시각
+        ========================= */
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
-    /* =========================
-       Entity → VO
-    ========================= */
-    public SellerProfileVO toVO() {
-        return new SellerProfileVO(this);
-    }
 
     /* =========================
-       상태 변경 / 통계 갱신
+       통계 반영 (행위 메서드)
     ========================= */
-    public void updateRating(double avg, int count) {
-        this.ratingAvg = avg;
-        this.ratingCount = count;
-        this.updatedAt = LocalDateTime.now();
-    }
 
-    public void increaseSales() {
-        this.totalSales++;
+    /** 평균 별점 갱신 (계산은 Service 책임) */
+    public void applyRating(double newAvg) {
+        this.ratingAvg = newAvg;
         this.updatedAt = LocalDateTime.now();
     }
 
@@ -113,8 +148,21 @@ public class SellerProfile {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public void changeStatus(String status) {
-        this.sellerStatus = status;
+    public void increaseSales() {
+        this.totalSales++;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    /* =========================
+       판매 상태 변경
+    ========================= */
+    public void suspend() {
+        this.sellerStatus = SellerStatus.SUSPENDED;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void activate() {
+        this.sellerStatus = SellerStatus.ACTIVE;
         this.updatedAt = LocalDateTime.now();
     }
 }

@@ -1,9 +1,20 @@
 package com.itwillbs.service;
 
+import com.itwillbs.domain.ProductVO; // VO 임포트!
+import com.itwillbs.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
-    // 🔥 현재 단계에서는 아무 역할 없음
-    // (추후 상품 등록 / 수정 / 삭제용으로 사용)
+    
+    private final ProductRepository productRepository;
+
+    public Page<ProductVO> getPurchaseHistory(Long userId, Pageable pageable) {
+        return productRepository.findByBuyer_UserId(userId, pageable)
+                                .map(ProductVO::new); 
+    }
 }

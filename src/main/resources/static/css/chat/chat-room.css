@@ -12,6 +12,15 @@
 }
 
 /* =========================
+   Chat Room Fragment Wrapper
+========================= */
+#chat-room-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+
+/* =========================
    Header
 ========================= */
 
@@ -117,12 +126,18 @@
   line-height: var(--lh-normal);
 }
 
+.chat-room-bubble p {
+  margin: 0;
+}
+
+
 .chat-room-bubble-other {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border-soft);
 }
 
 .chat-room-bubble-me {
+	align-self: flex-end;
   background-color: var(--color-primary-soft);
 }
 
@@ -155,12 +170,19 @@
 
 /* time */
 
-.chat-room-time {
-  font-size: var(--fs-10);
-  color: var(--color-text-subtle);
+.chat-room-message-me .chat-room-time {
   text-align: right;
 }
 
+.chat-room-message:not(.chat-room-message-me) .chat-room-time {
+  text-align: left;
+}
+
+
+.chat-room-time {
+  display: block;
+  margin-top: 4px;
+}
 /* =========================
    Input
 ========================= */
@@ -206,3 +228,18 @@
 .chat-room-textarea:focus {
   outline: none;
 }
+
+
+.chat-room.is-disconnected {
+  opacity: 0.6;
+}
+
+.chat-room.is-disconnected .chat-room-send-btn {
+/*  pointer-events: none;*/
+  opacity: 0.5;
+}
+
+.chat-room.is-disconnected .chat-room-textarea {
+  pointer-events: none;
+}
+

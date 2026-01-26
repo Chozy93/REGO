@@ -54,7 +54,18 @@ public class ProductImage {
         this.imageUrl = vo.getImageUrl();
         this.sortOrder = vo.getSortOrder();
     }
-
+    //이미지 생성 메서드
+    public static ProductImage create(
+            Product product,
+            String imageUrl,
+            int sortOrder
+    ) {
+        ProductImage image = new ProductImage();
+        image.product = product;
+        image.imageUrl = imageUrl;
+        image.sortOrder = sortOrder;
+        return image;
+    }
     /* =========================
        Entity → VO
     ========================= */

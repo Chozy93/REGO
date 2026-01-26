@@ -30,38 +30,37 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public HeaderCategoryListVO getHeaderCategories() {
 
-        System.out.println("========== HEADER CATEGORY DEBUG START ==========");
+        // System.out.println("========== HEADER CATEGORY DEBUG START ==========");
 
         // 1. 부모
         List<Category> parents =
                 categoryRepository.findByLevelAndIsActiveOrderBySortOrderAsc(1, true);
 
-        System.out.println("[PARENTS] size = " + parents.size());
-        for (Category p : parents) {
-            System.out.println("  parentId=" + p.getCategoryId()
-                    + ", name=" + p.getName()
-                    + ", level=" + p.getLevel());
-        }
+        // System.out.println("[PARENTS] size = " + parents.size());
+        // for (Category p : parents) {
+        //     System.out.println("  parentId=" + p.getCategoryId()
+        //             + ", name=" + p.getName()
+        //             + ", level=" + p.getLevel());
+        // }
 
         // 2. 자식 전체 조회
         List<Category> children =
                 categoryRepository.findByLevelAndIsActiveOrderBySortOrderAsc(2, true);
 
-        System.out.println("[CHILDREN] size = " + children.size());
-
-        for (Category c : children) {
-            System.out.println("  childId=" + c.getCategoryId()
-                    + ", name=" + c.getName()
-                    + ", level=" + c.getLevel()
-                    + ", parent=" + (c.getParent() == null ? "NULL" : c.getParent().getCategoryId()));
-        }
+        // System.out.println("[CHILDREN] size = " + children.size());
+        // for (Category c : children) {
+        //     System.out.println("  childId=" + c.getCategoryId()
+        //             + ", name=" + c.getName()
+        //             + ", level=" + c.getLevel()
+        //             + ", parent=" + (c.getParent() == null ? "NULL" : c.getParent().getCategoryId()));
+        // }
 
         // 3. parentId 기준 그룹핑
         Map<Long, List<CategoryVO>> childrenMap =
                 children.stream()
                         .filter(c -> {
                             if (c.getParent() == null) {
-                                System.out.println("❌ [DROP] childId=" + c.getCategoryId() + " parent is NULL");
+                                // System.out.println("❌ [DROP] childId=" + c.getCategoryId() + " parent is NULL");
                                 return false;
                             }
                             return true;
@@ -71,10 +70,10 @@ public class CategoryService {
                                 Collectors.mapping(Category::toVO, Collectors.toList())
                         ));
 
-        System.out.println("[CHILD MAP KEYS]");
-        for (Long key : childrenMap.keySet()) {
-            System.out.println("  parentId=" + key + ", childCount=" + childrenMap.get(key).size());
-        }
+        // System.out.println("[CHILD MAP KEYS]");
+        // for (Long key : childrenMap.keySet()) {
+        //     System.out.println("  parentId=" + key + ", childCount=" + childrenMap.get(key).size());
+        // }
 
         // 4. 아이콘
         Map<Long, String> iconMap =
@@ -92,8 +91,8 @@ public class CategoryService {
             List<CategoryVO> childList =
                     childrenMap.getOrDefault(parent.getCategoryId(), List.of());
 
-            System.out.println("[ASSEMBLE] parentId=" + parent.getCategoryId()
-                    + ", children=" + childList.size());
+            // System.out.println("[ASSEMBLE] parentId=" + parent.getCategoryId()
+            //         + ", children=" + childList.size());
 
             nodes.add(new HeaderCategoryNodeVO(
                     parent.toVO(),
@@ -102,10 +101,11 @@ public class CategoryService {
             ));
         }
 
-        System.out.println("========== HEADER CATEGORY DEBUG END ==========");
+        // System.out.println("========== HEADER CATEGORY DEBUG END ==========");
 
         return new HeaderCategoryListVO(nodes);
     }
+
 
 
 

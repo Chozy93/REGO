@@ -1,99 +1,188 @@
 /**
- * Chat Room UI JS
- * - textarea auto height
- * - Enter / Shift+Enter handling (UI only)
- * - appointment / payment modal open & close
+ * Chat Room UI (jQuery)
+ * - fragment safe
+ * - delegated events
+ * - WebSocket send / receive helpers
  */
 
-document.addEventListener("DOMContentLoaded", () => {
 
-  /* ==================================================
-     Textarea Auto Height + Enter Handling
-  ================================================== */
-  const textarea = document.querySelector(".chat-room-textarea");
+/* ==================================================
+   Textarea Auto Height
+================================================== */
+function resizeChatTextarea($textarea) {
+  $textarea.css("height", "auto");
+  $textarea.css("height", $textarea.prop("scrollHeight") + "px");
+}
 
-  if (textarea) {
-    const resize = () => {
-      textarea.style.height = "auto";
-      textarea.style.height = textarea.scrollHeight + "px";
-    };
+/* ==================================================
+   Delegated Events (fragment 대응)
+================================================== */
 
-    textarea.addEventListener("input", resize);
+// textarea 입력
+$(document).on("input", ".chat-room-textarea", function () {
+  resizeChatTextarea($(this));
+});
 
-    textarea.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
+// Enter / Shift+Enter
+$(document).on("keydown", ".chat-room-textarea", function (e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
 
-        const value = textarea.value.trim();
-        if (value.length === 0) return;
+    const content = $(this).val().trim();
+    if (!content) return;
 
-        // 실제 전송 로직은 나중에 구현
-        textarea.value = "";
-        resize();
-      }
-    });
+    sendChatMessage(content);
+
+    $(this).val("");
+    resizeChatTextarea($(this));
+  }
+});
+
+// 전송 버튼
+$(document).on("click", ".chat-room-send-btn", function () {
+  const $textarea = $(".chat-room-textarea");
+  const content = $textarea.val().trim();
+  if (!content) return;
+
+  sendChatMessage(content);
+
+  $textarea.val("");
+  resizeChatTextarea($textarea);
+});
+
+/* ==================================================
+   WebSocket Message Send
+================================================== */
+function sendChatMessage(content) {
+
+  console.log("[CHAT] sendChatMessage:", content);
+
+  if (!window.stompClient || !stompClient.connected) {
+    console.warn("[CHAT] WebSocket not connected");
+    return;
   }
 
-  /* ==================================================
-     Modal Helper (UI only)
-  ================================================== */
-  function bindModal(openId, modalId, closeId) {
-    const openBtn = document.getElementById(openId);
-    const modal = document.getElementById(modalId);
-    const closeBtn = document.getElementById(closeId);
+  stompClient.send(
+    `/app/chat/${window.currentRoomId}/send`,
+    {},
+    JSON.stringify({ content })
+  );
+}
 
-    if (!modal) return;
+/* ==================================================
+   WebSocket Receive Helper
+   - chat-list.js에서 connect 후 호출
+================================================== */
+function subscribeChatRoom(roomId) {
 
-    const open = () => {
-      modal.classList.remove("is-hidden");
-      modal.classList.add("is-active");
-    };
+  window.currentRoomId = roomId;
 
-    const close = () => {
-      modal.classList.remove("is-active");
-      modal.classList.add("is-hidden");
-    };
+  const $chatScroll = $(".chat-room-messages");
 
-    // open button
-    if (openBtn) {
-      openBtn.addEventListener("click", open);
-    }
+  // 🔥 topic 구독
+  window.chatSubscription = stompClient.subscribe(
+    `/topic/chat.${roomId}`,
+    function (message) {
+      const data = JSON.parse(message.body);
 
-    // close button
-    if (closeBtn) {
-      closeBtn.addEventListener("click", close);
-    }
+      const shouldScroll =
+        $chatScroll.scrollTop() + $chatScroll.innerHeight() + 40
+        >= $chatScroll.prop("scrollHeight");
 
-    // backdrop click
-    const backdrop = modal.querySelector(".chat-modal-backdrop");
-    if (backdrop) {
-      backdrop.addEventListener("click", close);
-    }
+      appendMessageToChatUI(data);
 
-    // ESC key
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && modal.classList.contains("is-active")) {
-        close();
+      if (shouldScroll) {
+        $chatScroll.scrollTop($chatScroll.prop("scrollHeight"));
       }
-    });
+    }
+  );
+
+  // 🔥 서버에 "이 방 보고 있음" 알림
+  stompClient.send(
+    `/app/chat/${roomId}/view`,
+    {},
+    JSON.stringify({})
+  );
+}
+
+
+function leaveChatRoom() {
+
+  if (!window.currentRoomId) return;
+
+  // 🔥 서버에 "이 방 안 봄" 알림
+  if (window.stompClient && stompClient.connected) {
+    stompClient.send(
+      `/app/chat/${window.currentRoomId}/leave`,
+      {},
+      JSON.stringify({})
+    );
   }
 
-  /* ==================================================
-     Bind Chat Modals
-  ================================================== */
+  // 🔥 topic 구독 해제
+  if (window.chatSubscription) {
+    window.chatSubscription.unsubscribe();
+    window.chatSubscription = null;
+  }
 
-  // 약속 설정 모달
-  bindModal(
-    "open-appointment-modal",
-    "appointment-modal",
-    "close-appointment-modal"
-  );
+  window.currentRoomId = null;
+}
 
-  // 송금 모달
-  bindModal(
-    "open-payment-modal",
-    "payment-modal",
-    "close-payment-modal"
-  );
 
+/* ==================================================
+   UI State
+================================================== */
+function setChatConnectedUI(isConnected) {
+  const $room = $(".chat-room");
+  $room.toggleClass("is-disconnected", !isConnected);
+}
+
+/* ==================================================
+   Chat Message Renderer
+   - Thymeleaf 렌더 구조와 100% 동일
+================================================== */
+window.appendMessageToChatUI = function (message) {
+	  const loginUserId = $("#loginUserId").text().trim();
+	console.log("loginUserId", loginUserId);
+
+	
+	// 🔥 isMine 판단 (프론트 기준)
+	const isMine =
+	 loginUserId!== null &&
+	  Number(message.senderUserId) === Number(loginUserId);
+	   console.log("센더아이디"+message.senderUserId);
+	   console.log("로그인유저 아이디"+loginUserId);
+	console.log("isMine 체크"+isMine);
+  const $message = $("<div>").addClass("chat-room-message");
+
+  // 내 메시지
+  if (isMine) {
+    $message.addClass("chat-room-message-me");
+  }
+  const avatar = window.opponentAvatar;
+ console.log("avatar"+avatar);
+
+
+  // 말풍선
+  const $bubble = $("<div>")
+    .addClass("chat-room-bubble")
+    .addClass(isMine ? "chat-room-bubble-me" : "chat-room-bubble-other");
+
+  $("<p>")
+    .text(message.content)
+    .appendTo($bubble);
+
+  $("<span>")
+    .addClass("chat-room-time")
+    .text(message.createdAt)
+    .appendTo($bubble);
+
+  $bubble.appendTo($message);
+
+  // 메시지 영역에 추가
+  $(".chat-room-messages").append($message);
+};
+
+$(window).on("beforeunload", function () {
+  leaveChatRoom();
 });
