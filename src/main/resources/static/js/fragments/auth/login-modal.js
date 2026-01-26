@@ -56,3 +56,45 @@ function openFindPasswordModalFromLogin() {
   closeLoginModal();
   openFindPasswordModal();
 }
+
+$(document).ready(function () {
+  const $form = $(".login-modal__form");
+  const $errorBox = $("#loginError");
+
+  if ($form.length === 0) return;
+
+  $form.on("submit", function (e) {
+    e.preventDefault(); // 기본 submit 막기
+
+    // 에러 초기화
+    $errorBox.text("").addClass("is-hidden");
+
+    $.ajax({
+      url: "/login",
+      type: "POST",
+      data: $form.serialize(),   // email, password 자동 직렬화
+      xhrFields: {
+        withCredentials: true    // JSESSIONID 유지
+      },
+      success: function () {
+        // ✅ 로그인 성공 → SSR 반영
+        location.reload();
+      },
+      error: function (xhr) {
+        // ❌ 로그인 실패
+        if (xhr.status === 401 && xhr.responseJSON) {
+          $errorBox
+            .text(xhr.responseJSON.message)
+            .removeClass("is-hidden");
+          return;
+        }
+
+        // 기타 예외
+        $errorBox
+          .text("로그인 처리 중 오류가 발생했습니다.")
+          .removeClass("is-hidden");
+      }
+    });
+  });
+});
+

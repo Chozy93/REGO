@@ -1,0 +1,162 @@
+/* ==========================================================================
+   Complete Info Page (소셜 로그인 추가정보 입력)
+   ========================================================================== */
+
+/* =========================
+   Page Wrapper
+========================= */
+.complete-info {
+  min-height: calc(100vh - 150px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-24) var(--space-16);
+  background-color: var(--color-bg);
+}
+
+/* =========================
+   Card
+========================= */
+.complete-card {
+  width: 100%;
+  max-width: 500px; /* ⬅ 줄였다. 이게 데스크탑 최적 */
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-20);
+  box-shadow: var(--shadow-sm);
+}
+
+/* =========================
+   Intro / Title
+========================= */
+.complete-intro {
+  margin-bottom: var(--space-16);
+}
+
+.complete-logo {
+  font-size: var(--fs-18);
+  font-weight: var(--fw-extrabold);
+}
+
+.complete-title {
+  margin-bottom: var(--space-20);
+}
+
+.complete-title h1 {
+  font-size: var(--fs-20);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  margin-bottom: var(--space-6);
+}
+
+.complete-title p {
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+}
+
+/* =========================
+   Form
+========================= */
+.complete-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+}
+
+/* =========================
+   Sections
+========================= */
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+}
+
+.form-section-title {
+  font-size: var(--fs-15);
+  font-weight: var(--fw-semibold);
+}
+
+/* =========================
+   Inputs
+========================= */
+.complete-form input[type="text"],
+.complete-form input[type="tel"],
+.complete-form input[type="password"] {
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-14);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  font-size: var(--fs-14);
+}
+
+.complete-form input::placeholder {
+  color: var(--color-accent-text);
+}
+
+.complete-form input[readonly],
+.complete-form input:disabled {
+  background-color: var(--color-surface-2);
+  color: var(--color-text-muted);
+}
+
+/* =========================
+   Phone + Auth Button (핵심)
+========================= */
+.form-group.inline {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.auth-btn {
+  flex-shrink: 0;
+  width: 88px;              /* ⬅ 버튼 폭 고정 */
+  height: 44px;             /* ⬅ input이랑 동일 */
+  border-radius: var(--radius-md);
+
+  background-color: var(--color-primary);
+  color: var(--color-text);
+
+  font-size: var(--fs-13);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;      /* ⬅ 줄바꿈 방지 */
+
+  transition: background-color var(--duration-normal) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+}
+
+.auth-btn:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.auth-btn:active {
+  transform: scale(0.96);
+}
+
+/* =========================
+   Messages
+========================= */
+.form-msg {
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+}
+
+.form-msg.success { color: var(--color-success); }
+.form-msg.error { color: var(--color-danger); }
+
+/* =========================
+   Submit Button
+========================= */
+.btn-submit {
+  margin-top: var(--space-12);
+  height: 48px;
+  font-size: var(--fs-15);
+}
+
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

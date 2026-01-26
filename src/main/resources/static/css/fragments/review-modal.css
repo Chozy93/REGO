@@ -1,0 +1,249 @@
+/* ==========================================================================
+   Review Write Modal
+========================================================================== */
+
+.review-modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* backdrop */
+.review-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* panel */
+.review-modal__panel {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* =========================
+   Header
+========================= */
+
+.review-modal__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+
+  padding: var(--space-16);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.review-modal__back-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--color-text);
+}
+
+.review-modal__back-btn:hover {
+  background: var(--color-surface-2);
+}
+
+.review-modal__title {
+  flex: 1;
+  text-align: center;
+
+  font-size: var(--fs-18);
+  font-weight: var(--fw-bold);
+}
+
+/* =========================
+   Body
+========================= */
+
+.review-modal__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-24);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+}
+
+/* 상품 정보 */
+
+.review-product {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-16);
+}
+
+.review-product__image {
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+}
+
+.review-product__info {
+  text-align: center;
+}
+
+.review-product__title {
+  font-size: var(--fs-16);
+  font-weight: var(--fw-bold);
+  margin-bottom: var(--space-4);
+}
+
+.review-product__seller {
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+}
+
+.review-product__seller-name {
+  margin-left: var(--space-4);
+  color: var(--color-text);
+}
+
+/* =========================
+   Rating
+========================= */
+
+.review-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.review-rating__label {
+  font-weight: var(--fw-semibold);
+}
+
+.review-rating__stars {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.review-rating__star {
+  color: var(--color-text-subtle);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.review-rating__star.is-active {
+  color: var(--color-warning);
+}
+
+.review-rating__star:hover {
+  transform: scale(1.1);
+}
+
+.review-rating__text {
+  font-size: var(--fs-13);
+  font-weight: var(--fw-medium);
+  color: var(--color-primary);
+}
+
+/* =========================
+   Content
+========================= */
+
+.review-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.review-content__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.review-content__label {
+  font-weight: var(--fw-semibold);
+}
+
+.review-content__required {
+  font-size: var(--fs-12);
+  color: var(--color-text-subtle);
+}
+
+/* 태그 */
+
+.review-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.review-tag {
+  padding: var(--space-6) var(--space-12);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+}
+
+.review-tag.is-active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-text);
+}
+
+/* textarea */
+
+.review-textarea {
+  position: relative;
+}
+
+.review-textarea textarea {
+  width: 100%;
+  min-height: 140px;
+  padding: var(--space-16);
+
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  border: 1px solid transparent;
+
+  resize: none;
+}
+
+.review-textarea textarea:focus {
+  border-color: var(--color-primary);
+}
+
+.review-textarea__count {
+  position: absolute;
+  right: var(--space-12);
+  bottom: var(--space-8);
+  font-size: var(--fs-12);
+  color: var(--color-text-subtle);
+}
+
+/* =========================
+   Footer
+========================= */
+
+.review-modal__footer {
+  padding: var(--space-16);
+  border-top: 1px solid var(--color-divider);
+}

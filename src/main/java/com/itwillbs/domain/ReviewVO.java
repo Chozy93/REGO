@@ -27,7 +27,7 @@ public class ReviewVO {
     ========================= */
     public ReviewVO(Review entity) {
         this.reviewId = entity.getReviewId();
-        this.productId = entity.getProduct().getProductId();
+        this.productId = entity.getProductId();
         this.buyerId = entity.getBuyer().getUserId();
         this.sellerId = entity.getSellerId();
         this.content = entity.getContent();
