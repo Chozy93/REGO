@@ -68,6 +68,11 @@ public class User {
 
     @Column(name = "profile_img", length = 500, nullable = false)
     private String profileImg;
+    /* =========================
+	    사용자 소개글
+	 ========================= */
+	 @Column(name = "introduction", length = 1000)
+	 private String introduction;
 
     /* =========================
        생성 정보

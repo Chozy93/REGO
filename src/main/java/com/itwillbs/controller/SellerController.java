@@ -112,11 +112,11 @@ public class SellerController {
 	       판매자 등록 처리
 	    ========================= */
 		 @PostMapping("/register")
-		 public String registerSeller(@ModelAttribute SellerRegisterConditionVO conditionVO) {
+		 public String registerSeller() {
 
 		     User loginUser = SecurityUtil.getCurrentUser();
-
-		     sellerService.createSellerProfile(loginUser, conditionVO);
+		     
+		     sellerService.createSellerProfile(loginUser);
 
 		     return "seller/register-complete";
 		 }

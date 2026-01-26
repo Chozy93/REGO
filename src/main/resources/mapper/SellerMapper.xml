@@ -9,23 +9,23 @@
        판매자 프로필 요약
        ※ seller_profile 캐시 컬럼 사용
   ========================= -->
-  <select id="selectSellerProfile"
-          parameterType="long"
-          resultType="com.itwillbs.view.seller.SellerProfileViewVO">
-    SELECT
-        u.user_id        AS sellerId,
-        u.nickname       AS nickname,
-        u.profile_img    AS profileImg,
+<select id="selectSellerProfile"
+        parameterType="long"
+        resultType="com.itwillbs.view.seller.SellerProfileViewVO">
+  SELECT
+      u.user_id        AS sellerId,
+      u.nickname       AS nickname,
+      u.profile_img    AS profileImg,
+      u.introduction   AS introduction,
 
-        sp.description   AS description,
-        sp.rating_avg    AS ratingAvg,
-        sp.total_reviews AS totalReviews,
-        sp.total_sales   AS totalSales
-    FROM users u
-    JOIN seller_profile sp
-      ON sp.seller_id = u.user_id
-    WHERE u.user_id = #{sellerId}
-  </select>
+      sp.rating_avg    AS ratingAvg,
+      sp.total_reviews AS totalReviews,
+      sp.total_sales   AS totalSales
+  FROM users u
+  JOIN seller_profile sp
+    ON sp.seller_id = u.user_id
+  WHERE u.user_id = #{sellerId}
+</select>
 	<!-- =========================
 	     판매중 상품 (최대 15)
 	========================= -->
