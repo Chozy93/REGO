@@ -3,50 +3,92 @@ package com.itwillbs.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-// 관리자 페이지
+import com.itwillbs.domain.AdminDashboardPageVO;
+import com.itwillbs.domain.AdminMemberSummaryVO;
+import com.itwillbs.domain.AdminProductSummaryVO;
+import com.itwillbs.domain.AdminReportSummaryVO;
+import com.itwillbs.service.AdminMemberDashboardService;
+import com.itwillbs.service.AdminProductDashboardService;
+import com.itwillbs.service.AdminReportDashboardService;
+
 @Controller
-@RequestMapping("/admin")
 public class AdminController {
 
-    @GetMapping("/dashboard")
+    private final AdminMemberDashboardService memberService;
+    private final AdminProductDashboardService productService;
+    private final AdminReportDashboardService reportService;
+
+    public AdminController(
+        AdminMemberDashboardService memberService,
+        AdminProductDashboardService productService,
+        AdminReportDashboardService reportService
+    ) {
+        this.memberService = memberService;
+        this.productService = productService;
+        this.reportService = reportService;
+    }
+
+    @GetMapping("/admin/dashboard")
     public String dashboard(Model model) {
-        model.addAttribute("activeMenu", "dashboard");
+
+        AdminMemberSummaryVO memberSummary =
+            memberService.getMemberSummary();
+
+        AdminProductSummaryVO productSummary =
+            productService.getProductSummary();
+
+        AdminReportSummaryVO reportSummary =
+            reportService.getRecentReports();
+
+        model.addAttribute(
+            "page",
+            new AdminDashboardPageVO(
+                memberSummary,
+                productSummary,
+                reportSummary
+            )
+        );
+
         return "admin/dashboard";
     }
 
-    @GetMapping("/members")
-    public String members(Model model) {
-        model.addAttribute("activeMenu", "members");
+
+
+
+
+
+
+    @GetMapping("admin/members")
+    public String membersPage(Model model) {
         return "admin/members";
     }
 
-    @GetMapping("/products")
+    @GetMapping("/admin/products")
     public String products(Model model) {
         model.addAttribute("activeMenu", "products");
         return "admin/products";
     }
 
-    @GetMapping("/trades")
+    @GetMapping("admin/trades")
     public String trades(Model model) {
         model.addAttribute("activeMenu", "trades");
         return "admin/trades";
     }
 
-    @GetMapping("/inquiries")
+    @GetMapping("admin/inquiries")
     public String inquiries(Model model) {
         model.addAttribute("activeMenu", "inquiries");
         return "admin/inquiries";
     }
 
-    @GetMapping("/notices")
+    @GetMapping("admin/notices")
     public String notices(Model model) {
         model.addAttribute("activeMenu", "notices");
         return "admin/notices";
     }
 
-    @GetMapping("/reports")
+    @GetMapping("admin/reports")
     public String reports(Model model) {
         model.addAttribute("activeMenu", "reports");
         return "admin/reports";

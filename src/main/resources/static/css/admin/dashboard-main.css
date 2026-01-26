@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-32);
+  margin-bottom: var(--space-32);
 }
 
 /* ================= Page Header ================= */
@@ -105,11 +106,29 @@
   gap: var(--space-16);
 }
 
+/* ================= Recent Product (Image + Text) ================= */
+
 .panel-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: var(--space-12);
 }
+
+.recent-product-image {
+  width: 50px;                 /* 썸네일 크기 */
+  height: 50px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  flex-shrink: 0;              /* 커지는 현상 방지 */
+  background-color: var(--color-surface-2);
+}
+
+.panel-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
 
 .item-title {
   font-size: var(--fs-14);
@@ -163,4 +182,6 @@
     grid-template-columns: 1fr;
 	margin-bottom: 20px;
   }
+  
+
 }
