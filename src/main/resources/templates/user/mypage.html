@@ -34,14 +34,20 @@
             <div class="w-full max-w-[1024px] mx-auto px-4 py-8 flex flex-col gap-6">
                 
                 <section class="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-sm border border-[#f0f4f2] dark:border-white/5 relative overflow-hidden">
-                    <div class="flex flex-col md:flex-row items-center gap-6 md:gap-8 z-10 relative">
-                        <div class="relative group cursor-pointer flex-shrink-0">
-							<img th:src="${(user.profileImg != null and user.profileImg != 'default.png') ? user.profileImg : 'https://lh3.googleusercontent.com/aida-public/AB6AXuD0ObRBFDRs_vob6idb6aYKUuIove2YF-wbvYCHg-2sm6qoyedO7RYGPgbD3YUragy7aKMdHZaGuFf9n2VN8bfXNLuaHQv41ulrqhVYIpmk3x64L5NlUFVVfia-ExqeHUsxo5vgQfQPtrASlzehup3VxN0K1KuHLfM_Jo4LSDScARNe9G-rzONQqnH5Zobrl4cD0Z9vAbXnHqFPATdIE6yqtnbrqSfNs-liXa-Ege7QLNN9juuw7GAvbZhH4XK8XgkJEehsTeeKTVY'}" 
-							     alt="Profile" class="size-24 rounded-full object-cover border-4 border-white dark:border-[#1A2C20] shadow-md bg-gray-200" />
-                            <div class="absolute bottom-0 right-0 bg-white dark:bg-[#1A2C20] p-1.5 rounded-full border border-gray-100 dark:border-white/10 shadow-sm text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
-                                <span class="material-symbols-outlined text-[16px] block">edit</span>
-                            </div>
-                        </div>
+					<div class="flex flex-col md:flex-row items-center gap-6 md:gap-8 z-10 relative">
+					    <a href="/mypage/edit" class="relative group cursor-pointer flex-shrink-0 block decoration-none">
+					        <img th:src="${(user.profileImg != null and user.profileImg != 'default.png') ? user.profileImg : '/img/default-profile.png'}" 
+					             alt="Profile" 
+					             class="size-24 rounded-full object-cover border-4 border-white dark:border-[#1A2C20] shadow-md bg-gray-200 transition-all group-hover:brightness-90 group-hover:scale-[1.02]" />
+					        
+					        <div class="absolute inset-0 flex items-center justify-center bg-black/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+					            <span class="material-symbols-outlined text-white text-[24px]">photo_camera</span>
+					        </div>
+
+					        <div class="absolute bottom-0 right-0 bg-white dark:bg-[#1A2C20] p-1.5 rounded-full border border-gray-100 dark:border-white/10 shadow-sm text-gray-600 dark:text-gray-300 group-hover:text-primary transition-colors">
+					            <span class="material-symbols-outlined text-[16px] block">edit</span>
+					        </div>
+					    </a>
                         <div class="flex-1 text-center md:text-left space-y-2">
                             <div class="flex flex-col md:flex-row md:items-center gap-2 justify-center md:justify-start">
                                 <h2 class="text-2xl font-bold text-[#111813] dark:text-white" th:text="${user.nickname}">닉네임</h2>
@@ -141,7 +147,7 @@
 					<section class="space-y-4">
 					<h3 class="text-lg font-bold text-[#111813] dark:text-white px-1">나의 활동</h3>
 					<div class="grid grid-cols-1 gap-3">
-					<a class="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-sm transition-all group" href="#">
+					<a a href="/chat/list" class="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-sm transition-all group">
 					<div class="flex items-center gap-4">
 					<div class="size-10 rounded-xl bg-gray-50 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
 					<span class="material-symbols-outlined">chat_bubble_outline</span>
@@ -156,12 +162,12 @@
 					<span class="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
 					</div>
 					</a>
-					<a class="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-sm transition-all group" href="#">
+					<a href="/myrepay" class="flex items-center justify-between p-4 bg-white dark:bg-white/5 rounded-2xl border border-[#f0f4f2] dark:border-white/5 hover:border-primary/50 hover:shadow-sm transition-all group">
 					<div class="flex items-center gap-4">
 					<div class="size-10 rounded-xl bg-gray-50 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-300 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
 					<span class="material-symbols-outlined">payments</span>
 					</div>
-					<span class="font-bold text-[#111813] dark:text-white group-hover:text-primary transition-colors">RE:PAY 이동</span>
+					<span class="font-bold text-[#111813] dark:text-white group-hover:text-primary transition-colors">RE:PAY 관리</span>
 					</div>
 					<span class="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
 					</a>
