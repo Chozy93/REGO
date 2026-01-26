@@ -271,7 +271,15 @@
                         <form id="editProfileForm" th:action="@{/mypage/update}" method="post" class="space-y-5">
                             <div class="space-y-4">
                                 <div class="space-y-1.5"><label class="text-sm font-bold text-gray-700 ml-1">닉네임</label><input name="nickname" type="text" th:value="${user.nickname}" class="custom-input w-full rounded-xl px-4 font-medium text-sm"></div>
-                                <div class="space-y-1.5"><label class="text-sm font-bold text-gray-700 ml-1">내 상점 소개글</label><textarea name="bio" th:text="${user.bio}" class="custom-input w-full py-3 rounded-xl px-4 font-medium text-sm resize-none" placeholder="우리 상점을 소개해 보세요!"></textarea></div>
+								<div class="space-y-1.5">
+								    <label class="text-sm font-bold text-gray-700 ml-1">내 상점 소개글</label>
+								    <textarea name="introduction" 
+								              th:text="${user.introduction}" 
+								              class="custom-input w-full py-3 rounded-xl px-4 font-medium text-sm resize-none" 
+								              placeholder="상점 소개나 자기소개를 자유롭게 남겨보세요! (최대 1000자)"
+								              rows="5"
+								              maxlength="1000"></textarea>
+								</div>
                                 <div class="space-y-1.5"><label class="text-sm font-bold text-gray-700 ml-1">이메일</label><input th:value="${user.email}" disabled class="custom-input w-full rounded-xl px-4 font-medium text-sm"></div>
 								<div class="space-y-1.5">
 								    <label class="text-sm font-bold text-gray-700 ml-1">휴대폰 번호</label>

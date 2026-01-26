@@ -22,7 +22,7 @@ public class UserVO {
     private String profileImg;
     private String gender;   // ✅ String
     
-    private String bio;         
+    private String introduction;         
     private String address;     
     private String phoneNumber; 
     
