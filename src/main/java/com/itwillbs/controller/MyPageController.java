@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import com.itwillbs.domain.ProductVO;
 import com.itwillbs.dto.MyPageDTO;
+import com.itwillbs.dto.ReviewDTO;
 import com.itwillbs.entity.Product;
 import com.itwillbs.entity.User;
 import com.itwillbs.mapper.MypageMapper;
@@ -22,6 +23,7 @@ import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.service.ProductService;
 import com.itwillbs.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 
@@ -101,6 +103,24 @@ public class MyPageController {
     }
     
     
-    
+    @GetMapping("/reviews")
+    public String myReviews(Authentication authentication, Model model) {
+        if (authentication == null) return "redirect:/login";
+
+
+        String email = authentication.getName(); 
+        MyPageDTO mypageInfo = mypageMapper.getMyPageInfo(email);
+        
+
+        List<ReviewDTO> received = mypageMapper.getReceivedReviews(mypageInfo.getUserId());
+        List<ReviewDTO> sent = mypageMapper.getSentReviews(mypageInfo.getUserId());
+        
+        // 3. 화면에 필요한 데이터 전달
+        model.addAttribute("user", mypageInfo);
+        model.addAttribute("receivedReviews", received);
+        model.addAttribute("sentReviews", sent);
+        
+        return "user/reviews"; 
+    }
     
 }

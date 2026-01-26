@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import com.itwillbs.domain.ProductVO;
 import com.itwillbs.domain.user.UserVO;
 import com.itwillbs.dto.MyPageDTO;
+import com.itwillbs.dto.ReviewDTO;
 import com.itwillbs.entity.Product;
 
 import java.util.List;
@@ -26,4 +27,6 @@ public interface MypageMapper {
     List<Product> getPurchaseListByUserId(@Param("userId") Long userId);
 	List<Product> getLikeListByUserId(@Param("userId") Long userId);
 	void updatePhoneNumber(String email, String verifiedPhone);
+	List<ReviewDTO> getReceivedReviews(@Param("userId") Long userId);
+	List<ReviewDTO> getSentReviews(@Param("userId") Long userId);
 }

@@ -86,7 +86,7 @@
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(position) {
                         const geocoder = new kakao.maps.services.Geocoder();
-                        geocoder.coord2RegionCode(position.coords.longitude, position.coords.latitude, function(result, status) {
+                        geocoder.coord2RegionCode(position.coords.longitue, position.coords.latitude, function(result, status) {
                             if (status === kakao.maps.services.Status.OK) {
                                 for (let i = 0; i < result.length; i++) {
                                     if (result[i].region_type === 'H') {
@@ -245,6 +245,10 @@
 														        <span class="material-symbols-outlined text-[20px]">favorite</span>
 														        <span class="text-sm font-medium">찜한 상품</span>
 														    </a>
+															<a href="/mypage/reviews" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-gray-600">
+																										 <span class="material-symbols-outlined text-[20px]">rate_review</span>
+																										 <span class="text-sm font-medium">거래 후기</span>
+																										 </a>   
 														</nav>
 									                </div>
 									            </aside>
