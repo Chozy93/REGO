@@ -261,3 +261,15 @@
   background: #ffffff;
   border: 1px solid var(--color-border);
 }
+
+#findIdModal .login-modal__panel {
+  max-width: 440px;
+}
+
+#findIdAuthArea {
+  gap: var(--space-20);
+}
+
+#findIdAuthArea .btn {
+  margin-top: var(--space-4);
+}

@@ -45,3 +45,14 @@ document.addEventListener("DOMContentLoaded", () => {
         : localStorage.removeItem("savedEmail");
     });
 });
+
+
+function openFindIdModalFromLogin() {
+  closeLoginModal();
+  openFindIdModal();
+}
+
+function openFindPasswordModalFromLogin() {
+  closeLoginModal();
+  openFindPasswordModal();
+}

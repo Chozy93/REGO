@@ -1,0 +1,67 @@
+<div class="login-modal is-hidden"
+     th:fragment="find-id-modal"
+     id="findIdModal">
+
+  <div class="login-modal__backdrop" onclick="closeFindIdModal()"></div>
+
+  <section class="login-modal__panel stack">
+    <button class="login-modal__close" onclick="closeFindIdModal()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+
+    <!-- Header -->
+    <header class="login-modal__header stack text-center">
+      <h2 class="login-modal__title">아이디 찾기</h2>
+      <p class="login-modal__desc">
+        본인 명의 휴대폰으로 인증을 진행해주세요
+      </p>
+    </header>
+
+    <!-- 인증 전 -->
+    <div id="findIdAuthArea" class="stack gap-16">
+      <div class="find-id__guide text-center">
+        <span class="material-symbols-outlined find-id__icon">
+          identity_platform
+        </span>
+        <p class="find-id__title">안전한 아이디 찾기</p>
+        <p class="find-id__desc">
+          본인 명의의 휴대폰으로<br>
+          본인확인을 진행해주세요.
+        </p>
+      </div>
+
+      <button type="button"
+              class="btn btn-primary"
+              onclick="startFindIdCertification()">
+        본인인증 시작하기
+      </button>
+    </div>
+
+    <!-- 성공 -->
+    <div id="findIdResultArea"
+         class="find-id__result is-hidden stack text-center">
+      <p class="find-id__result-label">
+        가입하신 아이디를 찾았습니다
+      </p>
+      <p id="foundEmail" class="find-id__result-email"></p>
+
+      <button type="button"
+              class="btn btn-primary"
+              onclick="openLoginModalFromFindId()">
+        로그인하기
+      </button>
+    </div>
+
+    <!-- 실패 -->
+    <div id="findIdErrorArea"
+         class="find-id__error is-hidden stack text-center">
+      <p class="find-id__error-text">
+        해당 정보로 가입된 계정을 찾을 수 없습니다.
+      </p>
+      <a href="/signup/step1" class="find-id__signup-link">
+        회원가입 하러가기
+      </a>
+    </div>
+
+  </section>
+</div>

@@ -51,11 +51,20 @@
 	         <span>아이디 기억하기</span>
 	       </label>
 
-	       <div class="find-links inline">
-	         <a href="/login/id_find1">아이디 찾기</a>
-	         <span>|</span>
-	         <a href="/login/pass_find1">비밀번호 찾기</a>
-	       </div>
+		   <div class="find-links inline">
+		     <button type="button"
+		             class="find-link"
+		             onclick="openFindIdModalFromLogin()">
+		       아이디 찾기
+		     </button>
+		     <span>|</span>
+		     <button type="button"
+		             class="find-link"
+		             onclick="openFindPasswordModalFromLogin()">
+		       비밀번호 찾기
+		     </button>
+		   </div>
+
 	     </div>
 
 	     <button type="submit" class="btn btn-primary login-modal__submit">

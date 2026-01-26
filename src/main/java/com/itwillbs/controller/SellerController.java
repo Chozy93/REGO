@@ -35,11 +35,24 @@ public class SellerController {
 	
 	 private final SellerService sellerService;
 	 	
-	 //내 프로필
+	// 내 판매자 프로필
 	 @GetMapping("/myprofile")
 	 public String mySellerProfilePage(Model model) {
 
-	     Long sellerId = SecurityUtil.getCurrentUserId(); // 네가 이미 쓰는 유틸
+	     User loginUser = SecurityUtil.getCurrentUser();
+
+	     /* 로그인 안 된 경우 (방어 코드) */
+	     if (loginUser == null) {
+	         return "redirect:/login";
+	     }
+
+	     /* 아직 판매자 등록 안 한 경우 → 판매자 등록 페이지 */
+	     if (!sellerService.hasSellerProfile(loginUser)) {
+	         return "redirect:/seller/register";
+	     }
+
+	     /* 판매자 등록 완료된 경우 → 프로필 */
+	     Long sellerId = loginUser.getUserId();
 
 	     SellerProfilePageViewVO sellerProfilePageViewVO =
 	             sellerService.getSellerProfilePage(
@@ -52,6 +65,7 @@ public class SellerController {
 	     model.addAttribute("sellerProfilePageViewVO", sellerProfilePageViewVO);
 	     return "seller/profile";
 	 }
+
 	   /* =========================
 	    	판매자 프로필 페이지
 		 ========================= */

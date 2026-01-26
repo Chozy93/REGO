@@ -1,0 +1,130 @@
+/* ==========================================================================
+   Signup Complete
+========================================================================== */
+
+.signup-complete{
+  min-height: calc(100vh - 160px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-40) var(--space-16);
+}
+
+.signup-complete-card{
+  width: 100%;
+  max-width: 520px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-40);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+/* icon */
+.signup-complete-icon{
+  width: 88px;
+  height: 88px;
+  margin: 0 auto var(--space-24);
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.signup-complete-icon span{
+  font-size: 48px;
+  color: var(--color-primary);
+}
+
+/* title */
+.signup-complete-title{
+  margin: 0 0 var(--space-12);
+  font-size: var(--fs-28);
+  font-weight: var(--fw-extrabold);
+}
+
+/* desc */
+.signup-complete-desc{
+  margin: 0 0 var(--space-32);
+  font-size: var(--fs-15);
+  line-height: var(--lh-relaxed);
+  color: var(--color-text-muted);
+}
+
+/* social */
+.signup-social{
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  margin-bottom: var(--space-24);
+}
+
+.signup-social-btn{
+  position: relative;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  font-weight: var(--fw-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-12);
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+.signup-social-btn:active{
+  transform: scale(0.98);
+}
+
+/* kakao */
+.signup-social-btn.kakao{
+  background: #FEE500;
+  color: #3c1e1e;
+}
+
+/* naver */
+.signup-social-btn.naver{
+  background: #03C75A;
+  color: #fff;
+}
+
+/* google */
+.signup-social-btn.google{
+  background: #fff;
+  border: 1px solid var(--color-border);
+  color: #444;
+}
+
+/* skip */
+.signup-skip{
+  display: inline-block;
+  margin-bottom: var(--space-24);
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+  text-decoration: underline;
+}
+
+/* divider */
+.signup-divider{
+  width: 100%;
+  height: 1px;
+  background: var(--color-divider);
+  margin-bottom: var(--space-24);
+}
+
+/* start */
+.signup-start{
+  width: 100%;
+  height: 60px;
+  font-size: var(--fs-16);
+  font-weight: var(--fw-bold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  box-shadow: var(--shadow-primary);
+}
+.signup-start:active{
+  transform: scale(0.99);
+}
