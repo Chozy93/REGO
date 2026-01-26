@@ -1,0 +1,221 @@
+/* ==========================================================================
+   1:1 Inquiry Page
+========================================================================== */
+
+/* ===============================
+   Layout
+=============================== */
+
+.inquiry-layout {
+  display: flex;
+  gap: var(--space-24);
+  align-items: flex-start;
+}
+
+/* sidebar */
+.inquiry-layout .sidebar {
+  width: 240px;
+  flex-shrink: 0;
+}
+
+/* main content (policy와 동일 기준) */
+.inquiry-main {
+  flex: 1;
+  min-width: 0;
+  max-width: 980px;
+  padding-top: var(--space-32);
+  padding-bottom: var(--space-64);
+}
+
+/* mobile */
+@media (max-width: 768px) {
+  .inquiry-layout {
+    flex-direction: column;
+  }
+
+  .inquiry-main {
+    max-width: 100%;
+  }
+}
+
+/* ===============================
+   Header
+=============================== */
+
+.inquiry-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-16);
+  margin-bottom: var(--space-32);
+}
+
+.inquiry-back {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.inquiry-title {
+  font-size: var(--fs-24);
+  font-weight: var(--fw-bold);
+}
+
+.inquiry-desc {
+  font-size: var(--fs-14);
+  color: var(--color-text-muted);
+  margin-top: var(--space-4);
+}
+
+/* ===============================
+   Card
+=============================== */
+
+.inquiry-card {
+  width: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-32);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ===============================
+   Form
+=============================== */
+
+.inquiry-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.form-label {
+  font-weight: var(--fw-semibold);
+}
+
+.required {
+  color: var(--color-danger);
+}
+
+.inquiry-main input,
+.inquiry-main textarea,
+.inquiry-main select {
+  padding: var(--space-12) var(--space-16);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-2);
+  font-size: var(--fs-14);
+  font-family: inherit;
+}
+
+.inquiry-main textarea {
+  resize: vertical;
+}
+
+/* ===============================
+   Select
+=============================== */
+
+.select-box {
+  position: relative;
+}
+
+.select-box span {
+  position: absolute;
+  right: var(--space-12);
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--color-text-muted);
+}
+
+/* ===============================
+   File Upload
+=============================== */
+
+.file-drop {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  background: var(--color-surface-2);
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.file-drop span {
+  color: var(--color-text-muted);
+}
+
+.file-drop p {
+  font-size: var(--fs-14);
+}
+
+.file-drop small {
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+}
+
+/* ===============================
+   Footer
+=============================== */
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--color-divider);
+  gap: var(--space-16);
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-size: var(--fs-14);
+}
+
+/* ===============================
+   Info Box
+=============================== */
+
+.inquiry-info {
+  margin-top: var(--space-24);
+  width: 100%;
+  display: flex;
+  gap: var(--space-12);
+  padding: var(--space-16);
+  background: var(--color-surface-3);
+  border-radius: var(--radius-lg);
+}
+
+.inquiry-info h4 {
+  font-size: var(--fs-14);
+  font-weight: var(--fw-bold);
+  margin-bottom: var(--space-4);
+}
+
+.inquiry-info ul {
+  padding-left: 16px;
+}
+
+.inquiry-info li {
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+}

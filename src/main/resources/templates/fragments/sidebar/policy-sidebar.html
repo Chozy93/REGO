@@ -9,21 +9,22 @@
         <nav class="sidebar-nav">
             <a href="#" class="nav-link">공지사항</a>
             <a href="#" class="nav-link">자주 묻는 질문</a>
-            <a href="#" class="nav-link">1:1 문의</a>
+			<a href="/customer/inquiry" class="nav-link" 
+			             th:classappend="${currentMenu == 'inquiry'} ? 'active'">1:1 문의</a>
             <a href="#" class="nav-link">안전 거래 가이드</a>
             
             <div class="nav-divider"></div>
             
-            <a href="/terms" class="nav-link" 
+            <a href="/customer/terms" class="nav-link" 
                th:classappend="${currentMenu == 'terms'} ? 'active'">이용 약관</a>
                
-            <a href="/privacy" class="nav-link" 
+            <a href="/customer/privacy" class="nav-link" 
                th:classappend="${currentMenu == 'privacy'} ? 'active'">개인정보 처리방침</a>
                
-            <a href="/location" class="nav-link" 
+            <a href="/customer/location" class="nav-link" 
                th:classappend="${currentMenu == 'location'} ? 'active'">위치기반서비스 이용약관</a>
                
-            <a href="/youth" class="nav-link" 
+            <a href="/customer/youth" class="nav-link" 
                th:classappend="${currentMenu == 'youth'} ? 'active'">청소년 보호정책</a>
         </nav>
     </div>
