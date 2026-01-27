@@ -7,71 +7,90 @@
      PAGE CSS
 ========================= -->
 <th:block th:fragment="pageCss">
+  <link rel="stylesheet" th:href="@{/css/fragments/product-card.css}">
   <link rel="stylesheet" th:href="@{/css/product/list.css}">
 </th:block>
 
-<!-- =========================
-     CONTENT
-========================= -->
 <div class="container-content" layout:fragment="content">
 
-  <!-- =========================
-       CATEGORY BAR
-  ========================= -->
-  <!-- =========================
-       CATEGORY BAR (DROPDOWN)
-  ========================= -->
-  <section class="category-bar">
+	<!-- =========================
+	     CATEGORY MEGA DROPDOWN
+	========================= -->
+	<div class="category-mega" id="categoryMega">
 
-    <div class="category-dropdown">
+	  <!-- 🔹 대분류 버튼 -->
+	  <button
+	    type="button"
+	    class="category-mega-toggle parent-category-btn">
 
-      <!-- 드롭다운 버튼 (대분류) -->
-      <button type="button" class="dropdown-toggle">
-        <span th:text="${page.categoryGroup.parentCategoryName}">
-          디지털기기
-        </span>
-        <svg class="dropdown-arrow"
-             width="14" height="14" viewBox="0 0 24 24">
-          <path d="M7 10l5 5 5-5z"/>
-        </svg>
-      </button>
+	    <span th:text="${page.categoryGroup.parentCategoryName}">
+	      디지털기기
+	    </span>
+	    <span class="arrow">▾</span>
+	  </button>
 
-      <!-- 드롭다운 메뉴 (소분류) -->
-      <ul class="dropdown-menu">
-        <li th:each="tab : ${page.categoryGroup.subCategories}"
-            th:classappend="${tab.selected} ? 'active'">
+	  <!-- 🔽 드롭다운 패널 -->
+	  <div class="category-mega-panel">
 
-          <a th:href="@{/products(categoryId=${tab.categoryId})}"
-             th:text="${tab.categoryName}">
-            소분류명
-          </a>
+	    <!-- ✅ 대분류 GRID (상단) -->
+	    <div class="category-parent-grid">
+	      <a th:each="parent : ${parentCategoryList}"
+	         th:href="@{/products(categoryId=${parent.categoryId})}"
+	         th:text="${parent.name}"
+	         th:classappend="${parent.categoryId == page.categoryGroup.parentCategoryId} ? ' active' : ''">
+	      </a>
+	    </div>
 
-        </li>
-      </ul>
+	    <!-- 🔹 소분류 GRID (하단) -->
+	    <div class="category-mega-sub-grid">
 
-    </div>
+	      <!-- 현재 대분류 타이틀 -->
+		  <div style="
+		     grid-column: 1 / -1;
+		     font-size: 16px;
+		     font-weight: 700;
+		     margin-bottom: 4px;
+		   ">
+		     <span th:text="${page.categoryGroup.parentCategoryName}">디지털기기</span>
+		   </div>
 
-  </section>
+	      <!-- 전체보기 -->
+	      <a class="category-sub-item category-sub-all"
+	         th:href="@{/products(categoryId=${page.categoryGroup.parentCategoryId})}">
+	        전체보기
+	      </a>
 
-  <!-- =========================
+	      <!-- 소분류 -->
+	      <a class="category-sub-item"
+	         th:each="sub : ${page.categoryGroup.subCategories}"
+	         th:href="@{/products(categoryId=${sub.categoryId})}"
+	         th:text="${sub.categoryName}">
+	      </a>
+
+	    </div>
+
+	  </div>
+	</div>
+ <!-- =========================
        PRODUCT LIST
   ========================= -->
   <section class="product-list">
 
-    <!-- 상품 없음 -->
-	<div class="empty-result"
-	     th:if="${#lists.isEmpty(page.productList.products)}">
-	    등록된 상품이 없습니다.
-	</div>
+    <!-- 결과 없음 -->
+    <div class="empty-result"
+         th:if="${#lists.isEmpty(page.productList.products)}">
+      등록된 상품이 없습니다.
+    </div>
 
-	<!-- 상품 리스트 -->
-	<div class="product-grid"
+    <!-- 상품 카드 -->
+	<div id="productGrid"
+	     class="product-grid"
 	     th:if="${!#lists.isEmpty(page.productList.products)}">
 
 	  <th:block th:each="card : ${page.productList.products}">
-		<th:block
-		  th:replace="fragments/product-card :: productCard(${card})">
-		</th:block>
+	    <th:block
+	      th:replace="fragments/product-card :: productCard(${card})">
+	    </th:block>
 	  </th:block>
 
 	</div>
@@ -79,4 +98,19 @@
   </section>
 
 </div>
+
+<!-- =========================
+     PAGE JS
+========================= -->
+<th:block th:fragment="pageJs">
+
+  <!-- 기존 -->
+  <script th:src="@{/js/product/list-category.js}"></script>
+  <script th:src="@{/js/product-list.js}"></script>
+
+  <!-- ⭐ 추가 (이게 핵심) -->
+  <script th:src="@{/js/category-mega.js}"></script>
+
+</th:block>
+
 </html>

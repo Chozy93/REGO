@@ -1,0 +1,125 @@
+/* 사이드바와 나란히 있을 때 본문이 남은 공간을 다 차지하게 함 */
+.policy-container {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    width: 100%; /* 전체 너비 확보 */
+}
+
+.notice-main {
+    flex-grow: 1; /* 남은 공간을 모두 채움 */
+    min-width: 0; /* flex 자식 요소의 찌그러짐 방지 */
+    width: 100%;
+}
+
+.detail-card {
+    width: 100%;
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px; /* 안쪽 여백 충분히 */
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+    border: 1px solid #eee;
+}
+
+/* 상단 헤더 */
+.notice-page-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.back-btn {
+    width: 40px; height: 40px; background: #fff; border: 1px solid #f0f4f2;
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    color: #666; text-decoration: none; transition: 0.2s;
+}
+.back-btn:hover { background: #f9fafb; }
+.header-text h2 { font-size: 20px; font-weight: 700; color: #111813; }
+.breadcrumb { font-size: 13px; color: #888; margin-top: 2px; }
+
+/* 상세 카드 */
+.detail-card {
+    background: #fff;
+    border: 1px solid #f0f4f2;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+/* 제목 섹션 */
+.detail-header {
+    padding: 40px;
+    border-bottom: 1px solid #f0f4f2;
+}
+.tag-row { display: flex; gap: 8px; margin-bottom: 16px; }
+.badge { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+.badge-important { background: #fef2f2; color: #ef4444; }
+.badge-category { background: #f3f4f6; color: #6b7280; }
+
+.detail-header h1 {
+    font-size: 28px; font-weight: 800; color: #111813; line-height: 1.4; margin-bottom: 20px;
+}
+.meta-info { display: flex; align-items: center; gap: 16px; color: #999; font-size: 14px; }
+.meta-item { display: flex; align-items: center; gap: 6px; }
+.meta-item span { vertical-align: middle; }
+.meta-divider { width: 1px; height: 12px; background: #ddd; }
+
+/* 본문 섹션 */
+.detail-body { padding: 40px; line-height: 1.8; color: #333; }
+.detail-body p { margin-bottom: 20px; }
+.detail-body h3 { font-size: 18px; font-weight: 700; margin: 32px 0 16px; color: #111813; }
+
+.info-highlight-box {
+    background: #f8fafc; border: 1px solid #f1f5f9;
+    border-radius: 16px; padding: 24px; margin: 32px 0;
+}
+.info-highlight-box li { list-style: none; margin-bottom: 8px; font-size: 15px; }
+.info-highlight-box li strong { color: #111813; margin-right: 12px; display: inline-block; min-width: 70px; }
+
+.bullet-list { padding-left: 20px; margin-bottom: 32px; }
+.bullet-list li { list-style-type: disc; margin-bottom: 10px; color: #4b5563; }
+.thanks-msg { margin-top: 40px; }
+
+/* 첨부파일 */
+.detail-attachments { padding: 24px 40px; background: #fafafa; border-top: 1px solid #f0f4f2; }
+.detail-attachments h4 { font-size: 14px; color: #111813; margin-bottom: 12px; }
+.file-link {
+    display: flex; align-items: center; gap: 16px; padding: 12px 20px;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+    text-decoration: none; color: inherit; max-width: 400px; transition: 0.2s;
+}
+.file-link:hover { border-color: #13ec5b; }
+.file-icon { width: 40px; height: 40px; background: #fef2f2; color: #ef4444; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.file-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.file-name { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-size { font-size: 12px; color: #999; }
+.download-icon { color: #ccc; }
+
+/* 이전글/다음글 */
+.detail-footer-nav { border-top: 1px solid #f0f4f2; }
+.nav-row {
+    display: flex; align-items: center; padding: 16px 40px;
+    text-decoration: none; color: inherit; border-bottom: 1px solid #f9fafb; transition: 0.2s;
+}
+.nav-row:last-child { border-bottom: none; }
+.nav-row:hover { background: #fcfdfc; }
+.nav-row:hover .nav-title { color: #13ec5b; }
+
+.nav-label { display: flex; align-items: center; gap: 8px; width: 100px; font-size: 14px; color: #888; }
+.nav-title { flex: 1; font-size: 14px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nav-date { font-size: 12px; color: #bbb; margin-left: 20px; }
+
+/* 하단 버튼 */
+.action-row { display: flex; justify-content: center; margin-top: 32px; margin-bottom: 60px; }
+.list-btn {
+    padding: 14px 48px; background: #111813; color: #fff; border-radius: 14px;
+    text-decoration: none; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .detail-header, .detail-body, .detail-attachments, .nav-row { padding: 24px; }
+    .detail-header h1 { font-size: 22px; }
+    .nav-date { display: none; }
+    .nav-label { width: 80px; }
+}

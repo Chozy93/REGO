@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+    <link rel="stylesheet" href="/css/customer/notice.css">
+	<link rel="stylesheet" href="/css/policy/policy.css">
+</th:block>
+
+<div layout:fragment="content" class="policy-wrapper">
+	<div class="policy-container">
+	        
+	       <th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='notice')"></th:block>
+
+	        <main class="main-content" >
+	            
+	            <div class="page-header flex-header">
+					<div class="header-text-group">
+					        <h2 class="text-3xl font-extrabold tracking-tight text-[#111813]">공지사항</h2>
+					        <p class="text-gray-500">RE: GO의 새로운 소식과 업데이트를 확인하세요.</p>
+					    </div>
+					
+					<div sec:authorize="hasRole('ADMIN')" class="header-action">
+					        <a th:href="@{/customer/notice-write}" class="write-btn">
+					            <span class="material-symbols-outlined">edit</span>
+					            공지사항 작성
+					        </a>
+					    </div>
+	            </div>
+				
+
+
+	            <div class="filter-card">
+	                <div class="search-box">
+	                    <span class="material-symbols-outlined search-icon">search</span>
+	                    <input type="text" placeholder="제목 또는 내용으로 검색" class="search-input">
+	                </div>
+	                <div class="filter-tags">
+	                    <button class="tag active">전체</button>
+	                    <button class="tag">공지</button>
+	                    <button class="tag">이벤트</button>
+	                    <button class="tag">서비스 점검</button>
+	                </div>
+	            </div>
+
+	            <div class="list-card">
+	                <div class="list-table-header">
+	                    <div class="col-title">공지 제목</div>
+	                    <div class="col-date">작성일</div>
+	                    <div class="col-views">조회수</div>
+	                </div>
+
+					<ul class="notice-list">
+					    <li th:each="notice : ${pinnedList}" class="notice-item pinned">
+					        <a th:href="@{/customer/notice-detail(id=${notice.noticeId})}">
+					            <div class="item-content">
+					                <div class="badge-row">
+					                    <span class="badge badge-red">중요</span>
+					                    <span class="badge badge-gray" th:text="${notice.category}">분류</span>
+					                </div>
+					                <h3 class="item-title" th:text="${notice.title}">상단 고정 제목</h3>
+					            </div>
+					            <div class="item-info">
+					                <span class="info-date" th:text="${#temporals.format(notice.createdAt, 'yyyy.MM.dd')}">2024.01.01</span>
+					                <span class="info-views" th:text="${#numbers.formatInteger(notice.viewCount, 0, 'COMMA')}">0</span>
+					            </div>
+					        </a>
+					    </li>
+
+					    <li th:each="notice : ${noticeList}" class="notice-item">
+					        <a th:href="@{/customer/notice-detail(id=${notice.noticeId})}">
+					            <div class="item-content">
+					                <div class="badge-row">
+					                    <span class="badge badge-green">공지</span>
+					                    <span class="badge badge-gray" th:text="${notice.category}">분류</span>
+					                </div>
+					                <h3 class="item-title" th:text="${notice.title}">일반 공지 제목</h3>
+					            </div>
+					            <div class="item-info">
+					                <span class="info-date" th:text="${#temporals.format(notice.createdAt, 'yyyy.MM.dd')}">2024.01.01</span>
+					                <span class="info-views" th:text="${#numbers.formatInteger(notice.viewCount, 0, 'COMMA')}">0</span>
+					            </div>
+					        </a>
+					    </li>
+					    
+					    <li th:if="${#lists.isEmpty(noticeList) and #lists.isEmpty(pinnedList)}" class="notice-item" style="text-align: center; padding: 50px;">
+					        <p>등록된 공지사항이 없습니다.</p>
+					    </li>
+					</ul>
+
+					<div class="pagination" th:if="${!page.isEmpty()}">
+					    <a th:href="@{/customer/notice(page=${page.number - 1})}" 
+					       class="page-arrow" th:classappend="${page.first} ? 'disabled'">
+					        <span class="material-symbols-outlined">chevron_left</span>
+					    </a>
+
+					    <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+					        <a th:href="@{/customer/notice(page=${i})}" 
+					           class="page-num" 
+					           th:classappend="${i == page.number} ? 'active'" 
+					           th:text="${i + 1}">1</a>
+					    </th:block>
+
+					    <a th:href="@{/customer/notice(page=${page.number + 1})}" 
+					       class="page-arrow" th:classappend="${page.last} ? 'disabled'">
+					        <span class="material-symbols-outlined">chevron_right</span>
+					    </a>
+					</div>
+	            </div>
+	        </main>
+	    </div>
+</div>
+</html>

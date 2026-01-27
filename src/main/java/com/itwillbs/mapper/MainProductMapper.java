@@ -19,7 +19,6 @@ public interface MainProductMapper {
     List<MainProductListDTO> selectPopularProducts(
     	    @Param("userId") Long userId,
     	    @Param("limit") int limit,
-    	    @Param("sort") String sort,    // 추가
     	    @Param("region") String region // 추가
     	);
 

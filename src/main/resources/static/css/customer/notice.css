@@ -1,0 +1,215 @@
+.write-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #111813; /* 어두운 톤 */
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.write-btn:hover {
+    background-color: #13ec5b; /* RE:GO 포인트 컬러 */
+    color: #111813;
+    transform: translateY(-2px);
+}
+
+.write-btn .material-symbols-outlined {
+    font-size: 20px;
+}
+
+.page-header.flex-header {
+    display: flex;
+    justify-content: space-between; /* 양 끝 정렬 */
+    align-items: flex-end;         /* 아래쪽 라인 맞춤 (취향에 따라 center로 변경 가능) */
+    margin-bottom: 24px;
+    width: 100%;                   /* 가로폭 꽉 채우기 */
+}
+
+/* 필터 및 검색 카드 */
+.filter-card {
+    background: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #f0f4f2;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    color: #9ca3af;
+}
+
+.search-input {
+    width: 100%;
+    height: 3rem;
+    padding-left: 3rem;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    border-color: #13ec5b;
+}
+
+.filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tag {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    color: #4b5563;
+    transition: all 0.2s;
+}
+
+.tag.active {
+    background: #111813;
+    color: #ffffff;
+    border-color: #111813;
+    font-weight: 700;
+}
+
+/* 리스트 스타일 */
+.list-card {
+    background: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #f0f4f2;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-table-header {
+    display: none;
+    padding: 1rem 1.5rem;
+    background: #f9fafb;
+    border-bottom: 1px solid #f0f4f2;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+    .list-table-header { display: flex; }
+}
+
+.col-title { flex: 1; }
+.col-date { width: 6rem; text-align: center; }
+.col-views { width: 5rem; text-align: center; }
+
+.notice-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notice-item {
+    border-bottom: 1px solid #f0f4f2;
+    transition: background 0.2s;
+}
+
+.notice-item:hover {
+    background: #f9fafb;
+}
+
+.notice-item a {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1.5rem;
+    text-decoration: none;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .notice-item a { flex-direction: row; align-items: center; }
+}
+
+.item-content { flex: 1; min-width: 0; }
+.badge-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+.item-title { font-weight: 700; color: #111813; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.notice-item:hover .item-title { color: #13ec5b; }
+
+.item-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+@media (min-width: 768px) {
+    .item-info { justify-content: flex-end; gap: 2.5rem; }
+    .info-date { width: 6rem; text-align: center; }
+    .info-views { width: 5rem; text-align: center; }
+}
+
+/* 배지 스타일 */
+.badge {
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+.badge-red { background: #fee2e2; color: #dc2626; }
+.badge-gray { background: #f3f4f6; color: #4b5563; }
+.badge-green { background: rgba(19, 236, 91, 0.15); color: #065f46; }
+
+/* 페이지네이션 */
+.pagination {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: auto;
+}
+
+.page-num, .page-arrow {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: background 0.2s;
+}
+
+.page-num.active {
+    background: #13ec5b;
+    color: #111813;
+    font-weight: 700;
+}
+
+.page-num:not(.active):hover, .page-arrow:not(.disabled):hover {
+    background: #f3f4f6;
+}
+
+.page-arrow.disabled {
+    color: #d1d5db;
+    cursor: default;
+}

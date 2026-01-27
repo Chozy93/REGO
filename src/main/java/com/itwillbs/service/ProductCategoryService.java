@@ -150,4 +150,18 @@ public class ProductCategoryService {
 
         return new ProductListVO(cards);
     }
+    
+    /* ==================================================
+    부모 카테고리 전체 조회
+    - list.html 대분류 탭용
+ ================================================== */
+ public List<CategoryDTO> getParentCategoryList() {
+
+     // level == 1 (대분류) 전체 조회
+     return categoryMapper.selectParentCategoryList();
+ }
+ public Long getDefaultParentCategoryId() {
+     return 1L; // 예: 디지털기기
+ }
+
 }

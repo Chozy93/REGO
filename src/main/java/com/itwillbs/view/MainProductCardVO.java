@@ -1,5 +1,7 @@
 package com.itwillbs.view;
 
+import com.itwillbs.dto.MainProductListDTO;
+
 import lombok.Getter;
 
 @Getter
@@ -38,4 +40,18 @@ public class MainProductCardVO {
         this.likeCount = likeCount;
         this.liked = liked;
     }
+    
+ // 🔥🔥🔥 이 생성자만 추가하면 끝
+    public MainProductCardVO(MainProductListDTO dto) {
+        this.id = String.valueOf(dto.getProductId());
+        this.title = dto.getTitle();
+        this.price = dto.getPrice();
+        this.img = dto.getThumbnailUrl();      // ⚠ DTO 필드명에 맞게
+        this.loc = dto.getRegionName();        // ⚠ DTO 필드명에 맞게
+        this.time = dto.getCreatedTime();      // ⚠ DTO 필드명에 맞게
+        this.reserved = false;     // ⚠ DTO에 없으면 false
+        this.likeCount = dto.getLikeCount();
+        this.liked = dto.isLiked();
+    }
 }
+

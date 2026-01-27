@@ -209,6 +209,26 @@
   padding: 8px 0;   /* 🔥 위아래 여백 축소 */
 }
 
+/* =========================
+   CATEGORY MODAL OVERLAY
+========================= */
+
+/* 기본 상태: 완전히 제거 */
+.category-modal-overlay {
+  display: none;
+}
+
+/* 모달이 열릴 때만 overlay 활성 */
+.category-modal.is-active + .category-modal-overlay {
+  display: block;
+}
+
+/* 🔥 강제 차단 해제 (확정 테스트용) */
+.category-modal-overlay {
+  display: none !important;
+}
+
+
 
 
 
