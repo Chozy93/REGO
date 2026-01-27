@@ -114,4 +114,8 @@ public class ProductListService {
                 tabs
         );
     }
+    public List<MainProductCardVO> getProductsByParent(Long parentCategoryId) {
+        return productListMapper.selectProductsByParent(parentCategoryId);
+    }
+  
 }

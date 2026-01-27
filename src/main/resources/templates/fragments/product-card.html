@@ -64,18 +64,33 @@
         100,000원
       </p>
 
-      <!-- 메타 정보 -->
-      <div class="product-card__meta">
-        <span th:text="${card.loc}">지역</span>
-        <span class="meta-dot">·</span>
-        <span th:text="${card.time}">시간</span>
-        <span class="meta-dot">·</span>
+	  <!-- 메타 정보 -->
+	  <div class="product-card__meta"
+	       th:if="${(card.loc != null and card.loc != '') 
+	             or (card.time != null and card.time != '') 
+	             or (card.likeCount != null and card.likeCount > 0)}">
 
-        <span class="like-count"
-              th:text="${card.likeCount}">
-          0
-        </span>
-      </div>
+	    <span th:if="${card.loc != null and card.loc != ''}"
+	          th:text="${card.loc}">지역</span>
+
+	    <span class="meta-dot"
+	          th:if="${card.loc != null and card.loc != '' 
+	               and card.time != null and card.time != ''}">·</span>
+
+	    <span th:if="${card.time != null and card.time != ''}"
+	          th:text="${card.time}">시간</span>
+
+	    <span class="meta-dot"
+	          th:if="${(card.likeCount != null and card.likeCount > 0)
+	               and ((card.loc != null and card.loc != '') 
+	                 or (card.time != null and card.time != ''))}">·</span>
+
+	    <span class="like-count"
+	          th:if="${card.likeCount != null and card.likeCount > 0}"
+	          th:text="${card.likeCount}">
+	    </span>
+
+	  </div>
 
     </div>
 
