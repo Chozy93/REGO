@@ -12,6 +12,18 @@ public class CustomerController {
 		return "customer/notice";
 	}
 	
+	// 공지사항 상세페이지
+	@GetMapping("/customer/notice-detail")
+	public String getNoticeDetail() {
+		return "customer/notice-detail";
+	}
+	
+	// 공지사항 작성페이지 (admin계정일 경우에만 )
+	@GetMapping("/customer/notice-write")
+	public String getNoticeWrite() {
+		return "customer/notice-write";
+	}
+	
 	// 자주 묻는 질문
 	@GetMapping("/customer/faq")
 	public String getFaq() {

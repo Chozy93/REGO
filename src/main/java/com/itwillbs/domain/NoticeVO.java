@@ -14,6 +14,8 @@ public class NoticeVO {
     private final Long noticeId;
     private final String title;
     private final String content;
+    private final String category;  // 추가: 배지 분류용
+    private final int viewCount;    // 추가: 조회수 표시용
     private final Long writerId;
     private final boolean isActive;
     private final boolean isPinned;
@@ -27,6 +29,8 @@ public class NoticeVO {
         this.noticeId = entity.getNoticeId();
         this.title = entity.getTitle();
         this.content = entity.getContent();
+        this.category = entity.getCategory(); // 추가
+        this.viewCount = entity.getViewCount(); // 추가
         this.writerId = entity.getWriterId();
         this.isActive = entity.isActive();
         this.isPinned = entity.isPinned();
@@ -40,12 +44,15 @@ public class NoticeVO {
     public NoticeVO(
             String title,
             String content,
+            String category,
             boolean isActive,
             boolean isPinned
     ) {
         this.noticeId = null;
         this.title = title;
         this.content = content;
+        this.category = category; // 추가
+        this.viewCount = 0;       // 등록 시 초기값 0
         this.writerId = null;
         this.isActive = isActive;
         this.isPinned = isPinned;
