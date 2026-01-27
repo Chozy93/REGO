@@ -42,4 +42,21 @@ public class CustomerService {
         return noticeRepository.findByIsPinnedTrueOrderByCreatedAtDesc()
                 .stream().map(NoticeVO::new).toList();
     }
+    
+    // 공지사항 고정글로 등록
+    
+    
+    // 공지사항 상세페이지 
+    public NoticeVO getNoticeDetail(Long id) {
+        // 1. ID로 조회 (없으면 예외 발생)
+        Notice notice = noticeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 공지사항이 없습니다. id=" + id));
+        
+        // 2. 조회수 증가
+        notice.increaseViewCount(); 
+        
+        // 3. VO로 변환해서 반환
+        return new NoticeVO(notice);
+    }
+    
 }

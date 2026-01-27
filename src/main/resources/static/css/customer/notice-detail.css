@@ -1,3 +1,25 @@
+/* 사이드바와 나란히 있을 때 본문이 남은 공간을 다 차지하게 함 */
+.policy-container {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    width: 100%; /* 전체 너비 확보 */
+}
+
+.notice-main {
+    flex-grow: 1; /* 남은 공간을 모두 채움 */
+    min-width: 0; /* flex 자식 요소의 찌그러짐 방지 */
+    width: 100%;
+}
+
+.detail-card {
+    width: 100%;
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px; /* 안쪽 여백 충분히 */
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+    border: 1px solid #eee;
+}
 
 /* 상단 헤더 */
 .notice-page-header {

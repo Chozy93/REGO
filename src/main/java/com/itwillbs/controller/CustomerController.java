@@ -2,9 +2,9 @@ package com.itwillbs.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -12,7 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.itwillbs.domain.NoticeVO;
 import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.service.CustomerService;
@@ -50,12 +51,15 @@ public class CustomerController {
 
 	
 	// 공지사항 상세페이지
-	@GetMapping("/customer/notice-detail")
-	public String getNoticeDetail() {
-		return "customer/notice-detail";
-	}
+    @GetMapping("/customer/notice-detail")
+    public String getNoticeDetail(@RequestParam("id") Long id, Model model) {
+        NoticeVO notice = customerService.getNoticeDetail(id);
+        model.addAttribute("notice", notice);
+        System.out.println("공지사항 데이터"+notice);
+        return "customer/notice-detail"; // 상세 페이지 HTML 경로
+    }
 	
-	// 공지사항 작성페이지 (admin계정일 경우에만 )
+	// -------- 공지사항 작성페이지 (admin계정일 경우에만 )
 	@GetMapping("/customer/notice-write")
 	public String getNoticeWrite() {
 		return "customer/notice-write";
