@@ -1,0 +1,173 @@
+
+.guide-main {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* 페이지 헤더 */
+.guide-page-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.back-btn {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border: 1px solid #f0f4f2;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    text-decoration: none;
+}
+
+.header-text h2 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #111813;
+}
+
+.header-text p {
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+/* 상단 하이라이트 배너 */
+.guide-banner {
+    background: rgba(19, 236, 91, 0.05);
+    border: 1px solid rgba(19, 236, 91, 0.2);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.banner-icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(19, 236, 91, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00c73c;
+    flex-shrink: 0;
+}
+
+.banner-content h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.banner-content p {
+    font-size: 14px;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+/* 아코디언 가이드 리스트 */
+.guide-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.guide-item {
+    background: #fff;
+    border: 1px solid #f0f4f2;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.guide-item summary {
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    list-style: none;
+}
+
+.guide-item summary::-webkit-details-marker { display: none; }
+
+.summary-title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 아이콘 색상들 */
+.icon-circle.red { background: #fef2f2; color: #ef4444; }
+.icon-circle.blue { background: #eff6ff; color: #3b82f6; }
+.icon-circle.orange { background: #fff7ed; color: #f97316; }
+
+.summary-title h3 {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.guide-item[open] .arrow {
+    transform: rotate(180deg);
+}
+
+/* 상세 내용 영역 */
+.guide-content {
+    padding: 0 24px 24px 80px; /* 아이콘 너비만큼 왼쪽 여백 */
+    color: #4b5563;
+    line-height: 1.7;
+    border-top: 1px solid #f0f4f2;
+    padding-top: 24px;
+}
+
+.guide-content ul, .guide-content ol {
+    margin-top: 16px;
+    padding-left: 20px;
+}
+
+.guide-content li {
+    margin-bottom: 12px;
+}
+
+.guide-content li strong {
+    color: #111813;
+}
+
+/* 내부 팁 박스 */
+.info-tip {
+    background: #f9fafb;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+.info-tip strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #111813;
+}
+
+/* 모바일 대응 */
+@media (max-width: 768px) {
+    .guide-banner { flex-direction: column; text-align: center; }
+    .guide-content { padding-left: 24px; }
+}

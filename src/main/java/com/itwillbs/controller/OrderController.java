@@ -212,7 +212,7 @@ public class OrderController {
     }
     
     
- // 2. [구상세 확인 페이지] 
+ // 2. [결제 상세 확인 페이지] 
     @GetMapping("/order/detail/{orderId}")
     public String orderDetail(@PathVariable("orderId") Long orderId, 
                               @AuthenticationPrincipal CustomUserDetails userDetails,
