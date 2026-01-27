@@ -1,0 +1,123 @@
+<!-- ===============================
+     Review Write Modal
+=============================== -->
+<div class="review-modal is-hidden" id="reviewWriteModal">
+
+  <div class="review-modal__backdrop"></div>
+
+  <div class="review-modal__panel">
+
+    <!-- Header -->
+    <header class="review-modal__header">
+      <button type="button"
+              class="review-modal__back-btn"
+              aria-label="뒤로가기">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+
+      <h1 class="review-modal__title">리뷰 작성</h1>
+    </header>
+
+    <!-- ===============================
+         FORM START
+    =============================== -->
+    <form id="reviewWriteForm">
+
+      <!-- 🔒 hidden : ReviewConditionVO -->
+      <input type="hidden" name="productId">
+      <input type="hidden" name="sellerId">
+      <input type="hidden" name="rating">
+
+      <div class="review-modal__body">
+
+        <!-- 상품 / 판매자 (표시용) -->
+        <section class="review-product">
+          <div class="review-product__image">
+            <img src=""
+                 alt="상품 이미지">
+          </div>
+
+          <div class="review-product__info">
+            <h2 class="review-product__title"></h2>
+
+            <p class="review-product__seller">
+              판매자
+              <strong class="review-product__seller-name"></strong>
+            </p>
+          </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- ===============================
+             Rating (입력은 hidden)
+        =============================== -->
+        <section class="review-rating">
+          <p class="review-rating__label">
+            거래는 만족스러우셨나요?
+          </p>
+
+          <div class="review-rating__stars">
+            <button type="button" class="review-rating__star">
+              <span class="material-symbols-outlined">star</span>
+            </button>
+            <button type="button" class="review-rating__star">
+              <span class="material-symbols-outlined">star</span>
+            </button>
+            <button type="button" class="review-rating__star">
+              <span class="material-symbols-outlined">star</span>
+            </button>
+            <button type="button" class="review-rating__star">
+              <span class="material-symbols-outlined">star</span>
+            </button>
+            <button type="button" class="review-rating__star">
+              <span class="material-symbols-outlined">star</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- ===============================
+             Content
+        =============================== -->
+        <section class="review-content">
+
+          <div class="review-content__head">
+            <label class="review-content__label">
+              상세 후기
+            </label>
+            <span class="review-content__required">
+              필수 입력
+            </span>
+          </div>
+
+          <div class="review-textarea">
+            <textarea
+              name="content"
+              placeholder="거래하며 좋았던 점이나 아쉬웠던 점을 솔직하게 작성해주세요. (최소 10자 이상)"
+              maxlength="1000"></textarea>
+
+            <span class="review-textarea__count">
+              0 / 1000
+            </span>
+          </div>
+
+        </section>
+
+      </div>
+
+      <!-- Footer -->
+      <footer class="review-modal__footer">
+        <button type="submit"
+                class="btn btn-primary review-submit-btn">
+          <span class="material-symbols-outlined">edit_square</span>
+          리뷰 등록
+        </button>
+      </footer>
+
+    </form>
+    <!-- ===============================
+         FORM END
+    =============================== -->
+
+  </div>
+</div>

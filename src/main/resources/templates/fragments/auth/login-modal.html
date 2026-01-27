@@ -1,0 +1,100 @@
+<div class="login-modal is-hidden"
+     th:fragment="login-modal" id="loginModal">
+
+	 <div class="login-modal__backdrop" onclick="closeLoginModal()"></div>
+
+	 <section class="login-modal__panel stack">
+	   <button class="login-modal__close" onclick="closeLoginModal()">
+	     <span class="material-symbols-outlined">close</span>
+	   </button>
+
+	   <!-- Header -->
+	   <header class="login-modal__header stack text-center">
+	     <h2 class="login-modal__title">로그인</h2>
+	     <p class="login-modal__desc">중고 거래를 시작해보세요</p>
+
+	<div class="login-modal__error is-hidden" id="loginError"></div>
+	   </header>
+
+	   <!-- Form -->
+	   <form action="/login" method="post" class="login-modal__form stack">
+
+	     <div class="login-modal__field stack">
+	       <label for="loginEmail">이메일</label>
+	       <input type="email" id="loginEmail" name="email" required>
+	     </div>
+
+		 <div class="login-modal__field stack">
+		   <label for="loginPassword">비밀번호</label>
+
+		   <div class="password-field">
+		     <input
+		       type="password"
+		       id="loginPassword"
+		       name="password"
+		       placeholder="비밀번호를 입력해 주세요"
+		       required
+		     >
+		     <button type="button" class="password-toggle">
+		       <span class="material-symbols-outlined">visibility</span>
+		     </button>
+		   </div>
+		 </div>
+
+
+	     <div class="login-modal__options between">
+	       <label class="remember inline">
+	         <input type="checkbox" id="rememberEmail">
+	         <span>아이디 기억하기</span>
+	       </label>
+
+		   <div class="find-links inline">
+		     <button type="button"
+		             class="find-link"
+		             onclick="openFindIdModalFromLogin()">
+		       아이디 찾기
+		     </button>
+		     <span>|</span>
+		     <button type="button"
+		             class="find-link"
+		             onclick="openFindPasswordModalFromLogin()">
+		       비밀번호 찾기
+		     </button>
+		   </div>
+
+	     </div>
+
+	     <button type="submit" class="btn btn-primary login-modal__submit">
+	       로그인
+	     </button>
+	   </form>
+
+	   <div class="login-modal__signup text-center">
+	     아직 회원이 아니신가요?
+	     <a href="/signup/step1">회원가입</a>
+	   </div>
+
+	   <div class="login-modal__divider">
+	     <span>SNS 계정으로 로그인</span>
+	   </div>
+
+	   <div class="login-modal__sns">
+	     <a href="/oauth2/authorization/kakao" class="sns kakao" aria-label="Kakao login">
+	       <img src="/images/auth/kakao.svg" alt="Kakao">
+	     </a>
+
+	     <a href="/oauth2/authorization/naver" class="sns naver" aria-label="Naver login">
+	       <img src="/images/auth/naver.svg" alt="Naver">
+	     </a>
+
+	     <a href="/oauth2/authorization/google" class="sns google" aria-label="Google login">
+	       <img src="/images/auth/google.svg" alt="Google">
+	     </a>
+	   </div>
+
+
+	 </section>
+	 
+	 
+	 
+	 </div>

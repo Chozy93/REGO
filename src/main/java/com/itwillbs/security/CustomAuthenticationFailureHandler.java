@@ -14,12 +14,16 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 @Component
-public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+public class CustomAuthenticationFailureHandler
+        implements org.springframework.security.web.authentication.AuthenticationFailureHandler {
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-                                        AuthenticationException exception) throws IOException, ServletException {
-        
+    public void onAuthenticationFailure(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            AuthenticationException exception
+    ) throws IOException {
+
         String errorMessage;
 
         if (exception instanceof DisabledException) {
@@ -30,10 +34,14 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
             errorMessage = "이메일 또는 비밀번호가 맞지 않습니다.";
         }
 
-        // 에러 메시지를 URL 파라미터로 안전하게 인코딩해서 보냄
-        errorMessage = URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
-        setDefaultFailureUrl("/login?error=true&exception=" + errorMessage);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json;charset=UTF-8");
 
-        super.onAuthenticationFailure(request, response, exception);
+        response.getWriter().write("""
+        {
+          "success": false,
+          "message": "%s"
+        }
+        """.formatted(errorMessage));
     }
 }

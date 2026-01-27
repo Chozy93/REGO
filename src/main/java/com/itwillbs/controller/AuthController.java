@@ -164,13 +164,13 @@ public class AuthController {
 	// 1단계 화면 (약관동의)
 	@GetMapping("/signup/step1")
 	public String signupStep1() {
-		return "auth/signup1";
+		return "auth2/signup-terms";
 	}
 
 	// 2단계 화면 (정보입력 페이지 열기)
 	@GetMapping("/signup/step2")
 	public String signupStep2Page() {
-		return "auth/signup2";
+		return "auth2/signup-step2";
 	}
 
 	@PostMapping("/signup/step2")
@@ -185,7 +185,7 @@ public class AuthController {
 			return "redirect:/signup/step3";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "auth/signup2";
+			return "auth2/signup-step2";
 		}
 	}
 
@@ -242,7 +242,7 @@ public class AuthController {
 				model.addAttribute("userPhone", phone);
 			}
 		}
-		return "auth/completeInfo";
+		return "auth2/complete-Info";
 	}
 
 	@PostMapping("/auth/update-phone")
@@ -294,6 +294,6 @@ public class AuthController {
 	// 3단계 화면 (완료 축하)
 	@GetMapping("/signup/step3")
 	public String signupStep3() {
-		return "auth/signup3";
+		return "auth2/signup-complete";
 	}
 }

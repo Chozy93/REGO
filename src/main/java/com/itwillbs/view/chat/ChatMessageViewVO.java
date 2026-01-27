@@ -1,4 +1,4 @@
-package com.itwillbs.view;
+package com.itwillbs.view.chat;
 
 import lombok.Getter;
 import lombok.ToString;
