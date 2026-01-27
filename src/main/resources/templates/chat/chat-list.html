@@ -12,7 +12,13 @@
 </th:block>
 
 <div layout:fragment="content" class="chat-layout">
-
+	
+	<!-- ⭐ 자동 채팅방 오픈용 (JS에서 읽음) -->
+	  <div id="chat-list-root"
+	       th:if="${initialRoomId != null}"
+	       th:attr="data-initial-room-id=${initialRoomId}">
+	  </div>
+	  
     <!-- =========================
          Left
     ========================== -->

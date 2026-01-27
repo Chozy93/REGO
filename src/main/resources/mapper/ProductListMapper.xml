@@ -42,5 +42,26 @@ ORDER BY p.created_at DESC
 
 </select>
 
+<!-- =====================================
+       대분류 기준 상품 조회
+       API: /api/products/by-parent/{id}
+  ====================================== -->
+  <select id="selectProductsByParent"
+        parameterType="long"
+        resultType="com.itwillbs.view.MainProductCardVO">
+    SELECT
+        p.product_id        AS id,
+        p.product_name      AS title,
+        p.price             AS price,
+        p.main_image_url    AS img,
+        p.region_display_name AS loc,
+        DATE_FORMAT(p.created_at, '%m/%d') AS time,
+        (p.sales_status = 'RESERVED') AS reserved,
+        p.like_count        AS likeCount,
+        false               AS liked
+    FROM products p
+    JOIN categories c ON p.category_id = c.category_id
+    WHERE c.parent_id = #{parentId}
+</select>
 
 </mapper>

@@ -1,48 +1,30 @@
 package com.itwillbs.view;
 
-import java.util.Collections;
-import java.util.List;
+import lombok.Getter;
 
+@Getter
 public class MainPageVO {
 
+    // 로그인 여부 (헤더/버튼 제어용)
     private final boolean login;
 
-    private final List<MainProductCardVO> aiProducts;
-    private final List<MainProductCardVO> popularProducts;
-    private final List<MainProductCardVO> recentProducts; // 최근 등록
-    private final List<MainProductCardVO> recentView;     // 최근 본
+    // 메인 페이지 섹션별 VO
+    private final MainAiProductListVO ai;
+    private final MainPopularProductListVO popular;
+    private final MainRecentProductListVO recent;
+    private final MainRecentViewProductListVO recentView;
 
     public MainPageVO(
             boolean login,
-            List<MainProductCardVO> aiProducts,
-            List<MainProductCardVO> popularProducts,
-            List<MainProductCardVO> recentProducts,
-            List<MainProductCardVO> recentView
+            MainAiProductListVO ai,
+            MainPopularProductListVO popular,
+            MainRecentProductListVO recent,
+            MainRecentViewProductListVO recentView
     ) {
         this.login = login;
-        this.aiProducts = aiProducts != null ? aiProducts : Collections.emptyList();
-        this.popularProducts = popularProducts != null ? popularProducts : Collections.emptyList();
-        this.recentProducts = recentProducts != null ? recentProducts : Collections.emptyList();
-        this.recentView = recentView != null ? recentView : Collections.emptyList();
-    }
-
-    public boolean isLogin() {
-        return login;
-    }
-
-    public List<MainProductCardVO> getAiProducts() {
-        return aiProducts;
-    }
-
-    public List<MainProductCardVO> getPopularProducts() {
-        return popularProducts;
-    }
-
-    public List<MainProductCardVO> getRecentProducts() {
-        return recentProducts;
-    }
-
-    public List<MainProductCardVO> getRecentView() {
-        return recentView;
+        this.ai = ai;
+        this.popular = popular;
+        this.recent = recent;
+        this.recentView = recentView;
     }
 }

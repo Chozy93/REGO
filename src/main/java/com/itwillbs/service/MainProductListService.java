@@ -42,9 +42,10 @@ public class MainProductListService {
      * 인기 상품
      * MAIN01_POPULAR
      ========================= */
-    public List<MainProductCardVO> getPopularProducts(Long userId, String sort, String region) {
+    public List<MainProductCardVO> getPopularProducts(Long userId, String region)
+ {
         List<MainProductListDTO> list =
-                mainProductMapper.selectPopularProducts(userId, POPULAR_LIMIT, sort, region);
+                mainProductMapper.selectPopularProducts(userId, POPULAR_LIMIT, region);
         return list.stream().map(this::toCardVO).toList();
     }
 
