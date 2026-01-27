@@ -161,3 +161,29 @@ document.addEventListener("DOMContentLoaded", () => {
   })();
 
 });
+
+
+// 바로결제 이동
+document.getElementById("directPayBtn")?.addEventListener("click", function() {
+    // 1. 본인 상품인지 체크 (Thymeleaf 변수 활용)
+	const isMine = /*[[${page.mine}]]*/ false; 
+	const isLogin = /*[[${page.login}]]*/ false;
+    if (isMine) {
+        alert("본인 상품은 구매할 수 없습니다.");
+        return;
+    }
+	
+	if (isMine) {
+	        alert("본인 상품은 구매할 수 없습니다.");
+	        return;
+	    }
+
+    // 2. 상품 ID 가져오기
+    const productId = this.dataset.productId;
+
+    // 3. 결제 페이지(GET /direct)로 주소 이동
+    // 결과 주소 예시: /direct?productId=123
+    location.href = `/direct?productId=${productId}`;
+});
+
+
