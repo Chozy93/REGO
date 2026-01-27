@@ -26,6 +26,7 @@ function handlePayment(data) {
         IMP.request_pay({
             pg: "kakaopay", 
             pay_method: "card",
+			sandbox: true,
             merchant_uid: "order_" + new Date().getTime(),
             name: productName,
             amount: price,
