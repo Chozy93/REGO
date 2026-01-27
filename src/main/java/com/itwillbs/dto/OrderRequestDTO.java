@@ -19,6 +19,7 @@ public class OrderRequestDTO {
     private Long totalAmount;
     private String paymentType;           // REPAY or CARD
     private String impUid; // 아임포트 결제 고유 번호
+    private boolean sandbox;
     
     // 배송 메시지 최종 결정 로직
     public String getFinalDeliveryMessage() {

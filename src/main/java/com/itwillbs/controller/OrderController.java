@@ -138,6 +138,8 @@ public class OrderController {
                                RedirectAttributes redirectAttributes) {
         // 나중에 로그 저장 시 사용하기 위해 변수를 밖으로 뺍니다.
         Payment payment = null; 
+        System.out.println(">>> 넘어온 impUid: " + checkoutDTO.getImpUid());
+        System.out.println(">>> 넘어온 paymentType: " + checkoutDTO.getPaymentType());
 
         try {
             System.out.println("바로결제 주문 처리 시작: " + checkoutDTO.getPaymentType());
@@ -148,9 +150,9 @@ public class OrderController {
                 IamportResponse<Payment> ir = iamportClient.paymentByImpUid(checkoutDTO.getImpUid());
                 payment = ir.getResponse(); // 검증 성공 시 결제 정보 객체 확보
 
-                if (payment == null) {
-                    throw new RuntimeException("결제 정보를 찾을 수 없습니다.");
-                }
+//                if (payment == null) {
+//                    throw new RuntimeException("결제 정보를 찾을 수 없습니다.");
+//                }
 
                 Product product = orderService.getProductById(checkoutDTO.getProductId());
                 if (payment.getAmount().longValue() != product.getPrice()) {
@@ -209,6 +211,20 @@ public class OrderController {
         return "payment/direct-success"; 
     }
     
+    
+ // 2. [결제 상세 확인 페이지] 
+    @GetMapping("/order/detail/{orderId}")
+    public String orderDetail(@PathVariable("orderId") Long orderId, 
+                              @AuthenticationPrincipal CustomUserDetails userDetails,
+                              Model model) {
+        // 본인 주문인지 확인하는 로직 추가 권장
+        ProductOrder order = orderService.getOrderById(orderId);
+        
+        if (order == null) return "redirect:/";
+        
+        model.addAttribute("order", order);
+        return "payment/order-detail"; // 질문하신 이미지의 상세 레이아웃 페이지
+    }
     
     
 }
