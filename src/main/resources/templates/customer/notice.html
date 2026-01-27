@@ -15,10 +15,21 @@
 
 	        <main class="main-content" >
 	            
-	            <div class="page-header">
-	                <h2 class="text-3xl font-extrabold tracking-tight text-[#111813]">공지사항</h2>
-	                <p class="text-gray-500">RE: GO의 새로운 소식과 업데이트를 확인하세요.</p>
+	            <div class="page-header flex-header">
+					<div class="header-text-group">
+					        <h2 class="text-3xl font-extrabold tracking-tight text-[#111813]">공지사항</h2>
+					        <p class="text-gray-500">RE: GO의 새로운 소식과 업데이트를 확인하세요.</p>
+					    </div>
+					
+					<div sec:authorize="hasRole('ADMIN')" class="header-action">
+					        <a th:href="@{/customer/notice-write}" class="write-btn">
+					            <span class="material-symbols-outlined">edit</span>
+					            공지사항 작성
+					        </a>
+					    </div>
 	            </div>
+				
+
 
 	            <div class="filter-card">
 	                <div class="search-box">

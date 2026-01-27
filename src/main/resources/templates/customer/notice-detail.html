@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+    <link rel="stylesheet" href="/css/customer/notice-detail.css">
+	<link rel="stylesheet" href="/css/policy/policy.css">
+</th:block>
+
+<div layout:fragment="content" class="policy-wrapper">
+	<div class="policy-container">
+	        
+	       <th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='notice')"></th:block>
+		   <main class="notice-main">
+		               
+		               <div class="notice-page-header">
+		                   <a href="/customer/notice" class="back-btn">
+		                       <span class="material-symbols-outlined">arrow_back</span>
+		                   </a>
+		                   <div class="header-text">
+		                       <h2>공지사항</h2>
+		                       <p class="breadcrumb">공지사항 &gt; 상세 내용</p>
+		                   </div>
+		               </div>
+
+		               <article class="detail-card">
+		                   <header class="detail-header">
+		                       <div class="tag-row">
+		                           <span class="badge badge-important">중요</span>
+		                           <span class="badge badge-category">서비스 점검</span>
+		                       </div>
+		                       <h1>[점검] 5월 25일 새벽 시스템 정기 점검 안내 (02:00 ~ 06:00)</h1>
+		                       <div class="meta-info">
+		                           <div class="meta-item">
+		                               <span class="material-symbols-outlined">calendar_today</span>
+		                               <span>2024.05.23 14:30</span>
+		                           </div>
+		                           <div class="meta-divider"></div>
+		                           <div class="meta-item">
+		                               <span class="material-symbols-outlined">visibility</span>
+		                               <span>2,451 읽음</span>
+		                           </div>
+		                       </div>
+		                   </header>
+
+		                   <section class="detail-body">
+		                       <p>안녕하세요, RE: GO 운영팀입니다.</p>
+		                       <p>보다 안정적인 서비스 제공을 위해 아래와 같이 시스템 정기 점검이 진행될 예정입니다.<br>
+		                          점검 시간에는 RE: GO 서비스 이용이 일시적으로 중단되오니, 회원님들의 양해 부탁드립니다.</p>
+
+		                       <div class="info-highlight-box">
+		                           <ul>
+		                               <li><strong>점검 일시:</strong> 2024년 5월 25일 (토) 02:00 ~ 06:00 (4시간)</li>
+		                               <li><strong>점검 대상:</strong> RE: GO 전체 서비스 (웹/앱)</li>
+		                               <li><strong>점검 내용:</strong> 서버 안정화 및 DB 최적화 작업, 보안 패치 적용</li>
+		                           </ul>
+		                       </div>
+
+		                       <h3>🚨 이용 시 유의사항</h3>
+		                       <ul class="bullet-list">
+		                           <li>점검 시간 동안에는 회원가입, 로그인, 상품 등록, 채팅 등 모든 서비스 이용이 제한됩니다.</li>
+		                           <li>점검 시작 전 작성 중이던 게시물은 저장되지 않을 수 있으니 미리 저장해 주시기 바랍니다.</li>
+		                           <li>점검 시간은 작업 진행 상황에 따라 조기 종료되거나 연장될 수 있습니다.</li>
+		                       </ul>
+
+		                       <p>회원님들께 더욱 쾌적하고 안전한 거래 환경을 제공하기 위한 작업이오니 너른 양해 부탁드립니다.<br>
+		                          앞으로도 더 나은 서비스를 제공하기 위해 최선을 다하겠습니다.</p>
+		                       <p class="thanks-msg">감사합니다.</p>
+		                   </section>
+
+		                   <section class="detail-attachments">
+		                       <h4>첨부파일 (1)</h4>
+		                       <a href="#" class="file-link">
+		                           <div class="file-icon">
+		                               <span class="material-symbols-outlined">picture_as_pdf</span>
+		                           </div>
+		                           <div class="file-info">
+		                               <span class="file-name">20240525_점검안내.pdf</span>
+		                               <span class="file-size">458 KB</span>
+		                           </div>
+		                           <span class="material-symbols-outlined download-icon">download</span>
+		                       </a>
+		                   </section>
+
+		                   <footer class="detail-footer-nav">
+		                       <a href="#" class="nav-row">
+		                           <div class="nav-label">
+		                               <span class="material-symbols-outlined">expand_less</span>
+		                               <span>이전글</span>
+		                           </div>
+		                           <div class="nav-title">개인정보 처리방침 변경 안내 (시행일: 2024.06.01)</div>
+		                           <div class="nav-date">2024.05.20</div>
+		                       </a>
+		                       <a href="#" class="nav-row">
+		                           <div class="nav-label">
+		                               <span class="material-symbols-outlined">expand_more</span>
+		                               <span>다음글</span>
+		                           </div>
+		                           <div class="nav-title">여름 맞이 수수료 무료 이벤트 당첨자 발표</div>
+		                           <div class="nav-date">2024.05.15</div>
+		                       </a>
+		                   </footer>
+		               </article>
+
+		               <div class="action-row">
+		                   <a href="/customer/notice" class="list-btn">목록으로</a>
+		               </div>
+		           </main>
+	    </div>
+</div>
+</html>
