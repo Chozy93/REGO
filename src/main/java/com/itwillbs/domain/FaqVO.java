@@ -5,9 +5,11 @@ import java.time.LocalDateTime;
 import com.itwillbs.entity.Faq;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Getter
+@Setter
 @ToString
 public class FaqVO {
 

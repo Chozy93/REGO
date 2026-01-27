@@ -8,6 +8,10 @@
 	<link rel="stylesheet" href="/css/policy/policy.css">
 </th:block>
 
+<th:block th:fragment="pageJs">
+    <script src="/js/customer/notice.js"></script>
+</th:block>
+
 <div layout:fragment="content" class="policy-wrapper">
 	<div class="policy-container">
 	        
@@ -38,7 +42,6 @@
 	                </div>
 	                <div class="filter-tags">
 	                    <button class="tag active">전체</button>
-	                    <button class="tag">공지</button>
 	                    <button class="tag">이벤트</button>
 	                    <button class="tag">서비스 점검</button>
 	                </div>

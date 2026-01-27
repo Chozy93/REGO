@@ -8,50 +8,56 @@
 	<link rel="stylesheet" href="/css/policy/policy.css">
 </th:block>
 
+
+<th:block th:fragment="pageJs">
+    <script src="/js/customer/faq.js"></script>
+</th:block>
+
 <div layout:fragment="content" class="policy-wrapper">
-	<div class="policy-container">
-	        
-	       <th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='faq')"></th:block>
+    <div class="policy-container">
+        <th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='faq')"></th:block>
 
-		   <main class="main-content">
-		               <div class="faq-header">
-		               
-		                   <div class="header-text">
-		                       <h2>자주 묻는 질문</h2>
-		                       <p>궁금한 점이 있으신가요? 자주 묻는 질문에서 빠르게 답변을 찾아보세요.</p>
-		                   </div>
-		               </div>
+        <main class="main-content">
+            <div class="faq-header">
+                <div class="header-text">
+                    <h2>자주 묻는 질문</h2>
+                    <p>궁금한 점이 있으신가요? 자주 묻는 질문에서 빠르게 답변을 찾아보세요.</p>
+                </div>
+            </div>
 
-		               <section class="faq-search-card">
-		                   <div class="search-input-wrapper">
-		                       <span class="material-symbols-outlined search-icon">search</span>
-		                       <input type="text" placeholder="궁금한 내용을 검색해보세요">
-		                   </div>
-		                   <div class="category-tags">
-		                       <button class="tag active">전체</button>
-		                       <button class="tag">회원/계정</button>
-		                       <button class="tag">구매/판매</button>
-		                       <button class="tag">결제/환불</button>
-		                       <button class="tag">배송</button>
-		                   </div>
-		               </section>
+            <section class="faq-search-card">
+                <div class="search-input-wrapper">
+                    <span class="material-symbols-outlined search-icon">search</span>
+                    <input type="text" id="faqSearch" placeholder="궁금한 내용을 검색해보세요" onkeyup="filterFaq()">
+                </div>
+                <div class="category-tags">
+                    <button class="tag active" onclick="filterCategory('전체')">전체</button>
+                    <button class="tag" onclick="filterCategory('회원/계정')">회원/계정</button>
+                    <button class="tag" onclick="filterCategory('구매/판매')">구매/판매</button>
+                    <button class="tag" onclick="filterCategory('결제/환불')">결제/환불</button>
+                    <button class="tag" onclick="filterCategory('배송')">배송</button>
+                </div>
+            </section>
 
-		               <section class="faq-list">
-		                   <details class="faq-item">
-		                       <summary>
-		                           <div class="q-content">
-		                               <span class="category">회원/계정</span>
-		                               <h3 class="question">회원 탈퇴는 어떻게 하나요?</h3>
-		                           </div>
-		                           <span class="material-symbols-outlined arrow">expand_more</span>
-		                       </summary>
-		                       <div class="answer">
-		                           <p>회원 탈퇴는 마이페이지 > 설정 > 회원 탈퇴 메뉴에서 진행 가능합니다.</p>
-		                       </div>
-		                   </details>
-		                   
-		                   </section>
-		           </main>
-	    </div>
+            <section class="faq-list" id="faqAccordion">
+                <details class="faq-item" th:each="faq : ${faqList}" th:data-category="${faq.faqCategoryId}">
+                    <summary>
+                        <div class="q-content">
+                            <span class="category" th:text="${faq.faqCategoryId}">카테고리</span>
+                            <h3 class="question" th:text="${faq.question}">회원 탈퇴는 어떻게 하나요?</h3>
+                        </div>
+                        <span class="material-symbols-outlined arrow">expand_more</span>
+                    </summary>
+                    <div class="answer">
+                        <p th:text="${faq.answer}" style="white-space: pre-wrap;">답변 내용이 여기에 나옵니다.</p>
+                    </div>
+                </details>
+
+                <div id="noResult" style="display: none; text-align: center; padding: 50px; color: #666;">
+                    검색 결과가 없습니다.
+                </div>
+            </section>
+        </main>
+    </div>
 </div>
 </html>
