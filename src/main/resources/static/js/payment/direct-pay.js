@@ -21,12 +21,12 @@ function handlePayment(data) {
         if (!window.IMP) return alert("결제 모듈을 불러올 수 없습니다.");
         const IMP = window.IMP;
         IMP.init(impCode);
+		console.log(impCode);
 
         // 💳 카드 결제창 띄우기
         IMP.request_pay({
-            pg: "kakaopay", 
+            pg: "tosspay", 
             pay_method: "card",
-			sandbox: true,
             merchant_uid: "order_" + new Date().getTime(),
             name: productName,
             amount: price,
