@@ -42,32 +42,50 @@
                 </div>
 
                 <div class="filter-tags">
-                    <button class="tag active" onclick="filterCategory('전체')">전체</button>
-                    <button class="tag" onclick="filterCategory('회원/계정')">회원/계정</button>
-                    <button class="tag" onclick="filterCategory('구매/판매')">구매/판매</button>
-                    <button class="tag" onclick="filterCategory('결제/환불')">결제/환불</button>
-                    <button class="tag" onclick="filterCategory('배송')">배송</button>
+					<button class="tag active" onclick="filterCategory('ALL')">전체</button>
+					<button class="tag" onclick="filterCategory('MEMBER_ACCOUNT')">회원/계정</button>
+					<button class="tag" onclick="filterCategory('PURCHASE_SALE')">구매/판매</button>
+					<button class="tag" onclick="filterCategory('PAYMENT_REFUND')">결제/환불</button>
+					<button class="tag" onclick="filterCategory('DELIVERY')">배송</button>
                 </div>
             </section>
 
-            <section class="faq-list" id="faqAccordion">
-                <details class="faq-item" th:each="faq : ${faqList}" th:data-category="${faq.faqCategoryId}">
-                    <summary>
-                        <div class="q-content">
-                            <span class="category" th:text="${faq.faqCategoryId}">카테고리</span>
-                            <h3 class="question" th:text="${faq.question}">회원 탈퇴는 어떻게 하나요?</h3>
-                        </div>
-                        <span class="material-symbols-outlined arrow">expand_more</span>
-                    </summary>
-                    <div class="answer">
-                        <p th:text="${faq.answer}" style="white-space: pre-wrap;">답변 내용이 여기에 나옵니다.</p>
-                    </div>
-                </details>
+			<section class="faq-list" id="faqAccordion">
+			    <details class="faq-item"
+			             th:each="faq : ${faqList}"
+			             th:data-category="${faq.faqCategoryCode}">
 
-                <div id="noResult" style="display: none; text-align: center; padding: 50px; color: #666;">
-                    검색 결과가 없습니다.
-                </div>
-            </section>
+			        <summary>
+			            <div class="q-content">
+			                <!-- 화면 표시용 -->
+			                <span class="category"
+			                      th:text="${faq.faqCategoryLabel}">
+			                    카테고리
+			                </span>
+
+			                <h3 class="question"
+			                    th:text="${faq.question}">
+			                    질문
+			                </h3>
+			            </div>
+
+			            <span class="material-symbols-outlined arrow">expand_more</span>
+			        </summary>
+
+			        <div class="answer">
+			            <p th:text="${faq.answer}"
+			               style="white-space: pre-wrap;">
+			                답변
+			            </p>
+			        </div>
+			    </details>
+
+			    <div id="noResult"
+			         style="display: none; text-align: center; padding: 50px; color: #666;">
+			        검색 결과가 없습니다.
+			    </div>
+			</section>
+
         </main>
     </div>
     <th:block th:fragment="pageJs">
