@@ -312,15 +312,25 @@
 
 	  </div>
 
-      <!-- 실거래 지역 -->
-      <div class="info-card trade-info">
-        <h3>거래 정보</h3>
-        <p th:text="${page.product.sellerRegion}">
-          지역 정보
-        </p>
-      </div>
+	  <div class="info-card trade-action">
+	    <h3>거래 제안</h3>
 
-    </div>
+	    <div class="action-buttons">
+	      <button class="btn btn-outline">
+	        가격 제안
+	      </button>
+	      <button class="btn btn-primary">
+	        거래 요청
+	      </button>
+	    </div>
+
+	  
+			<p class="action-guide">
+			  💬 거래 요청 시 판매자에게 알림이 전달됩니다
+			</p>
+	  </div>
+	  
+	 </div>
 
     <!-- =========================
          BOTTOM : 비슷한 상품
@@ -337,7 +347,7 @@
               <img th:src="${item.thumbnailUrl}"
                    th:alt="${item.productName}">
               <div th:text="${item.productName}">상품명</div>
-              <div th:text="${item.price}">0</div>
+			  <div th:text="${#numbers.formatInteger(item.price, 3, 'COMMA')}">0</div>
             </a>
           </article>
         </div>

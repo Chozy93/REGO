@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     new Swiper(el, {
       slidesPerView: 5,
-      spaceBetween: 16,
+      spaceBetween: 24,
 
       navigation: {
         nextEl: el.querySelector(".swiper-button-next"),

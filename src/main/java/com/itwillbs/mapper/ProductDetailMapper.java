@@ -22,19 +22,17 @@ public interface ProductDetailMapper {
 
     // 판매자 정보 (STEP 6)
     ProductSellerInfoDTO selectSellerInfo(@Param("productId") Long productId);
-
-    // =========================
-    // 비슷한 상품
-    // =========================
-    List<ProductSimilarDTO> selectSimilarProducts(
-        @Param("productId") Long productId,
-        @Param("limit") int limit
-    );
-
-    // =========================
-    // 비슷한 상품 fallback (인기 상품)
-    // =========================
-    List<ProductSimilarDTO> selectPopularProductsForSimilar(
-        @Param("limit") int limit
-    );
-}
+    
+    // 유사한 상품 (같은 소분류)
+    List<ProductSimilarDTO> selectSimilarBySubCategory(
+            @Param("productId") Long productId,
+            @Param("limit") int limit
+        );
+    
+    	// 유사한 상품 (소분류 상품 부족하면 같은 대분류)
+        List<ProductSimilarDTO> selectSimilarByParentCategory(
+            @Param("productId") Long productId,
+            @Param("limit") int limit,
+            @Param("excludeIds") List<Long> excludeIds
+        );
+    }

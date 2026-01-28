@@ -14,17 +14,44 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductSimilarQueryService {
 
+    private static final int DEFAULT_LIMIT = 4;
+
     private final ProductDetailMapper productDetailMapper;
 
     public ProductSimilarListVO getSimilarProducts(Long productId, int limit) {
 
-        List<ProductSimilarDTO> list =
-                productDetailMapper.selectSimilarProducts(productId, limit);
+        // 1️⃣ 같은 소분류 기준
+        List<ProductSimilarDTO> result =
+                productDetailMapper.selectSimilarBySubCategory(
+                        productId,
+                        limit
+                );
 
-        if (list == null || list.isEmpty()) {
-            list = productDetailMapper.selectPopularProductsForSimilar(limit);
+        // 2️⃣ 부족하면 같은 대분류 fallback
+        if (result.size() < limit) {
+
+            int remain = limit - result.size();
+
+            List<Long> excludeIds = result.stream()
+                    .map(ProductSimilarDTO::getProductId)
+                    .toList();
+
+            List<ProductSimilarDTO> fallback =
+                    productDetailMapper.selectSimilarByParentCategory(
+                            productId,
+                            remain,
+                            excludeIds
+                    );
+
+            result.addAll(fallback);
         }
 
-        return new ProductSimilarListVO(list);
+        return new ProductSimilarListVO(result);
+    }
+
+    // 편의 메서드 (limit 안 넘길 때)
+    public ProductSimilarListVO getSimilarProducts(Long productId) {
+        return getSimilarProducts(productId, DEFAULT_LIMIT);
     }
 }
+

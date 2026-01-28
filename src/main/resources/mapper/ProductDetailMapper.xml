@@ -105,32 +105,29 @@ GROUP BY u.user_id, u.nickname
     </select>
 
 
-    <!-- ==================================================
-     DETAIL01_SIMILAR
-     비슷한 상품 조회 (카테고리 기준)
-================================================== -->
-<select id="selectSimilarProducts"
+<!-- DETAIL01_SIMILAR_1
+     같은 소분류 기준 -->
+<select id="selectSimilarBySubCategory"
         parameterType="map"
         resultType="com.itwillbs.dto.ProductSimilarDTO">
 
-    SELECT
-        p.product_id          AS productId,
-        p.product_name        AS productName,
-        p.price               AS price,
-        p.main_image_url      AS thumbnailUrl,
-        p.region_display_name AS regionName
-    FROM products p
-    WHERE p.category_id = (
-        SELECT category_id
-        FROM products
-        WHERE product_id = #{productId}
-    )
-    AND p.product_id != #{productId}
-    ORDER BY p.created_at DESC
-    LIMIT #{limit}
+  SELECT
+      p.product_id          AS productId,
+      p.product_name        AS productName,
+      p.price               AS price,
+      p.main_image_url      AS thumbnailUrl,
+      p.region_display_name AS regionName
+  FROM products p
+  WHERE p.category_id = (
+      SELECT category_id
+      FROM products
+      WHERE product_id = #{productId}
+  )
+  AND p.product_id != #{productId}
+  ORDER BY p.created_at DESC
+  LIMIT #{limit}
 
 </select>
-
 
     <!-- ==================================================
          DETAIL01_SIMILAR (fallback)
@@ -156,5 +153,45 @@ GROUP BY u.user_id, u.nickname
         LIMIT #{limit}
 
     </select>
+    
+    <!-- DETAIL01_SIMILAR_2
+     같은 대분류 기준 (fallback) -->
+<select id="selectSimilarByParentCategory"
+        parameterType="map"
+        resultType="com.itwillbs.dto.ProductSimilarDTO">
+
+  SELECT
+      p.product_id          AS productId,
+      p.product_name        AS productName,
+      p.price               AS price,
+      p.main_image_url      AS thumbnailUrl,
+      p.region_display_name AS regionName
+  FROM products p
+  JOIN categories c
+    ON p.category_id = c.category_id
+
+  WHERE c.parent_id = (
+      SELECT c2.parent_id
+      FROM products p2
+      JOIN categories c2
+        ON p2.category_id = c2.category_id
+      WHERE p2.product_id = #{productId}
+  )
+
+  AND p.product_id != #{productId}
+
+  <if test="excludeIds != null and excludeIds.size() > 0">
+    AND p.product_id NOT IN
+    <foreach item="id"
+             collection="excludeIds"
+             open="(" separator="," close=")">
+        #{id}
+    </foreach>
+  </if>
+
+  ORDER BY p.created_at DESC
+  LIMIT #{limit}
+
+</select>
 
 </mapper>

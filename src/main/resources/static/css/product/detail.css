@@ -696,6 +696,47 @@
   display: block;
 }
 
+.trade-action {
+  border: 2px solid var(--primary-color);
+  background: #f7fff9;
+}
+
+.trade-action h3 {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.trade-action .action-buttons {
+  margin-top: 16px;
+}
+
+.trade-action .btn {
+  height: 48px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.trade-action .btn-primary {
+  box-shadow: 0 6px 14px rgba(34,197,94,0.25);
+}
+
+.action-guide {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #666;
+}
+
+.product-info ul {
+  margin-top: 8px;
+}
+
+.product-info li {
+  margin-bottom: 6px;
+}
+
+
+
+
 
 
 
