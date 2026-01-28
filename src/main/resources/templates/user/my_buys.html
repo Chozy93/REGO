@@ -108,9 +108,10 @@
                                     <div th:if="${item.salesStatusCode == 'SOLD'}" class="absolute inset-0 bg-black/40 flex items-center justify-center">
                                         <span class="px-3 py-1 bg-white/20 backdrop-blur-md rounded-lg text-white font-bold text-sm border border-white/30">거래 완료</span>
                                     </div>
-                                    <div th:if="${item.salesStatusCode == 'TRADING'}" class="absolute top-2 right-2">	
-                                        <span class="px-2 py-1 bg-blue-500 text-white text-xs font-bold rounded-md shadow-sm">거래중</span>
-                                    </div>
+									<div th:if="${item.salesStatusCode == 'TRADING' || item.salesStatusCode == 'RESERVED'}" class="absolute top-2 right-2">	
+									    <span class="px-2 py-1 bg-blue-500 text-white text-xs font-bold rounded-md shadow-sm" 
+									          th:text="${item.salesStatusCode == 'RESERVED' ? '예약중' : '거래중'}">거래중</span>
+									</div>
                                 </div>
                                 
 								<div class="p-3 pt-2"> 
@@ -133,6 +134,13 @@
 								        </div>
 								        
 										<div class="flex gap-1">
+											<button th:if="${item.salesStatusCode == 'RESERVED'}" 
+											            type="button"
+											            class="btn-confirm-trade px-2 py-1 bg-green-600 text-white text-[10px] font-bold rounded-lg hover:bg-green-700 transition-colors"
+											            th:data-product-id="${item.productId}"> 거래완료 하기
+											    </button>
+											
+											
 										    <button th:if="${item.salesStatusCode == 'SOLD' && !item.isReviewed}" 
 										            type="button"
 										            class="btn-review px-2 py-1 bg-primary text-[#111813] text-[10px] font-bold rounded-lg hover:bg-primary/90 transition-colors"
@@ -189,8 +197,47 @@
 		    // 1. 카드 클릭 이벤트 (작성 / 조회 / 상세이동)
 		    // ==========================================
 			$(document).on('click', '.rego-card', function(e) {
+				const $btnConfirm = $(e.target).closest('.btn-confirm-trade');
 			    const $btnReview = $(e.target).closest('.btn-review');
 			    const $btnView = $(e.target).closest('.btn-view-review');
+				
+				// 0. [거래완료 하기] 버튼 클릭 시 (추가된 로직)
+				// 0. [거래완료 하기] 버튼 클릭 시
+				if ($btnConfirm.length > 0) {
+				    e.preventDefault();
+				    e.stopPropagation();
+
+				    if (confirm('상품을 수령하셨나요?\n거래 완료 처리를 하면 취소할 수 없으며, 판매자에게 대금이 정산됩니다.')) {
+				        const productId = $btnConfirm.data('product-id');
+				        const $thisBtn = $btnConfirm; // 버튼 상태 제어를 위해 변수 저장
+
+				        // 중복 클릭 방지
+				        $thisBtn.prop('disabled', true).text('처리 중...');
+
+				        $.ajax({
+				            url: `/mypage/purchase/confirm/${productId}`,
+				            type: 'POST',
+				            // Spring Security CSRF 대응 (meta 태그가 head에 있어야 함)
+				            beforeSend: function(xhr) {
+				                const header = $("meta[name='_csrf_header']").attr("content");
+				                const token = $("meta[name='_csrf']").attr("content");
+				                if (header && token) xhr.setRequestHeader(header, token);
+				            },
+				            success: function(response) {
+				                alert('거래가 성공적으로 완료되었습니다. 따뜻한 후기를 남겨주세요!');
+				                location.reload(); // 새로고침 시 '리뷰 작성' 버튼으로 자동 전환됨
+				            },
+				            error: function(xhr) {
+				                console.error("거래 확정 실패:", xhr);
+				                alert(xhr.responseText || '처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+				                $thisBtn.prop('disabled', false).text('거래완료 하기');
+				            }
+				        });
+				    }
+				    return;
+				}
+				
+				
 
 			    // 1. [리뷰 작성] 버튼 클릭 시
 			    if ($btnReview.length > 0) {
@@ -335,8 +382,16 @@
 		    // ==========================================
 		    function updateUI() {
 		        const filteredCards = cards.filter(card => {
-		            const status = card.getAttribute('data-status');
-		            return currentFilter === 'ALL' || status === currentFilter;
+					const status = card.getAttribute('data-status');
+					        
+					 if (currentFilter === 'ALL') return true;
+					        
+					// 🔥 여기를 수정: 필터가 'TRADING'일 때 status가 TRADING 혹은 RESERVED인 것 모두 포함
+					   if (currentFilter === 'TRADING') {
+					          return status === 'TRADING' || status === 'RESERVED';
+					    }
+					        
+					  return status === currentFilter;
 		        });
 		        
 		        cards.forEach(card => card.style.display = 'none');
