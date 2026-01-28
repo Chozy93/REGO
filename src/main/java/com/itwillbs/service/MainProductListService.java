@@ -55,16 +55,6 @@ public class MainProductListService {
     ========================= */
     private MainProductCardVO toCardVO(MainProductListDTO dto) {
 
-        return new MainProductCardVO(
-                String.valueOf(dto.getProductId()),
-                dto.getTitle(),
-                dto.getPrice(),
-                dto.getThumbnailUrl(),
-                dto.getRegionName(),
-                dto.getCreatedTime(),
-                false,                 // reserved (아직 미구현)
-                dto.getLikeCount(),    // ❤️ DB 기준
-                dto.isLiked()          // ❤️ 로그인 사용자 기준
-        );
+    	return new MainProductCardVO(dto);
     }
 }

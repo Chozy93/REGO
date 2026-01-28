@@ -1,15 +1,12 @@
 package com.itwillbs.controller;
 
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.itwillbs.dto.ProductByCategoryResponse;
 import com.itwillbs.entity.User;
 import com.itwillbs.repository.UserRepository;
 import com.itwillbs.security.util.SecurityUtil;
@@ -19,7 +16,6 @@ import com.itwillbs.service.ProductListService;
 import com.itwillbs.service.ProductReportService;
 import com.itwillbs.service.ProductService;
 import com.itwillbs.view.CategoryPageVO;
-import com.itwillbs.view.MainProductCardVO;
 import com.itwillbs.view.ProductDetailPageVO;
 
 import jakarta.servlet.http.Cookie;
@@ -31,6 +27,9 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class ProductController {
+	
+	@Value("${kakao.js.key}")
+	private String kakaoAppKey;
 
     private final ProductService productService;
     private final ProductDetailService productDetailService;
@@ -101,6 +100,8 @@ public class ProductController {
 
 	    // 👉 PageVO에 결과만 세팅
 	    page.setMine(isMine);
+	    // kakao mapkey 내려주기
+	    model.addAttribute("kakaoAppKey", kakaoAppKey);
 
 	    model.addAttribute("page", page);
 	    return "product/detail";

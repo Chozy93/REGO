@@ -59,7 +59,15 @@
   flex-direction: column;
   gap: 20px;
   height: 100%;
-}
+
+ }
+ 
+ .detail-right .product-category-path {
+   display: flex !important;            /* inline-flex에서 flex로 변경 */
+   justify-content: space-between !important; /* 양 끝 정렬 강제 */
+   align-items: center !important;
+   width: 100% !important;              /* 너비를 꽉 채워야 버튼이 끝으로 갑니다 */
+ }
 
 /* 공통 카드 */
 .info-card {
@@ -129,13 +137,40 @@
 }
 
 /* 신고 버튼 */
-.product-report-btn {
+/* 신고하기 텍스트 버튼 스타일 */
+.btn-report-text {
   background: none;
   border: none;
-  font-size: 18px;
+  padding: 0;
+  margin: 0;
   cursor: pointer;
+  
+  font-size: 13px;
+  color: var(--color-text-muted); /* 기본은 약간 흐릿한 회색 */
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  transition: color 0.2s;
 }
 
+.btn-report-text:hover:not(:disabled) {
+  color: #ff4d4f; /* 마우스 올리면 경고 의미의 붉은색 */
+  text-decoration: underline;
+}
+
+.btn-report-text:disabled {
+  cursor: default;
+  opacity: 0.6;
+  color: var(--color-text-muted);
+}
+
+/* 상품 제목 줄 정렬 유지 */
+.product-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 제목은 왼쪽, 신고는 오른쪽 끝으로 */
+  width: 100%;
+}
 /* 가격 */
 .product-price {
   font-size: 28px;
@@ -151,20 +186,25 @@
 }
 
 .product-category-path{
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 4px;
 
   font-size: 12px;
   color: var(--color-text-muted);
 
   margin-bottom: 10px;   /* 제목과 간격 */
-  padding: 2px 6px;      /* 카드 안에 얹힌 느낌 */
-
-  border-radius: 6px;
-  background: var(--color-surface-2);
+  /* 배경과 패딩, 테두리 반경을 삭제합니다 */
+    background: none;      
+    padding: 0;            
+    border-radius: 0;
 }
 
+.product-category-path a, 
+.product-category-path .category-separator {
+  margin-right: 4px; 
+}
 
 .product-category-path a{
   color: var(--color-text-muted);
@@ -173,6 +213,7 @@
 
 .product-category-path a:hover{
   color: var(--color-primary);
+  
 }
 
 
@@ -180,7 +221,60 @@
   color: var(--color-text-muted);
 }
 
+/*슬라이더 css*/
+/* 슬라이더 전체 크기 고정 */
+.detail-swiper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+}
 
+.detail-swiper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 화살표 버튼 공통 */
+.swiper-button-next, 
+.swiper-button-prev {
+  color: #fff !important;
+  background: rgba(0, 0, 0, 0.2); /* 반투명 배경 */
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+}
+
+/* 마우스 올렸을 때 배경을 좀 더 진하게 */
+.swiper-button-next:hover, 
+.swiper-button-prev:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* 화살표 아이콘 크기 조절 (중요: 별도 선택자로 분리) */
+.swiper-button-next:after, 
+.swiper-button-prev:after {
+  font-size: 18px !important;
+  font-weight: bold;
+}
+
+
+
+/* 1. 부모 영역을 가로로 꽉 채우도록 수정 (기존 핵폭탄 패치 덮어쓰기) */
+.detail-right .product-category-path {
+  display: flex !important;
+  width: 100% !important;
+  justify-content: flex-start !important; /* 기본은 왼쪽 정렬 */
+  align-items: center !important;
+}
+
+/* 2. 신고하기 버튼만 오른쪽 끝으로 밀기 */
+.btn-report-text {
+  margin-left: auto !important; /* 왼쪽 여백을 최대로 가져가서 오른쪽 끝으로 밀어버림 */
+  padding-right: 4px;           /* 벽에 너무 붙지 않게 살짝 여백 */
+}
 /* =========================
    ACTION BUTTONS
 ========================= */
@@ -228,6 +322,8 @@
   cursor: pointer;
 }
 
+
+
 /* =========================
    SELLER CARD
 ========================= */
@@ -262,6 +358,19 @@
   color: #6b7280;
   display: flex;
   gap: 16px;
+}
+
+
+.seller-profile-link {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--accent-text);
+    text-decoration: none;
+    background: #f9fafb;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
 }
 
 /* =========================
@@ -401,51 +510,108 @@
 /* =========================
    SIMILAR PRODUCTS
 ========================= */
-.grid-products {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-.grid-products article {
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #e5e7eb;
-}
-
-.grid-products img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-}
-
-.grid-products div {
-  padding: 8px 12px;
-  font-size: 14px;
-}
-
-/* 하단 전체 */
-.similar-products {
-  grid-column: 1 / -1;
-  margin-top: 64px;
-}
-
-.info-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px 22px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
 
 
 /* =========================
-   RESPONSIVE
+   SIMILAR PRODUCTS (CLEAN)
 ========================= */
+
+.similar-products {
+  margin-top: 64px;
+}
+
+/* 섹션 타이틀 */
+.similar-products .section-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #111;
+}
+
+/* 그리드 */
+.similar-products .grid-products {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+/* 카드 */
+.similar-products .recommend-card {
+  background: transparent;   /* 흰 배경 제거 */
+  border-radius: 0;
+  box-shadow: none;
+  transition: none;
+}
+
+
+.similar-products .recommend-card:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* 링크가 카드 전체 */
+.similar-products .recommend-card > a {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 이미지 */
+.similar-products .card-image-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #f3f4f6;
+  overflow: hidden;
+}
+
+.similar-products .card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.similar-products .recommend-card:hover img {
+  transform: scale(1.06);
+}
+
+/* 텍스트 영역 */
+.similar-products .card-info {
+  padding: 12px 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 상품명 */
+.similar-products .card-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111;
+  line-height: 1.4;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 가격 */
+.similar-products .card-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+}
+
+/* 반응형 */
 @media (max-width: 1024px) {
-  .product-detail-grid {
-    grid-template-columns: 1fr;
+  .similar-products .grid-products {
+    grid-template-columns: repeat(2, 1fr);
   }
+}
+
+
 
   .detail-right {
     position: static;
@@ -454,7 +620,7 @@
   .grid-products {
     grid-template-columns: repeat(2, 1fr);
   }
-}
+
 
 /* 🔥 카테고리 경로 핵폭탄 패치 (flex + width 완전 초기화) */
 .detail-right .product-category-path {
@@ -554,50 +720,9 @@
   color: #ccc;
 }
 
-.product-image-slider {
-  position: relative;
-  overflow: hidden;
-  border-radius: 16px;
-}
 
-.slider-track {
-  display: flex;
-  transition: transform 0.3s ease;
-}
 
-.slider-track img {
-  width: 100%;
-  flex-shrink: 0;
-  object-fit: cover;
-}
 
-/* dots */
-.slider-dots {
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 6px;
-}
-
-.slider-dots .dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.4);
-}
-
-.slider-dots .dot.active {
-  background: #fff;
-}
-
-.product-image-slider {
-  border: 1px solid #e5e7eb;   /* 연한 회색 */
-  border-radius: 16px;
-  overflow: hidden;
-  background: #fff;
-}
 
 /* 거래 정보 칩 */
 .trade-chip-group {
@@ -658,45 +783,25 @@
   color: var(--color-text);
 }
 
-.product-image-slider {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;   /* ⭐ 항상 정사각형 */
-  overflow: hidden;
-  border-radius: 16px;
-  background: #f4f6f5;
+
+
+
+
+/* 🔥 productName 강제 노출 패치 */
+.recommend-card .card-info .card-name {
+  display: -webkit-box !important; /* 다시 block 성격 부여 */
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: 40px !important;       /* 높이 강제 고정 */
+  color: #333 !important;        /* 글자색 강제 */
+  overflow: hidden !important;
+  z-index: 10 !important;        /* 다른 요소에 가려지지 않게 */
 }
 
-.product-image-slider img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;    /* ⭐ 비율 유지 + 잘라내기 */
-  display: block;
+/* 추천 상품 그리드 높이 영향 차단 */
+.grid-products article {
+  height: auto !important;
 }
-
-.product-image-slider {
-  width: 100%;
-  max-width: 600px;
-  aspect-ratio: 1 / 1;   /* 600x600 */
-  overflow: hidden;
-  border-radius: 16px;
-  background: #000;      /* 여백 보이면 검정 */
-}
-
-.slider-track {
-  display: flex;
-  height: 100%;          /* ⭐ 이게 없어서 빈칸 생김 */
-}
-
-.slider-track img {
-  width: 100%;
-  height: 100%;          /* ⭐ 컨테이너 꽉 채움 */
-  flex-shrink: 0;
-  object-fit: cover;     /* ⭐ 빈칸 없이 채우기 */
-  display: block;
-}
-
-
 
 
 

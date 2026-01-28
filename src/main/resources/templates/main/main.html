@@ -65,31 +65,7 @@
 	      </a>
 	  </div>
 
-      <!-- =========================
-           AI 맞춤 상품
-      ========================= -->
-	  <section class="section ai-section"
-	          th:if="${page.ai != null and #lists.size(page.ai.items) > 0}">
-
-
-        <div class="section-head">
-          <h2 class="section-title">🤖 AI 맞춤 상품</h2>
-        </div>
-
-        <div class="swiper product-swiper">
-          <div class="swiper-wrapper">
-			<th:block th:each="card : ${page.ai.items}">
-              <div class="swiper-slide">
-                <th:block
-                  th:replace="~{fragments/product-card :: productCard(${card})}" />
-              </div>
-            </th:block>
-          </div>
-
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-        </div>
-      </section>
+     
 
       <!-- =========================
            인기 상품
