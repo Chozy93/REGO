@@ -1,0 +1,221 @@
+/* ==========================================================================
+   Inquiry Page (Only)
+========================================================================== */
+
+/* select */
+.select-box {
+  position: relative;
+}
+
+.select-box span {
+  position: absolute;
+  right: var(--space-12);
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--color-text-muted);
+}
+
+/* file upload */
+.file-drop {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+  background: var(--color-surface-2);
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--space-16);
+  padding-top: var(--space-24);
+  border-top: 1px solid var(--color-divider);
+}
+
+/* info box */
+.inquiry-info {
+  margin-top: var(--space-24);
+  display: flex;
+  gap: var(--space-12);
+  padding: var(--space-16);
+  background: var(--color-surface-3);
+  border-radius: var(--radius-lg);
+}
+
+
+.select-box .material-symbols-outlined {
+  display: none;
+}
+
+/* (선택) 주문 프리뷰 스타일 */
+.selected-order {
+  margin-top: var(--space-12);
+  padding: var(--space-12);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-2);
+}
+
+.field-help {
+  margin-top: var(--space-8);
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+}
+/* ===============================
+   Inquiry Order Select Trigger
+=============================== */
+
+.order-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-16);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-2);
+  cursor: pointer;
+  transition: border-color .15s ease, background-color .15s ease;
+}
+
+.order-select-trigger:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.order-select-trigger__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.order-select-trigger__title {
+  font-size: var(--fs-14);
+  font-weight: var(--fw-semibold);
+}
+
+.order-select-trigger__desc {
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+}
+
+.order-select-trigger .material-symbols-outlined {
+  font-size: 22px;
+  color: var(--color-text-muted);
+}
+
+/* ===============================
+   Selected Order Preview
+=============================== */
+
+.selected-order {
+  margin-top: var(--space-12);
+  padding: var(--space-14);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+}
+
+.selected-order__title {
+  font-size: var(--fs-14);
+  font-weight: var(--fw-semibold);
+}
+
+.selected-order__meta {
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+  margin-top: var(--space-4);
+}
+
+/* ===============================
+   Inquiry Order Modal (전용)
+=============================== */
+
+#orderSelectModal .modal-panel {
+  max-width: 560px;
+}
+
+#orderSelectModal .order-item {
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+
+#orderSelectModal .order-item:hover {
+  background: var(--color-primary-soft);
+  border-color: var(--color-primary);
+}
+/* ===============================
+   Inquiry Modal Base (전용)
+=============================== */
+
+#orderSelectModal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#orderSelectModal.is-hidden {
+  display: none;
+}
+
+/* backdrop */
+#orderSelectModal .modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* panel */
+#orderSelectModal .modal-panel {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 560px;
+  max-height: 80vh;
+
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* header */
+#orderSelectModal .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: var(--space-20);
+  border-bottom: 1px solid var(--color-border);
+}
+
+#orderSelectModal .modal-title {
+  font-size: var(--fs-16);
+  font-weight: var(--fw-bold);
+}
+
+#orderSelectModal .modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* body */
+#orderSelectModal .modal-body {
+  padding: var(--space-20);
+  overflow-y: auto;
+}

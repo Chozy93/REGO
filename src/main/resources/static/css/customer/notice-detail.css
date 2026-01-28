@@ -1,16 +1,4 @@
-/* 사이드바와 나란히 있을 때 본문이 남은 공간을 다 차지하게 함 */
-.policy-container {
-    display: flex;
-    gap: 30px;
-    align-items: flex-start;
-    width: 100%; /* 전체 너비 확보 */
-}
 
-.notice-main {
-    flex-grow: 1; /* 남은 공간을 모두 채움 */
-    min-width: 0; /* flex 자식 요소의 찌그러짐 방지 */
-    width: 100%;
-}
 
 .detail-card {
     width: 100%;
@@ -18,24 +6,7 @@
     border-radius: 12px;
     padding: 40px; /* 안쪽 여백 충분히 */
     box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
-    border: 1px solid #eee;
 }
-
-/* 상단 헤더 */
-.notice-page-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 24px;
-}
-.back-btn {
-    width: 40px; height: 40px; background: #fff; border: 1px solid #f0f4f2;
-    border-radius: 12px; display: flex; align-items: center; justify-content: center;
-    color: #666; text-decoration: none; transition: 0.2s;
-}
-.back-btn:hover { background: #f9fafb; }
-.header-text h2 { font-size: 20px; font-weight: 700; color: #111813; }
-.breadcrumb { font-size: 13px; color: #888; margin-top: 2px; }
 
 /* 상세 카드 */
 .detail-card {

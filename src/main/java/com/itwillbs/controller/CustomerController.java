@@ -18,6 +18,7 @@ import com.itwillbs.domain.FaqVO;
 import com.itwillbs.domain.NoticeVO;
 import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.service.CustomerService;
+import com.itwillbs.view.condition.InquiryCreateConditionVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -88,6 +89,7 @@ public class CustomerController {
 	
 
 
+
 	
 	// ---------------------------- 자주 묻는 질문 -------------------------------
 	/**
@@ -103,11 +105,6 @@ public class CustomerController {
 	
 	
 
-	// 1:1 문의
-	@GetMapping("/customer/qna")
-	public String getQna() {
-		return "customer/qna";
-	}
 	
 	
 	// 안전 거래 가이드
@@ -115,4 +112,43 @@ public class CustomerController {
 	public String getSafeGuide() {
 		return "customer/safe-guide";
 	}
+
+	// 1:1 문의
+		@GetMapping("/customer/inquiry")
+	public String inquiryPage() {
+		
+		return "customer/inquiry";
+	}
+	
+	// 이용약관
+		@GetMapping("/customer/terms")
+		public String terms() {
+			return "customer/terms";
+		}
+		
+		// 개인정보처리방침
+	    @GetMapping("/customer/privacy")
+	    public String privacy() {
+	        return "customer/privacy";
+	    }
+	    
+	   // 위치기반 서비스 이용약관
+	    @GetMapping("/customer/location")
+	    public String location() {
+	        return "customer/location";
+	    }
+	    
+	   //  청소년 보호정책
+	    @GetMapping("/customer/youth")
+	    public String youth() {
+	        return "customer/youth";
+	    }
+	    
+	    @PostMapping("/inquiries")
+	    public String createInquiry(
+	            InquiryCreateConditionVO conditionVO
+	    ) {
+	    	customerService.inquiriesRegister(conditionVO);
+	        return "redirect:/mypage/inquiries";
+	    }
 }

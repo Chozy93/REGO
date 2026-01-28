@@ -4,33 +4,44 @@
       layout:decorate="~{layout/base}">
 
 <th:block th:fragment="pageCss">
-    <link rel="stylesheet" href="/css/customer/faq.css">
-	<link rel="stylesheet" href="/css/policy/policy.css">
+  <link rel="stylesheet" href="/css/customer/customer.css">
+  <link rel="stylesheet" href="/css/customer/faq.css">
+  <link rel="stylesheet" href="/css/customer/sidebar.css">
 </th:block>
 
 
-<th:block th:fragment="pageJs">
-    <script src="/js/customer/faq.js"></script>
-</th:block>
 
-<div layout:fragment="content" class="policy-wrapper">
-    <div class="policy-container">
-        <th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='faq')"></th:block>
 
-        <main class="main-content">
-            <div class="faq-header">
-                <div class="header-text">
-                    <h2>자주 묻는 질문</h2>
-                    <p>궁금한 점이 있으신가요? 자주 묻는 질문에서 빠르게 답변을 찾아보세요.</p>
+<div layout:fragment="content" class="container-content">
+     <div class="customer-layout">
+      
+      
+    <!-- Sidebar -->
+    <th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='faq')"></th:block>
+
+         <main class="customer-main">
+            <div class="customer-header">
+              <a href="#" class="customer-back" onclick="history.back()">
+		         <span class="material-symbols-outlined">arrow_back</span>
+		       </a>
+                <div>
+                     <h1 class="customer-title">자주 묻는 질문</h1>
+                    <p class="customer-desc">궁금한 점이 있으신가요? 자주 묻는 질문에서 빠르게 답변을 찾아보세요.</p>
                 </div>
             </div>
 
-            <section class="faq-search-card">
-                <div class="search-input-wrapper">
+            <section class="customer-card">
+                <div class="customer-card-body">
+                  
+             
+           
+             <div class="search-box">
                     <span class="material-symbols-outlined search-icon">search</span>
                     <input type="text" id="faqSearch" placeholder="궁금한 내용을 검색해보세요" onkeyup="filterFaq()">
+                    </div>
                 </div>
-                <div class="category-tags">
+
+                <div class="filter-tags">
                     <button class="tag active" onclick="filterCategory('전체')">전체</button>
                     <button class="tag" onclick="filterCategory('회원/계정')">회원/계정</button>
                     <button class="tag" onclick="filterCategory('구매/판매')">구매/판매</button>
@@ -59,5 +70,8 @@
             </section>
         </main>
     </div>
+    <th:block th:fragment="pageJs">
+    <script src="/js/customer/faq.js"></script>
+</th:block>
 </div>
 </html>

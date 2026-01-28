@@ -9,10 +9,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.itwillbs.domain.FaqVO;
 import com.itwillbs.domain.NoticeVO;
-import com.itwillbs.entity.Faq;
+import com.itwillbs.entity.Inquiry;
 import com.itwillbs.entity.Notice;
+import com.itwillbs.entity.ProductOrder;
+import com.itwillbs.entity.User;
+import com.itwillbs.entity.enumtype.InquiryType;
+import com.itwillbs.mapper.CustomerMapper;
+import com.itwillbs.repository.InquiryRepository;
+import com.itwillbs.entity.Faq;
+
 import com.itwillbs.repository.FaqRepository;
 import com.itwillbs.repository.NoticeRepository;
+import com.itwillbs.repository.ProductOrderRepository;
+import com.itwillbs.security.util.SecurityUtil;
+import com.itwillbs.view.MyOrderSelectViewVO;
+import com.itwillbs.view.condition.InquiryCreateConditionVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +32,9 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class CustomerService {
 	private final NoticeRepository noticeRepository;
+	private final InquiryRepository inquiryRepository;
+	private final CustomerMapper customerMapper;
+
 	private final FaqRepository faqRepository; 
 	
 	// -------- 공지사항 쓰기
@@ -61,6 +75,57 @@ public class CustomerService {
         return new NoticeVO(notice);
     }
     
+    public void inquiriesRegister(InquiryCreateConditionVO conditionVO) {
+
+        InquiryType inquiryType = InquiryType.from(conditionVO.getInquiryType());
+
+        validateByType(inquiryType, conditionVO);
+        
+        User currentUser = SecurityUtil.getCurrentUser();
+        
+        Inquiry inquiry = Inquiry.create(
+                currentUser,
+                inquiryType,
+                conditionVO.getTitle(),
+                conditionVO.getContent(),
+                conditionVO.getOrderId()
+          
+        );
+
+        inquiryRepository.save(inquiry);
+    }
+    
+    //타입에 맞는 추가 구성요소가 왔는지 검증
+    private void validateByType(
+            InquiryType inquiryType,
+            InquiryCreateConditionVO condition
+    ) {
+
+        switch (inquiryType) {
+            case PAYMENT -> {
+                if (condition.getOrderId() == null) {
+                    throw new IllegalArgumentException("결제 문의에는 주문 정보가 필요합니다.");
+                }
+            }
+
+            case ACCOUNT, SYSTEM, ETC -> {
+                // 추가 검증 없음
+            }
+        }
+    }
+    
+    
+ // 문의를 위한 내 결제/거래 내역 가져오기
+    public List<MyOrderSelectViewVO> getMyOrdersForInquiry(Long userId) {
+
+        if (userId == null) {
+            throw new IllegalArgumentException("로그인 사용자 정보가 없습니다.");
+        }
+
+        return customerMapper.selectMyOrdersForInquiry(userId);
+    }
+
+
     
     // --------------------- faq 페이지
     
