@@ -190,34 +190,67 @@
     <!-- ===============================
          Price
     =============================== -->
-	<section class="spr-section">
-		<div class="spr-header">
-			<div class="spr-section__title">가격</div>
-			<button type="button" class="spr-ai-btn">
-			      <span class="material-symbols-outlined">smart_toy</span>
-			      GPT	
-			    </button>
-		</div>
-	
-
-	  <div class="spr-price">
-	    <div class="spr-price__field">
-	      <span class="spr-price__prefix">₩</span>
-		  <input type="text"
-		         name="price"
-		         class="spr-input spr-input--price"
-		         placeholder="가격을 입력해주세요">
-	    </div>
-
-	  
+	<section class="spr-section price-section">
+	  <div class="spr-header">
+	    <div class="spr-section__title">가격</div>
 	  </div>
 
-	  <label class="spr-check">
-	    <input type="checkbox">
-	    배송비 포함
-	  </label>
+	  <!-- ===============================
+	       Price + AI Recommend (Flex)
+	  =============================== -->
+	  <div class="spr-price-row">
+		
+	    <!-- 가격 입력 영역 -->
+		
+		<div class="spr-price-bottom">
+	    <div class="spr-price">
+			<button type="button" class="spr-ai-btn">
+					      <span class="material-symbols-outlined">smart_toy</span>
+					      GPT 가격 추천 받기
+					    </button>
+	      <div class="spr-price__field">
+	        <span class="spr-price__prefix">₩</span>
+	        <input type="text"
+	               name="price"
+	               class="spr-input spr-input--price"
+	               placeholder="가격을 입력해주세요">
+	      </div>
+
+	      <label class="spr-check">
+	        <input type="checkbox">
+	        배송비 포함
+	      </label>
+	    </div>
+		</div>
+	    <!-- AI 추천 정보 영역 -->
+		<div class="spr-ai-info" style="display:none;">
+		  <p class="spr-ai-info__title">
+		    🤖 <strong>AI 중고 시세 참고</strong>
+		  </p>
+
+		  <p class="spr-ai-info__price">
+		    예상 적정가: <strong><span id="aiPriceRange"></span></strong>
+		  </p>
+<!--		  가격 추천 이유-->
+		  <p class="spr-ai-info__reason"></p>
+		  <p class="spr-ai-info__notice">
+		    ※ <strong>AI의 추천 가격</strong>이며,
+		    최종 가격은 <strong>판매자 판단</strong>에 따라 결정됩니다
+		  </p>
+
+		  <button type="button" class="spr-ai-info__apply">
+		    평균가 적용
+		  </button>
+		</div>
+
+
+	  </div>
 	</section>
 
+	
+	
+	
+	
 
     <hr class="spr-divider">
 
