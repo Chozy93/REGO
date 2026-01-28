@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+    <link rel="stylesheet" href="/css/product/search.css">
+</th:block>
+
+<th:block th:fragment="pageJs">
+    
+</th:block>
+
+<div layout:fragment="content">
+    <main class="main-container">
+        <div class="search-layout">
+            <section class="content">
+                <div class="content-header">
+                    <h2>
+                        '<span th:text="${searchDTO.keyword}">검색어</span>' 검색 결과 
+                        <span class="count" th:text="'(' + ${page.totalElements} + '개)'">(0개)</span>
+                    </h2>
+                    <div class="sort-options">
+                        <a th:href="@{/product/search(keyword=${searchDTO.keyword}, sort='createdAt,desc')}" 
+                           class="sort-btn"
+                           th:classappend="${param.sort == null or #strings.equals(param.sort, 'createdAt,desc')} ? 'active'">
+                           최신순
+                        </a>
+
+                        <a th:href="@{/product/search(keyword=${searchDTO.keyword}, sort='price,asc')}" 
+                           class="sort-btn"
+                           th:classappend="${#strings.equals(param.sort, 'price,asc')} ? 'active'">
+                           저가순
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product-grid">
+                    <div class="product-card" th:each="product : ${products}">
+                        <a th:href="@{/product/{id}(id=${product.productId})}">
+                            <div class="image-wrapper">
+                                <img th:src="${product.mainImageUrl != null ? product.mainImageUrl : '/images/default-product.png'}" alt="상품이미지">
+                                <button class="wish-btn">
+                                    <span class="material-symbols-outlined">favorite</span>
+                                </button>
+                            </div>
+                            <div class="info">
+                                <h4 class="title" th:text="${product.productName}">상품명</h4>
+                                <p class="price" th:text="${#numbers.formatInteger(product.price, 0, 'COMMA') + '원'}">0원</p>
+                                <div class="meta">
+                                    <span th:text="${product.regionDisplayName}">지역</span> · 
+                                    <span th:text="${product.createdAt}">시간</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="pagination" th:if="${page.totalPages > 0}">
+                    <a th:href="@{/product/search(keyword=${searchDTO.keyword}, page=${page.number - 1}, sort=${param.sort})}" 
+                       th:if="${!page.first}" class="nav-btn">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </a>
+                    
+                    <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+                        <a th:href="@{/product/search(keyword=${searchDTO.keyword}, page=${i}, sort=${param.sort})}" 
+                           class="page-num" 
+                           th:classappend="${i == page.number} ? 'active'"
+                           th:text="${i + 1}">1</a>
+                    </th:block>
+
+                    <a th:href="@{/product/search(keyword=${searchDTO.keyword}, page=${page.number + 1}, sort=${param.sort})}" 
+                       th:if="${!page.last}" class="nav-btn">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+</div>
+</html>
