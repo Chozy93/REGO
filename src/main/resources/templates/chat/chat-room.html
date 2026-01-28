@@ -7,39 +7,50 @@
 
     <div class="chat-room">
 
-        <!-- =========================
-             Chat Header
-        ========================== -->
-        <header class="chat-room-header">
-            <div class="chat-room-partner">
-                <img class="chat-room-avatar"
-                     th:src="${chatRoom.header.opponentProfileImageUrl}"
-                     alt="">
+		<!-- =========================
+		     Chat Header
+		========================== -->
+		<header class="chat-room-header">
+		    <div class="chat-room-partner">
+		        <img class="chat-room-avatar"
+		             th:src="${chatRoom.header.opponentProfileImageUrl}"
+		             alt="">
 
-                <div class="chat-room-partner-info">
-                    <strong class="chat-room-partner-name"
-                            th:text="${chatRoom.header.opponentUserName}">
-                        상대방닉네임
-                    </strong>
-                </div>
-            </div>
+		        <div class="chat-room-partner-info">
+		            <strong class="chat-room-partner-name"
+		                    th:text="${chatRoom.header.opponentUserName}">
+		                상대방닉네임
+		            </strong>
 
-            <div class="chat-room-actions">
-                <button class="btn btn-outline"
-                        id="open-appointment-modal">
-                    약속잡기
-                </button>
+		            <!-- 평점 -->
+		            <div class="chat-room-partner-rating">
+		                ★
+		                <span th:text="${chatRoom.header.opponentRatingAvg}">0.0</span>
+		                (<span th:text="${chatRoom.header.opponentTotalReviews}">0</span>)
+		            </div>
 
-                <button class="btn btn-outline"
-                        id="open-payment-modal">
-                    송금하기
-                </button>
+		            <!-- 상품 정보 -->
+					<div class="chat-room-product">
+					    <span class="chat-room-product-title"
+					          th:text="${chatRoom.header.productName}">
+					        상품명
+					    </span>
+					    ·
+					    <span th:text="${#numbers.formatInteger(chatRoom.header.productPrice, 3, 'COMMA')}">
+					        0
+					    </span>원
+					</div>
+		        </div>
+		    </div>
 
-                <button class="btn btn-outline">
-                    상품 보기
-                </button>
-            </div>
-        </header>
+		    <div class="chat-room-actions">
+		        <a class="btn btn-outline"
+		           th:href="@{/product/{id}(id=${chatRoom.header.productId})}">
+		            상품 보기
+		        </a>
+		    </div>
+		</header>
+
 
         <!-- =========================
              Message Area
@@ -108,13 +119,7 @@
          Chat Modals
     ========================== -->
 
-    <!-- 약속 잡기 모달 -->
-    <th:block th:replace="~{fragments/chat-appointment-modal :: chat-appointment-modal}">
-    </th:block>
-
-    <!-- 송금 모달 -->
-    <th:block th:replace="~{fragments/chat-payment-modal :: chat-payment-modal}">
-    </th:block>
+   
 <script>
 	window.chatOpponentProfileImageUrl =
 	   /*[[${chatRoom.header.opponentProfileImageUrl}]]*/ '';
