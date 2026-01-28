@@ -1,0 +1,291 @@
+/* ==========================================================================
+   Notice Page (customer.css 기반 확장)
+========================================================================== */
+
+/* ===============================
+   Header Action (공지 작성 버튼)
+=============================== */
+
+.notice-write-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+
+  padding: var(--space-12) var(--space-20);
+  border-radius: var(--radius-md);
+
+  background-color: var(--color-text);
+  color: var(--color-surface);
+
+  font-size: var(--fs-14);
+  font-weight: var(--fw-bold);
+
+  box-shadow: var(--shadow-sm);
+  transition:
+    background-color var(--duration-normal) var(--ease-out),
+    color var(--duration-normal) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.notice-write-btn:hover {
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  transform: translateY(-2px);
+}
+
+.notice-write-btn .material-symbols-outlined {
+  font-size: 20px;
+}
+
+
+/* ===============================
+   Filter / Search (카드 내부)
+=============================== */
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: var(--space-16);
+  color: var(--color-text-subtle);
+}
+
+.search-box input {
+  width: 100%;
+  height: 48px;
+
+  padding-left: 48px;
+  padding-right: var(--space-16);
+
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+
+  background-color: var(--color-surface-2);
+  margin-bottom: var(--space-12)	;
+}
+
+.search-box input:focus {
+  border-color: var(--color-primary);
+}
+
+
+/* ===============================
+   Filter Tags
+=============================== */
+
+.filter-tags {
+	display: flex;
+	 gap: var(--space-8);
+	 flex-wrap: wrap;
+}
+
+.filter-tags .tag {
+  
+  padding: var(--space-8) var(--space-16);
+  border-radius: 999px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  font-size: var(--fs-13);
+  cursor: pointer;	
+ 
+}
+
+.filter-tags .tag.active {
+  background-color: var(--color-text);
+  color: var(--color-surface);
+  border-color: var(--color-text);
+}
+
+
+/* ===============================
+   Notice List (Table-like)
+=============================== */
+
+.list-table-header {
+  display: none;
+
+  padding: var(--space-16) var(--space-24);
+  border-bottom: 1px solid var(--color-divider);
+
+  font-size: var(--fs-12);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 768px) {
+  .list-table-header {
+    display: flex;
+  }
+}
+
+.col-title {
+  flex: 1;
+}
+
+.col-date {
+  width: 96px;
+  text-align: center;
+}
+
+.col-views {
+  width: 80px;
+  text-align: center;
+}
+
+
+/* ===============================
+   Notice Items
+=============================== */
+
+.notice-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.notice-item {
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.notice-item:last-child {
+  border-bottom: 0;
+}
+
+.notice-item a {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+
+  padding: var(--space-20) var(--space-24);
+}
+
+@media (min-width: 768px) {
+  .notice-item a {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.notice-item:hover {
+  background-color: var(--color-surface-2);
+}
+
+.item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.badge-row {
+  display: flex;
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);
+}
+
+.item-title {
+  font-size: var(--fs-15);
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notice-item:hover .item-title {
+  color: var(--color-primary);
+}
+
+.item-info {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-16);
+
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 768px) {
+  .item-info {
+    justify-content: flex-end;
+  }
+
+  .info-date {
+    width: 96px;
+    text-align: center;
+  }
+
+  .info-views {
+    width: 80px;
+    text-align: center;
+  }
+}
+
+
+/* ===============================
+   Notice Badge Overrides
+=============================== */
+
+.badge-red {
+  background-color: rgba(239, 68, 68, 0.14);
+  color: var(--color-danger);
+}
+
+.badge-green {
+  background-color: var(--color-primary-soft);
+  color: var(--color-text);
+}
+
+.badge-gray {
+  background-color: var(--color-surface-3);
+  color: var(--color-text-muted);
+}
+
+
+/* ===============================
+   Pagination
+=============================== */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-4);
+
+  padding: var(--space-24);
+}
+
+.page-num,
+.page-arrow {
+  width: 36px;
+  height: 36px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-14);
+
+  transition: background-color var(--duration-normal) var(--ease-out);
+}
+
+.page-num.active {
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  font-weight: var(--fw-bold);
+}
+
+.page-num:not(.active):hover,
+.page-arrow:not(.disabled):hover {
+  background-color: var(--color-surface-2);
+}
+
+.page-arrow.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+

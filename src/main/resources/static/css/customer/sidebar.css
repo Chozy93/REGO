@@ -1,0 +1,88 @@
+/* ==========================================================================
+   Customer Sidebar (고객센터 사이드바)
+   - fragment: sidebar.html
+========================================================================== */
+
+/* --- 사이드바 래퍼 --- */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  padding-top: 108px;
+}
+
+/* --- 사이드바 박스 (sticky) --- */
+.sidebar-box {
+  background-color: #ffffff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  overflow: hidden;
+
+  position: sticky;
+  top: 194px;           /* 헤더 높이 고려 */
+  z-index: 10;
+
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+/* --- 헤더 --- */
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.sidebar-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* --- 네비게이션 --- */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  gap: 4px;
+}
+
+/* --- 링크 --- */
+.nav-link {
+  display: block;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #666;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.nav-link:hover {
+  background-color: #f5f5f5;
+}
+
+/* 활성 메뉴 */
+.nav-link.active {
+  background-color: #e6fcf0;
+  color: #00c73c;
+  font-weight: 700;
+}
+
+/* 구분선 */
+.nav-divider {
+  height: 1px;
+  background-color: #eee;
+  margin: 8px;
+}
+
+/* --- 모바일 대응 --- */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    padding-top: 0;
+  }
+
+  .sidebar-box {
+    position: static;
+    max-height: none;
+  }
+}

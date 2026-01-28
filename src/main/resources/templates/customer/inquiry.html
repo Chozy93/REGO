@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<!-- page 전용 CSS -->
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/customer/customer.css">
+  <link rel="stylesheet" href="/css/customer/inquiry.css">
+  <link rel="stylesheet" href="/css/customer/sidebar.css">
+</th:block>
+
+<div layout:fragment="content" class="container-content">
+
+  <!-- ===============================
+       Layout : Sidebar + Content
+  =============================== -->
+  <div class="customer-layout">
+
+    <!-- Sidebar -->
+    <th:block
+      th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='inquiry')">
+    </th:block>
+
+    <!-- ===============================
+         Inquiry Main Content
+    =============================== -->
+    <main class="customer-main">
+
+      <!-- Header -->
+      <div class="customer-header">
+        <a href="#" class="customer-back" onclick="history.back()">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </a>
+
+        <div>
+          <h1 class="customer-title">1:1 문의</h1>
+          <p class="customer-desc">
+            궁금한 점을 남겨주시면 담당자가 순차적으로 답변해 드립니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <section class="customer-card">
+        <form class="customer-form"
+              th:action="@{/customer/inquiries}"
+              method="post">
+
+          <!-- 문의 유형 -->
+          <div class="customer-field">
+            <label class="customer-label">
+              문의 유형 <span class="required">*</span>
+            </label>
+
+            <div class="select-box">
+<!--              <%-- enum InquiryType과 value 정확히 일치 --%>-->
+              <select name="inquiryType" id="inquiryTypeSelect" required>
+                <option value="">문의하실 유형을 선택해주세요</option>
+                <option value="ACCOUNT">계정 / 로그인</option>
+                <option value="PAYMENT">결제 / 주문</option>
+                <option value="SYSTEM">시스템 / 오류</option>
+                <option value="ETC">기타</option>
+              </select>
+              <span class="material-symbols-outlined">expand_more</span>
+            </div>
+          </div>
+
+<!--          <%-- 결제/주문 선택 (PAYMENT일 때만 노출) --%>-->
+<div class="customer-field is-hidden" id="orderSelectField">
+  <label class="customer-label">관련 주문 선택</label>
+
+  <div class="order-select-trigger"
+       onclick="openMyOrderSelectModal()">
+    <div class="order-select-trigger__text">
+      <p class="order-select-trigger__title">관련 주문 선택</p>
+      <p class="order-select-trigger__desc">
+        내 결제 내역에서 주문을 선택해주세요
+      </p>
+    </div>
+    <span class="material-symbols-outlined">chevron_right</span>
+  </div>
+
+  <input type="hidden" name="orderId" id="orderId">
+
+  <div class="selected-order is-hidden" id="selectedOrderPreview">
+    <p class="selected-order__title" id="selectedOrderTitle"></p>
+    <p class="selected-order__meta" id="selectedOrderMeta"></p>
+  </div>
+</div>
+
+          <!-- 제목 -->
+          <div class="customer-field">
+            <label class="customer-label">
+              제목 <span class="required">*</span>
+            </label>
+            <input type="text"
+                   name="title"
+                   placeholder="제목을 입력해주세요"
+                   maxlength="255"
+                   required>
+          </div>
+
+          <!-- 내용 -->
+          <div class="customer-field">
+            <label class="customer-label">
+              상세 문의 내용 <span class="required">*</span>
+            </label>
+            <textarea rows="6"
+                      name="content"
+                      placeholder="문의하실 내용을 상세히 적어주세요. (주문번호, 오류 메시지 등)"
+                      maxlength="255"
+                      required></textarea>
+          </div>
+
+
+          <!-- footer -->
+          <div class="form-footer">
+            <label class="checkbox">
+              <input type="checkbox" name="privacyAgree" required>
+              <span>개인정보 수집 및 이용에 동의합니다.</span>
+            </label>
+
+            <button type="submit" class="btn btn-primary">
+              문의하기
+            </button>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- Info -->
+      <div class="customer-info">
+        <span class="material-symbols-outlined">info</span>
+        <div>
+          <h4>안내사항</h4>
+          <ul>
+            <li>문의 내역은 마이페이지에서 확인 가능합니다.</li>
+            <li>답변 완료 시 알림 또는 이메일로 안내됩니다.</li>
+            <li>답변은 순차 처리됩니다.</li>
+            <li>상품 관련 문의는 판매자와 채팅을 이용해주세요.</li>
+            <li>신고는 상품/프로필의 신고 기능을 이용해주세요.</li>
+          </ul>
+        </div>
+      </div>
+
+    </main>
+  </div>
+  
+  
+  <div th:replace="customer/order-select-modal :: orderSelectModal"></div>
+  
+</div>
+
+<th:block th:fragment="pageJs">
+  <script th:src="@{/js/customer/inquiry.js}" defer></script>
+</th:block>
+
+</html>

@@ -3,7 +3,15 @@ package com.itwillbs.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.itwillbs.dto.OrderRequestDTO;
 import com.itwillbs.entity.Product;
@@ -15,6 +23,8 @@ import com.itwillbs.mapper.OrderMapper;
 import com.itwillbs.repository.OrderRepository;
 import com.itwillbs.repository.ProductRepository;
 import com.itwillbs.repository.UserAddressReopsitory;
+import com.siot.IamportRestClient.response.IamportResponse;
+import com.siot.IamportRestClient.response.Payment;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +32,14 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
+	
+    @Value("${iamport.imp_key}")
+    private String apiKey;
+
+    @Value("${iamport.imp_secret}")
+    private String apiSecret;
+
+    private final RestTemplate restTemplate = new RestTemplate();
 	
 	private final ProductRepository productRepository;
 	private final UserAddressReopsitory addressRepository;
@@ -109,5 +127,50 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 주문을 찾을 수 없습니다. ID: " + orderId));
     }
     
+    
+    // ✅ 액세스 토큰 발급
+    public String getAccessToken() {
+
+        String url = "https://api.iamport.kr/users/getToken";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, String> body = new HashMap<>();
+        body.put("imp_key", apiKey);
+        body.put("imp_secret", apiSecret);
+
+        HttpEntity<Map<String, String>> entity =
+                new HttpEntity<>(body, headers);
+
+        ResponseEntity<IamportResponse> response =
+                restTemplate.postForEntity(url, entity, IamportResponse.class);
+
+        Map responseBody = (Map) response.getBody().getResponse();
+        return (String) responseBody.get("access_token");
+    }
+    // iamport 직접 발급받기
+    public Payment getPaymentIncludeSandbox(String impUid) {
+        String accessToken = getAccessToken(); // 기존 토큰 발급 로직
+
+        String url = "https://api.iamport.kr/payments/" + impUid + "?include_sandbox=true";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<IamportResponse<Payment>> response =
+            restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {}
+            );
+
+        return response.getBody().getResponse();
+    }
+
+
     
 }

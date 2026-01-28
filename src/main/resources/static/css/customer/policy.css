@@ -1,0 +1,37 @@
+/* ==========================================================================
+   Policy Page Only
+========================================================================== */
+
+.section-title {
+  display: block;
+  margin-bottom: var(--space-12);
+  font-size: var(--fs-16);
+  font-weight: var(--fw-bold);
+}
+
+.styled-list {
+  padding-left: 20px;
+  margin: var(--space-8) 0;
+}
+
+.sub-text {
+  font-size: var(--fs-13);
+  color: var(--color-text-muted);
+}
+
+.info-box {
+  background-color: var(--color-surface-3);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-lg);
+  padding: var(--space-24);
+}
+
+.appendix {
+  margin-top: var(--space-16);
+  padding-top: var(--space-32);
+  border-top: 1px solid var(--color-divider);
+}
+
+.customer-card {
+	padding: var(--space-32) !important;
+}

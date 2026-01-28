@@ -60,7 +60,7 @@ dependencies {
     // 소셜로그인 
   	 implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     // 아임포트(포트원) 자바 클라이언트
-    implementation 'com.github.iamport:iamport-rest-client-java:0.2.22'
+    implementation 'com.github.iamport:iamport-rest-client-java:0.2.23'
     // Cloudinary 이미지 업로드용
     implementation 'com.cloudinary:cloudinary-http44:1.37.0'
 }

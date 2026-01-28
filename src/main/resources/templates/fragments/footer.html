@@ -20,7 +20,7 @@
 
 	    <!-- Quick Cards -->
 	    <div class="footer-cards">
-	      <a class="footer-card" href="#">
+	      <a class="footer-card" th:href="@{/customer/faq}">
 	        <span class="material-symbols-outlined footer-card-icon">help</span>
 	        <div>
 	          <div class="footer-card-title">자주 묻는 질문</div>
@@ -28,7 +28,7 @@
 	        </div>
 	      </a>
 
-	      <a class="footer-card" href="#">
+	      <a class="footer-card" th:href="@{/customer/notice}">
 	        <span class="material-symbols-outlined footer-card-icon">campaign</span>
 	        <div>
 	          <div class="footer-card-title">공지사항</div>
@@ -36,7 +36,7 @@
 	        </div>
 	      </a>
 
-	      <a class="footer-card" href="#">
+	      <a class="footer-card" th:href="@{/customer/qna}">
 	        <span class="material-symbols-outlined footer-card-icon">forum</span>
 	        <div>
 	          <div class="footer-card-title">1:1 문의</div>
@@ -44,7 +44,7 @@
 	        </div>
 	      </a>
 
-	      <a class="footer-card" href="#">
+	      <a class="footer-card" th:href="@{/customer/safe-guide}">
 	        <span class="material-symbols-outlined footer-card-icon">verified_user</span>
 	        <div>
 	          <div class="footer-card-title">안전 거래 가이드</div>
@@ -93,10 +93,10 @@
 	    <!-- Bottom -->
 	    <div class="footer-bottom">
 	      <div class="footer-links">
-			 <a href="/terms">이용약관</a>
-		     <a href="/privacy" class="strong">개인정보처리방침</a>
-		     <a href="/location">위치기반서비스 이용약관</a>
-		     <a href="/youth">청소년보호정책</a>
+			 <a href="/customer/terms">이용약관</a>
+		     <a href="/customer/privacy">개인정보처리방침</a>
+		     <a href="/customer/location">위치기반서비스 이용약관</a>
+		     <a href="/customer/youth">청소년보호정책</a>
 	      </div>
 	      <p>© 2024 GreenTrade Inc. All rights reserved.</p>
 	    </div>

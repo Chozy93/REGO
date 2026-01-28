@@ -6,6 +6,8 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 import com.itwillbs.domain.FaqVO;
+import com.itwillbs.entity.enumtype.FaqCategory;
+import com.itwillbs.view.condition.FaqCreateConditionVO;
 
 @Entity
 @Table(name = "faqs")
@@ -30,10 +32,11 @@ public class Faq {
     private String answer;
 
     /* =========================
-       카테고리 (코드)
+       카테고리 (ENUM)
     ========================= */
-    @Column(name = "faq_category_id", length = 50)
-    private String faqCategoryId;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "faq_category", nullable = false, length = 30)
+    private FaqCategory faqCategory;
 
     /* =========================
        활성 상태
@@ -56,13 +59,15 @@ public class Faq {
     protected Faq() {}
 
     /* =========================
-       생성자 (VO → Entity)
+       생성자 (명시적, 정석)
     ========================= */
-    public Faq(FaqVO vo) {
-        this.question = vo.getQuestion();
-        this.answer = vo.getAnswer();
-        this.faqCategoryId = vo.getFaqCategoryId();
-        this.isActive = vo.isActive();
+    public Faq(
+    		FaqCreateConditionVO faqCreateConditionVO
+    ) {
+        this.question = faqCreateConditionVO.getQuestion();
+        this.answer = faqCreateConditionVO.getAnswer();
+        this.faqCategory = FaqCategory.fromCode(faqCreateConditionVO.getFaqCategoryCode());
+        this.isActive = faqCreateConditionVO.isActive();
         this.createdAt = LocalDateTime.now();
     }
 
@@ -76,11 +81,16 @@ public class Faq {
     /* =========================
        상태 / 내용 변경
     ========================= */
-    public void update(FaqVO vo) {
-        this.question = vo.getQuestion();
-        this.answer = vo.getAnswer();
-        this.faqCategoryId = vo.getFaqCategoryId();
-        this.isActive = vo.isActive();
+    public void update(
+            String question,
+            String answer,
+            FaqCategory faqCategory,
+            boolean isActive
+    ) {
+        this.question = question;
+        this.answer = answer;
+        this.faqCategory = faqCategory;
+        this.isActive = isActive;
         this.updatedAt = LocalDateTime.now();
     }
 

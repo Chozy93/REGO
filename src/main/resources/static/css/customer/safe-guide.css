@@ -1,0 +1,92 @@
+/* ======================================================================
+   Safe Guide Page (customer-main 내부 전용)
+====================================================================== */
+
+
+/* 배너 */
+.safe-guide .guide-banner {
+  background: rgba(19, 236, 91, 0.05);
+  border: 1px solid rgba(19, 236, 91, 0.2);
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--space-24);
+}
+
+.safe-guide .banner-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(19, 236, 91, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #00c73c;
+  flex-shrink: 0;
+}
+
+/* 리스트 */
+.safe-guide .guide-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.safe-guide .guide-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-bottom: var(--space-16);	
+}
+
+/* summary */
+.safe-guide .guide-item summary {
+  padding: var(--space-24);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  list-style: none;
+  
+}
+
+.safe-guide .summary-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+}
+
+/* 아이콘 */
+.safe-guide .icon-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.safe-guide .icon-circle.red { background: #fef2f2; color: #ef4444; }
+.safe-guide .icon-circle.blue { background: #eff6ff; color: #3b82f6; }
+.safe-guide .icon-circle.orange { background: #fff7ed; color: #f97316; }
+
+/* open */
+.safe-guide .guide-item[open] .arrow {
+  transform: rotate(180deg);
+}
+
+/* content */
+.safe-guide .guide-content {
+  padding: var(--space-24) var(--space-24) var(--space-24) 80px;
+  border-top: 1px solid var(--color-divider);
+  line-height: var(--lh-relaxed);
+}
+
+/* tip */
+.safe-guide .info-tip {
+  background: var(--color-surface-2);
+  padding: var(--space-16);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}

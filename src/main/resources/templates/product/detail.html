@@ -191,10 +191,13 @@
 			  </script>
 
 
-		      <button class="btn-dark"
-		              th:disabled="${page.mine}">
-		        바로구매
-		      </button>
+			  <button type="button" 
+			          id="directPayBtn" 
+			          class="btn-dark" 
+			          th:disabled="${page.mine}"
+			          th:data-product-id="${page.product.productId}">
+			      바로구매
+			  </button>
 
 		    </div>
 

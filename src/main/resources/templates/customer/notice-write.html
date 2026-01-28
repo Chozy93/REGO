@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+	<link rel="stylesheet" href="/css/customer/customer.css">
+	    <link rel="stylesheet" href="/css/customer/notice-write.css">
+	    <link rel="stylesheet" href="/css/customer/sidebar.css">
+</th:block>
+
+<div layout:fragment="content" class="container-content">
+	
+
+	
+    <div class="customer-layout">
+		
+		
+		<!-- Sidebar -->
+			<th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='notice')"></th:block>
+			
+			<main class="customer-main">
+    
+            <div class="customer-header">
+				<a href="#" class="customer-back" onclick="history.back()">
+												         <span class="material-symbols-outlined">arrow_back</span>
+												       </a>
+                <div class="header-text">
+                    <h1 class="customer-title">공지사항 작성</h1>
+                    <p class="customer-desc">관리자 페이지 &gt; 공지사항 관리</p>
+                </div>
+            </div>	 
+
+            <form class="write-card" th:action="@{/customer/notice/write}" method="post">
+                <div class="form-section">
+                    <div class="form-row split">
+                        <div class="form-group flex-1">
+                            <label>분류</label>
+                            <select name="category" class="form-control">
+                                <option value="공지">공지</option>
+                                <option value="이벤트">이벤트</option>
+                                <option value="서비스 점검">서비스 점검</option>
+                                <option value="업데이트">업데이트</option>
+                                <option value="일반">일반</option>
+                            </select>
+                        </div>
+                        <div class="form-group flex-3">
+                            <label>제목</label>
+                            <input type="text" name="title" class="form-control" placeholder="공지사항 제목을 입력해주세요" required>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label>상세 내용</label>
+                        <div class="custom-editor">
+                            <div class="editor-toolbar">
+                                <div class="toolbar-group">
+                                    <button type="button"><span class="material-symbols-outlined">format_bold</span></button>
+                                    <button type="button"><span class="material-symbols-outlined">image</span></button>
+                                </div>
+                            </div>
+                            <textarea name="content" class="editor-textarea" rows="12" placeholder="공지사항 상세 내용을 입력하세요..." required></textarea>
+                        </div>
+                    </div>
+
+                   
+                </div> 
+
+                <div class="form-actions">
+                    <a th:href="@{/customer/notice}" class="btn btn-secondary">취소</a>
+                    <button type="submit" class="btn btn-primary">등록하기</button>
+                </div>
+            </form>
+        </main>
+    </div>
+</div>

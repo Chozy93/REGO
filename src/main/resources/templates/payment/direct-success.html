@@ -45,7 +45,7 @@
         </section>
 
         <div class="button-group">
-            <a th:href="@{/mypage/orders}" class="btn-primary">구매 내역 확인</a>
+            <a th:href="@{/order/detail/{orderId}(orderId=${order.orderId})}" class="btn-primary">구매 내역 확인</a>
             <div class="button-row">
                 <a th:href="@{/}" class="btn-outline">
                     <span class="material-symbols-outlined">home</span>
