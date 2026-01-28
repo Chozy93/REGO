@@ -23,6 +23,7 @@ import com.itwillbs.repository.NoticeRepository;
 import com.itwillbs.repository.ProductOrderRepository;
 import com.itwillbs.security.util.SecurityUtil;
 import com.itwillbs.view.MyOrderSelectViewVO;
+import com.itwillbs.view.condition.FaqCreateConditionVO;
 import com.itwillbs.view.condition.InquiryCreateConditionVO;
 
 import lombok.RequiredArgsConstructor;
@@ -130,17 +131,18 @@ public class CustomerService {
     // --------------------- faq 페이지
     
     // faq list 가져오기
-    public List<FaqVO> getFaqList() {
-        return faqRepository.findByIsActiveTrueOrderByFaqCategoryIdAscCreatedAtDesc()
+    public List<FaqVO> getActiveFaqList() {
+        return faqRepository
+                .findByIsActiveTrueOrderByFaqCategoryAscCreatedAtDesc()
                 .stream()
-                .map(FaqVO::new)
+                .map(Faq::toVO)
                 .toList();
     }
     
     // faq 작성하기
     
     @Transactional
-    public void registerFaq(FaqVO vo) {
+    public void registerFaq(FaqCreateConditionVO vo) {
         Faq faq = new Faq(vo);
         // 작성 시 기본적으로 활성화하고 싶다면
         faq.activate(); 

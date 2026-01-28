@@ -1,33 +1,53 @@
-function filterCategory(category) {
-    // 탭 활성화 스타일 변경
-    const tags = document.querySelectorAll('.tag');
-    tags.forEach(tag => {
-        tag.classList.remove('active');
-        if(tag.innerText === category) tag.classList.add('active');
-    });
+let currentCategory = 'ALL';
 
-    // 리스트 필터링
-    const items = document.querySelectorAll('.faq-item');
-    items.forEach(item => {
-        const itemCat = item.getAttribute('data-category');
-        if(category === '전체' || itemCat === category) {
-            item.style.display = 'block';
-        } else {
-            item.style.display = 'none';
+function filterCategory(categoryCode) {
+    currentCategory = categoryCode;
+
+    /* =========================
+       탭 active 처리
+    ========================= */
+    $('.tag').removeClass('active');
+
+    $('.tag').each(function () {
+        if ($(this).attr('onclick')?.includes(categoryCode)) {
+            $(this).addClass('active');
         }
     });
+
+    applyFilters();
 }
 
 function filterFaq() {
-    const keyword = document.getElementById('faqSearch').value.toLowerCase();
-    const items = document.querySelectorAll('.faq-item');
-    
-    items.forEach(item => {
-        const question = item.querySelector('.question').innerText.toLowerCase();
-        if(question.includes(keyword)) {
-            item.style.display = 'block';
+    applyFilters();
+}
+
+/* =========================
+   카테고리 + 검색 통합 필터
+========================= */
+function applyFilters() {
+    const keyword = $('#faqSearch').val().toLowerCase();
+    let visibleCount = 0;
+
+    $('.faq-item').each(function () {
+        const itemCategory = $(this).data('category');
+        const questionText = $(this).find('.question').text().toLowerCase();
+
+        const matchCategory =
+            currentCategory === 'ALL' || itemCategory === currentCategory;
+
+        const matchKeyword =
+            keyword === '' || questionText.includes(keyword);
+
+        if (matchCategory && matchKeyword) {
+            $(this).show();
+            visibleCount++;
         } else {
-            item.style.display = 'none';
+            $(this).hide();
         }
     });
+
+    /* =========================
+       결과 없음 처리
+    ========================= */
+    $('#noResult').toggle(visibleCount === 0);
 }

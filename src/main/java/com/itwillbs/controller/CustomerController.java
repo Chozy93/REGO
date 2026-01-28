@@ -97,7 +97,7 @@ public class CustomerController {
      */
 	@GetMapping("/customer/faq")
 	public String getFaqList(Model model) {
-	    List<FaqVO> faqList = customerService.getFaqList();
+	    List<FaqVO> faqList = customerService.getActiveFaqList();
 	    model.addAttribute("faqList", faqList);
 	    return "customer/faq"; // FAQ HTML 경로
 	}
