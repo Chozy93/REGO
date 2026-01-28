@@ -172,5 +172,30 @@ public class OrderService {
     }
 
 
+    // 거래완료 버튼 눌렀을 때 product 상태 변경하기
+ // 거래완료 버튼 눌렀을 때 product 상태 변경하기
+    @Transactional
+    public void confirmProductStatus(Long productId, Long buyerId) {
+        // 1. 상품 조회
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+
+        // 2. 권한 검증 (상품에 저장된 구매자 객체에서 ID를 꺼내 비교)
+        if (product.getBuyer() == null || !product.getBuyer().getUserId().equals(buyerId)) {
+            throw new IllegalStateException("본인이 구매 확정한 상품이 아니거나 구매자 정보가 없습니다.");
+        }
+
+        // 3. 상태 검증 (RESERVED 상태일 때만 SOLD로 변경 가능)
+        // Enum을 사용 중이시라면 ProductSalesStatus.RESERVED와 비교하세요.
+        if (product.getSalesStatus() != ProductSalesStatus.RESERVED) {
+            throw new IllegalStateException("예약 중인 상품만 거래 완료 처리가 가능합니다.");
+        }
+
+        // 4. 상태 변경
+        // product가 이미 가지고 있는 buyer 객체를 다시 넣어주면서 상태만 SOLD로 변경
+        product.changeSalesStatus(ProductSalesStatus.SOLD, product.getBuyer());
+        
+        // 💡 별도의 save()를 호출하지 않아도 @Transactional 덕분에 더티 체킹으로 DB에 반영됩니다.
+    }
     
 }

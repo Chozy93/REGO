@@ -229,15 +229,25 @@ public class ChatService {
         if (messageDTOs == null) {
             throw new IllegalStateException("채팅 메시지 조회 실패");
         }
-        // 3. DTO → View VO 변환
+     // 3. DTO → View VO 변환
         ChatRoomHeaderViewVO headerVO = new ChatRoomHeaderViewVO(
             headerDTO.getRoomId(),
+            headerDTO.getProductId(),
+
             headerDTO.getOpponentUserId(),
             headerDTO.getOpponentUserNickName(),
             headerDTO.getOpponentProfileImg(),
+
+            headerDTO.getOpponentRatingAvg(),
+            headerDTO.getOpponentTotalReviews(),
+
+            headerDTO.getProductName(),
+            headerDTO.getProductPrice(),
+
             headerDTO.getRoomStatusCode(),
             headerDTO.getRoomStatusLabel()
         );
+
 
         List<ChatMessageViewVO> messageVOs =
             messageDTOs.stream()

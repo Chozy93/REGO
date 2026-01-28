@@ -23,6 +23,32 @@ function requireLogin(target) {
 }
 
 
+// swiper
+document.addEventListener('DOMContentLoaded', function() {
+  // Swiper 초기화
+  const swiper = new Swiper('.detail-swiper', {
+    // 기본 파라미터
+    slidesPerView: 1,
+    spaceBetween: 0,
+    loop: true, // 이미지가 1장일 때는 작동 안 할 수 있으니 주의
+
+    // 페이지네이션 (점)
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+
+    // 화살표 내비게이션
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    
+    // 마우스 드래그 허용
+    grabCursor: true,
+  });
+});
+
 /* ==============================
    DOM Ready
 ============================== */
@@ -187,3 +213,42 @@ document.getElementById("directPayBtn")?.addEventListener("click", function() {
 });
 
 
+// 카카오 맵 표시하기
+document.addEventListener("DOMContentLoaded", function() {
+    const mapContainer = document.getElementById('map');
+    if (!mapContainer) return;
+
+    // 1. DB에서 가져온 지역 텍스트 추출 (예: "부산진구 양정동")
+    const regionText = document.getElementById('tradeRegion').innerText;
+
+    const mapOption = {
+        center: new kakao.maps.LatLng(35.1595, 129.0602), // 주소 찾기 전 기본 위치 (부산진구)
+        level: 3 
+    };
+
+    const map = new kakao.maps.Map(mapContainer, mapOption);
+    const geocoder = new kakao.maps.services.Geocoder();
+
+    // 2. 주소로 좌표 검색
+    geocoder.addressSearch(regionText, function(result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+            // 마커 표시
+            new kakao.maps.Marker({
+                map: map,
+                position: coords
+            });
+
+            // 중심 이동
+            map.setCenter(coords);
+            
+            // 3. 중고거래 특성상 지도는 보기만 하도록 설정 (옵션)
+            map.setDraggable(false); 
+            map.setZoomable(false);
+        } else {
+            console.error("지도를 불러올 수 없는 주소입니다.");
+            mapContainer.style.display = 'none'; // 주소가 이상하면 지도 숨김
+        }
+    });
+});

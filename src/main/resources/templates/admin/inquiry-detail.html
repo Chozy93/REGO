@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/admin/admin-sidebar.css">
+  <link rel="stylesheet" href="/css/admin/inquiry-detail.css">
+</th:block>
+
+<div layout:fragment="content" class="admin-layout">
+
+  <th:block th:replace="fragments/admin-sidebar :: admin-sidebar('inquiries')"/>
+
+  <div class="admin-inquiry-detail">
+
+    <!-- 상단 -->
+    <div class="detail-header">
+      <span class="breadcrumb">1:1 문의 상세</span>
+      <span class="status done"
+            th:text="${inquiry.status == 'DONE' ? '답변완료' : '답변대기'}">
+      </span>
+    </div>
+
+    <!-- 문의 카드 -->
+    <section class="detail-card">
+      <div class="card-head">
+        <span class="type" th:text="${inquiry.inquiryType}"></span>
+        <span class="date"
+              th:text="${#temporals.format(inquiry.createdAt,'yyyy.MM.dd')}">
+        </span>
+      </div>
+
+      <h2 class="title" th:text="${inquiry.title}"></h2>
+
+      <div class="content" th:text="${inquiry.content}"></div>
+    </section>
+
+    <!-- 답변 카드 -->
+    <section class="detail-card answer"
+             th:if="${inquiry.status == 'DONE'}">
+
+      <div class="answer-head">
+        <span class="admin-badge">RE:GO 운영팀</span>
+        <span class="date"
+              th:text="${#temporals.format(inquiry.answeredAt,'yyyy.MM.dd HH:mm')}">
+        </span>
+      </div>
+
+      <div class="answer-content"
+           th:text="${inquiry.answerContent}">
+      </div>
+    </section>
+
+    <div class="detail-footer">
+      <a th:href="@{/admin/inquiries}" class="btn btn-light">목록으로</a>
+    </div>
+
+  </div>
+</div>
+
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/admin/admin-sidebar.css">
+  <link rel="stylesheet" href="/css/admin/inquiries.css">
+</th:block>
+
+<div layout:fragment="content" class="admin-layout">
+
+  <!-- 사이드바 -->
+  <th:block th:replace="fragments/admin-sidebar :: admin-sidebar('inquiries')"></th:block>
+
+  <!-- 메인 -->
+  <div class="admin-inquiries">
+
+    <!-- 헤더 -->
+    <section class="admin-inquiries-head">
+      <div class="admin-head-row">
+        <h1 class="admin-inquiries-title">문의 관리</h1>
+
+        <!-- 요약 카드 -->
+        <div class="admin-summary-cards">
+          <div class="summary-card">
+            <span class="summary-label">전체</span>
+            <strong class="summary-value" th:text="${totalCount}">0</strong>
+          </div>
+
+          <div class="summary-card is-wait">
+            <span class="summary-label">대기</span>
+            <strong class="summary-value" th:text="${waitingCount}">0</strong>
+          </div>
+
+          <div class="summary-card is-done">
+            <span class="summary-label">답변완료</span>
+            <strong class="summary-value" th:text="${doneCount}">0</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 필터 / 검색 -->
+    <form method="get" th:action="@{/admin/inquiries}">
+      <section class="admin-inquiries-filter">
+        <div class="filter-left">
+
+          <!-- 기간 -->
+          <select name="period" class="filter-select">
+            <option value="">전체 기간</option>
+            <option value="WEEK" th:selected="${param.period == 'WEEK'}">최근 7일</option>
+            <option value="MONTH" th:selected="${param.period == 'MONTH'}">최근 30일</option>
+          </select>
+
+          <!-- 상태 -->
+          <select name="status" class="filter-select">
+            <option value="">전체 상태</option>
+            <option value="WAITING" th:selected="${param.status == 'WAITING'}">대기</option>
+            <option value="DONE" th:selected="${param.status == 'DONE'}">답변완료</option>
+          </select>
+
+          <!-- 제목 검색 -->
+          <input class="filter-input"
+                 type="text"
+                 name="keyword"
+                 placeholder="문의 제목 검색"
+                 th:value="${param.keyword}">
+        </div>
+
+        <button class="btn btn-primary" type="submit">검색</button>
+      </section>
+    </form>
+
+    <!-- 문의 리스트 -->
+    <section class="admin-inquiries-list">
+
+      <!-- 헤더 -->
+      <div class="inquiry-list-head">
+        <span>문의유형</span>
+        <span>제목</span>
+        <span>상태</span>
+        <span>작성일</span>
+      </div>
+
+      <!-- 데이터 행 -->
+      <div class="inquiry-item"
+           th:each="inquiry : ${page.inquiries}"
+           th:onclick="
+             |location.href='
+             + (${inquiry.status} == 'WAITING'
+                ? '/admin/inquiries/' + ${inquiry.id} + '/answer'
+                : '/admin/inquiries/' + ${inquiry.id})
+             + '|">
+
+        <span class="type" th:text="${inquiry.inquiryType}">유형</span>
+
+        <span class="title" th:text="${inquiry.title}">제목</span>
+
+        <span class="status"
+              th:classappend="${inquiry.status == 'WAITING'} ? ' wait' : ' done'"
+              th:text="${inquiry.status == 'WAITING'} ? '대기' : '답변완료'">
+        </span>
+
+        <span class="date"
+              th:text="${#temporals.format(inquiry.createdAt, 'yyyy-MM-dd')}">
+        </span>
+      </div>
+
+      <!-- 데이터 없을 때 -->
+      <div class="inquiry-item"
+           th:if="${#lists.isEmpty(page.inquiries)}">
+        조회된 문의가 없습니다.
+      </div>
+
+    </section>
+
+    <!-- 페이징 -->
+    <div class="admin-pagination">
+      <div class="admin-page-buttons">
+
+        <!-- 이전 -->
+        <a class="admin-page-btn"
+           th:if="${page.currentPage > 1}"
+           th:href="@{/admin/inquiries(page=${page.currentPage - 1},
+                    status=${param.status},
+                    period=${param.period},
+                    keyword=${param.keyword})}">
+          Previous
+        </a>
+
+        <!-- 페이지 번호 -->
+        <a class="admin-page-btn"
+           th:each="p : ${#numbers.sequence(1, page.totalPages)}"
+           th:classappend="${p == page.currentPage} ? ' is-active'"
+           th:href="@{/admin/inquiries(page=${p},
+                    status=${param.status},
+                    period=${param.period},
+                    keyword=${param.keyword})}"
+           th:text="${p}">
+        </a>
+
+        <!-- 다음 -->
+        <a class="admin-page-btn"
+           th:if="${page.currentPage < page.totalPages}"
+           th:href="@{/admin/inquiries(page=${page.currentPage + 1},
+                    status=${param.status},
+                    period=${param.period},
+                    keyword=${param.keyword})}">
+          Next
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</html>

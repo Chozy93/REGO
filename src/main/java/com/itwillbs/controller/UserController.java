@@ -25,10 +25,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.itwillbs.domain.user.NotificationUpdateVO;
 import com.itwillbs.domain.user.UserVO;
 import com.itwillbs.dto.MyPageDTO;
+import com.itwillbs.dto.SocialAccountDTO;
 import com.itwillbs.entity.NotificationSettings;
 import com.itwillbs.entity.User;
 import com.itwillbs.mapper.MypageMapper;
+import com.itwillbs.mapper.UserMapper;
 import com.itwillbs.repository.UserRepository;
+import com.itwillbs.service.CloudinaryImageService;
 import com.itwillbs.service.MypageService;
 import com.itwillbs.service.NotificationService;
 import com.itwillbs.service.UserService;
@@ -43,35 +46,36 @@ public class UserController {
 	private final MypageMapper mypageMapper;
 	private final MypageService mypageService;
 	private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+	
 	@Autowired
 	private NotificationService notificationService;
+	private final CloudinaryImageService cloudinaryImageService;
+	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private UserMapper userMapper;
 	
 	
 	@GetMapping("/mypage")
 	public String myPageMain(Authentication authentication, Model model) {
 	    if (authentication == null) return "redirect:/login";
 
-
 	    String email = getUserEmail(authentication);
 	    
-	    System.out.println("🔍 마이페이지 진입 시도 이메일: [" + email + "]");
+	    if (email == null || email.isEmpty()) return "redirect:/login";
 
-	    if (email == null || email.isEmpty()) {
-	        System.out.println("⚠️ 이메일을 찾을 수 없어 로그인 페이지로 튕깁니다.");
-	        return "redirect:/login";
-	    }
-
-	    // 2. 데이터 가져오기
+	    // 1. 기존 유저 기본 정보 가져오기
 	    MyPageDTO mypageInfo = mypageMapper.getMyPageInfo(email);
+	    if (mypageInfo == null) return "redirect:/"; 
+	    
 
-	    if (mypageInfo == null) {
-	        System.out.println("⚠️ DB에 해당 이메일의 유저 정보가 없습니다.");
-	        return "redirect:/"; 
-	    }
+	    Map<String, Object> sellerProfile = userMapper.findSellerProfileByEmail(email);
 	    
 	    model.addAttribute("user", mypageInfo);
+	    model.addAttribute("sellerProfile", sellerProfile);
+	    
 	    return "user/mypage";
 	}
 	
@@ -82,7 +86,10 @@ public class UserController {
 
         String email = getUserEmail(authentication);
         MyPageDTO mypageInfo = mypageMapper.getMyPageInfo(email);
+        SocialAccountDTO socialInfo = userMapper.findSocialAccountByUserId(mypageInfo.getUserId());
+        
         model.addAttribute("user", mypageInfo);
+        model.addAttribute("social", socialInfo);
         
         return "user/profile-edit"; 
     }
@@ -228,13 +235,19 @@ public class UserController {
     
     @PostMapping("/mypage/upload-profile")
     @ResponseBody
-    public ResponseEntity<?> uploadProfile(@RequestParam("profileFile") MultipartFile file, 
-                                           Authentication authentication, 
-                                           HttpSession session) {
+    public ResponseEntity<?> uploadProfile(
+            @RequestParam("profileFile") MultipartFile file,
+            Authentication authentication,
+            HttpSession session
+    ) {
         try {
-            if (file.isEmpty()) return ResponseEntity.badRequest().body("파일이 비어있습니다.");
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest().body("파일이 비어있습니다.");
+            }
 
-            // 1. 유저 정보 식별
+            /* =========================
+               1. 유저 식별
+            ========================= */
             String email = getUserEmail(authentication);
             UserVO loginUser = (UserVO) session.getAttribute("loginUser");
 
@@ -246,31 +259,81 @@ public class UserController {
                 session.setAttribute("loginUser", loginUser);
             }
 
-            // 2. 파일 저장 경로 설정
-            String uploadDir = System.getProperty("user.dir") + File.separator + "upload" + File.separator;
-            File dir = new File(uploadDir);
-            if (!dir.exists()) dir.mkdirs(); 
+            /* =========================
+               2. Cloudinary 업로드
+            ========================= */
+            String imageUrl =
+                cloudinaryImageService.uploadProfileImage(
+                    loginUser.getUserId(),
+                    file
+                );
 
-            // 3. 파일명 중복 방지 및 저장
-            String savedFilename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-            file.transferTo(new File(uploadDir + savedFilename));
+            /* =========================
+               3. DB 업데이트
+            ========================= */
+            mypageMapper.updateProfileImg(loginUser.getUserId(), imageUrl);
 
-            // 4. DB에 저장할 웹 경로
-            String dbPath = "/upload/" + savedFilename;
-            
-            //  DB 업데이트 호출
-            mypageMapper.updateProfileImg(loginUser.getUserId(), dbPath);
-
-            // 5. 세션에도 실시간 반영
-            loginUser.setProfileImg(dbPath);
+            /* =========================
+               4. 세션 반영
+            ========================= */
+            loginUser.setProfileImg(imageUrl);
             session.setAttribute("loginUser", loginUser);
 
-            System.out.println("✅ 프로필 이미지 변경 성공: " + dbPath);
-            return ResponseEntity.ok(Map.of("imageUrl", dbPath));
-            
+            System.out.println("✅ 프로필 이미지 변경 성공: " + imageUrl);
+
+            return ResponseEntity.ok(Map.of("imageUrl", imageUrl));
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("서버 오류 발생");
+        }
+    }
+
+    
+    
+    private Map<String, Object> getVerifiedUserInfo(String impUid) {
+        try {
+            org.springframework.web.client.RestTemplate restTemplate = new org.springframework.web.client.RestTemplate();
+            org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+            headers.set("Authorization", "PortOne im4tZ60IROAfT8VcCioqXCBCElABYFoYidxxVBcYPsRbjZPYCThD79J20OOEn7Iy05W0zzisYfPi2ewz");
+            
+            org.springframework.http.HttpEntity<String> entity = new org.springframework.http.HttpEntity<>(headers);
+            String url = "https://api.portone.io/identity-verifications/" + impUid;
+            
+            org.springframework.http.ResponseEntity<Map> response = restTemplate.exchange(url, org.springframework.http.HttpMethod.GET, entity, Map.class);
+            Map<String, Object> body = response.getBody();
+
+            if (body != null && body.containsKey("verifiedCustomer")) {
+                return (Map<String, Object>) body.get("verifiedCustomer");
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    @PostMapping("/mypage/update-phone-verified")
+    @ResponseBody
+    public ResponseEntity<?> updatePhoneVerified(@RequestBody Map<String, String> payload, 
+                                                Authentication authentication) {
+        String impUid = payload.get("imp_uid");
+        
+        Map<String, Object> userInfo = getVerifiedUserInfo(impUid); 
+        
+        if (userInfo == null) {
+            return ResponseEntity.ok(Map.of("success", false, "message", "인증 정보를 가져오지 못했습니다."));
+        }
+
+        String verifiedPhone = (String) userInfo.get("phoneNumber");
+        String email = getUserEmail(authentication);
+        
+        try {
+            // MypageService 호출
+            mypageService.updatePhoneNumberByEmail(email, verifiedPhone);
+            return ResponseEntity.ok(Map.of("success", true, "phoneNumber", verifiedPhone));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("success", false, "message", "업데이트 중 오류 발생"));
         }
     }
     

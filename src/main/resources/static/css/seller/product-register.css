@@ -24,17 +24,6 @@
   accent-color: var(--color-primary);
 }
 
-/* Chrome, Edge, Safari */
-.spr-input--price::-webkit-outer-spin-button,
-.spr-input--price::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-.spr-input--price {
-  -moz-appearance: textfield;
-}
 
 /* ==========================================================================
    Seller Product Register
@@ -191,6 +180,7 @@
   font-weight: var(--fw-bold);
   font-size: var(--fs-16);
   color: var(--color-text);
+  margin-bottom: var(--space-24);
 }
 
 .spr-section__meta {
@@ -241,9 +231,6 @@
   box-shadow: 0 0 0 3px var(--color-focus-ring);
 }
 
-.spr-input--price {
-  padding-left: 38px;
-}
 
 .spr-counter {
   display: flex;
@@ -369,73 +356,6 @@
 	border-color: var(--color-primary);
 	 background: var(--color-primary-soft);
 	 font-size: var(--fw-bold);
-}
-
-/* =========================
-   Price Section Refinement
-========================= */
-.spr-header{
-	width: 360px;
-	display: flex;
-	padding-bottom: var(--space-6);
-	
-}
-.spr-price {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  max-width: 360px; /* ← 너무 안 벌어지게 */
-}
-
-.spr-price__field {
-  position: relative;
-  flex: 1;
-}
-
-.spr-price__prefix {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text-muted);
-}
-
-.spr-input--price {
-  height: 40px;                 /* ↓ 키 줄임 */
-  padding-left: 34px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* number 화살표 제거 */
-.spr-input--price::-webkit-inner-spin-button,
-.spr-input--price::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-}
-.spr-input--price {
-  -moz-appearance: textfield;
-}
-.spr-price__field {
-  position: relative; /* ★ 필수 */
-}
-.spr-price__prefix {
-  z-index: 2;
-  pointer-events: none;
-}
-
-
-/* GPT 버튼 작게 */
-.spr-ai-btn {
-	margin-left: auto;
-  height: 32px;
-  width: 250px;
-  text-align: center;
-  padding: 0 10px;
-  font-size: 11px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
 }
 
 
@@ -575,5 +495,192 @@ border: 1px solid var(--color-border);
   margin-top: var(--space-8);
   font-size: var(--fs-12);
   color: var(--color-text-muted);
+}
+
+
+/* ==========================================================================
+   Price Section (정리된 최종본)
+   - 입력 필드가 기준
+   - AI 영역은 보조 설명
+========================================================================== */
+
+/* 가격 헤더 (제목 + GPT 버튼) */
+.spr-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 360px;
+  margin-bottom: var(--space-8);
+}
+
+
+
+
+/* GPT 버튼 */
+.spr-ai-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  height: 32px;
+  padding: 0 14px;
+  justify-content: center; /* ← 이게 가로 가운데 */
+  font-size: 12px;
+  font-weight: 600;
+
+  color: #4F46E5;
+  background: #EEF2FF;
+  margin-bottom: var(--space-8);
+  border: 1px solid #E0E7FF;
+  border-radius: 999px;
+  width: 200px;
+  cursor: pointer;
+  transition: background-color .15s ease, box-shadow .15s ease;
+
+}
+
+.spr-ai-btn:hover {
+  background: #E0E7FF;
+}
+
+.spr-ai-btn .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.spr-price-bottom {
+  margin-top: auto;
+  width: 450px;
+
+}
+
+/* ===============================
+   Price + AI Row
+=============================== */
+.spr-price-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-24);
+}
+
+/* ===============================
+   Price 영역 (주인공)
+=============================== */
+.spr-price {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 360px;
+}
+/* 가격 입력 필드 */
+.spr-price__field {
+  position: relative;
+  width: 100%;
+}
+
+/* ₩ prefix */
+.spr-price__prefix {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* 가격 input */
+.spr-input--price {
+  width: 100%;
+  height: 40px;
+  padding-left: 34px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* number 화살표 제거 */
+.spr-input--price::-webkit-inner-spin-button,
+.spr-input--price::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+.spr-input--price {
+  -moz-appearance: textfield;
+}
+
+/* 배송비 포함 체크 */
+.spr-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-8);
+  font-size: var(--fs-12);
+  color: var(--color-text-muted);
+}
+
+/* ===============================
+   AI 추천 정보 영역 (보조)
+=============================== */
+.spr-ai-info {
+  flex: 1;
+  max-width: 420px;
+  padding-left: var(--space-16);
+  border-left: 1px dashed var(--color-border);
+}
+
+/* AI 타이틀 */
+.spr-ai-info__title {
+  font-size: var(--fs-13);
+  font-weight: var(--fw-semibold);
+  margin-bottom: var(--space-6);
+}
+
+/* 추천 가격 */
+.spr-ai-info__price {
+  font-size: var(--fs-14);
+  margin-bottom: var(--space-6);
+}
+
+/* 안내 문구 */
+.spr-ai-info__notice {
+  font-size: var(--fs-12);
+  line-height: 1.4;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-8);
+}
+
+/* 평균가 적용 (텍스트 버튼) */
+.spr-ai-info__apply {
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: var(--fs-12);
+  font-weight: var(--fw-semibold);
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.spr-ai-info__apply:hover {
+  text-decoration: underline;
+}
+
+/* ===============================
+   Responsive (모바일)
+=============================== */
+@media (max-width: 768px) {
+  .spr-price-row {
+    flex-direction: column;
+  }
+
+  .spr-ai-info {
+    max-width: 100%;
+    padding-left: 0;
+    border-left: none;
+    margin-top: var(--space-12);
+  }
+
+  .spr-header {
+    max-width: 100%;
+  }
 }
 
