@@ -1,13 +1,13 @@
 package com.itwillbs.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.itwillbs.domain.FaqVO;
 import com.itwillbs.domain.NoticeVO;
 import com.itwillbs.entity.Inquiry;
 import com.itwillbs.entity.Notice;
@@ -16,6 +16,9 @@ import com.itwillbs.entity.User;
 import com.itwillbs.entity.enumtype.InquiryType;
 import com.itwillbs.mapper.CustomerMapper;
 import com.itwillbs.repository.InquiryRepository;
+import com.itwillbs.entity.Faq;
+
+import com.itwillbs.repository.FaqRepository;
 import com.itwillbs.repository.NoticeRepository;
 import com.itwillbs.repository.ProductOrderRepository;
 import com.itwillbs.security.util.SecurityUtil;
@@ -32,6 +35,7 @@ public class CustomerService {
 	private final InquiryRepository inquiryRepository;
 	private final CustomerMapper customerMapper;
 
+	private final FaqRepository faqRepository; 
 	
 	// -------- 공지사항 쓰기
     public void register(Long writerId, NoticeVO vo) {
@@ -122,4 +126,25 @@ public class CustomerService {
     }
 
 
+    
+    // --------------------- faq 페이지
+    
+    // faq list 가져오기
+    public List<FaqVO> getFaqList() {
+        return faqRepository.findByIsActiveTrueOrderByFaqCategoryIdAscCreatedAtDesc()
+                .stream()
+                .map(FaqVO::new)
+                .toList();
+    }
+    
+    // faq 작성하기
+    
+    @Transactional
+    public void registerFaq(FaqVO vo) {
+        Faq faq = new Faq(vo);
+        // 작성 시 기본적으로 활성화하고 싶다면
+        faq.activate(); 
+        faqRepository.save(faq);
+    }
+    
 }

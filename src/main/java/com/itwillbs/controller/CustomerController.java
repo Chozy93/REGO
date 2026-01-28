@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.itwillbs.domain.FaqVO;
 import com.itwillbs.domain.NoticeVO;
 import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.service.CustomerService;
@@ -29,7 +30,7 @@ public class CustomerController {
 	private final CustomerService customerService;
 
 	
-	// -------------- 공지사항
+	// -------------- 공지사항  ---------------------
 	/**
      * 공지사항 목록 조회
      */
@@ -51,7 +52,9 @@ public class CustomerController {
     }
 
 	
-	// 공지사항 상세페이지
+	/**
+     * 공지사항 상세페이지 조회 (isActive==1인 것들만)
+     */
     @GetMapping("/customer/notice-detail")
     public String getNoticeDetail(@RequestParam("id") Long id, Model model) {
         NoticeVO notice = customerService.getNoticeDetail(id);
@@ -60,11 +63,16 @@ public class CustomerController {
         return "customer/notice-detail"; // 상세 페이지 HTML 경로
     }
 	
-	// -------- 공지사항 작성페이지 (admin계정일 경우에만 )
+    
+	/**
+     * 공지사항 작성페이지 (user ROLE == "ADMIN"인 경우만 작성 버튼 보임)
+     */
 	@GetMapping("/customer/notice-write")
 	public String getNoticeWrite() {
 		return "customer/notice-write";
 	}
+	
+	
 	
 	@PostMapping("/customer/notice/write")
 	@PreAuthorize("hasRole('ADMIN')") // 관리자만 접근 가능
@@ -83,11 +91,19 @@ public class CustomerController {
 
 
 	
-	// 자주 묻는 질문
+	// ---------------------------- 자주 묻는 질문 -------------------------------
+	/**
+     * faq 리스트 조회
+     */
 	@GetMapping("/customer/faq")
-	public String getFaq() {
-		return "customer/faq";
+	public String getFaqList(Model model) {
+	    List<FaqVO> faqList = customerService.getFaqList();
+	    model.addAttribute("faqList", faqList);
+	    return "customer/faq"; // FAQ HTML 경로
 	}
+	
+	
+	
 
 	
 	
