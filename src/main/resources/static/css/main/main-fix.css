@@ -1,0 +1,263 @@
+/* 기본 설정 */
+        :root {
+            --primary: #13ec5b;
+            --bg-light: #f6f8f6;
+            --text-dark: #111813;
+            --text-gray: #6b7280;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+
+        /* 배너 섹션 */
+        .hero-banner {
+            width: 100%;
+            height: 320px;
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 48px;
+            box-shadow: var(--shadow);
+            background-color: #eee;
+        }
+
+        .hero-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: transform 0.7s ease;
+        }
+
+        .hero-banner:hover img {
+            transform: scale(1.05);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(16, 34, 22, 0.8), rgba(16, 34, 22, 0.4), transparent);
+            display: flex;
+            align-items: center;
+            padding: 0 48px;
+        }
+
+        .hero-content {
+            max-width: 500px;
+            color: var(--white);
+        }
+
+        .hero-content h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.125rem;
+            margin-bottom: 32px;
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--text-dark);
+            font-weight: 700;
+            padding: 14px 32px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 15px -3px rgba(19, 236, 91, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* 섹션 공통 스타일 */
+        section {
+            margin-bottom: 64px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 24px;
+        }
+
+        .section-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .view-all {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-gray);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s;
+        }
+
+        .view-all:hover {
+            color: var(--primary);
+        }
+
+        /* 상품 그리드 */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px 16px;
+        }
+
+        @media (min-width: 640px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1024px) { .product-grid { grid-template-columns: repeat(6, 1fr); } }
+
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+		/* 1. 이미지 박스: 무조건 정사각형으로 영역 고정 */
+		.image-box {
+		    position: relative !important;
+		    width: 100% !important;
+		    aspect-ratio: 1 / 1 !important; /* 가로세로 1:1 강제 */
+		    background-color: #f3f4f6 !important;
+		    border-radius: 16px !important;
+		    overflow: hidden !important;
+		}
+
+		/* 2. 이미지: 박스 안에 꽉 채우고 삐져나온 건 자르기 */
+		.image-box img {
+		    position: absolute !important;
+		    top: 0 !important;
+		    left: 0 !important;
+		    width: 100% !important;
+		    height: 100% !important;
+		    object-fit: cover !important; /* 이게 핵심: 비율 유지하면서 박스 채움 */
+		    object-position: center !important; /* 이미지의 가운데를 보여줌 */
+		    display: block !important;
+		}
+
+        .product-card:hover .image-box img {
+            transform: scale(1.05);
+        }
+		
+		/* 이미지 박스의 비율을 1:1로 고정 (정사각형) */
+		.product-card .image-box {
+		    position: relative;
+		    width: 100%;
+		    aspect-ratio: 1 / 1; /* 가로세로 비율 1:1 고정 */
+		    overflow: hidden;
+		    border-radius: 12px; /* 디자인에 맞춰 조절 */
+		    background-color: #f8f8f8;
+		}
+		
+		/* 이미지가 박스를 꽉 채우도록 설정 */
+		.product-card .image-box img {
+		    width: 100%;
+		    height: 100%;
+		    object-fit: cover; /* 비율을 유지하면서 박스를 꽉 채움 (잘리는 부분 발생) */
+		    display: block;
+		    transition: transform 0.3s ease; /* 호버 효과용 */
+		}
+
+        /* 뱃지 및 찜 버튼 */
+        .status-badge {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            color: var(--white);
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            backdrop-filter: blur(4px);
+        }
+
+        .wish-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .wish-btn:hover {
+            color: #ef4444;
+            transform: scale(1.1);
+        }
+
+        /* 상품 정보 */
+        .product-info h4 {
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color 0.2s;
+        }
+
+        .product-card:hover h4 {
+            color: var(--primary);
+        }
+
+        .price-tag {
+            display: flex;
+            flex-direction: column;
+            margin-top: 4px;
+        }
+
+        .price {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .meta-info {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 4px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
