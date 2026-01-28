@@ -1,0 +1,85 @@
+package com.itwillbs.service;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.itwillbs.domain.FaqVO;
+import com.itwillbs.domain.NoticeVO;
+import com.itwillbs.entity.Faq;
+import com.itwillbs.entity.Notice;
+import com.itwillbs.repository.FaqRepository;
+import com.itwillbs.repository.NoticeRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class CustomerService {
+	private final NoticeRepository noticeRepository;
+	private final FaqRepository faqRepository; 
+	
+	// -------- 공지사항 쓰기
+    public void register(Long writerId, NoticeVO vo) {
+        // 엔티티 생성 (우리가 만든 생성자 사용)
+        Notice notice = new Notice(writerId, vo);
+        notice.activate();
+        // DB 저장
+        noticeRepository.save(notice);
+    }
+    
+ // ------- 공지사항 목록 조회
+    @Transactional(readOnly = true)
+    public Page<NoticeVO> getNoticeList(Pageable pageable) {
+        return noticeRepository.findByIsActiveTrue(pageable).map(NoticeVO::new);
+    }
+
+    // -------- 공지사항 고정글 조회
+    @Transactional(readOnly = true)
+    public List<NoticeVO> getPinnedNotices() {
+        return noticeRepository.findByIsPinnedTrueOrderByCreatedAtDesc()
+                .stream().map(NoticeVO::new).toList();
+    }
+    
+    // 공지사항 고정글로 등록
+    
+    
+    // 공지사항 상세페이지 
+    public NoticeVO getNoticeDetail(Long id) {
+        // 1. ID로 조회 (없으면 예외 발생)
+        Notice notice = noticeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 공지사항이 없습니다. id=" + id));
+        
+        // 2. 조회수 증가
+        notice.increaseViewCount(); 
+        
+        // 3. VO로 변환해서 반환
+        return new NoticeVO(notice);
+    }
+    
+    
+    // --------------------- faq 페이지
+    
+    // faq list 가져오기
+    public List<FaqVO> getFaqList() {
+        return faqRepository.findByIsActiveTrueOrderByFaqCategoryIdAscCreatedAtDesc()
+                .stream()
+                .map(FaqVO::new)
+                .toList();
+    }
+    
+    // faq 작성하기
+    
+    @Transactional
+    public void registerFaq(FaqVO vo) {
+        Faq faq = new Faq(vo);
+        // 작성 시 기본적으로 활성화하고 싶다면
+        faq.activate(); 
+        faqRepository.save(faq);
+    }
+    
+}

@@ -6,7 +6,7 @@
 <!-- =========================
      PAGE CSS
 ========================= -->
-<th:block th:fragment="pageCss">
+<th:block th:fragment="pageCss"> 
   <link rel="stylesheet" th:href="@{/css/product/detail.css}">
   <link rel="stylesheet" th:href="@{/css/fragments/report-modal.css}">
 </th:block>
@@ -41,108 +41,171 @@
     ========================= -->
     <div class="detail-left">
 
-      <!-- 상품 이미지 -->
-      <section class="product-detail-media">
-        <div class="product-image-main">
-          <img th:if="${page.product.mainImageUrl != null}"
-               th:src="${page.product.mainImageUrl}"
-               alt="상품 이미지"/>
+		<!-- 상품 이미지 -->
+		<section class="product-detail-media">
+		  <div class="product-image-slider" id="detailImageSlider">
 
-          <img th:if="${page.product.mainImageUrl == null}"
-               src="/images/no-image.png"
-               alt="기본 이미지"/>
-        </div>
-      </section>
+		    <div class="slider-track">
+		      <!-- 지금은 같은 이미지 3번 써도 OK -->
+		      <img th:if="${page.product.mainImageUrl != null}"
+		           th:src="${page.product.mainImageUrl}"
+		           alt="상품 이미지 1"/>
 
-      <!-- 🔽 이미지 아래 영역 -->
-      <div class="left-bottom-box">
+		      <img th:if="${page.product.mainImageUrl != null}"
+		           th:src="${page.product.mainImageUrl}"
+		           alt="상품 이미지 2"/>
 
-        <!-- 판매자 카드 -->
-		<section class="info-card seller-card"
-		         th:if="${page.sellerInfo != null}">
+		      <img th:if="${page.product.mainImageUrl != null}"
+		           th:src="${page.product.mainImageUrl}"
+		           alt="상품 이미지 3"/>
 
-		  <!-- 상단 -->
-		  <div class="seller-card-header">
-		    <div class="seller-card-profile">
-		      <span class="material-symbols-outlined">person</span>
+		      <!-- 이미지 없을 때 -->
+		      <img th:if="${page.product.mainImageUrl == null}"
+		           src="/images/no-image.png"
+		           alt="기본 이미지"/>
 		    </div>
 
-		    <div class="seller-card-meta">
-		      <div class="seller-card-name"
-		           th:text="${page.sellerInfo.nickname}">
-		        판매자
-		      </div>
-
-		      <div class="seller-card-stats">
-		        <span>상품 <b th:text="${page.sellerInfo.productCount}">0</b></span>
-		        <span class="dot"></span>
-		        <span th:text="${page.sellerInfo.ratingLabel}">평점</span>
-		      </div>
+		  
+		    <!-- 하단 dot -->
+		    <div class="slider-dots">
+		      <span class="dot active"></span>
+		      <span class="dot"></span>
+		      <span class="dot"></span>
 		    </div>
+
 		  </div>
-
-		  <!-- 중단: 신뢰 정보 -->
-		  <div class="seller-card-info">
-		    <div class="seller-card-info-row">
-		      <span class="label">판매자 유형</span>
-
-		      <span class="seller-type-badge"
-		            th:text="${page.sellerInfo.newSeller ? '신규 판매자' : '일반 판매자'}">
-		        일반 판매자
-		      </span>
-		    </div>
-		  </div>
-
-		  <!-- 하단: 액션 -->
-		  <div class="seller-card-actions">
-		    <a class="btn btn-primary"
-		       th:href="@{/seller/{id}(id=${page.sellerInfo.sellerId})}">
-		      판매자 상품 보기
-		    </a>
-		  </div>
-
 		</section>
 
-        <!-- 찜 / 채팅 / 구매 -->
-		<div class="action-card product-detail">
+		<!-- 🔽 이미지 아래 영역 -->
+		<div class="left-bottom-box">
 
-		  <!-- 찜 버튼 (본인 상품이어도 가능) -->
-		  <button type="button"
-		          class="product-card__like-btn"
-		          th:data-product-id="${page.product.productId}"
-		          th:data-login="${page.login ? 'true' : 'false'}"
-		          th:data-mine="${page.isMine ? 'true' : 'false'}"
-		          th:disabled="${page.isMine}"
-		          th:title="${page.isMine ? '내 상품은 찜할 수 없습니다' : ''}">
+		  <!-- 판매자 + 액션 통합 카드 -->
+		  <section class="info-card seller-card"
+		           th:if="${page.sellerInfo != null}">
 
-		    <span class="material-symbols-outlined"
-		          th:classappend="${page.product.liked} ? ' filled' : ''">
-		      favorite
-		    </span>
-		  </button>
+		    <!-- 판매자 헤더 -->
+		    <div class="seller-card-header">
+		      <div class="seller-card-profile">
+		        <span class="material-symbols-outlined">person</span>
+		      </div>
 
-		  <!-- 채팅하기 -->
-		  <button type="button"
-		          id="dealBtn"
-		          class="btn-primary"
-		          th:disabled="${page.mine}"
-		          th:data-mine="${page.mine}"
-		          th:data-login="${page.login ? 'true' : 'false'}"
-		          th:text="${page.mine ? '내 상품입니다' : '채팅하기'}">
-		    채팅하기
-		  </button>
+		      <div class="seller-card-meta">
+		        <div class="seller-card-name"
+		             th:text="${page.sellerInfo.nickname}">
+		          판매자
+		        </div>
 
-		  <!-- 바로구매 -->
-		  <button class="btn-dark"
-		          th:disabled="${page.mine}"
-				  th:onclick="|location.href='@{/direct(productId=${page.product.productId})}'|">
-		    바로구매
-		  </button>
+		        <div class="seller-card-stats">
+		          <span>상품 <b th:text="${page.sellerInfo.productCount}">0</b></span>
+		          <span class="dot"></span>
+		          <span th:text="${page.sellerInfo.ratingLabel}">평점 없음</span>
+		        </div>
+		      </div>
+			  
+			  <a class="seller-profile-link"
+			     th:href="@{/seller/profile}">
+			    프로필 보기
+			  </a>
+			  </div>
 
+		    <!-- 판매자 유형 -->
+		    <div class="seller-card-info">
+		      <div class="seller-card-info-row">
+		        <span class="label">판매자 유형</span>
+		        <span class="seller-type-badge"
+		              th:text="${page.sellerInfo.newSeller ? '신규 판매자' : '일반 판매자'}">
+		          일반 판매자
+		        </span>
+		      </div>
+		    </div>
+			
+	
+
+		    <!-- 판매자 상품 보기 -->
+		    <div class="seller-card-actions">
+				<a class="btn btn-primary"
+				   th:href="@{/seller/{sellerId}(sellerId=${page.sellerInfo.sellerId})}">
+				  판매자 상품 보기
+				</a>
+		    </div>
+
+		    <hr class="seller-divider">
+
+		    <!-- 찜 / 채팅 / 바로구매 -->
+		    <div class="action-card product-detail">
+
+		      <button type="button"
+		              class="product-card__like-btn"
+		              th:data-product-id="${page.product.productId}"
+		              th:data-login="${page.login ? 'true' : 'false'}"
+		              th:data-mine="${page.isMine ? 'true' : 'false'}"
+		              th:disabled="${page.isMine}">
+		        <span class="material-symbols-outlined"
+		              th:classappend="${page.product.liked} ? ' filled' : ''">
+		          favorite
+		        </span>
+		      </button>
+
+			  <!-- 채팅 -->
+			  <button type="button"
+			          id="dealBtn"
+			          class="btn-primary"
+			          th:data-product-id="${page.product.productId}"
+			          th:data-mine="${page.mine}"
+			          th:data-login="${page.login ? 'true' : 'false'}">
+			    채팅하기
+			  </button>
+
+			  <!-- =========================
+			       ✅ JS는 여기!
+			  ========================= -->
+			  <script>
+			  document.getElementById("dealBtn")?.addEventListener("click", () => {
+			    const btn = document.getElementById("dealBtn");
+
+			    const productId = btn.dataset.productId;
+			    const isMine = btn.dataset.mine === "true";
+			    const isLogin = btn.dataset.login === "true";
+
+			    if (!isLogin) {
+			      alert("로그인이 필요합니다.");
+			      location.href = "/login";
+			      return;
+			    }
+
+			    if (isMine) {
+			      alert("내 상품에는 채팅할 수 없습니다.");
+			      return;
+			    }
+
+			    fetch(`/chat/room`, {
+			      method: "POST",
+			      headers: { "Content-Type": "application/json" },
+			      body: JSON.stringify({ productId })
+			    })
+			    .then(res => res.json())
+			    .then(data => {
+			      location.href = `/chat/list?roomId=${data.roomId}`;
+			    });
+			  });
+			  </script>
+
+
+			  <button type="button" 
+			          id="directPayBtn" 
+			          class="btn-dark" 
+			          th:disabled="${page.mine}"
+			          th:data-product-id="${page.product.productId}">
+			      바로구매
+			  </button>
+
+		    </div>
+
+		  </section>
 		</div>
-      </div>
-    </div>
-
+		
+		</div>
+		
     <!-- =========================
          RIGHT : 상품 정보
     ========================= -->
@@ -211,13 +274,46 @@
         </div>
       </div>
 
-      <!-- 상품 정보 -->
-      <div class="info-card product-description">
-        <h3>상품 정보</h3>
-        <p th:text="${page.product.description}">
-          설명
-        </p>
-      </div>
+	  <!-- 상품 정보 -->
+	  <div class="info-card product-description">
+	    <h3>상품 정보</h3>
+
+	    <!-- 판매자 설명이 있는 경우 -->
+	    <p th:if="${!#strings.isEmpty(page.product.description)}"
+	       th:text="${page.product.description}">
+	    </p>
+
+	    <!-- 판매자 설명이 없는 경우 (공통 기본 문구) -->
+	    <p th:if="${#strings.isEmpty(page.product.description)}">
+	      판매자가 등록한 상품입니다.<br><br>
+	      생활 사용감이 있을 수 있으나,
+	      전체적으로 상태가 양호한 상품입니다.<br><br>
+	      직거래를 우선으로 하며,
+	      거래 전 상품 상태를 꼭 확인해 주세요.
+	    </p>
+
+	    <!-- 👍 이런 분께 추천 -->
+	    <div class="product-recommend">
+	      <strong>이런 분께 추천해요</strong>
+	      <ul>
+	        <li>✔ 합리적인 가격으로 중고 제품을 찾고 계신 분</li>
+	        <li>✔ 근처 지역에서 빠른 거래를 원하시는 분</li>
+	        <li>✔ 실사용에 문제없는 상품을 선호하시는 분</li>
+	      </ul>
+	    </div>
+
+	    <!-- ⚠ 거래 주의사항 -->
+	    <div class="product-notice">
+	      <strong>거래 전 꼭 확인해 주세요</strong>
+	      <ul>
+	        <li>🔍 중고 특성상 사용감이 있을 수 있습니다.</li>
+	        <li>📦 구성품 및 상태는 판매자에게 꼭 확인해 주세요.</li>
+	        <li>🤝 직거래 시 상품 상태를 직접 확인한 후 거래하세요.</li>
+	        <li>💬 궁금한 점은 채팅으로 문의하시면 빠르게 안내받을 수 있습니다.</li>
+	      </ul>
+	    </div>
+
+	  </div>
 
       <!-- 실거래 지역 -->
       <div class="info-card trade-info">

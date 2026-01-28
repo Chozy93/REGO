@@ -32,11 +32,7 @@ public class SellerProfile {
     )
     private User seller;
 
-    /* =========================
-       판매자 소개
-    ========================= */
-    @Column(name = "description")
-    private String description;
+ 
 
     /* =========================
        평점 / 통계 (캐싱)
@@ -83,7 +79,7 @@ public class SellerProfile {
     public SellerProfile(User seller, SellerProfileVO vo) {
         this.seller = seller;
 
-        this.description = vo.getDescription();
+       
 
         /* 초기 통계값 */
         this.ratingAvg = 0.0;
@@ -99,14 +95,10 @@ public class SellerProfile {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
-    //conditonVO를 매개변수로받아 최초생성시 사용 생성자
-    public SellerProfile(User seller, SellerRegisterConditionVO conditionVO) {
+    // 최초생성시 사용 생성자
+    public SellerProfile(User seller) {
         this.seller = seller;
 
-        /* =========================
-           판매자 소개
-        ========================= */
-        this.description = conditionVO.getDescription();
 
         /* =========================
            초기 통계값

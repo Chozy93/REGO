@@ -35,4 +35,6 @@ public interface CategoryMapper {
     
     CategoryBaseDTO selectDefaultCategory();
 
+	List<CategoryDTO> selectParentCategoryList();
+
 }

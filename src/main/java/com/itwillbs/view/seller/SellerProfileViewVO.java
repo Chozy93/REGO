@@ -14,7 +14,7 @@ public class SellerProfileViewVO {
     private final String nickname;
     private final String profileImg;
 
-    private final String description;
+    private final String introduction;
 
     private final double ratingAvg;
     private final int totalReviews;
@@ -27,7 +27,7 @@ public class SellerProfileViewVO {
             Long sellerId,
             String nickname,
             String profileImg,
-            String description,
+            String introduction,
             double ratingAvg,
             int totalReviews,
             int totalSales
@@ -35,7 +35,7 @@ public class SellerProfileViewVO {
         this.sellerId = sellerId;
         this.nickname = nickname;
         this.profileImg = profileImg;
-        this.description = description;
+        this.introduction = introduction;
         this.ratingAvg = ratingAvg;
         this.totalReviews = totalReviews;
         this.totalSales = totalSales;

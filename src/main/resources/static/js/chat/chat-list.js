@@ -25,6 +25,36 @@
 ================================================== */
 
 $(function () {
+  console.log("🔥🔥🔥 chat-list.js 로드됨");
+
+  const rawRoomId = $("#chat-list-root").attr("data-initial-room-id");
+  console.log("🧩 rawRoomId =", rawRoomId);
+
+  const initialRoomId = rawRoomId ? Number(rawRoomId) : null;
+  console.log("🧩 initialRoomId =", initialRoomId);
+
+  if (!initialRoomId) {
+    console.log("❌ initialRoomId 없음 → 자동 오픈 안 함");
+    return;
+  }
+
+  console.log("🚀 초기 채팅방 자동 오픈:", initialRoomId);
+
+  $("#chatEmptyState").hide();
+  $("#chatRoomArea").show();
+
+  $("#chatRoomArea").load("/chat/room/" + initialRoomId, function () {
+    console.log("✅ 채팅방 fragment 로드 완료");
+
+    const $messages = $("#chatMessages");
+    if ($messages.length) {
+      $messages.scrollTop($messages[0].scrollHeight);
+    }
+
+    syncActiveChatRoom();
+    connectChatSocket(initialRoomId);
+  });
+});
 
   /* ==================================================
      Dropdown (채팅방 리스트 옵션 드롭다운)
@@ -110,8 +140,6 @@ $(function () {
       connectChatSocket(roomId);
     });
   });
-
-}); // $(function () {}) 종료
 
 
 /* ==================================================

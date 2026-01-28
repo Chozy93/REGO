@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+    <link rel="stylesheet" href="/css/customer/qna.css">
+	<link rel="stylesheet" href="/css/policy/policy.css">
+</th:block>
+
+<div layout:fragment="content" class="policy-wrapper">
+	<div class="policy-container">
+	        
+	       <th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='qna')"></th:block>
+
+		   <main class="qna-main">
+		               <div class="page-top-bar">
+		                   <div class="title-area">
+		                       <div>
+		                           <h2>1:1 문의 내역</h2>
+		                           <p>고객님의 소중한 문의 내역입니다.</p>
+		                       </div>
+		                   </div>
+		                   <button class="write-btn">
+		                       <span class="material-symbols-outlined">edit_square</span>
+		                       1:1 문의하기
+		                   </button>
+		               </div>
+
+		               <div class="filter-row">
+		                   <div class="select-wrapper">
+		                       <select>
+		                           <option>전체 문의 유형</option>
+		                           <option>배송/택배</option>
+		                           <option>계정/로그인</option>
+		                           <option>사기 신고</option>
+		                       </select>
+		                       <span class="material-symbols-outlined arrow">expand_more</span>
+		                   </div>
+		               </div>
+
+		               <div class="list-card">
+		                   <div class="list-header">
+		                       <div class="col-type">유형</div>
+		                       <div class="col-title">제목</div>
+		                       <div class="col-date">접수일</div>
+		                       <div class="col-status">상태</div>
+		                   </div>
+		                   
+		                   <div class="list-body">
+		                       <div class="list-item">
+		                           <a href="/qna/detail/1" class="item-link">
+		                               <div class="col-type"><span class="m-label">유형</span>배송/택배</div>
+		                               <div class="col-title"><h3>배송이 시작되지 않았는데 취소 가능한가요?</h3></div>
+		                               <div class="col-date"><span class="m-label">접수일</span>2023.11.02</div>
+		                               <div class="col-status"><span class="badge status-waiting">답변대기</span></div>
+		                           </a>
+		                       </div>
+		                       <div class="list-item">
+		                           <a href="/qna/detail/2" class="item-link">
+		                               <div class="col-type"><span class="m-label">유형</span>계정/로그인</div>
+		                               <div class="col-title"><h3>비밀번호 변경 메일이 오지 않습니다.</h3></div>
+		                               <div class="col-date"><span class="m-label">접수일</span>2023.10.28</div>
+		                               <div class="col-status"><span class="badge status-complete">답변완료</span></div>
+		                           </a>
+		                       </div>
+		                   </div>
+
+		                   <div class="pagination">
+		                       <button class="page-arrow"><span class="material-symbols-outlined">chevron_left</span></button>
+		                       <button class="page-num active">1</button>
+		                       <button class="page-num">2</button>
+		                       <button class="page-num">3</button>
+		                       <button class="page-arrow"><span class="material-symbols-outlined">chevron_right</span></button>
+		                   </div>
+		               </div>
+
+		               <div class="info-box">
+		                   <span class="material-symbols-outlined icon">info</span>
+		                   <div class="info-content">
+		                       <h4>안내사항</h4>
+		                       <ul>
+		                           <li>1:1 문의 내역은 최근 1년까지 조회 가능합니다.</li>
+		                           <li>답변이 완료된 문의는 수정이나 삭제가 불가능합니다.</li>
+		                       </ul>
+		                   </div>
+		               </div>
+		           </main>
+	    </div>
+</div>
+</html>

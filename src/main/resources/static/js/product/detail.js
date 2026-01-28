@@ -94,29 +94,96 @@ document.addEventListener("DOMContentLoaded", () => {
      - 채팅 담당자 영역으로 연결만 담당
   ========================= */
   const dealBtn = document.getElementById("dealBtn");
+
   if (dealBtn) {
     dealBtn.addEventListener("click", (e) => {
 
-      // 🔥 1차 차단: disabled 상태
+      // 1차 차단
       if (dealBtn.disabled) {
         e.preventDefault();
         e.stopPropagation();
         return;
       }
 
-      // 🔥 2차 차단: 본인 상품(mine)
+      // 2차 차단: 본인 상품
       if (dealBtn.dataset.mine === "true") {
         e.preventDefault();
         return;
       }
 
-      // 🔐 로그인 가드 (구매자만 여기 도달)
+      // 로그인 가드
       if (!requireLogin(e.currentTarget)) return;
 
-      // ✅ 정상 사용자만 이동
-      location.href = "/chat/list";
+      // 🔥🔥🔥 핵심 한 줄 (이게 빠져 있었음)
+      const productId = dealBtn.dataset.productId;
+
+      console.log("채팅 시작 productId =", productId);
+
+      // 정상 이동
+      location.href = `/chat/start/${productId}`;
     });
   }
 
+  
+  (() => {
+    const slider = document.getElementById('detailImageSlider');
+    if (!slider) return;
+
+    const track = slider.querySelector('.slider-track');
+    const dots = slider.querySelectorAll('.dot');
+    const total = dots.length;
+
+    if (!track || total === 0) return;
+
+    let index = 0;
+
+    function moveSlide(i) {
+      index = (i + total) % total;
+      track.style.transform = `translateX(-${index * 100}%)`;
+
+      dots.forEach(d => d.classList.remove('active'));
+      dots[index].classList.add('active');
+    }
+
+    /* ▶ 좌 / 우 버튼 */
+    slider.querySelector('.next')
+      ?.addEventListener('click', () => moveSlide(index + 1));
+
+    slider.querySelector('.prev')
+      ?.addEventListener('click', () => moveSlide(index - 1));
+
+    /* 🔘 dot 클릭 이동 (추가된 부분) */
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        moveSlide(i);
+      });
+    });
+  })();
 
 });
+
+
+// 바로결제 이동
+document.getElementById("directPayBtn")?.addEventListener("click", function() {
+    // 1. 본인 상품인지 체크 (Thymeleaf 변수 활용)
+	const isMine = /*[[${page.mine}]]*/ false; 
+	const isLogin = /*[[${page.login}]]*/ false;
+    if (isMine) {
+        alert("본인 상품은 구매할 수 없습니다.");
+        return;
+    }
+	
+	if (isMine) {
+	        alert("본인 상품은 구매할 수 없습니다.");
+	        return;
+	    }
+
+    // 2. 상품 ID 가져오기
+    const productId = this.dataset.productId;
+
+    // 3. 결제 페이지(GET /direct)로 주소 이동
+    // 결과 주소 예시: /direct?productId=123
+    location.href = `/direct?productId=${productId}`;
+});
+
+
