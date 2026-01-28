@@ -14,7 +14,13 @@ public class FaqVO {
     private final Long faqsId;
     private final String question;
     private final String answer;
-    private final String faqCategoryId;
+
+    /* =========================
+       카테고리 (VO는 enum 모름)
+    ========================= */
+    private final String faqCategoryCode;
+    private final String faqCategoryLabel;
+
     private final boolean isActive;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
@@ -26,7 +32,10 @@ public class FaqVO {
         this.faqsId = entity.getFaqsId();
         this.question = entity.getQuestion();
         this.answer = entity.getAnswer();
-        this.faqCategoryId = entity.getFaqCategoryId();
+
+        this.faqCategoryCode = entity.getFaqCategory().name();
+        this.faqCategoryLabel = entity.getFaqCategory().getLabel();
+
         this.isActive = entity.isActive();
         this.createdAt = entity.getCreatedAt();
         this.updatedAt = entity.getUpdatedAt();
@@ -38,13 +47,16 @@ public class FaqVO {
     public FaqVO(
             String question,
             String answer,
-            String faqCategoryId,
+            String faqCategoryCode,
             boolean isActive
     ) {
         this.faqsId = null;
         this.question = question;
         this.answer = answer;
-        this.faqCategoryId = faqCategoryId;
+
+        this.faqCategoryCode = faqCategoryCode;
+        this.faqCategoryLabel = null; // 서버에서 채움
+
         this.isActive = isActive;
         this.createdAt = null;
         this.updatedAt = null;

@@ -2,6 +2,7 @@ package com.itwillbs.service;
 
 import org.springframework.stereotype.Service;
 
+import com.itwillbs.dto.ReviewDTO;
 import com.itwillbs.entity.Review;
 import com.itwillbs.entity.SellerProfile;
 import com.itwillbs.entity.User;
@@ -88,4 +89,28 @@ public class ReviewService {
         sellerProfileRepository.save(profile);
     }
 
+    public boolean checkIfReviewed(Long buyerId, Long productId) {
+        return reviewRepository.existsByBuyerUserIdAndProductId(buyerId, productId);
+    }
+    
+    public ReviewDTO getReviewByProductAndBuyer(Long productId, Long buyerId) {
+        // 1. DB에서 리뷰 찾기
+        Review review = reviewRepository.findByBuyerUserIdAndProductId(buyerId, productId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰를 찾을 수 없습니다."));
+
+        User seller = userRepository.findById(review.getSellerId())
+                .orElseThrow(() -> new IllegalArgumentException("DB에 저장된 sellerId(" + review.getSellerId() + ")가 유저 테이블에 없습니다!"));
+        
+        var product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("상품 정보를 찾을 수 없습니다."));
+        
+        // 2. DTO로 변환해서 반환
+        ReviewDTO dto = new ReviewDTO();
+        dto.setContent(review.getContent());
+        dto.setRating(review.getRating());
+        dto.setSellerNickname(seller.getNickname());
+        dto.setProductImageUrl(product.getMainImageUrl());
+        return dto;
+    }
+    
 }

@@ -3,80 +3,67 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
 
-<!-- =========================
-     PAGE CSS
-========================= -->
 <th:block th:fragment="pageCss">
+  <link rel="stylesheet" th:href="@{/css/fragments/product-card.css}">
   <link rel="stylesheet" th:href="@{/css/product/list.css}">
 </th:block>
 
-<!-- =========================
-     CONTENT
-========================= -->
 <div class="container-content" layout:fragment="content">
 
-  <!-- =========================
-       CATEGORY BAR
-  ========================= -->
-  <!-- =========================
-       CATEGORY BAR (DROPDOWN)
-  ========================= -->
-  <section class="category-bar">
+    <div class="category-mega" id="categoryMega">
+        
+        <button type="button" class="category-mega-toggle parent-category-btn">
+            <span th:text="${page.categoryGroup.parentCategoryName}">디지털기기</span>
+            <span class="arrow">▾</span>
+        </button>
 
-    <div class="category-dropdown">
-
-      <!-- 드롭다운 버튼 (대분류) -->
-      <button type="button" class="dropdown-toggle">
-        <span th:text="${page.categoryGroup.parentCategoryName}">
-          디지털기기
-        </span>
-        <svg class="dropdown-arrow"
-             width="14" height="14" viewBox="0 0 24 24">
-          <path d="M7 10l5 5 5-5z"/>
-        </svg>
-      </button>
-
-      <!-- 드롭다운 메뉴 (소분류) -->
-      <ul class="dropdown-menu">
-        <li th:each="tab : ${page.categoryGroup.subCategories}"
-            th:classappend="${tab.selected} ? 'active'">
-
-          <a th:href="@{/products(categoryId=${tab.categoryId})}"
-             th:text="${tab.categoryName}">
-            소분류명
-          </a>
-
-        </li>
-      </ul>
-
+        <div class="category-mega-panel">
+            <div class="category-parent-grid">
+                <a th:each="parent : ${parentCategoryList}"
+                   th:href="@{/products(categoryId=${parent.categoryId})}"
+                   th:text="${parent.name}"
+                   th:classappend="${parent.categoryId == page.categoryGroup.parentCategoryId} ? ' active' : ''">
+                </a>
+            </div>
+        </div>
     </div>
 
-  </section>
+    <div class="category-fixed-sub-grid">
+        
+        <a class="sub-grid-item all-view"
+           th:href="@{/products(categoryId=${page.categoryGroup.parentCategoryId})}">
+            <span class="name">전체보기</span>
+            <span class="arrow">›</span>
+        </a>
 
-  <!-- =========================
-       PRODUCT LIST
-  ========================= -->
-  <section class="product-list">
+        <a class="sub-grid-item"
+           th:each="sub : ${page.categoryGroup.subCategories}"
+           th:href="@{/products(categoryId=${sub.categoryId})}">
+            <span class="name" th:text="${sub.categoryName}">소분류명</span>
+        </a>
+        
+    </div>
 
-    <!-- 상품 없음 -->
-	<div class="empty-result"
-	     th:if="${#lists.isEmpty(page.productList.products)}">
-	    등록된 상품이 없습니다.
-	</div>
+    <section class="product-list">
+        
+        <div class="empty-result" th:if="${#lists.isEmpty(page.productList.products)}">
+            등록된 상품이 없습니다.
+        </div>
 
-	<!-- 상품 리스트 -->
-	<div class="product-grid"
-	     th:if="${!#lists.isEmpty(page.productList.products)}">
-
-	  <th:block th:each="card : ${page.productList.products}">
-		<th:block
-		  th:replace="fragments/product-card :: productCard(${card})">
-		</th:block>
-	  </th:block>
-
-	</div>
-
-  </section>
+        <div id="productGrid" class="product-grid" th:if="${!#lists.isEmpty(page.productList.products)}">
+            <th:block th:each="card : ${page.productList.products}">
+                <th:block th:replace="~{fragments/product-card :: productCard(${card})}"></th:block>
+            </th:block>
+        </div>
+        
+    </section>
 
 </div>
+
+<th:block th:fragment="pageJs">
+  <script th:src="@{/js/product/list-category.js}"></script>
+  <script th:src="@{/js/product-list.js}"></script>
+  <script th:src="@{/js/category-mega.js}"></script>
+</th:block>
+
 </html>

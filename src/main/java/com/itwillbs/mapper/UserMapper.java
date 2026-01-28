@@ -31,4 +31,8 @@ public interface UserMapper {
     void updateSocialInfo(@Param("username") String username, 
             @Param("phoneNumber") String phoneNumber, 
             @Param("password") String password);
+
+	Map<String, Object> findSellerProfileByEmail(String email);
+
+	SocialAccountDTO findSocialAccountByUserId(Long userId);
 }

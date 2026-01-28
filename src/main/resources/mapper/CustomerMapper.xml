@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itwillbs.mapper.CustomerMapper">
+
+    <!-- =====================================
+         내 결제/거래 주문 목록 (1:1 문의용)
+         구매자 / 판매자 모두 포함
+    ====================================== -->
+    <select id="selectMyOrdersForInquiry"
+            parameterType="long"
+            resultType="com.itwillbs.view.MyOrderSelectViewVO">
+        SELECT
+            po.order_id     AS orderId,
+            p.product_name  AS productTitle,
+            po.total_amount AS totalAmount,
+            po.deal_type    AS dealType,
+            po.created_at   AS createdAt,
+            CASE
+                WHEN po.buyer_id = #{userId} THEN 'BUYER'
+                ELSE 'SELLER'
+            END             AS myRole
+        FROM product_orders po
+        JOIN products p
+          ON po.product_id = p.product_id
+        WHERE po.buyer_id = #{userId}
+           OR po.seller_id = #{userId}
+        ORDER BY po.created_at DESC
+    </select>
+
+</mapper>

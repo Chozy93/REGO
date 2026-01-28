@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+	<link rel="stylesheet" href="/css/customer/customer.css">
+    <link rel="stylesheet" href="/css/customer/notice-detail.css">
+    <link rel="stylesheet" href="/css/customer/sidebar.css">
+    
+</th:block>
+
+<div layout:fragment="content" class="container-content">
+	<div class="customer-layout">
+	        
+
+		<!-- Sidebar -->
+		<th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='notice')"></th:block>
+		   <main class="customer-main">
+			
+		               <div class="customer-header">
+						<a href="#" class="customer-back" onclick="history.back()">
+								         <span class="material-symbols-outlined">arrow_back</span>
+								       </a>
+						   <div>
+						            <h1 class="customer-title">공지사항</h1>
+						            <p class="customer-desc">
+						             공지사항 &gt; 상세 내용
+						            </p>
+						          </div>
+
+		               </div>
+
+		               <article class="detail-card" th:if="${notice != null}">
+		                   <header class="detail-header">
+		                       <div class="tag-row">
+		                           <span class="badge badge-important" th:if="${notice.pinned}">중요</span>
+		                           <span class="badge badge-category" th:text="${notice.category}">분류</span>
+		                       </div>
+		                       <h1 th:text="${notice.title}">공지사항 제목</h1>
+		                       
+		                       <div class="meta-info">
+		                           <div class="meta-item">
+		                               <span class="material-symbols-outlined">calendar_today</span>
+		                               <span th:text="${#temporals.format(notice.createdAt, 'yyyy.MM.dd HH:mm')}">2024.01.01 00:00</span>
+		                           </div>
+		                           <div class="meta-divider"></div>
+		                           <div class="meta-item">
+		                               <span class="material-symbols-outlined">visibility</span>
+		                               <span th:text="${#numbers.formatInteger(notice.viewCount, 0, 'COMMA')} + ' 읽음'">0 읽음</span>
+		                           </div>
+		                       </div>
+		                   </header>
+
+		                   <section class="detail-body">
+		                       <div class="content-area" th:text="${notice.content}" style="white-space: pre-wrap; min-height: 300px;">
+		                           내용이 여기에 출력됩니다.
+		                       </div>
+		                       <p class="thanks-msg" style="margin-top: 50px;">감사합니다.</p>
+		                   </section>
+
+		                   <section class="detail-attachments" th:if="${notice.noticeId == -1}"> <h4>첨부파일 (0)</h4>
+		                       <p class="text-gray-400">첨부된 파일이 없습니다.</p>
+		                   </section>
+
+		                   <footer class="detail-footer-nav">
+		                       </footer>
+		               </article>
+
+		               <div class="action-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+		                   <a th:href="@{/customer/notice}" class="list-btn">목록으로</a>
+		                   
+		                   <div sec:authorize="hasRole('ADMIN')" class="admin-btns" style="display: flex; gap: 10px;">
+		                       <a th:href="@{/customer/notice-edit(id=${notice.noticeId})}" 
+		                          class="list-btn" style="background-color: #f3f4f6; color: #374151;">수정</a>
+		                       <button type="button" class="list-btn" 
+		                               th:onclick="deleteNotice([[${notice.noticeId}]])"
+		                               style="background-color: #fee2e2; color: #ef4444; border: none; cursor: pointer;">삭제</button>
+		                   </div>
+		               </div>
+		           </main>
+	    </div>
+</div>
+</html>

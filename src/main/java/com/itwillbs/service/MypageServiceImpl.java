@@ -43,5 +43,10 @@ public class MypageServiceImpl implements MypageService {
         
         userRepository.save(user); 
     }
+    
+    @Override
+    public void updatePhoneNumberByEmail(String email, String verifiedPhone) {
+        mypageMapper.updatePhoneNumber(email, verifiedPhone);
+    }
 }
    

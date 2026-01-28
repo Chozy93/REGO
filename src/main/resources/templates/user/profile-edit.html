@@ -1,363 +1,382 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/base}">
-<head>
-    <th:block layout:fragment="pageCss">
-        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-        <style>
-            .profile-edit-container { font-family: 'Manrope', 'Noto Sans KR', sans-serif; }
-            footer, .footer { display: none !important; }
-        </style>
-    </th:block>
-	<th:block layout:fragment="pageJs">
-		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4c764c90e4c6a17612ca32a2a6c26e4d&libraries=services"></script>
-		    
-		    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-		    
-		    <script>
-				function coordToAddress() {
-				            if (typeof kakao === 'undefined' || !kakao.maps) {
-				                alert("아직 지도가 준비되지 않았어요. 1~2초만 기다려주세요!");
-				                return;
-				            }
-
-				            if (navigator.geolocation) {
-				                navigator.geolocation.getCurrentPosition(function(position) {
-				                    const lat = position.coords.latitude;
-				                    const lng = position.coords.longitude;
-
-				                    const geocoder = new kakao.maps.services.Geocoder();
-
-				                    geocoder.coord2RegionCode(lng, lat, function(result, status) {
-				                        if (status === kakao.maps.services.Status.OK) {
-				                            for (let i = 0; i < result.length; i++) {
-				                                if (result[i].region_type === 'H') {
-				                                    const fullAddr = result[i].address_name;
-				                                    const parts = fullAddr.split(' ');
-				                                    const displayAddr = parts[1] + " " + parts[2];
-				                                    
-				                                    document.getElementById('displayAddress').innerText = displayAddr;
-				                                    document.getElementById('userAddress').value = displayAddr;
-				                                    alert("📍 " + displayAddr + " 인증에 성공했습니다!");
-				                                    break;
-				                                }
-				                            }
-				                        }
-				                    });
-				                }, function(error) {
-				                    alert("위치 정보를 가져올 수 없습니다. GPS 권한을 허용해주세요!");
-				                });
-				            }
-				        }
-						function openPwdModal() {
-							        document.getElementById('pwdModal').classList.remove('hidden');
-							    }
-
-							    function closeModal() {
-							        document.getElementById('pwdModal').classList.add('hidden');
-							        document.getElementById('currentPwd').value = '';
-							        document.getElementById('step1').classList.remove('hidden');
-							        document.getElementById('step2').classList.add('hidden');
-							    }
-
-								function checkCurrentPwd() {
-								    const pwd = document.getElementById('currentPwd').value;
-								    if(!pwd) { alert("비밀번호를 입력해주세요!"); return; }
-
-								    const params = new URLSearchParams();
-								    params.append('currentPassword', pwd);
-
-								    fetch('/mypage/check-password', {
-								        method: 'POST',
-								        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-								        body: params // 요렇게 보내는 게 더 안전해!
-								    })
-								    .then(response => {
-								        if(response.ok) {
-								            document.getElementById('step1').classList.add('hidden');
-								            document.getElementById('step2').classList.remove('hidden');
-								        } else {
-								            alert("현재 비밀번호가 일치하지 않습니다.");
-								        }
-								    });
-								}
-								// 새 비밀번호로 변경 (Step 2)
-								function updatePwd() {
-								    const newPwd = document.getElementById('newPwd').value;
-								    const confirm = document.getElementById('newPwdConfirm').value;
-
-								    if(!newPwd || !confirm) { alert("빈칸을 모두 채워주세요!"); return; }
-									
-									if(newPwd.length < 8) {
-									        alert("비밀번호는 최소 8자 이상이어야 합니다! 안전하게 만들어 봐요. 😊");
-									        return;
-									    }
-										
-								    if(newPwd !== confirm) { alert("새 비밀번호가 서로 일치하지 않습니다."); return; }
-
-
-								    const params = new URLSearchParams();
-								    params.append('newPassword', newPwd);
-
-								    fetch('/mypage/update-password', {
-								        method: 'POST',
-								        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-								        body: params
-								    })
-								    .then(response => {
-								        if(response.ok) {
-								            alert("비밀번호가 성공적으로 변경되었습니다! 다시 로그인 해주세요.");
-								            location.href = "/logout";
-								        } else {
-								            console.error("Error Status:", response.status);
-								            alert("변경 실패! 서버 응답 코드를 확인해 보세요.");
-								        }
-								    });
-								}
-								function checkLength() {
-								    const pwd = document.getElementById('newPwd').value;
-								    const hint = document.getElementById('pwdHint');
-								    
-								    if(pwd.length > 0) {
-								        hint.classList.remove('hidden');
-								        if(pwd.length >= 8) {
-								            hint.innerText = "✅ 8자 이상입니다. 사용 가능해요!";
-								            hint.className = "text-[11px] mt-1 ml-1 text-green-500";
-								        } else {
-								            hint.innerText = "❌ 8자 이상 입력해 주세요.";
-								            hint.className = "text-[11px] mt-1 ml-1 text-red-500";
-								        }
-								    } else {
-								        hint.classList.add('hidden');
-								    }
-								}
-								
-								function triggerFileUpload() {
-								    document.getElementById('profileUpload').click();
-								}
-
-								// 파일이 선택되면 실행될 함수
-								function handleFileSelect(event) {
-								    const file = event.target.files[0];
-								    if (file) {
-								        // 1. 이미지 미리보기 처리 (사용자에게 바로 보여주기)
-								        const reader = new FileReader();
-								        reader.onload = function(e) {
-								            document.getElementById('profileImagePreview').src = e.target.result;
-								        };
-								        reader.readAsDataURL(file);
-
-								        // 2. 서버로 파일 업로드 (비동기 방식 추천!)
-								        uploadImageToServer(file);
-								    }
-								}
-								function uploadImageToServer(file) {
-								    const formData = new FormData();
-								    formData.append('profileFile', file);
-
-								    fetch('/mypage/upload-profile', {
-								        method: 'POST',
-								        body: formData 
-								    })
-								    .then(response => {
-								        if (response.ok) {
-								            alert("프로필 사진이 서버에 저장되었습니다! 😊");
-								        } else {
-								            alert("사진 업로드 실패! 다시 시도해 주세요.");
-								        }
-								    })
-								    .catch(error => console.error('Error:', error));
-								}
-								
-				    </script>
+	<!DOCTYPE html>
+	<html xmlns:th="http://www.thymeleaf.org"
+	      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	      layout:decorate="~{layout/base}">
+	<head>
+	    <th:block layout:fragment="pageCss">
+	        <link rel="stylesheet" href="/css/main/main.css">
+	        <script src="https://cdn.tailwindcss.com"></script>
+	        <script>
+	            tailwind.config = {
+	                corePlugins: { preflight: false, container: false },
+	                important: '#tailwind-zone', 
+	                theme: { extend: { colors: { "primary": "#13ec5b" } } }
+	            }
+	        </script>
+	        <style>
+	            #tailwind-zone { font-family: 'Manrope', 'Noto Sans KR', sans-serif; background-color: #f8faf9; min-height: 100vh; }
+	            footer, .footer { display: none !important; }
+	            
+	            .modal-overlay {
+	                position: fixed !important; inset: 0 !important;
+	                background-color: rgba(0, 0, 0, 0.5) !important;
+	                backdrop-filter: blur(4px);
+	                z-index: 9999 !important;
+	                display: none; align-items: center; justify-content: center;
+	            }
+	            
+	            .custom-input { 
+	                border: 1px solid #f0f4f2 !important; 
+	                background-color: #f0f4f2 !important; 
+	                height: 40px !important; 
+	                transition: all 0.2s;
+	            }
+	            .custom-input:focus { 
+	                border-color: #13ec5b !important; 
+	                background-color: white !important; 
+	                outline: none !important;
+	                box-shadow: 0 0 0 4px rgba(19, 236, 91, 0.05) !important;
+	            }
+	            .custom-input:disabled { cursor: not-allowed !important; color: #9ca3af !important; opacity: 0.8; }
+	            
+	            textarea.custom-input { height: 80px !important; }
+				.elevated-card {
+				        background-color: white !important;
+				        border: 1px solid #eef2f0 !important; 
+				        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important; 
+				        transition: all 0.3s ease;
+				        max-height: 72px; 
+				    }
+				    
+	
+					.elevated-card:hover {
+					        border-color: #13ec5b !important; 
+					        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05) !important;
+					        transform: translateY(-1px); 
+					    }
+	
+					    .soft-border {
+					        border: 1px solid #eef2f0 !important;
+					        transition: all 0.2s;
+					    }
+					    
+					    .soft-border:hover {
+					        border-color: #d1d5db !important; 
+					    }
+	
+	
+					    .custom-input { 
+					        border: 1px solid #f0f4f2 !important; 
+					        background-color: #f0f4f2 !important; 
+					        height: 42px !important; 
+					        transition: all 0.2s;
+					    }
+					
+	        </style>
 	    </th:block>
 	
-</head>
-
-<body>
-	<div layout:fragment="content">
-	    <div class="profile-edit-container bg-[#f8faf9] dark:bg-[#0d130f] min-h-screen">
-	        <div class="w-full max-w-[1280px] mx-auto px-4 py-8 flex flex-col md:flex-row gap-6">
-	            
-				<aside class="w-full md:w-64 flex-shrink-0">
-				    <div class="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-sm border border-[#f0f4f2] dark:border-white/5 space-y-6">
-				        <div class="flex flex-col items-center pb-6 border-b border-[#f0f4f2] dark:border-white/5">
-				            
-							<div class="size-20 rounded-full border-4 border-white dark:border-[#1A2C20] shadow-md bg-gray-200 flex items-center justify-center mb-3 flex-shrink-0 overflow-hidden">
-							    <img th:if="${user.profileImg != null and user.profileImg != 'default.png'}" 
-							         th:src="${user.profileImg}" 
-							         alt="User Profile" class="w-full h-full object-cover" />
-
-							    <img th:if="${user.profileImg == null or user.profileImg == 'default.png'}" 
-							         src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0ObRBFDRs_vob6idb6aYKUuIove2YF-wbvYCHg-2sm6qoyedO7RYGPgbD3YUragy7aKMdHZaGuFf9n2VN8bfXNLuaHQv41ulrqhVYIpmk3x64L5NlUFVVfia-ExqeHUsxo5vgQfQPtrASlzehup3VxN0K1KuHLfM_Jo4LSDScARNe9G-rzONQqnH5Zobrl4cD0Z9vAbXnHqFPATdIE6yqtnbrqSfNs-liXa-Ege7QLNN9juuw7GAvbZhH4XK8XgkJEehsTeeKTVY" 
-							         alt="Default Profile" class="w-full h-full object-cover" />
-							</div>
-				            <h2 class="text-xl font-bold text-[#111813] dark:text-white" th:text="${user.nickname}">닉네임</h2>
-				            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">인증된 회원</p>
-				        </div>
-	                    <nav class="space-y-1">
-	                        <a class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/10 text-primary font-bold transition-colors" href="#">
-	                            <span class="material-symbols-outlined text-[20px]">person</span>
-	                            <span class="text-sm">프로필 관리</span>
-	                        </a>
-	                    </nav>
-	                </div>
-	            </aside>
-
-	            <main class="flex-1">
-	                <div class="bg-white dark:bg-white/5 rounded-2xl p-6 md:p-8 shadow-sm border border-[#f0f4f2] dark:border-white/5 w-full max-w-2xl mx-auto">
-	                    <div class="flex items-center justify-between mb-8">
-	                        <h2 class="text-2xl font-bold text-[#111813] dark:text-white">프로필 관리</h2>
+	    <th:block layout:fragment="pageJs">
+	        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4c764c90e4c6a17612ca32a2a6c26e4d&libraries=services"></script>
+	        <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+			<script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+	        <script th:inline="javascript">
+	            // 📍 위치 인증 (카카오맵 로직)
+	            function coordToAddress() {
+	                if (typeof kakao === 'undefined' || !kakao.maps) { alert("잠시만 기다려주세요!"); return; }
+					
+	                if (navigator.geolocation) {
+	                    navigator.geolocation.getCurrentPosition(function(position) {
+	                        const geocoder = new kakao.maps.services.Geocoder();
+	                        geocoder.coord2RegionCode(position.coords.longitude, position.coords.latitude, function(result, status) {
+	                            if (status === kakao.maps.services.Status.OK) {
+	                                for (let i = 0; i < result.length; i++) {
+	                                    if (result[i].region_type === 'H') {
+	                                        const displayAddr = result[i].address_name.split(' ')[1] + " " + result[i].address_name.split(' ')[2];
+	                                        document.getElementById('displayAddress').innerText = displayAddr;
+	                                        document.getElementById('userAddress').value = displayAddr;
+	                                        alert("📍 " + displayAddr + " 인증 성공!");
+	                                        break;
+	                                    }
+	                                }
+	                            }
+	                        });
+	                    });
+	                }
+	            }
+	
+	            // 🔐 모달 제어
+	            function openPwdModal() { document.getElementById('pwdModal').style.display = 'flex'; }
+	            function closeModal() {
+	                document.getElementById('pwdModal').style.display = 'none';
+	                document.getElementById('currentPwd').value = '';
+	                document.getElementById('step1').style.display = 'block';
+	                document.getElementById('step2').style.display = 'none';
+	            }
+	
+	            function checkCurrentPwd() {
+	                const pwd = document.getElementById('currentPwd').value;
+	                if(!pwd) { alert("비밀번호를 입력해주세요!"); return; }
+	                const params = new URLSearchParams();
+	                params.append('currentPassword', pwd);
+	                fetch('/mypage/check-password', {
+	                    method: 'POST',
+	                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+	                    body: params
+	                }).then(response => {
+	                    if(response.ok) {
+	                        document.getElementById('step1').style.display = 'none';
+	                        document.getElementById('step2').style.display = 'block';
+	                    } else { alert("현재 비밀번호가 일치하지 않습니다."); }
+	                });
+	            }
+	
+	            function updatePwd() {
+	                const newPwd = document.getElementById('newPwd').value;
+	                const confirm = document.getElementById('newPwdConfirm').value;
+	                if(!newPwd || newPwd.length < 8) { alert("8자 이상 입력해주세요!"); return; }
+	                if(newPwd !== confirm) { alert("일치하지 않습니다."); return; }
+	                const params = new URLSearchParams();
+	                params.append('newPassword', newPwd);
+	                fetch('/mypage/update-password', {
+	                    method: 'POST',
+	                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+	                    body: params
+	                }).then(response => {
+	                    if(response.ok) { alert("변경 성공! 다시 로그인해주세요."); location.href = "/logout"; }
+	                });
+	            }
+	
+	            function checkLength() {
+	                const pwd = document.getElementById('newPwd').value;
+	                const hint = document.getElementById('pwdHint');
+	                if(pwd.length > 0) {
+	                    hint.classList.remove('hidden');
+	                    hint.innerText = pwd.length >= 8 ? "✅ 사용 가능해요!" : "❌ 8자 이상 입력하세요.";
+	                    hint.className = "text-[11px] mt-1 " + (pwd.length >= 8 ? "text-green-500" : "text-red-500");
+	                } else { hint.classList.add('hidden'); }
+	            }
+	
+	            // 📸 이미지 업로드
+	            function triggerFileUpload() { document.getElementById('profileUpload').click(); }
+	            function handleFileSelect(event) {
+	                const file = event.target.files[0];
+	                if (file) {
+	                    const reader = new FileReader();
+	                    reader.onload = e => document.getElementById('profileImagePreview').src = e.target.result;
+	                    reader.readAsDataURL(file);
+	                    const formData = new FormData();
+	                    formData.append('profileFile', file);
+	                    fetch('/mypage/upload-profile', { method: 'POST', body: formData }).then(r => { if(r.ok) alert("업로드 완료! 😊"); });
+	                }
+	            }
+				
+				async function openPortoneAuth() {
+				    try {
+				        const identityVerificationId = `id-verify-${new Date().getTime()}`;
+	
+	
+				        const response = await PortOne.requestIdentityVerification({
+				            storeId: "store-40e995f6-80d5-43c5-812a-babeaca09755",
+				            channelKey: "channel-key-d4d68a57-122c-4418-81fb-d1ed47cec331",
+				            identityVerificationId: identityVerificationId,
+				            identityVerificationMethod: "SMS"
+				        });
+	
+				        // 인증 성공 시 
+				        if (response.code == null) { 
+				            const res = await fetch("/mypage/update-phone-verified", {
+				                method: "POST",
+				                headers: { "Content-Type": "application/json" },
+				                body: JSON.stringify({ imp_uid: response.identityVerificationId }) 
+				            });
+	
+				            const data = await res.json();
+	
+				            if (data.success) {
+				                document.getElementById('userPhoneNumber').value = data.phoneNumber;
+				                alert("📍 휴대폰 번호가 인증된 번호로 변경되었습니다!");
+				            } else {
+				                alert("업데이트 실패: " + data.message);
+				            }
+				        }
+				    } catch (error) {
+				        alert("본인인증 중 오류가 발생했습니다: " + error.message);
+				    }
+				}
+				
+				function submitForm() {
+				    document.getElementById('userPhoneNumber').disabled = false;
+				    document.getElementById('editProfileForm').submit();
+				}
+	        </script>
+	    </th:block>
+	</head>
+	
+	<body>
+	    <div layout:fragment="content">
+	        <div id="tailwind-zone">
+	            <div class="w-full max-w-[1280px] mx-auto px-4 py-8 flex flex-col md:flex-row gap-8">
+	                
+					<aside class="w-full md:w-64 flex-shrink-0">
+													    <div class="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-sm border border-[#f0f4f2] dark:border-white/5 space-y-2 sticky top-32">
+													        
+													        <div class="flex flex-col items-center pb-1" style="border-bottom: 2px solid #f0f4f2;">
+													            <img th:src="${user.profileImg != null ? user.profileImg : '/img/default-profile.png'}" 
+													                 class="size-20 rounded-full object-cover border-4 border-white shadow-md bg-gray-200 mb-3">
+													            <h2 class="text-xl font-bold" th:text="${user.nickname}">사용자</h2>
+													            <p class="text-xs text-gray-500 mt-1" th:text="${user.address}">주소 없음</p>
+													        </div>
+															<nav class="space-y-1">
+															    <a href="/mypage/edit" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/10 text-primary font-bold transition-all">
+															        <span class="material-symbols-outlined text-[20px]">person</span>
+															        <span class="text-sm">프로필 관리</span>
+															    </a>
+															    
+															    <a href="/mypage/sales" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-gray-600">
+															        <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+															        <span class="text-sm font-medium">판매 내역</span>
+															    </a>
+															    
+															    <a href="/mypage/buys" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-gray-600">
+															        <span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+															        <span class="text-sm font-medium">구매 내역</span>
+															    </a>
+															    
+															    <a href="/mypage/likes" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-gray-600">
+															        <span class="material-symbols-outlined text-[20px]">favorite</span>
+															        <span class="text-sm font-medium">찜한 상품</span>
+															    </a>
+																<a href="/mypage/reviews" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-gray-600">
+																											 <span class="material-symbols-outlined text-[20px]">rate_review</span>
+																											 <span class="text-sm font-medium">거래 후기</span>
+																											 </a>   
+															</nav>
+										                </div>
+										            </aside>
+	                <main class="flex-1 min-w-0">
+	                    <div class="flex items-center gap-4 mb-4">
+	                        <button onclick="history.back()" class="p-1 hover:bg-gray-100 rounded-full"><span class="material-symbols-outlined text-2xl">chevron_left</span></button>
+	                        <h2 class="text-2xl font-bold">프로필 관리</h2>
 	                    </div>
-
-						<div class="flex flex-col items-center mb-10">
-						    <div class="relative group cursor-pointer" onclick="triggerFileUpload()"> <div class="relative group cursor-pointer flex-shrink-0">
-						            <img id="profileImagePreview" 
-						                 th:src="${(user.profileImg != null and user.profileImg != 'default.png') ? user.profileImg : 'https://lh3.googleusercontent.com/aida-public/AB6AXuD0ObRBFDRs_vob6idb6aYKUuIove2YF-wbvYCHg-2sm6qoyedO7RYGPgbD3YUragy7aKMdHZaGuFf9n2VN8bfXNLuaHQv41ulrqhVYIpmk3x64L5NlUFVVfia-ExqeHUsxo5vgQfQPtrASlzehup3VxN0K1KuHLfM_Jo4LSDScARNe9G-rzONQqnH5Zobrl4cD0Z9vAbXnHqFPATdIE6yqtnbrqSfNs-liXa-Ege7QLNN9juuw7GAvbZhH4XK8XgkJEehsTeeKTVY'}" 
-						                 alt="Profile" class="size-32 rounded-full object-cover border-4 border-white dark:border-[#1A2C20] shadow-lg bg-gray-200"/>
-						            
-						            <div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-						                <span class="material-symbols-outlined text-white text-3xl">photo_camera</span>
-						            </div>
-						        </div>
-						        <button type="button" class="absolute bottom-0 right-0 p-2.5 bg-primary text-[#111813] rounded-full shadow-lg border-2 border-white dark:border-[#1A2C20]">
-						            <span class="material-symbols-outlined text-xl leading-none">edit</span>
-						        </button>
-						    </div>
-						    
-						    <input type="file" id="profileUpload" class="hidden" accept="image/*" onchange="handleFileSelect(event)">
-						    
-						    <button type="button" onclick="triggerFileUpload()" class="mt-4 text-sm font-bold text-primary hover:text-primary/80 transition-colors">이미지 변경</button>
-						</div>
-
-						<form th:action="@{/mypage/update}" method="post" class="space-y-6">
-						    <div>
-						        <label class="block text-sm font-bold text-[#111813] dark:text-white mb-2">닉네임</label>
-						        <div class="flex gap-3">
-						            <input name="nickname" class="flex-1 h-12 rounded-xl bg-[#f0f4f2] dark:bg-white/5 border-transparent focus:border-primary focus:bg-white text-[#111813] dark:text-white px-4 transition-colors font-medium" type="text" th:value="${user.nickname}"/>
-						        </div>
-						    </div>
-
-						    <div>
-						        <label class="block text-sm font-bold text-[#111813] dark:text-white mb-2">내 상점 소개글</label>
-						        <textarea name="bio" class="w-full h-24 rounded-xl bg-[#f0f4f2] dark:bg-white/5 border-transparent focus:border-primary focus:bg-white text-[#111813] dark:text-white px-4 py-3 transition-colors font-medium resize-none leading-relaxed" placeholder="우리 상점을 소개해 보세요!" th:text="${user.bio}"></textarea>
-						    </div>
-
-						    <div>
-						        <label class="block text-sm font-bold text-[#111813] dark:text-white mb-2">이메일</label>
-						        <input class="w-full h-12 rounded-xl bg-gray-50 dark:bg-white/5 border-transparent text-gray-500 px-4 cursor-not-allowed font-medium" disabled type="email" th:value="${user.email}"/>
-						    </div>
-
-						    <div>
-						        <label class="block text-sm font-bold text-[#111813] dark:text-white mb-2">휴대폰 번호</label>
-						        <div class="flex gap-3">
-						            <input name="phoneNumber" class="flex-1 h-12 rounded-xl bg-[#f0f4f2] dark:bg-white/5 border-transparent focus:border-primary focus:bg-white text-[#111813] dark:text-white px-4 transition-colors font-medium" type="tel" th:value="${user.phoneNumber}"/>
-						            <button type="button" class="h-12 px-5 rounded-xl border border-primary text-sm font-bold text-primary hover:bg-primary/10 transition-colors whitespace-nowrap bg-white dark:bg-transparent">재인증</button>
-						        </div>
-						    </div>
-
-							<div class="space-y-4 mt-8">
-							    <div class="flex items-center justify-between p-4 rounded-xl border border-[#f0f4f2] dark:border-white/10 hover:border-primary/50 hover:shadow-sm transition-all group cursor-pointer bg-white dark:bg-white/5" 
-							         onclick="coordToAddress()">
-							        <div class="flex items-center gap-4">
-							            <div class="p-2.5 rounded-xl bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
-							                <span class="material-symbols-outlined">location_on</span>
-							            </div>
-							            <div>
-							                <h3 class="text-sm font-bold text-[#111813] dark:text-white mb-0.5">내 동네 설정</h3>
-							                <p id="displayAddress" class="text-xs text-gray-500 dark:text-gray-400" 
-							                   th:text="${user.address ?: '버튼을 눌러 동네를 인증해 주세요'}">주소를 설정해 주세요</p>
-							                <input type="hidden" name="address" id="userAddress" th:value="${user.address}">
-							            </div>
-							        </div>
-							        <button type="button" class="text-xs font-bold text-primary bg-primary/10 px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-colors">
-							            위치인증
-							        </button>
-							    </div>
-							</div>
-						
-						        <div class="flex items-center justify-between p-4 rounded-xl border border-[#f0f4f2] dark:border-white/10 hover:border-primary/50 hover:shadow-sm transition-all group cursor-pointer bg-white dark:bg-white/5" onclick="openPwdModal()">
-						            <div class="flex items-center gap-4">
-						                <div class="p-2.5 rounded-xl bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
-						                    <span class="material-symbols-outlined">lock</span>
-						                </div>
-						                <h3 class="text-sm font-bold text-[#111813] dark:text-white">비밀번호 변경</h3>
-						            </div>
-						            <span class="material-symbols-outlined text-gray-400 group-hover:text-[#111813] dark:group-hover:text-white transition-colors">chevron_right</span>
-						        </div>
-
-						        <div class="flex items-center justify-between p-4 rounded-xl border border-[#f0f4f2] dark:border-white/10 hover:border-primary/50 hover:shadow-sm transition-all group cursor-pointer bg-white dark:bg-white/5">
-						            <div class="flex items-center gap-4">
-						                <div class="p-2.5 rounded-xl bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
-						                    <span class="material-symbols-outlined">link</span>
-						                </div>
-						                <div>
-						                    <h3 class="text-sm font-bold text-[#111813] dark:text-white mb-0.5">소셜 계정 연동</h3>
-						                    <div class="flex items-center gap-1">
-						                        <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
-						                        <p class="text-xs text-gray-500 dark:text-gray-400">카카오톡 연결됨</p>
-						                    </div>
-						                </div>
-						            </div>
-						            <span class="material-symbols-outlined text-gray-400 group-hover:text-[#111813] dark:group-hover:text-white transition-colors">chevron_right</span>
-						        </div>
-
-						    <div class="flex gap-4 mt-10">
-						        <button type="button" onclick="location.href='/mypage'" class="flex-1 h-12 rounded-xl border border-[#f0f4f2] dark:border-white/10 text-[#111813] dark:text-white font-bold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors bg-white dark:bg-transparent">
-						            취소
-						        </button>
-								<button type="submit" 
-								        class="flex-1 h-12 rounded-xl bg-[#111813] text-white font-bold hover:opacity-90 transition-colors shadow-lg shadow-[#111813]/20">
-								    저장
-								</button>
-						    </div>
-						</form>
+	
+	                    <div class="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-[#f0f4f2] max-w-3xl">
+	                        <div class="flex flex-col items-center mb-10">
+	                            <div class="relative cursor-pointer group" onclick="triggerFileUpload()">
+	                                <img id="profileImagePreview" th:src="${(user.profileImg != null and user.profileImg != 'default.png') ? user.profileImg : '/img/default-profile.png'}" 
+	                                     class="size-32 rounded-full object-cover border-4 border-white shadow-xl transition-all group-hover:brightness-90">
+	                                <div class="absolute bottom-1 right-1 bg-primary p-2 rounded-full border-2 border-white text-black shadow-md"><span class="material-symbols-outlined text-sm">photo_camera</span></div>
+	                            </div>
+	                            <input type="file" id="profileUpload" class="hidden" onchange="handleFileSelect(event)">
+	                        </div>
+	
+	                        <form id="editProfileForm" th:action="@{/mypage/update}" method="post" class="space-y-5">
+	                            <div class="space-y-4">
+	                                <div class="space-y-1.5"><label class="text-sm font-bold text-gray-700 ml-1">닉네임</label><input name="nickname" type="text" th:value="${user.nickname}" class="custom-input w-full rounded-xl px-4 font-medium text-sm"></div>
+									<div class="space-y-1.5">
+									    <label class="text-sm font-bold text-gray-700 ml-1">내 상점 소개글</label>
+									    <textarea name="introduction" 
+									              th:text="${user.introduction}" 
+									              class="custom-input w-full py-3 rounded-xl px-4 font-medium text-sm resize-none" 
+									              placeholder="상점 소개나 자기소개를 자유롭게 남겨보세요! (최대 1000자)"
+									              rows="5"
+									              maxlength="1000"></textarea>
+									</div>
+	                                <div class="space-y-1.5"><label class="text-sm font-bold text-gray-700 ml-1">이메일</label><input th:value="${user.email}" disabled class="custom-input w-full rounded-xl px-4 font-medium text-sm"></div>
+									<div class="space-y-1.5">
+									    <label class="text-sm font-bold text-gray-700 ml-1">휴대폰 번호</label>
+									    <div class="flex gap-2">
+									        <input name="phoneNumber" type="tel" th:value="${user.phoneNumber}" 
+									               id="userPhoneNumber" disabled
+									               class="custom-input flex-1 rounded-xl px-4 font-medium text-sm bg-gray-100 cursor-not-allowed">
+									        
+									        <button type="button" onclick="openPortoneAuth()" 
+									                class="auth-btn px-5 h-[42px] rounded-xl border soft-border text-gray-600 font-bold text-xs bg-white hover:text-primary hover:border-primary transition-all">
+									            재인증
+									        </button>
+									    </div>
+									</div>
+	
+								<div class="space-y-3 pt-4">
+								                                <div onclick="coordToAddress()" class="elevated-card flex items-center justify-between p-4 rounded-xl cursor-pointer group">
+								                                    <div class="flex items-center gap-3"><div class="p-2 rounded-lg bg-gray-50 text-gray-400 group-hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl">location_on</span></div>
+								                                        <div><h3 class="text-xs font-bold text-gray-800">내 동네 설정</h3><p id="displayAddress" class="text-[11px] text-gray-500" th:text="${user.address ?: '동네 인증 필요'}"></p><input type="hidden" name="address" id="userAddress" th:value="${user.address}"></div>
+								                                    </div><span class="text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-1.5 rounded-lg group-hover:bg-primary group-hover:text-white transition-all">위치인증</span>
+								                                </div>
+								                                <div onclick="openPwdModal()" class="elevated-card flex items-center justify-between p-4 rounded-xl cursor-pointer group">
+								                                    <div class="flex items-center gap-3"><div class="p-2 rounded-lg bg-gray-50 text-gray-400 group-hover:text-primary transition-colors"><span class="material-symbols-outlined text-xl">lock</span></div><h3 class="text-xs font-bold text-gray-800">비밀번호 변경</h3></div>
+								                                    <span class="material-symbols-outlined text-gray-300 group-hover:text-black transition-colors">chevron_right</span>
+								                                </div>
+																<div class="elevated-card flex items-center justify-between p-4 rounded-xl"> <div class="flex items-center gap-3">
+																        <div class="p-2 rounded-lg bg-gray-50 text-gray-400">
+																            <span class="material-symbols-outlined text-xl">link</span>
+																        </div>
+																        <div>
+																            <h3 class="text-xs font-bold text-gray-800">소셜 계정 연동</h3>
+																            
+																            <p th:if="${social != null}" class="text-[10px] text-gray-400 flex items-center gap-1">
+																                <span th:switch="${social.provider}" class="flex items-center gap-1">
+																                    <span th:case="'KAKAO'" class="flex items-center gap-1">
+																                        <span class="w-1.5 h-1.5 rounded-full bg-[#FEE500]"></span>
+																                        <span>카카오톡 연결됨</span>
+																                    </span>
+																                    <span th:case="'NAVER'" class="flex items-center gap-1">
+																                        <span class="w-1.5 h-1.5 rounded-full bg-[#03C75A]"></span>
+																                        <span>네이버 연결됨</span>
+																                    </span>
+																                    <span th:case="'GOOGLE'" class="flex items-center gap-1">
+																                        <span class="w-1.5 h-1.5 rounded-full bg-[#4285F4]"></span>
+																                        <span>구글 연결됨</span>
+																                    </span>
+																                    <span th:case="*">소셜 계정 연결됨</span>
+																                </span>
+																            </p>
+																            
+																            <p th:if="${social == null}" class="text-[10px] text-gray-400 flex items-center gap-1">
+																                <span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span>
+																                <span>연결된 소셜 계정이 없습니다.</span>
+																            </p>
+																        </div>
+																    </div>
+																</div>
+								                            </div>
+	
+								                            <div class="flex gap-3 pt-6">
+	
+								                                <button type="button" onclick="location.href='/mypage'" class="flex-1 h-11 rounded-xl border border-gray-100 font-bold text-sm">취소</button>
+	
+								                                <button type="button" onclick="submitForm()" class="flex-1 h-11 rounded-xl bg-black text-white font-bold text-sm shadow-md">저장하기</button>
+	
+								                            </div>
+	
+								                        </form>
+	
+								                    </div>
+	
+								                </main>
+	
+								            </div>
+	
+	            <div id="pwdModal" class="modal-overlay">
+	                <div class="bg-white w-full max-w-md p-10 rounded-[2.5rem] shadow-2xl mx-4 relative">
+	                    <button type="button" onclick="closeModal()" class="absolute top-8 right-8 text-gray-400 hover:text-black transition-colors"><span class="material-symbols-outlined">close</span></button>
+	                    <h3 class="text-2xl font-bold mb-8">비밀번호 변경</h3>
+	                    <div id="step1">
+	                        <p class="text-sm text-gray-500 mb-4">현재 비밀번호를 입력해 주세요.</p>
+	                        <input type="password" id="currentPwd" class="custom-input w-full rounded-xl px-4 mb-4" placeholder="현재 비밀번호">
+	                        <button type="button" onclick="checkCurrentPwd()" class="w-full h-11 rounded-xl bg-black text-white font-bold">다음</button>
+	                    </div>
+	                    <div id="step2" style="display: none;">
+	                        <p class="text-sm text-gray-500 mb-4">새 비밀번호를 입력해 주세요.</p>
+	                        <div class="mb-4">
+	                            <input type="password" id="newPwd" onkeyup="checkLength()" class="custom-input w-full rounded-xl px-4" placeholder="새 비밀번호">
+	                            <p id="pwdHint" class="text-[11px] mt-1 ml-1 hidden"></p>
+	                        </div>
+	                        <input type="password" id="newPwdConfirm" class="custom-input w-full rounded-xl px-4 mb-6" placeholder="비밀번호 확인">
+	                        <button type="button" onclick="updatePwd()" class="w-full h-11 rounded-xl bg-primary text-black font-bold">변경 완료</button>
+	                    </div>
 	                </div>
-	            </main>
+	            </div>
 	        </div>
 	    </div>
-		<div id="pwdModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-[100]">
-		            <div class="bg-white dark:bg-[#1A2C20] p-8 rounded-2xl w-full max-w-md shadow-2xl mx-4">
-		                <div class="flex justify-between items-center mb-6">
-		                    <h3 class="text-xl font-bold text-[#111813] dark:text-white">비밀번호 변경</h3>
-		                    <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
-		                        <span class="material-symbols-outlined">close</span>
-		                    </button>
-		                </div>
-		                
-		                <div id="step1">
-		                    <p class="text-sm text-gray-500 mb-4">안전을 위해 현재 비밀번호를 입력해 주세요.</p>
-		                    <input type="password" id="currentPwd" class="w-full h-12 rounded-xl bg-gray-50 border-gray-200 mb-4 px-4 text-black focus:ring-primary" placeholder="현재 비밀번호">
-							<button onclick="checkCurrentPwd()" 
-							        class="flex items-center justify-center w-full h-12 rounded-xl bg-[#111813] text-white font-bold">
-							    <span class="text-white">다음</span>
-							</button>
-		                </div>
-
-						<div id="step2" class="hidden">
-						    <p class="text-sm text-gray-500 mb-4">새로 사용할 비밀번호를 입력해 주세요.</p>
-						    
-						    <div class="mb-4"> 
-						        <input type="password" id="newPwd" onkeyup="checkLength()" 
-						               class="w-full h-12 rounded-xl bg-gray-50 border-gray-200 px-4 text-black focus:ring-primary" 
-						               placeholder="새 비밀번호">
-						        <p id="pwdHint" class="text-[11px] mt-1.5 ml-1 hidden leading-none"></p>
-						    </div>
-						    
-						    <div class="mb-6">
-						        <input type="password" id="newPwdConfirm" 
-						               class="w-full h-12 rounded-xl bg-gray-50 border-gray-200 px-4 text-black focus:ring-primary" 
-						               placeholder="새 비밀번호 확인">
-						    </div>
-
-						    <button onclick="updatePwd()" class="w-full h-12 rounded-xl bg-[#111813] text-white font-bold">
-						        비밀번호 확정
-						    </button>
-						</div>
-		            </div>
-		        </div>
-		    </div> </body>
-		</html>
-
+	</body>
+	</html>

@@ -1,287 +1,29 @@
-/* =========================
-   CATEGORY BAR
-========================= */
-
-.category-bar {
-  margin: 32px auto 24px;
-  max-width: 1200px;
-  padding: 0 16px;
-}
-
-.category-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 16px;
-  color: #222;
-}
-
-.category-tabs {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 6px;
-  scrollbar-width: none;
-}
-
-.category-tabs::-webkit-scrollbar {
-  display: none;
-}
-
-.category-tabs li {
-  flex-shrink: 0;
-  list-style: none;
-}
-
-.category-tabs a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 16px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #444;
-  background-color: #f4f5f6;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-}
-
-.category-tabs a:hover {
-  background-color: #e8f8ef;
-  color: #00c471;
-}
-
-.category-tabs li.active a {
-  background-color: #00c471;
-  color: #fff;
-  font-weight: 600;
-}
-
-/* =========================
-   PRODUCT GRID
-========================= */
-
-.grid-products {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 20px;
-}
-
-/* =========================
-   PRODUCT CARD
-========================= */
-
-.product-card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-/* 이미지 영역 */
-.product-card__image {
-  position: relative;
-  overflow: hidden;
-}
-
-.product-card__image img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  display: block;
-}
-
-/* ❤️ LIKE BUTTON */
-.product-card__like-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.95);
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 2;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s ease;
-}
-
-.product-card__like-btn:hover {
-  transform: scale(1.08);
-}
-
-.product-card__like-btn .material-symbols-outlined {
-  font-size: 20px;
-  color: #999;
-}
-
-.product-card__like-btn.liked .material-symbols-outlined {
-  color: #ff4d4f;
-  font-variation-settings: 'FILL' 1;
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 768px) {
-  .category-title {
-    font-size: 18px;
-  }
-
-  .category-tabs a {
-    padding: 7px 14px;
-    font-size: 13px;
-  }
-}
-
-/* =========================
-   PRODUCT GRID
-========================= */
+/* ==========================================================================
+   PRODUCT LIST
+   ========================================================================== */
 
 .product-list {
-  margin-top: 24px;
+   margin-top: var(--space-32);
+   padding-bottom: 80px; /* 페이지 끝 답답함 제거 */
+   
+   background: linear-gradient(
+       180deg,
+       #ffffff 0%,
+       #f9fafb 100%
+     );
+     border-radius: 24px;
+     padding: 32px 0 80px;
 }
 
+/* 상품 카드 그리드 */
 .product-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* ✅ 4열 */
-  gap: 24px;
-}
-
-/* 반응형 */
-@media (max-width: 1200px) {
-  .product-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .product-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* =========================
-   CATEGORY DROPDOWN
-========================= */
-
-.category-bar {
-  margin-bottom: 24px;
-}
-
-/* 드롭다운 전체 */
-.category-dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-/* 버튼 */
-.dropdown-toggle {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-
-  padding: 10px 14px;
-  font-size: 16px;
-  font-weight: 600;
-
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.dropdown-toggle:hover {
-  background: #f9fafb;
-}
-
-/* 화살표 */
-.dropdown-arrow {
-  fill: #666;
-}
-
-/* 드롭다운 메뉴 */
-.dropdown-menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  z-index: 100;
-
-  min-width: 180px;
-  padding: 6px 0;
-
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-
-  /* STEP 1에서는 hover 방식 */
-  display: none;
-}
-
-/* hover 시 열림 */
-.category-dropdown:hover .dropdown-menu {
-  display: block;
-}
-
-/* 메뉴 아이템 */
-.dropdown-menu li a {
-  display: block;
-  padding: 10px 14px;
-
-  font-size: 14px;
-  color: #333;
-  text-decoration: none;
-}
-
-.dropdown-menu li a:hover {
-  background: #f3f4f6;
-}
-
-/* 선택된 카테고리 */
-.dropdown-menu li.active a {
-  font-weight: 700;
-  color: #10b981;
-  background: #ecfdf5;
-}
-
-/* =========================
-   PRODUCT GRID
-========================= */
-
-.product-list-section {
-  margin-top: 24px;
-}
-
-/* 제목 */
-.category-title {
-  font-size: 20px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.product-count {
-  font-size: 14px;
-  font-weight: 400;
-  color: #9ca3af;
-}
-
-/* 🔥 카드 나열 핵심 */
-.product-grid {
-  margin-top: 20px;
+  margin-top: var(--space-24);
 
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
+  gap: 24px; /* 기존 var(--space-20)보다 살짝 여유 */
 }
+
 
 /* 반응형 */
 @media (max-width: 1200px) {
@@ -299,8 +41,332 @@
 @media (max-width: 640px) {
   .product-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
   }
 }
 
 
+/* =========================
+   PRODUCT GRID
+========================= */
 
+.grid-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.product-list .product-card {
+  position: relative;
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease;
+}
+
+.product-list .product-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.6),
+    inset 0 0 0 2px rgba(0,0,0,0.02);
+}
+
+.product-list .product-card:hover {
+  transform: translateY(-6px);
+  outline: 2px solid rgba(0,198,93,0.18);
+  outline-offset: -2px;
+}
+
+
+/* =========================
+   CATEGORY MEGA (LIST PAGE)
+========================= */
+
+/* 대분류 상단 영역 - 표(Grid) 형식을 버리고 나열형으로 수정 */
+.category-parent-grid {
+  display: flex;         /* Grid 대신 Flex 사용 */
+  flex-wrap: wrap;       /* 줄바꿈 허용 */
+  gap: 10px;             /* 아이템 간 간격 */
+  padding: 20px;
+  border-bottom: none;   /* 하단 선 제거 */
+  background: #fff;      /* 배경 흰색 */
+}
+
+/* 아래 구분선 가상 요소 제거 */
+.category-parent-grid::after {
+  display: none;
+}
+
+.category-parent-grid a {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 20px;   /* 둥근 형태 */
+  font-size: 14px;
+  color: #555;
+  background: #f1f3f5;   /* 부드러운 회색 배경 */
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.category-parent-grid a:hover {
+  background: #e9ecef;
+  color: #000;
+}
+
+.category-parent-grid a.active {
+  background: #ecfdf3;   /* 활성화 시 배경 */
+  color: #00c65d;        /* 포인트 컬러 */
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0,198,93,0.1); /* 약간의 입체감 */
+}
+
+.category-mega {
+  position: relative; /* 🔥 기준점 */
+  z-index: 2000;
+  display: inline-block;
+  margin-bottom: var(--space-20);
+}
+
+/* 버튼 */
+.category-mega-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+
+.category-mega-toggle:hover {
+  background: #f9fafb;
+}
+
+.category-mega.is-open .category-mega-toggle {
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(0,198,93,0.25);
+}
+
+/* 패널 */
+.category-mega-panel {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 0;
+    width: 600px; /* 드롭다운 넓이 */
+    
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.08); /* 선을 아주 연하게 */
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12); /* 부드러운 그림자 */
+    padding: 24px;
+    display: none; /* JS 제어 */
+    z-index: 2100;
+}
+
+/* 열렸을 때 */
+.category-mega.is-open .category-mega-panel {
+  display: block;
+  align-items: stretch;
+}
+
+/* 소분류 2열 */
+/* 소분류: 가로 나열 + 줄바꿈 */
+.category-mega-sub-grid {
+  display: grid;
+  flex-wrap: wrap;          /* 🔥 2줄로 내려가게 */
+  gap: 12px;
+  padding: 20px;
+  
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+  align-content: flex-start;
+  background:
+      linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #fafafa 100%
+      );
+  }
+
+
+/* 소분류 아이템: 일정 폭 확보 */
+.category-sub-item {
+  display: inline-flex;
+  align-items: center;
+  min-width: 120px;         /* 여기로 한 줄에 몇 개 나올지 조절 */
+  padding: 10px 18px;
+  text-decoration: none;
+  color: #333;
+
+  border-radius: 999px;
+  background: #f9fafb;
+  border: 1px solid #eef0f2;
+
+  font-size: 13.5px;
+  font-weight: 500;
+
+  transition: all .15s ease;
+}
+
+
+/* 전체보기는 맨 앞 고정 + 살짝 강조 */
+.category-sub-all {
+  font-weight: 700;
+
+  background: #00c65d;
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,198,93,.25);
+}
+
+
+/* hover */
+.category-sub-item:hover {
+  background: #ecfdf3;
+  border-color: #00c65d;
+  color: #00a550;
+  text-decoration: none;
+}
+
+.category-sub-all:hover {
+  background: #00b456;
+  color: #fff;
+}
+
+
+
+
+
+
+/* 소분류 항상 보이는 그리드 스타일 */
+.category-fixed-sub-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 이미지처럼 5열 구성 */
+    border: 1px solid #e1e1e1;
+    background-color: #fff;
+    margin: 20px 0;
+}
+
+.sub-grid-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-right: 1px solid #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+/* 5열 줄바꿈 시 마지막 칸 보더 제거 */
+.sub-grid-item:nth-child(5n) {
+    border-right: none;
+}
+
+.sub-grid-item.all-view {
+    font-weight: 700;
+}
+
+.sub-grid-item .arrow {
+    color: #bbb;
+    font-size: 12px;
+}
+
+
+/* =========================
+   DROPDOWN LAYOUT
+========================= */
+
+.category-parent-list {
+  padding: 20px 12px;
+  margin: 0;
+  list-style: none;
+
+  background: #f8f9fa;
+ }
+
+.category-parent-list li a {
+  display: block;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background .15s ease;
+}
+
+.category-parent-list li a:hover,
+.category-parent-list li a.active {
+  background: #eef6f1; /* 팀 컬러로 바꿔도 됨 */
+  font-weight: 600;
+}
+
+/* 대분류 상단 영역 */
+.category-parent-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 한 줄 6개 */
+  gap: 8px;
+
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+  background: #fafafa;
+}
+
+.category-parent-grid::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: rgba(0,0,0,0.08);
+}
+
+.category-parent-grid a {
+  padding: 8px 10px;
+  text-align: center;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+}
+
+.category-parent-grid a:hover {
+  background: #f0f2f5;
+}
+
+.category-parent-grid a.active {
+  background: #ecfdf3;
+  color: #00c65d;
+  font-weight: 700;
+}
+
+.empty-result {
+  padding: 120px 0;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--fs-14);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+ 

@@ -42,9 +42,10 @@ public class MainProductListService {
      * 인기 상품
      * MAIN01_POPULAR
      ========================= */
-    public List<MainProductCardVO> getPopularProducts(Long userId, String sort, String region) {
+    public List<MainProductCardVO> getPopularProducts(Long userId, String region)
+ {
         List<MainProductListDTO> list =
-                mainProductMapper.selectPopularProducts(userId, POPULAR_LIMIT, sort, region);
+                mainProductMapper.selectPopularProducts(userId, POPULAR_LIMIT, region);
         return list.stream().map(this::toCardVO).toList();
     }
 
@@ -54,16 +55,6 @@ public class MainProductListService {
     ========================= */
     private MainProductCardVO toCardVO(MainProductListDTO dto) {
 
-        return new MainProductCardVO(
-                String.valueOf(dto.getProductId()),
-                dto.getTitle(),
-                dto.getPrice(),
-                dto.getThumbnailUrl(),
-                dto.getRegionName(),
-                dto.getCreatedTime(),
-                false,                 // reserved (아직 미구현)
-                dto.getLikeCount(),    // ❤️ DB 기준
-                dto.isLiked()          // ❤️ 로그인 사용자 기준
-        );
+    	return new MainProductCardVO(dto);
     }
 }

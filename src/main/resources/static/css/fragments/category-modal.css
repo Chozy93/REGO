@@ -5,7 +5,11 @@
 .category-modal {
   position: fixed;
   inset: 0;
-  z-index: var(--z-modal);
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;   /* 🔥 세로 중앙 */
+  justify-content: center; /* 🔥 가로 중앙 */
 }
 
 /* hidden */
@@ -209,8 +213,150 @@
   padding: 8px 0;   /* 🔥 위아래 여백 축소 */
 }
 
+/* =========================
+   CATEGORY MODAL OVERLAY
+========================= */
+
+/* 기본 상태: 완전히 제거 */
+.category-modal-overlay {
+  display: none;
+}
+
+/* 모달이 열릴 때만 overlay 활성 */
+.category-modal.is-active + .category-modal-overlay {
+  display: block;
+}
+
+/* 🔥 강제 차단 해제 (확정 테스트용) */
+.category-modal-overlay {
+  display: none !important;
+}
 
 
+/* ==========================================================================
+   CATEGORY MEGA (LIST PAGE) - 대분류 드롭다운 전용
+   ========================================================================== */
 
+/* 1. 대분류를 감싸는 그리드: 표 형식을 완전히 버림 */
+.category-parent-grid {
+	display: flex !important;
+	    flex-direction: column !important; /* 🔥 가로가 아닌 세로로 정렬 */
+	    gap: 2px;                          /* 항목 간 좁은 간격 */
+	    padding: 0 !important;             /* 좌우 여백 제거 (항목 내부에서 처리) */
+	    background: none !important;
+	    border: none !important;
+}
+
+/* 스크롤바가 너무 투박하면 숨기거나 얇게 조절 (선택사항) */
+.category-parent-grid::-webkit-scrollbar {
+  height: 4px;
+}
+
+
+.category-parent-grid::-webkit-scrollbar-thumb {
+  background: #eee;
+  border-radius: 10px;
+}
+
+
+/* 2. 개별 대분류 링크: 딱딱한 칸이 아니라 부드러운 버튼/태그 느낌 */
+.category-parent-grid a {
+	display: flex !important;
+	    align-items: center;
+	    padding: 12px 20px !important;     /* 시원시원한 터치 영역 */
+	    
+	    font-size: 14px;
+	    color: #444;
+	    background: transparent !important; /* 기본 배경 제거 */
+	    border-radius: 0 !important;       /* 알약 모양 제거 */
+	    text-decoration: none;
+	    transition: all 0.15s ease;
+	    
+	    border-left: 3px solid transparent; /* 활성화 표시용 왼쪽 선 */
+}
+
+/* 마우스 올렸을 때 */
+.category-parent-grid a:hover {
+  background: #e9ecef;
+  color: #000;
+  transform: translateY(-2px); /* 살짝 떠오르는 효과 */
+}
+
+/* 현재 활성화된(선택된) 대분류 */
+.category-parent-grid a.active {
+  background: #ecfdf3 !important;
+  color: #00c65d !important;
+  border-color: #00c65d !important;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0, 198, 93, 0.15);
+}
+/* 3. 패널 설정: 한 줄로 길게 보일 수 있도록 너비 확장 */
+.category-mega-panel {
+	position: absolute;
+	    top: calc(100% + 8px);
+	    left: 0;
+	    width: 220px;            /* 세로 리스트에 적당한 슬림한 너비 */
+	    
+	    background: #ffffff;
+	    border: 1px solid rgba(0,0,0,0.1);
+	    border-radius: 12px;     /* 너무 둥글지 않게 적당히 */
+	    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+	    padding: 8px 0;          /* 위아래만 여백 */
+	    display: none; 
+	    z-index: 2100;
+}
+
+.category-mega.is-open .category-mega-panel {
+  display: block;
+}
+
+
+/* =========================
+   CATEGORY MEGA (토글 버튼 위치 조정)
+========================= */
+
+.category-mega {
+  position: relative;
+  z-index: 2000;
+  display: inline-block;
+  
+  /* 🔥 네비바와의 간격을 위해 마진 추가 */
+  margin-top: 24px;   /* 원하는 만큼 숫자를 조절하세요 (예: 20px, 32px 등) */
+  margin-bottom: var(--space-20);
+}
+
+/* 만약 버튼 자체가 공중에 뜬 느낌을 주고 싶다면 버튼에도 여백을 줄 수 있습니다 */
+.category-mega-toggle {
+  /* 기존 스타일 유지 */
+  margin-top: 50px; 
+}
+
+
+/* ==========================================================================
+   PRODUCT LIST (배경 제거 및 여백 조정)
+   ========================================================================== */
+
+.product-list {
+  /* 1. 배경색 및 그라디언트 삭제 */
+  background: none !important; 
+  background-color: transparent !important;
+  
+  /* 2. 테두리와 라운드 효과 제거 (배경이 없으므로 어색할 수 있음) */
+  border-radius: 0;
+  border-top: none;
+
+  /* 3. 간격 조정 */
+  margin-top: 20px;     /* 상단 소분류 그리드와의 간격 */
+  padding: 0 0 100px;  /* 하단에만 여유 공간 부여 */
+}
+
+/* 결과 없음 문구 스타일도 배경 없이 깔끔하게 */
+.empty-result {
+  padding: 100px 0;
+  text-align: center;
+  color: #999;
+  font-size: 15px;
+  border-top: 1px solid #f1f1f1; /* 내용이 없어도 구분이 필요하면 연하게 선 추가 */
+}
 
 

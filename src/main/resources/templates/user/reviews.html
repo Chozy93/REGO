@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <th:block layout:fragment="pageCss">
+        <link rel="stylesheet" href="/css/main/main.css">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                corePlugins: { preflight: false, container: false },
+                important: '#tailwind-zone', 
+                theme: { extend: { colors: { "primary": "#13ec5b" } } }
+            }
+        </script>
+        <style>
+            #tailwind-zone { font-family: 'Manrope', 'Noto Sans KR', sans-serif; background-color: #f8faf9; min-height: 100vh; }
+            .material-symbols-outlined.filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 }
+            .no-scrollbar::-webkit-scrollbar { display: none; }
+            footer, .footer { display: none !important; }
+			
+
+			.review-rating__stars {
+			    display: flex;
+			    gap: 4px; 
+			}
+
+			.review-rating__star {
+			    color: #d1d5db; 
+			    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+			}
+
+			.review-rating__star.is-active,
+			.review-rating__star.filled {
+			    color: #facc15 !important;
+			    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
+			}
+        </style>
+    </th:block>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div id="tailwind-zone">
+            <div class="w-full max-w-[1280px] mx-auto px-4 py-8 flex flex-col md:flex-row gap-8">
+                
+                <aside class="w-full md:w-64 flex-shrink-0">
+                    <div class="bg-white dark:bg-white/5 rounded-2xl p-6 shadow-sm border border-[#f0f4f2] dark:border-white/5 space-y-2 sticky top-32">
+                        <div class="flex flex-col items-center pb-1" style="border-bottom: 2px solid #f0f4f2;">
+                            <img th:src="${user.profileImg != null ? user.profileImg : '/img/default-profile.png'}" 
+                                 class="size-20 rounded-full object-cover border-4 border-white shadow-md bg-gray-200 mb-3">
+                            <h2 class="text-xl font-bold" th:text="${user.nickname}">사용자</h2>
+                            <p class="text-xs text-gray-500 mt-1" th:text="${user.address}">주소 없음</p>
+                        </div>
+                        <nav class="space-y-1">
+                            <a href="/mypage/edit" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-all text-gray-600">
+                                <span class="material-symbols-outlined text-[20px]">person</span><span class="text-sm font-medium">프로필 관리</span>
+                            </a>
+                            <a href="/mypage/sales" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-all text-gray-600">
+                                <span class="material-symbols-outlined text-[20px]">inventory_2</span><span class="text-sm font-medium">판매 내역</span>
+                            </a>
+                            <a href="/mypage/buys" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-all text-gray-600">
+                                <span class="material-symbols-outlined text-[20px]">shopping_bag</span><span class="text-sm font-medium">구매 내역</span>
+                            </a>
+                            <a href="/mypage/likes" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-all text-gray-600">
+                                <span class="material-symbols-outlined text-[20px]">favorite</span><span class="text-sm font-medium">찜한 상품</span>
+                            </a>
+                            <a href="/mypage/reviews" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-primary/10 text-primary font-bold transition-all">
+                                <span class="material-symbols-outlined text-[20px]">rate_review</span><span class="text-sm font-medium">거래 후기</span>
+                            </a>
+                        </nav>
+                    </div>
+                </aside>
+
+                <main class="flex-1 min-w-0">
+                    <div class="flex flex-col">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-4">
+                                <button onclick="history.back()" class="p-1 hover:bg-gray-100 rounded-full transition-colors">
+                                    <span class="material-symbols-outlined text-2xl">chevron_left</span>
+                                </button>
+                                <h2 class="text-2xl font-bold">거래 후기</h2>
+                            </div>
+                            <span class="text-sm text-gray-500">전체 <span id="totalReviewCount" class="text-primary font-bold">0</span>개</span>
+                        </div>
+
+                        <div class="bg-white dark:bg-white/5 rounded-2xl p-4 shadow-sm border border-[#f0f4f2] dark:border-white/5 mb-6">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div class="status-filters flex p-1 bg-gray-100 dark:bg-white/5 rounded-xl w-fit overflow-x-auto no-scrollbar">
+                                    <button data-filter="ALL" class="filter-btn cursor-pointer px-4 py-2 text-sm font-bold rounded-lg bg-white shadow-sm transition-all whitespace-nowrap">전체</button>
+                                    <button data-filter="RECEIVED" class="filter-btn cursor-pointer px-4 py-2 text-sm font-medium text-gray-500 hover:text-[#111813] transition-all whitespace-nowrap">받은후기</button>
+                                    <button data-filter="SENT" class="filter-btn cursor-pointer px-4 py-2 text-sm font-medium text-gray-500 hover:text-[#111813] transition-all whitespace-nowrap">작성후기</button>
+                                </div>
+                                <select id="sortSelect" class="cursor-pointer form-select pl-3 pr-8 py-2 text-sm border-gray-200 bg-transparent rounded-lg focus:ring-primary px-3 py-2">
+                                    <option value="latest">최신순</option>
+                                    <option value="ratingHigh">별점 높은순</option>
+                                    <option value="ratingLow">별점 낮은순</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="reviewGrid" class="flex flex-col gap-4">
+                            <div th:each="review : ${receivedReviews}" class="review-item bg-white rounded-2xl p-5 shadow-sm border border-[#f0f4f2] flex flex-col md:flex-row gap-5 hover:border-primary/50 transition-all group" 
+                                 data-type="RECEIVED" th:data-date="${review.createdAt}" th:data-rating="${review.rating}">
+                                <div class="flex-shrink-0">
+                                    <div class="relative w-full md:w-28 aspect-square rounded-xl bg-gray-100 overflow-hidden border border-[#f0f4f2]">
+                                        <img th:src="${review.productImageUrl}" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                                <div class="flex-1 flex flex-col">
+									<div class="flex justify-between items-start mb-1">
+									    <h3 class="font-bold text-[15px] text-[#111813] truncate" th:text="${review.productName}">상품명</h3>
+										<div class="flex items-center gap-1 text-[11px] text-gray-400">
+										    <span th:text="${review.regionDisplayName}">지역</span>
+										    <span>·</span>
+										    <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd')}">2026-01-25</span>
+										</div>
+									</div>
+									<div class="review-rating__stars mb-2">
+									    <span th:each="i : ${#numbers.sequence(1, 5)}" 
+									          class="review-rating__star material-symbols-outlined text-[16px]" 
+									          th:classappend="${(i * 2) <= review.rating} ? 'filled' : ''">star</span>
+									</div>
+                                    <p class="text-sm text-gray-700 leading-snug mb-3 line-clamp-2" th:text="${review.content}">내용</p>
+									<div class="flex items-center justify-between mt-auto pt-3 border-t border-[#f8faf9]">
+									    <div class="flex items-center gap-2">
+									        <img th:src="${review.writerProfileImg}" class="size-5 rounded-full border border-gray-100">
+									        <span class="text-xs font-medium text-gray-500">
+									            구매자 : <span th:text="${review.writerNickname}" class="text-gray-700">닉네임</span>
+									        </span>
+									    </div>
+									</div>
+                                </div>
+                            </div>
+                            <div th:each="review : ${sentReviews}" class="review-item bg-white rounded-2xl p-5 shadow-sm border border-[#f0f4f2] flex flex-col md:flex-row gap-5 hover:border-primary/50 transition-all group" 
+                                 data-type="SENT" th:data-date="${review.createdAt}" th:data-rating="${review.rating}">
+                                <div class="flex-shrink-0">
+                                    <div class="relative w-full md:w-28 aspect-square rounded-xl bg-gray-100 overflow-hidden border border-[#f0f4f2]">
+                                        <img th:src="${review.productImageUrl}" class="w-full h-full object-cover">
+                                    </div>
+                                </div>
+                                <div class="flex-1 flex flex-col">
+									<div class="flex justify-between items-start mb-1">
+									    <h3 class="font-bold text-[15px] text-[#111813] truncate" th:text="${review.productName}">상품명</h3>
+										<div class="flex items-center gap-1 text-[11px] text-gray-400">
+										    <span th:text="${review.regionDisplayName}">지역</span>
+										    <span>·</span>
+										    <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd')}">2026-01-25</span>
+										</div>
+									</div>
+									<div class="review-rating__stars mb-2">
+									    <span th:each="i : ${#numbers.sequence(1, 5)}" 
+									          class="review-rating__star material-symbols-outlined text-[16px]" 
+									          th:classappend="${(i * 2) <= review.rating} ? 'filled' : ''">star</span>
+									</div>
+                                    <p class="text-sm text-gray-700 leading-snug mb-3 line-clamp-2" th:text="${review.content}">내가 쓴 내용</p>
+                                    <div class="flex items-center justify-between mt-auto pt-3 border-t border-[#f8faf9]">
+											    <div class="flex items-center gap-2">
+											        <img th:src="${review.sellerProfileImg != null ? review.sellerProfileImg : '/img/default-profile.png'}" 
+											             class="size-5 rounded-full border border-gray-100 object-cover">
+											        <span class="text-xs font-medium text-gray-500">
+											            판매자 : <span th:text="${review.sellerNickname}" class="text-gray-700">닉네임</span>
+											        </span>
+											    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="emptyMessage" class="hidden bg-white rounded-2xl p-12 shadow-sm border border-[#f0f4f2] flex flex-col items-center justify-center text-center mt-4">
+                            <span class="material-symbols-outlined text-gray-300 mb-4" style="font-size: 48px;">rate_review</span>
+                            <h3 class="text-lg font-bold text-[#111813] mb-1">해당되는 후기가 없어요</h3>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                const reviewGrid = document.getElementById('reviewGrid');
+                const emptyMessage = document.getElementById('emptyMessage');
+                const filterBtns = document.querySelectorAll('.filter-btn');
+                const sortSelect = document.getElementById('sortSelect');
+                const totalCountSpan = document.getElementById('totalReviewCount');
+                const items = Array.from(document.querySelectorAll('.review-item'));
+                
+                let currentFilter = 'ALL';
+
+                function updateUI() {
+                    const filteredItems = items.filter(item => {
+                        const type = item.getAttribute('data-type');
+                        return currentFilter === 'ALL' || type === currentFilter;
+                    });
+                    
+                    // 정렬
+                    const sortVal = sortSelect.value;
+                    filteredItems.sort((a, b) => {
+                        if (sortVal === 'ratingHigh') return (b.dataset.rating || 0) - (a.dataset.rating || 0);
+                        if (sortVal === 'ratingLow') return (a.dataset.rating || 0) - (b.dataset.rating || 0);
+                        return b.dataset.date.localeCompare(a.dataset.date);
+                    });
+
+                    // 모두 숨기고 정렬된 순서대로 다시 노출
+                    items.forEach(item => item.style.display = 'none');
+                    filteredItems.forEach(item => {
+                        item.style.display = 'flex';
+                        reviewGrid.appendChild(item); // 순서 보정
+                    });
+
+                    // 카운트 및 메시지
+                    if(totalCountSpan) totalCountSpan.textContent = filteredItems.length;
+                    if (filteredItems.length === 0) {
+                        emptyMessage.classList.remove('hidden');
+                        reviewGrid.style.display = 'none';
+                    } else {
+                        emptyMessage.classList.add('hidden');
+                        reviewGrid.style.display = 'flex';
+                    }
+                }
+
+                filterBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        currentFilter = this.getAttribute('data-filter');
+                        filterBtns.forEach(b => {
+                            b.classList.remove('font-bold', 'bg-white', 'shadow-sm');
+                            b.classList.add('font-medium', 'text-gray-500');
+                        });
+                        this.classList.add('font-bold', 'bg-white', 'shadow-sm');
+                        this.classList.remove('font-medium', 'text-gray-500');
+                        updateUI();
+                    });
+                });
+
+                sortSelect.addEventListener('change', updateUI);
+                updateUI();
+            });
+        </script>
+    </div> </body>
+</html>

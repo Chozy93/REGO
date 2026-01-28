@@ -7,7 +7,7 @@
         u.user_id as userId,
         u.email,
         u.nickname,
-        u.bio,
+        u.introduction,
         u.phone_number as phoneNumber,
         u.gender,
         u.profile_img as profileImg,
@@ -30,7 +30,7 @@
 <update id="updateUser">
     UPDATE users 
     SET nickname = #{vo.nickname},
-        bio = #{vo.bio},
+        introduction = #{vo.introduction},
         phone_number = #{vo.phoneNumber}
     WHERE user_id = #{userId}
 </update>
@@ -62,6 +62,12 @@
 
 <update id="updateProfileImg">
     UPDATE users SET profile_img = #{profileImg} WHERE user_id = #{userId}
+</update>
+
+<update id="updatePhoneNumber">
+    UPDATE users
+    SET phone_number = #{verifiedPhone}
+    WHERE email = #{email}
 </update>
 
 
@@ -143,5 +149,44 @@
     ORDER BY f.created_at DESC
 </select>
 
+<select id="getReceivedReviews" resultType="com.itwillbs.dto.ReviewDTO">
+    SELECT 
+        r.id as reviewId,
+        r.content,
+        r.rating,
+        r.created_at as createdAt,
+        p.product_id as productId,
+        p.product_name as productName,
+        p.main_image_url as productImageUrl,
+        p.region_display_name as regionDisplayName, -- 지역 추가
+        u.nickname as writerNickname,
+        u.profile_img as writerProfileImg,
+        'RECEIVED' as type
+    FROM reviews r
+    JOIN products p ON r.product_id = p.product_id
+    JOIN users u ON r.buyer_id = u.user_id
+    WHERE r.seller_id = #{userId}
+    ORDER BY r.created_at DESC
+</select>
+
+<select id="getSentReviews" resultType="com.itwillbs.dto.ReviewDTO">
+    SELECT 
+        r.id as reviewId,
+        r.content,
+        r.rating,
+        r.created_at as createdAt,
+        p.product_id as productId,
+        p.product_name as productName,
+        p.main_image_url as productImageUrl,
+        p.region_display_name as regionDisplayName, 
+        u.nickname as sellerNickname,    
+        u.profile_img as sellerProfileImg,            
+        'SENT' as type
+    FROM reviews r
+    JOIN products p ON r.product_id = p.product_id
+    JOIN users u ON p.seller_id = u.user_id          
+    WHERE r.buyer_id = #{userId}
+    ORDER BY r.created_at DESC
+</select>
 
 </mapper>

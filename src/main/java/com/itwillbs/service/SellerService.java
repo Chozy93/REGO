@@ -50,8 +50,7 @@ public class SellerService {
     
 	 //판매자 프로필 생성
 	 @Transactional
-	 public void createSellerProfile(User user,
-	                                 SellerRegisterConditionVO conditionVO) {
+	 public void createSellerProfile(User user) {
 
 	     Long userId = user.getUserId();
 
@@ -64,7 +63,7 @@ public class SellerService {
 
 
 	     SellerProfile sellerProfile =
-	             new SellerProfile(managedUser, conditionVO);
+	             new SellerProfile(managedUser);
 
 	     sellerProfileRepository.save(sellerProfile);
 	 }

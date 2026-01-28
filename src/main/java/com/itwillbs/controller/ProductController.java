@@ -1,5 +1,6 @@
 package com.itwillbs.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,9 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class ProductController {
+	
+	@Value("${kakao.js.key}")
+	private String kakaoAppKey;
 
     private final ProductService productService;
     private final ProductDetailService productDetailService;
@@ -96,6 +100,8 @@ public class ProductController {
 
 	    // 👉 PageVO에 결과만 세팅
 	    page.setMine(isMine);
+	    // kakao mapkey 내려주기
+	    model.addAttribute("kakaoAppKey", kakaoAppKey);
 
 	    model.addAttribute("page", page);
 	    return "product/detail";
@@ -107,13 +113,33 @@ public class ProductController {
 	    @RequestParam(name = "categoryId", required = false) Long categoryId,
 	    Model model
 	) {
+	    // 🔥 기본 대분류 처리
+	    if (categoryId == null) {
+	        categoryId = productCategoryService.getDefaultParentCategoryId();
+	    }
+
 	    CategoryPageVO page =
 	        productCategoryService.getCategoryPage(categoryId);
 
+	    model.addAttribute(
+	        "parentCategoryList",
+	        productCategoryService.getParentCategoryList()
+	    );
+
 	    model.addAttribute("page", page);
+
 	    return "product/list";
 	}
 
-
+	
+//	// 🔥 [API] 대분류 변경 시 소분류 + 상품 목록 Ajax용
+//	// ProductController
+//	@GetMapping("/api/products/by-parent/{parentId}")
+//	@ResponseBody
+//	public List<MainProductCardVO> getProductsByParent(
+//	        @PathVariable("parentId") Long parentId
+//	) {
+//	    return productListService.getProductsByParent(parentId);
+//	}
 
 }

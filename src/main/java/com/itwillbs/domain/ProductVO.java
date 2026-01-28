@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import com.itwillbs.entity.Product;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Getter
@@ -46,7 +47,10 @@ public class ProductVO {
 
     private final String createdAt;
     private final String updatedAt;
-
+    
+    @Setter
+    private boolean isReviewed;
+    
     private static final DateTimeFormatter FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 

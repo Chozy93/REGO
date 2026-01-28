@@ -5,113 +5,112 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-import com.itwillbs.domain.InquiryVO;
 import com.itwillbs.entity.enumtype.InquiryStatus;
+import com.itwillbs.entity.enumtype.InquiryType;
 
 @Entity
 @Table(name = "inquiries")
 @Getter
 public class Inquiry {
 
-    /* =========================
-       PK
-    ========================= */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long inquiryId;
+    private Long id;
 
     /* =========================
-       문의 작성자
+       작성자
     ========================= */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "user_id",
-        nullable = false,
-        foreignKey = @ForeignKey(name = "fk_inquiries_user")
-    )
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     /* =========================
-       제목 / 내용
+       문의 유형
     ========================= */
-    @Column(name = "title", length = 255, nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "inquiry_type", nullable = false, length = 30)
+    private InquiryType inquiryType;
+
+    /* =========================
+       내용
+    ========================= */
+    @Column(nullable = false, length = 255)
     private String title;
 
-    @Column(name = "content", nullable = false)
+    @Column(nullable = false, length = 255)
     private String content;
 
     /* =========================
-       문의 상태
+       결제 / 주문 연관
+    ========================= */
+    @Column(name = "order_id")
+    private Long orderId;
+
+    /* =========================
+       상태
     ========================= */
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(nullable = false, length = 20)
     private InquiryStatus status;
 
     /* =========================
-       답변 정보
+       답변
     ========================= */
-    @Column(name = "answer_content")
+    @Column(name = "answer_content", length = 255)
     private String answerContent;
-
-    @Column(name = "answered_by")
-    private Long answeredBy; // 관리자 user_id
 
     @Column(name = "answered_at")
     private LocalDateTime answeredAt;
 
-    /* =========================
-       비공개 여부
-    ========================= */
-    @Column(name = "is_private", nullable = false)
-    private boolean isPrivate;
+    @Column(name = "answered_by")
+    private Long answeredBy;
 
     /* =========================
-       날짜
+       시간
     ========================= */
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     /* =========================
-       JPA 전용 기본 생성자
+       생성 팩토리
     ========================= */
-    protected Inquiry() {}
-
-    /* =========================
-       생성자 (VO → Entity)
-    ========================= */
-    public Inquiry(User user, InquiryVO vo) {
-        this.user = user;
-        this.title = vo.getTitle();
-        this.content = vo.getContent();
-        this.isPrivate = vo.isPrivate();
-        this.status = InquiryStatus.PENDING;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+    public static Inquiry create(
+            User user,
+            InquiryType inquiryType,
+            String title,
+            String content,
+            Long orderId
+    ) {
+        Inquiry inquiry = new Inquiry();
+        inquiry.user = user;
+        inquiry.inquiryType = inquiryType;
+        inquiry.title = title;
+        inquiry.content = content;
+        inquiry.orderId = orderId;
+        inquiry.status = InquiryStatus.PENDING;
+        inquiry.createdAt = LocalDateTime.now();
+        inquiry.updatedAt = LocalDateTime.now();
+        return inquiry;
     }
 
     /* =========================
-       Entity → VO
+       도메인 행위
     ========================= */
-    public InquiryVO toVO() {
-        return new InquiryVO(this);
-    }
-
-    /* =========================
-       상태 변경 로직
-    ========================= */
-    public void answer(String answerContent, Long adminId) {
+    public void answer(Long adminUserId, String answerContent) {
         this.answerContent = answerContent;
-        this.answeredBy = adminId;
+        this.answeredBy = adminUserId;
         this.answeredAt = LocalDateTime.now();
         this.status = InquiryStatus.ANSWERED;
         this.updatedAt = LocalDateTime.now();
     }
 
     public void cancel() {
+        if (this.status == InquiryStatus.ANSWERED) {
+            throw new IllegalStateException("답변 완료된 문의는 취소할 수 없습니다.");
+        }
         this.status = InquiryStatus.CANCELED;
         this.updatedAt = LocalDateTime.now();
     }
