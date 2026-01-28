@@ -620,7 +620,7 @@
   .grid-products {
     grid-template-columns: repeat(2, 1fr);
   }
-}
+
 
 /* 🔥 카테고리 경로 핵폭탄 패치 (flex + width 완전 초기화) */
 .detail-right .product-category-path {
