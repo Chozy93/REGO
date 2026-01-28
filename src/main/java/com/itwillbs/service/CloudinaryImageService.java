@@ -29,6 +29,8 @@ public class CloudinaryImageService {
         private final String url;
     }
 
+    
+  //상품 사진 업로드
     public List<String> upload(List<MultipartFile> images) {
         if (images == null || images.isEmpty()) {
             throw new IllegalArgumentException("업로드할 이미지가 없습니다.");
@@ -67,7 +69,34 @@ public class CloudinaryImageService {
             throw new RuntimeException("Cloudinary 이미지 업로드 실패", e);
         }
     }
+    
+    //개인 프로필 사진 업로드
+    public String uploadProfileImage(Long userId, MultipartFile image) {
+        if (image == null || image.isEmpty()) {
+            throw new IllegalArgumentException("업로드할 프로필 이미지가 없습니다.");
+        }
 
+        try {
+            Map<?, ?> result = cloudinary.uploader().upload(
+                image.getBytes(),
+                Map.of(
+                    "folder", "rego/profile",
+                    "public_id", "user_" + userId,
+                    "overwrite", true,
+                    "resource_type", "image"
+                )
+            );
+
+            return (String) result.get("secure_url");
+
+        } catch (Exception e) {
+            throw new RuntimeException("프로필 이미지 업로드 실패", e);
+        }
+    }
+
+    
+    
+    
     private void rollback(List<UploadedImage> uploadedImages) {
         for (UploadedImage image : uploadedImages) {
             try {

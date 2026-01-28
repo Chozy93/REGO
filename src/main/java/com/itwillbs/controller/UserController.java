@@ -31,6 +31,7 @@ import com.itwillbs.entity.User;
 import com.itwillbs.mapper.MypageMapper;
 import com.itwillbs.mapper.UserMapper;
 import com.itwillbs.repository.UserRepository;
+import com.itwillbs.service.CloudinaryImageService;
 import com.itwillbs.service.MypageService;
 import com.itwillbs.service.NotificationService;
 import com.itwillbs.service.UserService;
@@ -48,6 +49,7 @@ public class UserController {
 	
 	@Autowired
 	private NotificationService notificationService;
+	private final CloudinaryImageService cloudinaryImageService;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -233,13 +235,19 @@ public class UserController {
     
     @PostMapping("/mypage/upload-profile")
     @ResponseBody
-    public ResponseEntity<?> uploadProfile(@RequestParam("profileFile") MultipartFile file, 
-                                           Authentication authentication, 
-                                           HttpSession session) {
+    public ResponseEntity<?> uploadProfile(
+            @RequestParam("profileFile") MultipartFile file,
+            Authentication authentication,
+            HttpSession session
+    ) {
         try {
-            if (file.isEmpty()) return ResponseEntity.badRequest().body("파일이 비어있습니다.");
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest().body("파일이 비어있습니다.");
+            }
 
-            // 1. 유저 정보 식별
+            /* =========================
+               1. 유저 식별
+            ========================= */
             String email = getUserEmail(authentication);
             UserVO loginUser = (UserVO) session.getAttribute("loginUser");
 
@@ -251,33 +259,38 @@ public class UserController {
                 session.setAttribute("loginUser", loginUser);
             }
 
-            // 2. 파일 저장 경로 설정
-            String uploadDir = System.getProperty("user.dir") + File.separator + "upload" + File.separator;
-            File dir = new File(uploadDir);
-            if (!dir.exists()) dir.mkdirs(); 
+            /* =========================
+               2. Cloudinary 업로드
+            ========================= */
+            String imageUrl =
+                cloudinaryImageService.uploadProfileImage(
+                    loginUser.getUserId(),
+                    file
+                );
 
-            // 3. 파일명 중복 방지 및 저장
-            String savedFilename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-            file.transferTo(new File(uploadDir + savedFilename));
+            /* =========================
+               3. DB 업데이트
+            ========================= */
+            mypageMapper.updateProfileImg(loginUser.getUserId(), imageUrl);
 
-            // 4. DB에 저장할 웹 경로
-            String dbPath = "/upload/" + savedFilename;
-            
-            //  DB 업데이트 호출
-            mypageMapper.updateProfileImg(loginUser.getUserId(), dbPath);
-
-            // 5. 세션에도 실시간 반영
-            loginUser.setProfileImg(dbPath);
+            /* =========================
+               4. 세션 반영
+            ========================= */
+            loginUser.setProfileImg(imageUrl);
             session.setAttribute("loginUser", loginUser);
 
-            System.out.println("✅ 프로필 이미지 변경 성공: " + dbPath);
-            return ResponseEntity.ok(Map.of("imageUrl", dbPath));
-            
+            System.out.println("✅ 프로필 이미지 변경 성공: " + imageUrl);
+
+            return ResponseEntity.ok(Map.of("imageUrl", imageUrl));
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("서버 오류 발생");
         }
     }
+
+    
+    
     private Map<String, Object> getVerifiedUserInfo(String impUid) {
         try {
             org.springframework.web.client.RestTemplate restTemplate = new org.springframework.web.client.RestTemplate();
