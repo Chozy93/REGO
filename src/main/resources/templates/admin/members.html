@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/admin/member.css">
+  <link rel="stylesheet" href="/css/admin/admin-sidebar.css">
+</th:block>
+
+<div layout:fragment="content" class="admin-page">
+  <!-- Sidebar -->
+  <th:block th:replace="fragments/admin-sidebar :: admin-sidebar('members')"></th:block>
+
+  <section class="admin-content">
+
+    <header class="admin-content-head">
+      <div>
+        <h1 class="admin-title">회원 관리</h1>
+        <p class="admin-desc">전체 회원의 상태를 확인하고 관리할 수 있습니다.</p>
+      </div>
+	  
+	  <div class="admin-summary">
+	    <div class="admin-summary-card">
+	      <div class="admin-summary-label">총 회원수</div>
+
+		  <div class="admin-summary-value"
+		       th:text="${#numbers.formatInteger(page.totalMemberCount, 2, 'COMMA')}">
+		    
+		  </div>
+	    </div>
+
+    </header>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>회원정보</th>
+            <th>연락처</th>
+            <th>가입일</th>
+            <th>권한</th>
+            <th>상태</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr th:each="member : ${page.members}">
+
+
+            <td>
+              <div class="admin-user">
+                <div class="admin-user-avatar"
+                     th:text="${#strings.substring(member.username,0,1)}">
+                </div>
+                <div>
+                  <div class="admin-user-name"
+                       th:text="${member.username}">
+                    사용자명
+                  </div>
+                  <div class="admin-user-id"
+                       th:text="'ID: ' + ${member.email}">
+                    닉네임
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <span th:text="${member.phoneNumber}">phone</span>
+            </td>
+
+            <td th:text="${member.createdAt}">
+              2024-01-01 12:00
+            </td>
+
+            <td th:text="${member.role}">
+              USER
+            </td>
+
+            <td>
+              <span class="badge"
+                    th:classappend="${member.status == 'ACTIVE'} ? ' badge-primary' : ''"
+                    th:text="${member.status}">
+                상태
+              </span>
+            </td>
+
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+
+  </section>
+</div>
+
+<th:block layout:fragment="pageJs">
+</th:block>
+
+</html>

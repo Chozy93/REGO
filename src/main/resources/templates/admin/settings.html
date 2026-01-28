@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/admin/settings-main.css">
+  <link rel="stylesheet" href="/css/admin/admin-sidebar.css">
+</th:block>
+
+<div layout:fragment="content" class="admin-layout">
+
+  <!-- 사이드바 -->
+  <th:block th:replace="fragments/admin-sidebar :: admin-sidebar('settings')"></th:block>
+
+  <!-- 메인 -->
+  <main class="admin-main">
+    <h1 class="admin-main-title">설정</h1>
+
+    <div class="settings-menu vertical">
+
+      <a th:href="@{/admin/normal-settings}" class="settings-card">
+        <div class="card-left">
+          <span class="icon">⚙️</span>
+          <div class="card-text">
+            <h3>일반 설정</h3>
+            <p>사이트 기본 정보, 관리자 설정</p>
+          </div>
+        </div>
+        <span class="arrow">›</span>
+      </a>
+
+      <a th:href="@{/admin/user-settings}" class="settings-card">
+        <div class="card-left">
+          <span class="icon">👤</span>
+          <div class="card-text">
+            <h3>회원 설정</h3>
+            <p>회원 가입, 인증 정책</p>
+          </div>
+        </div>
+        <span class="arrow">›</span>
+      </a>
+
+      <a th:href="@{/admin/product-settings}" class="settings-card">
+        <div class="card-left">
+          <span class="icon">📦</span>
+          <div class="card-text">
+            <h3>상품 설정</h3>
+            <p>상품 등록, 거래 정책</p>
+          </div>
+        </div>
+        <span class="arrow">›</span>
+      </a>
+
+    </div>
+  </main>
+
+</div>
+</html>

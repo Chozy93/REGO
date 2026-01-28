@@ -1,13 +1,138 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>RE:GO AdminDashboard</title>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 
-</head>
-<body>
+<th:block th:fragment="pageCss">
+    <link rel="stylesheet" href="/css/admin/dashboard-main.css">
+	<link rel="stylesheet" href="/css/admin/admin-sidebar.css">
 
-<h1>관리자 dashboard 페이지</h1>
+</th:block>
 
-</body>
+<div layout:fragment="content" class="admin-dashboard-layout">
+
+    <!-- 좌측 사이드바 -->
+	<th:block th:replace="fragments/admin-sidebar :: admin-sidebar('dashboard')"></th:block>
+
+
+    <!-- 메인 대시보드 영역 -->
+    <main class="admin-dashboard">
+
+        <section class="dashboard-header between">
+            <h1 class="dashboard-title">대시보드</h1>
+			<div class="dashboard-date" th:text="${today}"></div>
+        </section>
+
+        <section class="dashboard-summary grid">
+			<div class="summary-card">
+			    <div class="summary-icon">👥</div>
+			    <div class="summary-body">
+			        <div class="summary-label">총 회원 수</div>
+					<div class="summary-value" th:text="${page.memberSummary.totalMemberCount}"></div>
+					<div class="summary-diff"
+					     th:classappend="${page.memberSummary.isTotalIncrease ? ' is-up' : ' is-down'}"
+					     th:text="${page.memberSummary.totalIncreasePercent + '%'}">
+					</div>
+			    </div>
+			</div>
+            <div class="summary-card">
+                <div class="summary-icon">📦</div>
+                <div class="summary-body">
+                    <div class="summary-label">총 상품 수</div>
+					    <div class="summary-value"
+					         th:text="${page.productSummary.totalProductCount}">
+					    </div>
+
+					    <!-- 증감률 -->
+					    <div class="summary-diff"
+					         th:classappend="${page.productSummary.isIncrease ? ' is-up' : ' is-down'}"
+					         th:text="${page.productSummary.increasePercent + '%'}">
+					    </div>
+					</div>
+            </div>
+
+			<div class="summary-card">
+			    <div class="summary-icon">🆕</div>
+			    <div class="summary-body">
+			        <div class="summary-label">오늘 가입</div>
+					<div class="summary-value" th:text="${page.memberSummary.todaySignupCount}"></div>
+					<div class="summary-diff"
+					     th:classappend="${page.memberSummary.isTodayIncrease ? ' is-up' : ' is-down'}"
+					     th:text="${page.memberSummary.todayIncreasePercent + '%'}">
+					</div>
+			    </div>
+			</div>
+        </section>
+
+
+
+        <section class="dashboard-bottom grid">
+            <div class="dashboard-panel">
+                <div class="section-head">
+                    <h3 class="section-title">최근 등록 상품</h3>
+                    <a th:href="@{/admin/products}" class="section-link">더보기</a>
+                </div>
+				<ul class="panel-list">
+				    <li class="panel-item"
+				        th:each="product : ${page.productSummary.recentProducts}">
+
+				        <img class="recent-product-image"
+				             th:src="${product.imageUrl}"
+				             alt="상품 이미지" />
+
+				        <div class="panel-item-body">
+				            <span class="item-title"
+				                  th:text="${product.productName}"></span>
+				            <span class="item-meta text-muted"
+				                  th:text="${product.createdAt}"></span>
+				        </div>
+
+				    </li>
+				</ul>
+            </div>
+
+            <div class="dashboard-panel">
+                <div class="section-head">
+                    <h3 class="section-title">최근 거래 내역</h3>
+                    <a th:href="@{/admin/trades}" class="section-link">더보기</a>
+                </div>
+                <ul class="panel-list">
+					<li class="panel-item">
+					    <span class="item-title"></span>
+					    <span class="item-meta"></span>
+					</li>
+
+                </ul>
+            </div>
+
+            <div class="dashboard-panel">
+                <div class="section-head">
+                    <h3 class="section-title">최근 신고</h3>
+                    <a th:href="@{/admin/reports}" class="section-link">더보기</a>
+                </div>
+				<ul class="panel-list">
+				    <li class="panel-item"
+				        th:each="report : ${page.reportSummary.recentReports}"
+				        th:classappend="${report.isDone ? ' is-success' : ' is-warning'}">
+
+				        <span class="item-title"
+				              th:text="${report.reason}"></span>
+
+				        <span class="item-meta">
+				            <span th:text="${report.createdAt}"></span>
+				            ·
+				            <span th:text="${report.status}"></span>
+				        </span>
+				    </li>
+				</ul>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<th:block layout:fragment="pageJs">
+    <script src="/js/admin/dashboard.js"></script>
+</th:block>
+
 </html>
