@@ -4,22 +4,32 @@
       layout:decorate="~{layout/base}">
 
 <th:block th:fragment="pageCss">
-    <link rel="stylesheet" href="/css/customer/notice-write.css">
-	<link rel="stylesheet" href="/css/policy/policy.css">
+	<link rel="stylesheet" href="/css/customer/customer.css">
+	    <link rel="stylesheet" href="/css/customer/notice-write.css">
+	    <link rel="stylesheet" href="/css/customer/sidebar.css">
 </th:block>
 
-<div layout:fragment="content">
-    <div class="write-wrapper">
-        <div class="write-container">
-            <header class="write-page-header">
-                <a th:href="@{/customer/notice}" class="back-btn">
-                    <span class="material-symbols-outlined">arrow_back</span>
-                </a>
+<div layout:fragment="content" class="container-content">
+	
+
+	
+    <div class="customer-layout">
+		
+		
+		<!-- Sidebar -->
+			<th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='notice')"></th:block>
+			
+			<main class="customer-main">
+    
+            <div class="customer-header">
+				<a href="#" class="customer-back" onclick="history.back()">
+												         <span class="material-symbols-outlined">arrow_back</span>
+												       </a>
                 <div class="header-text">
-                    <h2>공지사항 작성</h2>
-                    <p class="breadcrumb">관리자 페이지 &gt; 공지사항 관리</p>
+                    <h1 class="customer-title">공지사항 작성</h1>
+                    <p class="customer-desc">관리자 페이지 &gt; 공지사항 관리</p>
                 </div>
-            </header>
+            </div>	 
 
             <form class="write-card" th:action="@{/customer/notice/write}" method="post">
                 <div class="form-section">
@@ -63,6 +73,6 @@
                     <button type="submit" class="btn btn-primary">등록하기</button>
                 </div>
             </form>
-        </div>
+        </main>
     </div>
 </div>

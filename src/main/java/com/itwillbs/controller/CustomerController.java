@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.itwillbs.domain.NoticeVO;
 import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.service.CustomerService;
+import com.itwillbs.view.condition.InquiryCreateConditionVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -97,33 +98,41 @@ public class CustomerController {
 	}
 
 	// 1:1 문의
-		@GetMapping("/inquiry")
+		@GetMapping("/customer/inquiry")
 	public String inquiryPage() {
 		
 		return "customer/inquiry";
 	}
 	
 	// 이용약관
-		@GetMapping("/terms")
+		@GetMapping("/customer/terms")
 		public String terms() {
 			return "customer/terms";
 		}
 		
 		// 개인정보처리방침
-	    @GetMapping("/privacy")
+	    @GetMapping("/customer/privacy")
 	    public String privacy() {
 	        return "customer/privacy";
 	    }
 	    
 	   // 위치기반 서비스 이용약관
-	    @GetMapping("/location")
+	    @GetMapping("/customer/location")
 	    public String location() {
 	        return "customer/location";
 	    }
 	    
 	   //  청소년 보호정책
-	    @GetMapping("/youth")
+	    @GetMapping("/customer/youth")
 	    public String youth() {
 	        return "customer/youth";
+	    }
+	    
+	    @PostMapping("/inquiries")
+	    public String createInquiry(
+	            InquiryCreateConditionVO conditionVO
+	    ) {
+	    	customerService.inquiriesRegister(conditionVO);
+	        return "redirect:/mypage/inquiries";
 	    }
 }

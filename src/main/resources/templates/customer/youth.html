@@ -3,31 +3,32 @@
 	layout:decorate="~{layout/base}">
 
 <th:block th:fragment="pageCss">
-	<link rel="stylesheet" href="/css/policy/policy.css">
+	<link rel="stylesheet" href="/css/customer/policy.css">
+	<link rel="stylesheet" href="/css/customer/customer.css">
 	<link rel="stylesheet" href="/css/customer/sidebar.css">
 </th:block>
 
 <div layout:fragment="content" class="container-content">
 
-	<div class="policy-layout">
+	<div class="customer-layout">
 
 		<th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='youth')"></th:block>
 
-		<main class="policy-main">
+		<main class="customer-main">
 
-			<div class="policy-header">
-				<a href="#" class="policy-back" onclick="history.back()">
+			<div class="customer-header">
+				<a href="#" class="customer-back" onclick="history.back()">
 					<span class="material-symbols-outlined">arrow_back</span>
 				</a>
 				<div>
-					<h1 class="policy-title">청소년 보호정책</h1>
-					<p class="policy-desc">
+					<h1 class="customer-title">청소년 보호정책</h1>
+					<p class="customer-desc">
 						RE: GO의 청소년 보호를 위한 운영 정책입니다.
 					</p>
 				</div>
 			</div>
 
-			<section class="policy-card">
+			<section class="customer-card">
 
 				<div class="card-header">
 					<div>

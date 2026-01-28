@@ -4,23 +4,31 @@
       layout:decorate="~{layout/base}">
 
 <th:block th:fragment="pageCss">
+	<link rel="stylesheet" href="/css/customer/customer.css">
     <link rel="stylesheet" href="/css/customer/notice-detail.css">
-	<link rel="stylesheet" href="/css/policy/policy.css">
+    <link rel="stylesheet" href="/css/customer/sidebar.css">
+    
 </th:block>
 
-<div layout:fragment="content" class="policy-wrapper">
-	<div class="policy-container">
+<div layout:fragment="content" class="container-content">
+	<div class="customer-layout">
 	        
-	       <th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='notice')"></th:block>
-		   <main class="notice-main">
-		               <div class="notice-page-header">
-		                   <a th:href="@{/customer/notice}" class="back-btn">
-		                       <span class="material-symbols-outlined">arrow_back</span>
-		                   </a>
-		                   <div class="header-text">
-		                       <h2>공지사항</h2>
-		                       <p class="breadcrumb">공지사항 &gt; 상세 내용</p>
-		                   </div>
+
+		<!-- Sidebar -->
+		<th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='notice')"></th:block>
+		   <main class="customer-main">
+			
+		               <div class="customer-header">
+						<a href="#" class="customer-back" onclick="history.back()">
+								         <span class="material-symbols-outlined">arrow_back</span>
+								       </a>
+						   <div>
+						            <h1 class="customer-title">공지사항</h1>
+						            <p class="customer-desc">
+						             공지사항 &gt; 상세 내용
+						            </p>
+						          </div>
+
 		               </div>
 
 		               <article class="detail-card" th:if="${notice != null}">

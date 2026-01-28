@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="orderSelectModal">
+
+  <!-- ===============================
+       Order Select Modal
+  =============================== -->
+  <div id="orderSelectModal" class="modal is-hidden">
+
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-panel">
+
+      <!-- Header -->
+      <div class="modal-header">
+        <h2 class="modal-title">내 결제 내역 선택</h2>
+        <button type="button" class="modal-close"
+                onclick="closeOrderSelectModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+
+        <!-- 주문 리스트 -->
+        <ul class="order-list">
+
+          <li class="order-item"
+              th:each="order : ${myOrders}"
+              th:data-order-id="${order.orderId}"
+              th:data-title="${order.productTitle}"
+              th:data-meta="|${#numbers.formatInteger(order.totalAmount, 3, 'COMMA')}원 · ${order.dealType}|">
+
+            <div class="order-item-main">
+              <p class="order-title"
+                 th:text="${order.productTitle}"></p>
+
+              <p class="order-meta"
+                 th:text="|${#numbers.formatInteger(order.totalAmount, 3, 'COMMA')}원 · ${order.dealType}|">
+              </p>
+            </div>
+
+            <button type="button"
+                    class="btn btn-outline btn-sm select-order-btn">
+              선택
+            </button>
+          </li>
+
+        </ul>
+
+        <p class="empty-text"
+           th:if="${#lists.isEmpty(myOrders)}">
+          결제 내역이 없습니다.
+        </p>
+
+      </div>
+
+    </div>
+  </div>
+
+</th:block>
+
+</html>
