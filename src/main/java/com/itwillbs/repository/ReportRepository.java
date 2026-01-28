@@ -3,6 +3,9 @@ package com.itwillbs.repository;
 import com.itwillbs.entity.Report;
 import com.itwillbs.entity.User;
 import com.itwillbs.entity.enumtype.ReportTargetType;
+
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {

@@ -19,7 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     long countByCreatedAtBefore(LocalDateTime time);
 
     List<Product> findTop3ByOrderByCreatedAtDesc();
-}
+
     Page<Product> findByBuyer_UserId(Long userId, Pageable pageable);
     
  // 지역명 필터링 조회 (판매 중인 상품만)
@@ -27,4 +27,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         String regionName, 
         ProductSalesStatus salesStatus
     );
+
+
 }
+
+
