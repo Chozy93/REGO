@@ -18,6 +18,23 @@
             .material-symbols-outlined.filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 }
             .no-scrollbar::-webkit-scrollbar { display: none; }
             footer, .footer { display: none !important; }
+			
+
+			.review-rating__stars {
+			    display: flex;
+			    gap: 4px; 
+			}
+
+			.review-rating__star {
+			    color: #d1d5db; 
+			    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+			}
+
+			.review-rating__star.is-active,
+			.review-rating__star.filled {
+			    color: #facc15 !important;
+			    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
+			}
         </style>
     </th:block>
 </head>
@@ -99,9 +116,11 @@
 										    <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd')}">2026-01-25</span>
 										</div>
 									</div>
-                                    <div class="flex items-center gap-0.5 text-yellow-400 mb-2">
-                                        <span th:each="i : ${#numbers.sequence(1, 5)}" class="material-symbols-outlined text-[16px]" th:classappend="${i <= review.rating} ? 'filled' : ''">star</span>
-                                    </div>
+									<div class="review-rating__stars mb-2">
+									    <span th:each="i : ${#numbers.sequence(1, 5)}" 
+									          class="review-rating__star material-symbols-outlined text-[16px]" 
+									          th:classappend="${(i * 2) <= review.rating} ? 'filled' : ''">star</span>
+									</div>
                                     <p class="text-sm text-gray-700 leading-snug mb-3 line-clamp-2" th:text="${review.content}">내용</p>
 									<div class="flex items-center justify-between mt-auto pt-3 border-t border-[#f8faf9]">
 									    <div class="flex items-center gap-2">
@@ -129,9 +148,11 @@
 										    <span th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd')}">2026-01-25</span>
 										</div>
 									</div>
-                                    <div class="flex items-center gap-0.5 text-yellow-400 mb-2">
-                                        <span th:each="i : ${#numbers.sequence(1, 5)}" class="material-symbols-outlined text-[16px]" th:classappend="${i <= review.rating} ? 'filled' : ''">star</span>
-                                    </div>
+									<div class="review-rating__stars mb-2">
+									    <span th:each="i : ${#numbers.sequence(1, 5)}" 
+									          class="review-rating__star material-symbols-outlined text-[16px]" 
+									          th:classappend="${(i * 2) <= review.rating} ? 'filled' : ''">star</span>
+									</div>
                                     <p class="text-sm text-gray-700 leading-snug mb-3 line-clamp-2" th:text="${review.content}">내가 쓴 내용</p>
                                     <div class="flex items-center justify-between mt-auto pt-3 border-t border-[#f8faf9]">
 											    <div class="flex items-center gap-2">

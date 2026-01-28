@@ -25,9 +25,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.itwillbs.domain.user.NotificationUpdateVO;
 import com.itwillbs.domain.user.UserVO;
 import com.itwillbs.dto.MyPageDTO;
+import com.itwillbs.dto.SocialAccountDTO;
 import com.itwillbs.entity.NotificationSettings;
 import com.itwillbs.entity.User;
 import com.itwillbs.mapper.MypageMapper;
+import com.itwillbs.mapper.UserMapper;
 import com.itwillbs.repository.UserRepository;
 import com.itwillbs.service.MypageService;
 import com.itwillbs.service.NotificationService;
@@ -43,35 +45,35 @@ public class UserController {
 	private final MypageMapper mypageMapper;
 	private final MypageService mypageService;
 	private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+	
 	@Autowired
 	private NotificationService notificationService;
+	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private UserMapper userMapper;
 	
 	
 	@GetMapping("/mypage")
 	public String myPageMain(Authentication authentication, Model model) {
 	    if (authentication == null) return "redirect:/login";
 
-
 	    String email = getUserEmail(authentication);
 	    
-	    System.out.println("🔍 마이페이지 진입 시도 이메일: [" + email + "]");
+	    if (email == null || email.isEmpty()) return "redirect:/login";
 
-	    if (email == null || email.isEmpty()) {
-	        System.out.println("⚠️ 이메일을 찾을 수 없어 로그인 페이지로 튕깁니다.");
-	        return "redirect:/login";
-	    }
-
-	    // 2. 데이터 가져오기
+	    // 1. 기존 유저 기본 정보 가져오기
 	    MyPageDTO mypageInfo = mypageMapper.getMyPageInfo(email);
+	    if (mypageInfo == null) return "redirect:/"; 
+	    
 
-	    if (mypageInfo == null) {
-	        System.out.println("⚠️ DB에 해당 이메일의 유저 정보가 없습니다.");
-	        return "redirect:/"; 
-	    }
+	    Map<String, Object> sellerProfile = userMapper.findSellerProfileByEmail(email);
 	    
 	    model.addAttribute("user", mypageInfo);
+	    model.addAttribute("sellerProfile", sellerProfile);
+	    
 	    return "user/mypage";
 	}
 	
@@ -82,7 +84,10 @@ public class UserController {
 
         String email = getUserEmail(authentication);
         MyPageDTO mypageInfo = mypageMapper.getMyPageInfo(email);
+        SocialAccountDTO socialInfo = userMapper.findSocialAccountByUserId(mypageInfo.getUserId());
+        
         model.addAttribute("user", mypageInfo);
+        model.addAttribute("social", socialInfo);
         
         return "user/profile-edit"; 
     }
