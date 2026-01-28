@@ -66,7 +66,13 @@
 			      </a>
 			    </h1>
         <div class="header-search">
-          <input type="text" placeholder="물품이나 동네를 검색해보세요">
+			<form action="/product/search" method="get" class="search-form">
+			        <input type="text" 
+			               name="keyword" 
+			               th:value="${searchDTO != null ? searchDTO.keyword : ''}" 
+			               placeholder="물품이나 동네를 검색해보세요">
+
+			      </form>
         </div>
 		<!-- 지역 -->
 		      <button class="location-btn" onclick="openRegionModal()">
