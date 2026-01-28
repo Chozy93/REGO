@@ -110,46 +110,80 @@
 
     
     
-	<!--    채팅방 상대방 정보-->
-	<select id="selectChatRoomHeader"
-	        resultType="com.itwillbs.dto.ChatRoomHeaderDTO">
-	
-	    SELECT
-	        cr.room_id                         AS roomId,
-	
-	        /* 상대방 정보 */
-	        CASE
-	            WHEN cr.buyer_id = #{loginUserId}
-	                THEN seller.user_id
-	            ELSE buyer.user_id
-	        END                                 AS opponentUserId,
-	
-	        CASE
-	            WHEN cr.buyer_id = #{loginUserId}
-	                THEN seller.nickname
-	            ELSE buyer.nickname
-	        END                                 AS opponentUserNickName,
-	
-	        CASE
-	            WHEN cr.buyer_id = #{loginUserId}
-	                THEN seller.profile_img
-	            ELSE buyer.profile_img
-	        END                                 AS opponentProfileImg,
-	
-	        /* 채팅방 상태 */
-	        cr.room_status                      AS roomStatusCode,
-	        CASE cr.room_status
-	            WHEN 'ACTIVE' THEN '진행중'
-	            WHEN 'CLOSED' THEN '종료됨'
-	        END                                 AS roomStatusLabel
-	
-	    FROM chat_room cr
-	        JOIN users buyer  ON cr.buyer_id  = buyer.user_id
-	        JOIN users seller ON cr.seller_id = seller.user_id
-	
-	    WHERE cr.room_id = #{roomId}
-	
-	</select>
+	<!-- 채팅방 헤더 정보 -->
+<select id="selectChatRoomHeader"
+        resultType="com.itwillbs.dto.ChatRoomHeaderDTO">
+
+    SELECT
+        cr.room_id                         AS roomId,
+        cr.product_id                      AS productId,
+
+        /* =========================
+           상대방 기본 정보
+        ========================= */
+        CASE
+            WHEN cr.buyer_id = #{loginUserId}
+                THEN seller.user_id
+            ELSE buyer.user_id
+        END                                 AS opponentUserId,
+
+        CASE
+            WHEN cr.buyer_id = #{loginUserId}
+                THEN seller.nickname
+            ELSE buyer.nickname
+        END                                 AS opponentUserNickName,
+
+        CASE
+            WHEN cr.buyer_id = #{loginUserId}
+                THEN seller.profile_img
+            ELSE buyer.profile_img
+        END                                 AS opponentProfileImg,
+
+        /* =========================
+           상대방 신뢰도 (seller_profile)
+           - 있으면 사용
+           - 없으면 0.0 / 0
+        ========================= */
+        COALESCE(sp.rating_avg, 0.0)       AS opponentRatingAvg,
+        COALESCE(sp.total_reviews, 0)      AS opponentTotalReviews,
+
+        /* =========================
+           상품 정보
+        ========================= */
+        p.product_name                     AS productName,
+        p.price                            AS productPrice,
+
+        /* =========================
+           채팅방 상태
+        ========================= */
+        cr.room_status                     AS roomStatusCode,
+        CASE cr.room_status
+            WHEN 'ACTIVE' THEN '진행중'
+            WHEN 'CLOSED' THEN '종료됨'
+        END                                 AS roomStatusLabel
+
+    FROM chat_room cr
+        JOIN users buyer  ON cr.buyer_id  = buyer.user_id
+        JOIN users seller ON cr.seller_id = seller.user_id
+
+        /* 상대방 기준 seller_profile */
+        LEFT JOIN seller_profile sp
+            ON sp.seller_id = (
+                CASE
+                    WHEN cr.buyer_id = #{loginUserId}
+                        THEN seller.user_id
+                    ELSE buyer.user_id
+                END
+            )
+
+        /* 상품 */
+        JOIN products p
+            ON p.product_id = cr.product_id
+
+    WHERE cr.room_id = #{roomId}
+
+</select>
+
 	
 	<!--	채팅방 메세지들-->
 	<select id="selectMessagesByRoomId"

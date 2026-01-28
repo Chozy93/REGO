@@ -6,7 +6,6 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: var(--color-surface);
 
  
 }
@@ -28,18 +27,41 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  padding: var(--space-16) var(--space-20);
+  height: 116px;
+  padding: 0 var(--space-24);   /* 상하 패딩 제거 */
   border-bottom: 1px solid var(--color-divider);
-  background-color: var(--color-surface);
+  font-size: 20px;
 }
 
 .chat-room-partner {
   display: flex;
-  align-items: center;
+  align-items: center;   /* 아바타 + 텍스트 수직 중앙 */
   gap: var(--space-12);
 }
 
+.chat-room-partner-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 🔥 이거 추가 */
+  gap: 4px;                /* 기존 2px → 4px */
+}
+
+.chat-room-partner-rating {
+  font-size: var(--fs-12);
+  color: #F2B705; /* 소프트 옐로우 */
+}
+.chat-room-partner-name {
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-16);
+  line-height: 1.2;
+}
+
+
+
+.chat-room-product {
+  font-size: var(--fs-13);
+  color: var(--color-text);
+}
 .chat-room-avatar {
   width: 40px;
   height: 40px;
@@ -54,20 +76,38 @@
 }
 
 .chat-room-partner-name {
-  font-size: var(--fs-15);
   font-weight: var(--fw-bold);
 }
 
-.chat-room-partner-rating {
-  font-size: var(--fs-12);
-  color: var(--color-text-muted);
+.chat-room-product {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  max-width: 360px; /* 🔥 여기서 길이 제한 */
+  padding: 4px 10px;
+  margin-top: 2px;
+
+  background-color: var(--color-surface-2);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-pill);
+
+  font-size: var(--fs-13);
+  color: var(--color-text);
+}
+
+/* 상품명만 자르기 */
+.chat-room-product-title {
+  max-width: 220px;       /* 🔥 타이틀 최대 길이 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chat-room-actions {
   display: flex;
-  gap: var(--space-8);
+  align-items: center;  /* 🔥 추가 */
 }
-
 /* =========================
    Messages
 ========================= */
@@ -78,7 +118,7 @@
   overflow-y: auto;
 
   /* 선택 */
-  background-color: var(--color-surface);
+  background-color: var(--color-surface-2);
 }
 .chat-room-date {
   display: flex;
@@ -191,7 +231,6 @@
 	flex-shrink: 0;
   padding: var(--space-12);
   border-top: 1px solid var(--color-divider);
-  background-color: var(--color-surface);
 }
 
 .chat-room-input-box {
@@ -243,3 +282,8 @@
   pointer-events: none;
 }
 
+.btn-outline{
+	color: var(  --color-surface);
+	border: 1px solid var(--color-border);
+	background-color: var(--color-text);
+}
