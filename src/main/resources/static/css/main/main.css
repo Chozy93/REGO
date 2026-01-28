@@ -131,7 +131,7 @@ body {
 
   border: 1px solid #f0f0f0;
   box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-  border-left: 3px solid var(--color-primary);
+
 }
 
 
@@ -143,9 +143,14 @@ body {
 }
 
 .recent-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+	display: flex;
+	  flex-direction: column;
+	  gap: 8px;
+	  
+	  /* 🔥 추가: 점 제거 및 기본 여백 리셋 */
+	  list-style: none; 
+	  padding: 0;
+	  margin: 0;
 }
 
 
@@ -212,60 +217,56 @@ body {
   }
 }
 
-/* Swiper 기준 */
+/* Swiper 컨테이너 */
 .product-swiper {
   position: relative;
   overflow: hidden;
+  padding: 10px 0;
 }
 
-/* 화살표 공통 */
+/* 화살표 공통 디자인 */
 .product-swiper .swiper-button-prev,
 .product-swiper .swiper-button-next {
-  width: 36px;
-  height: 36px;
-
-  color: #fff;                 /* ⭐ 흰색 화살표 */
-  background: rgba(0,0,0,0.25);/* ⭐ 중고나라 느낌 */
+  width: 36px !important;
+  height: 36px !important;
+  background: rgba(0, 0, 0, 0.3) !important; /* 반투명 검정 배경 */
+  color: #fff !important;                    /* 흰색 아이콘 */
   border-radius: 50%;
-
-  top: 50%;
-  transform: translateY(-50%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  
+  /* ⭐ 기본적으로 숨김 (마우스 올리면 나타남) */
+  opacity: 0;
+  transition: all 0.3s ease;
   z-index: 10;
-
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
 }
 
-/* 위치는 사진 안쪽 */
-.product-swiper .swiper-button-prev {
-  left: 12px;
+/* Swiper에 마우스 올리면 화살표 등장 */
+.product-swiper:hover .swiper-button-prev,
+.product-swiper:hover .swiper-button-next {
+  opacity: 1;
 }
 
-.product-swiper .swiper-button-next {
-  right: 12px;
+/* 화살표 아이콘 크기 조절 */
+.product-swiper .swiper-button-prev::after,
+.product-swiper .swiper-button-next::after {
+  font-size: 16px !important;
+  font-weight: bold;
 }
 
-/* hover 효과 */
+/* 사진 안쪽 위치 고정 */
+.product-swiper .swiper-button-prev { left: 15px !important; }
+.product-swiper .swiper-button-next { right: 15px !important; }
+
+/* hover 시 배경 더 진하게 */
 .product-swiper .swiper-button-prev:hover,
 .product-swiper .swiper-button-next:hover {
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.6) !important;
 }
 
-.product-swiper .swiper-button-prev,
-.product-swiper .swiper-button-next {
-  background: transparent;
-  box-shadow: none;
-  font-size: 22px;
-}
-
-/* 비활성화돼도 보이게 */
+/* 비활성화 상태에서도 보이게 유지 (옵션) */
 .product-swiper .swiper-button-disabled {
-  opacity: 1 !important;          /* ⭐ 안 흐리게 */
-  pointer-events: auto !important;
-}
-
-/* 왼쪽 화살표 색 강조 */
-.product-swiper .swiper-button-prev {
-  color: #fff;
+  opacity: 0.3 !important; /* 끝에 도달하면 살짝 흐리게 해서 알려줌 */
+  cursor: default;
 }
 
 
