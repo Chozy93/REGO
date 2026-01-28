@@ -108,6 +108,7 @@ public class Review {
      this.content  = conditionVO.getContent();
 
      this.createdAt = LocalDateTime.now();
+     this.updatedAt = LocalDateTime.now();
  }
     /* =========================
        Entity → VO

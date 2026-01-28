@@ -66,8 +66,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 userParams.put("password", passwordEncoder.encode(rawPassword)); 
                 
                 // 전화번호는 아까처럼 20자 맞춰서 임시 생성
-                //String tempPhone = "TMP_" + finalProviderId;
-                userParams.put("phoneNumber", null);
+                String tempPhone = "TMP_" + finalProviderId;
+                if (tempPhone.length() > 20) tempPhone = tempPhone.substring(0, 20);
+
+                userParams.put("phoneNumber", tempPhone);
                 
                 userMapper.insertUser(userParams);
                 

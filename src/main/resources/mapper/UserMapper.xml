@@ -22,7 +22,8 @@
         role, 
         email, 
         user_status, 
-        phone_number, profile_img, 
+        phone_number, 
+        profile_img, 
         created_at
     ) VALUES (
         #{username}, 
@@ -31,10 +32,24 @@
         'USER', 
         #{email}, 
         'ACTIVE', 
-        COALESCE(#{phoneNumber}, 'PENDING'), COALESCE(#{profileImg}, 'https://lh3.googleusercontent.com/aida-public/AB6AXuD0ObRBFDRs_vob6idb6aYKUuIove2YF-wbvYCHg-2sm6qoyedO7RYGPgbD3YUragy7aKMdHZaGuFf9n2VN8bfXNLuaHQv41ulrqhVYIpmk3x64L5NlUFVVfia-ExqeHUsxo5vgQfQPtrASlzehup3VxN0K1KuHLfM_Jo4LSDScARNe9G-rzONQqnH5Zobrl4cD0Z9vAbXnHqFPATdIE6yqtnbrqSfNs-liXa-Ege7QLNN9juuw7GAvbZhH4XK8XgkJEehsTeeKTVY'), 
+        #{phoneNumber},
+        COALESCE(#{profileImg}, 'https://lh3.googleusercontent.com/aida-public/AB6AXuD0ObRBFDRs_vob6idb6aYKUuIove2YF-wbvYCHg-2sm6qoyedO7RYGPgbD3YUragy7aKMdHZaGuFf9n2VN8bfXNLuaHQv41ulrqhVYIpmk3x64L5NlUFVVfia-ExqeHUsxo5vgQfQPtrASlzehup3VxN0K1KuHLfM_Jo4LSDScARNe9G-rzONQqnH5Zobrl4cD0Z9vAbXnHqFPATdIE6yqtnbrqSfNs-liXa-Ege7QLNN9juuw7GAvbZhH4XK8XgkJEehsTeeKTVY'), 
         NOW()
     )
 </insert>
+
+<select id="findSellerProfileByEmail" resultType="map">
+    SELECT 
+        seller_id AS sellerId,
+        rating_avg AS ratingAvg,
+        total_reviews AS totalReviews,
+        total_sales AS totalSales,
+        seller_status AS sellerStatus
+    FROM seller_profile sp
+    JOIN users u ON sp.seller_id = u.user_id
+    WHERE u.email = #{email}
+</select>
+
 
 <update id="updatePhoneNumber">
     UPDATE users 
@@ -54,6 +69,17 @@
 
 <select id="selectUserById" resultType="com.itwillbs.entity.User">
     SELECT * FROM users 
+    WHERE user_id = #{userId}
+</select>
+
+<select id="findSocialAccountByUserId" resultType="com.itwillbs.dto.SocialAccountDTO">
+    SELECT 
+        social_id AS socialId, 
+        connected_at AS connectedAt, 
+        provider, 
+        provider_id AS providerId, 
+        user_id AS userId
+    FROM social_accounts 
     WHERE user_id = #{userId}
 </select>
 

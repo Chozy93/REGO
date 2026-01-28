@@ -15,13 +15,16 @@ import java.util.stream.Collectors;
 
 import com.itwillbs.domain.ProductVO;
 import com.itwillbs.dto.MyPageDTO;
+import com.itwillbs.dto.ReviewDTO;
 import com.itwillbs.entity.Product;
 import com.itwillbs.entity.User;
 import com.itwillbs.mapper.MypageMapper;
 import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.service.ProductService;
+import com.itwillbs.service.ReviewService;
 import com.itwillbs.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 
@@ -33,7 +36,8 @@ public class MyPageController {
     private final UserService userService;
     private final MypageMapper mypageMapper;
     private final ProductService productService;
-
+    private final ReviewService reviewService;
+    
     @GetMapping("/sales")
     public String mySalesPage(Authentication authentication, Model model) {
         if (authentication == null) return "redirect:/login";
@@ -64,16 +68,23 @@ public class MyPageController {
 
         String email = authentication.getName(); 
         MyPageDTO mypageInfo = mypageMapper.getMyPageInfo(email);
+        Long userId = mypageInfo.getUserId();
         
-        // 2. 매퍼 호출 (userId 사용)
-        List<Product> entityList = mypageMapper.getPurchaseListByUserId(mypageInfo.getUserId());
+     // 2. 구매 리스트 가져오기
+        List<Product> entityList = mypageMapper.getPurchaseListByUserId(userId);
         
-        // 3. 변환
+        // 3. VO로 변환하면서 리뷰 여부 체크
         List<ProductVO> purchaseList = entityList.stream()
-                .map(ProductVO::new)
+                .map(entity -> {
+                    ProductVO vo = new ProductVO(entity);
+                    
+                    boolean isReviewed = reviewService.checkIfReviewed(userId, entity.getProductId());
+                    vo.setReviewed(isReviewed); 
+                    
+                    return vo;
+                })
                 .collect(Collectors.toList());
 
-        // 4. 전달
         model.addAttribute("user", mypageInfo);
         model.addAttribute("purchaseList", purchaseList);
         
@@ -101,6 +112,24 @@ public class MyPageController {
     }
     
     
-    
+    @GetMapping("/reviews")
+    public String myReviews(Authentication authentication, Model model) {
+        if (authentication == null) return "redirect:/login";
+
+
+        String email = authentication.getName(); 
+        MyPageDTO mypageInfo = mypageMapper.getMyPageInfo(email);
+        
+
+        List<ReviewDTO> received = mypageMapper.getReceivedReviews(mypageInfo.getUserId());
+        List<ReviewDTO> sent = mypageMapper.getSentReviews(mypageInfo.getUserId());
+        
+        // 3. 화면에 필요한 데이터 전달
+        model.addAttribute("user", mypageInfo);
+        model.addAttribute("receivedReviews", received);
+        model.addAttribute("sentReviews", sent);
+        
+        return "user/reviews"; 
+    }
     
 }

@@ -3,111 +3,131 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
 <head>
-	<th:block layout:fragment="pageCss">
-	    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-	    <style>
-	        body { font-family: 'Manrope', 'Noto Sans KR', sans-serif; }
-	        footer, .footer { display: none !important; }
-	    </style>
-	    
-	    <script th:inline="javascript">
-	        window.onload = function() {
-	            const form = document.getElementById('withdrawForm');
-	            
-	            if (form) {
-	                form.addEventListener('submit', function(e) {
-	                    e.preventDefault();
-
-	                    const password = document.getElementById('password').value;
-	                    
-	                    if(!confirm('정말로 탈퇴하시겠습니까? 모든 정보가 삭제되며 복구할 수 없습니다.')) {
-	                        return;
-	                    }
-
-	                    fetch('/mypage/settings/withdraw/process', {
-	                        method: 'POST',
-	                        headers: {
-	                            'Content-Type': 'application/x-www-form-urlencoded',
-	                        },
-	                        body: 'password=' + encodeURIComponent(password)
-	                    })
-	                    .then(response => {
-	                        if (response.ok) {
-	                            alert('회원 탈퇴가 완료되었습니다. 그동안 이용해 주셔서 감사합니다.');
-	                            location.href = '/';
-	                        } else if (response.status === 401) {
-	                            alert('비밀번호가 일치하지 않습니다. 다시 확인해 주세요.');
-	                        } else {
-	                            alert('탈퇴 처리 중 오류가 발생했습니다. 관리자에게 문의하세요.');
-	                        }
-	                    })
-	                    .catch(error => {
-	                        console.error('Error:', error);
-	                        alert('네트워크 오류가 발생했습니다.');
-	                    });
-	                });
-	            } else {
-	                console.error("아직 폼을 못 찾았어! 폼 ID를 다시 확인해봐야 할 것 같아.");
-	            }
-	        };
-	    </script>
-	</th:block>
+    <th:block layout:fragment="pageCss">
+        <link rel="stylesheet" href="/css/main/main.css">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                corePlugins: { preflight: false, container: false },
+                important: '#tailwind-zone', 
+                theme: { 
+                    extend: { 
+                        colors: { 
+                            "primary": "#13ec5b",
+                            "danger": "#ff4d4f"
+                        } 
+                    } 
+                }
+            }
+        </script>
+        <style>
+            #tailwind-zone {
+                font-family: 'Manrope', 'Noto Sans KR', sans-serif;
+                background-color: #f8faf9;
+                min-height: 100vh;
+            }
+            footer, .footer { display: none !important; }
+            /* 입력창 포커스 시 링 색상 커스텀 */
+            .custom-input:focus {
+                box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+                border-color: #ff4d4f !important;
+            }
+        </style>
+    </th:block>
 </head>
+
 <body>
-<div layout:fragment="content" class="bg-[#f8faf9] dark:bg-[#0d130f] min-h-screen">
-    <div class="w-full max-w-2xl mx-auto px-4 py-8 flex flex-col gap-8">
-        <div class="flex items-center gap-3">
-            <button class="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors text-gray-700 dark:text-white" 
-                    onclick="history.back()">
-                <span class="material-symbols-outlined">arrow_back</span>
-            </button>
-            <h1 class="text-2xl font-extrabold text-[#111813] dark:text-white tracking-tight">회원 탈퇴</h1>
-        </div>
-
-        <div class="bg-white dark:bg-white/5 rounded-3xl border border-[#f0f4f2] dark:border-white/5 p-6 md:p-8">
-            <div class="flex flex-col items-center text-center mb-8">
-                <div class="size-16 rounded-2xl bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-500 mb-4">
-                    <span class="material-symbols-outlined" style="font-size: 40px;">warning</span>
-                </div>
-                <h2 class="text-xl font-bold text-[#111813] dark:text-white mb-2">정말 떠나시나요?</h2>
-                <p class="text-gray-500 dark:text-gray-400 leading-relaxed">
-                    계정을 삭제하면 모든 활동 정보, 포인트, <br class="hidden md:block">
-                    그리고 설정된 알림 정보가 즉시 삭제되며 복구할 수 없습니다.
-                </p>
-            </div>
-
-            <form id="withdrawForm" class="space-y-6">
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 px-1">비밀번호 확인</label>
-                    <input type="password" id="password" required
-                           class="w-full px-4 py-4 bg-gray-50 dark:bg-white/5 border-none rounded-2xl focus:ring-2 focus:ring-red-500/50 dark:text-white transition-all"
-                           placeholder="비밀번호를 입력해 주세요">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 px-1">탈퇴 사유 (선택)</label>
-                    <select class="w-full px-4 py-4 bg-gray-50 dark:bg-white/5 border-none rounded-2xl focus:ring-2 focus:ring-primary/50 dark:text-white transition-all">
-                        <option value="">사유를 선택해 주세요</option>
-                        <option value="1">자주 사용하지 않아요</option>
-                        <option value="2">이용이 불편해요</option>
-                        <option value="3">개인정보 유출이 우려돼요</option>
-                        <option value="4">다른 서비스를 이용할 예정이에요</option>
-                        <option value="5">기타</option>
-                    </select>
-                </div>
-
-                <div class="pt-4">
-                    <button type="submit" 
-                            class="w-full py-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-2xl shadow-lg shadow-red-500/30 transition-all hover:-translate-y-1">
-                        탈퇴하기
+    <div layout:fragment="content">
+        <div id="tailwind-zone">
+            <div class="w-full max-w-2xl mx-auto px-4 py-8">
+                
+                <div class="flex items-center gap-4 mb-4">
+                    <button onclick="history.back()" class="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600">
+                        <span class="material-symbols-outlined text-2xl">arrow_back</span>
                     </button>
-                    <p class="text-center text-xs text-gray-400 mt-4">
-                        탈퇴 버튼을 누르면 즉시 로그아웃 되며 계정이 삭제됩니다.
-                    </p>
+                    <h2 class="text-2xl font-extrabold text-[#111813] tracking-tight">회원 탈퇴</h2>
                 </div>
-            </form>
+
+                <div class="bg-white rounded-[2rem] border border-[#f0f4f2] p-8 md:p-10 shadow-sm">
+                    <div class="flex flex-col items-center text-center mb-10">
+                        <div class="w-20 h-20 rounded-3xl bg-red-50 flex items-center justify-center text-red-500 mb-2">
+                            <span class="material-symbols-outlined" style="font-size: 48px;">warning</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-[#111813] mb-3">정말 떠나시나요?</h3>
+                        <p class="text-gray-500 leading-relaxed">
+                            계정을 삭제하면 모든 활동 정보, 포인트, <br class="hidden md:block">
+                            그리고 설정된 알림 정보가 즉시 삭제되며 복구할 수 없습니다.
+                        </p>
+                    </div>
+
+                    <form id="withdrawForm" class="space-y-8">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-3 px-1">비밀번호 확인</label>
+                            <input type="password" id="password" required
+                                   class="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-red-500/20 text-[#111813] transition-all placeholder:text-gray-400"
+                                   placeholder="안전을 위해 비밀번호를 입력해 주세요">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-3 px-1">탈퇴 사유 (선택)</label>
+                            <div class="relative">
+                                <select class="w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 text-[#111813] appearance-none cursor-pointer transition-all">
+                                    <option value="">사유를 선택해 주세요</option>
+                                    <option value="1">자주 사용하지 않아요</option>
+                                    <option value="2">이용이 불편해요</option>
+                                    <option value="3">개인정보 유출이 우려돼요</option>
+                                    <option value="4">다른 서비스를 이용할 예정이에요</option>
+                                    <option value="5">기타</option>
+                                </select>
+                                <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">expand_more</span>
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="submit" 
+                                    class="w-full py-5 bg-red-500 hover:bg-red-600 text-white font-bold rounded-2xl shadow-lg shadow-red-500/20 transition-all hover:-translate-y-1 active:scale-[0.98]">
+                                탈퇴하기
+                            </button>
+                            <p class="text-center text-[13px] text-gray-400 mt-6">
+                                탈퇴 버튼을 누르면 즉시 로그아웃 되며 계정이 영구 삭제됩니다.
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
+
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('withdrawForm');
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const password = document.getElementById('password').value;
+                        
+                        if(!confirm('정말로 탈퇴하시겠습니까? 모든 정보가 삭제되며 복구할 수 없습니다.')) {
+                            return;
+                        }
+
+                        fetch('/mypage/settings/withdraw/process', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: 'password=' + encodeURIComponent(password)
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                alert('회원 탈퇴가 완료되었습니다. 그동안 이용해 주셔서 감사합니다.');
+                                location.href = '/';
+                            } else if (response.status === 401) {
+                                alert('비밀번호가 일치하지 않습니다. 다시 확인해 주세요.');
+                            } else {
+                                alert('탈퇴 처리 중 오류가 발생했습니다.');
+                            }
+                        });
+                    });
+                }
+            });
+        </script>
     </div>
-</div>
 </body>
 </html>
