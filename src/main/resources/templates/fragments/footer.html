@@ -1,20 +1,19 @@
 <th:block th:fragment="footer">
 	<footer class="footer">
 	  <!-- Newsletter -->
-	  <section class="footer-newsletter">
-	    <div class="footer-newsletter-inner">
-	      <div>
-	        <h2>새로운 소식 구독하기</h2>
-	        <p>중고 거래 팁, 안전 거래 가이드, 최신 인기 매물을 메일로 받아보세요.</p>
-	      </div>
+<!--	  <section class="footer-newsletter">-->
+<!--	    <div class="footer-newsletter-inner">-->
+<!--	      <div>-->
+<!--	        <h2>새로운 소식 구독하기</h2>-->
+<!--	        <p>중고 거래 팁, 안전 거래 가이드, 최신 인기 매물을 메일로 받아보세요.</p>-->
+<!--	      </div>-->
 
-	      <form class="footer-newsletter-form">
-	        <input type="email" placeholder="이메일 주소 입력">
-	        <button type="submit">구독하기</button>
-	      </form>
-	    </div>
-	  </section>
-
+<!--	      <form class="footer-newsletter-form">-->
+<!--	        <input type="email" placeholder="이메일 주소 입력">-->
+<!--	        <button type="submit">구독하기</button>-->
+<!--	      </form>-->
+<!--	    </div>-->
+<!--	  </section>-->
 	  <!-- Footer Body -->
 	  <section class="footer-inner">
 
@@ -36,7 +35,7 @@
 	        </div>
 	      </a>
 
-	      <a class="footer-card" th:href="@{/customer/qna}">
+	      <a class="footer-card" th:href="@{/customer/inquiry}">
 	        <span class="material-symbols-outlined footer-card-icon">forum</span>
 	        <div>
 	          <div class="footer-card-title">1:1 문의</div>
@@ -47,6 +46,7 @@
 	      <a class="footer-card" th:href="@{/customer/safe-guide}">
 	        <span class="material-symbols-outlined footer-card-icon">verified_user</span>
 	        <div>
+				
 	          <div class="footer-card-title">안전 거래 가이드</div>
 	          <div class="footer-card-desc">필수 체크리스트</div>
 	        </div>
