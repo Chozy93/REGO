@@ -8,8 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.itwillbs.domain.ReportVO;
 import com.itwillbs.entity.Notice;
+import com.itwillbs.entity.Report;
+import com.itwillbs.entity.enumtype.ReportStatus;
 import com.itwillbs.repository.NoticeRepository;
+import com.itwillbs.repository.ReportRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 public class AdminService {
 
 	private final NoticeRepository noticeRepository;
+	private final ReportRepository reportRepository;
+	
 	
 	// 상단 통계 데이터 가져오기
     public Map<String, Long> getNoticeStats() {
@@ -45,5 +51,36 @@ public class AdminService {
             notice.deactivate(); // isActive = false
         }
         // @Transactional이 걸려있으므로 save()를 명시하지 않아도 더티 체킹으로 업데이트됩니다.
+    }
+    
+    
+    
+    // -------------------- 신고하기 관리 페이지
+	// 상단 통계 데이터 가져오기
+    public Map<String, Long> getReportStats() {
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("total", reportRepository.count());
+        stats.put("pending", reportRepository.countByStatus(ReportStatus.PENDING));
+        stats.put("done", reportRepository.countByStatus(ReportStatus.DONE));
+        return stats;
+    }
+    
+    
+    // 신고하기 리스트 가져오기
+    public Page<Report> getReportList(Pageable pageable) {
+       
+ 
+        return reportRepository.findAllByOrderByCreatedAtDesc(pageable);
+    }
+
+ 
+
+    
+    // 신고하기 완료시
+    @Transactional
+    public void completeReport(Long id) {
+        Report report = reportRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 신고가 존재하지 않습니다."));
+        report.markDone(); // 엔티티 내 메서드 호출
     }
 }
