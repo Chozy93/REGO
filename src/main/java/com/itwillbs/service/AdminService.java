@@ -8,13 +8,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.itwillbs.dto.OrderListResponseDTO;
 import com.itwillbs.entity.Notice;
 import com.itwillbs.entity.Report;
 import com.itwillbs.entity.User;
+import com.itwillbs.entity.enumtype.EscrowStatus;
 import com.itwillbs.entity.enumtype.ReportStatus;
 import com.itwillbs.entity.enumtype.UserRole;
 import com.itwillbs.entity.enumtype.UserStatus;
 import com.itwillbs.repository.NoticeRepository;
+import com.itwillbs.repository.OrderRepository;
 import com.itwillbs.repository.ReportRepository;
 import com.itwillbs.repository.UserRepository;
 
@@ -27,7 +30,7 @@ public class AdminService {
 	private final NoticeRepository noticeRepository;
 	private final ReportRepository reportRepository;
 	private final UserRepository userRepository;
-	
+	private final OrderRepository orderRepository;
 	
 	
 	/**
@@ -124,4 +127,34 @@ public class AdminService {
         // String을 Enum으로 변환하거나 직접 문자열 세팅
         report.markDone();
     }
+    
+    
+    
+    // --- order 관리
+    // 주문 내역 가져오기
+    // 목록 조회 로직 (기존 구현 내용)
+    public Page<OrderListResponseDTO> findAllOrders(String status, String search, Pageable pageable) {
+        EscrowStatus escrowStatus = null;
+        if (status != null && !status.isEmpty() && !status.equals("전체 상태")) {
+            try {
+                escrowStatus = EscrowStatus.valueOf(status);
+            } catch (IllegalArgumentException e) {
+                escrowStatus = null;
+            }
+        }
+        return orderRepository.searchOrders(escrowStatus, search, pageable);
+    }
+ // 총 거래 수
+    public long getTotalCount() {
+        return orderRepository.count();
+    }
+
+    // 분쟁 접수 수 (예시로 CANCELLED나 별도의 DISPUTE 상태가 있다면 그것을 사용)
+    public long getDisputeCount() {
+        // 실제 프로젝트의 분쟁 상태 Enum값을 넣으세요.
+        // 여기서는 예시로 CANCELLED를 사용합니다.
+        return orderRepository.countByEscrowStatus(EscrowStatus.CANCELLED);
+    }
+
+
 }
