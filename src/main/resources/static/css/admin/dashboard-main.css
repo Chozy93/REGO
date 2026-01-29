@@ -172,6 +172,26 @@
   min-width: 0;               /* overflow 방지 */
 }
 
+
+/* 대시보드 배지 스타일 예시 */
+.status-badge span {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.panel-item-body {
+    flex: 1;
+    min-width: 0; /* 텍스트가 길어질 경우 대비 */
+}
+
+.item-title {
+    font-weight: 600;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* ================= Responsive ================= */
 @media (max-width: 1024px) {
   .dashboard-summary {

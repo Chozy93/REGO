@@ -29,6 +29,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         String regionName, 
         ProductSalesStatus salesStatus
     );
+    
+
+    // 검색기능
+    @Query("SELECT p FROM Product p " +
+            "JOIN p.seller s " + 
+            "WHERE (p.productName LIKE %:kw% " +
+            "OR s.nickname LIKE %:kw% " +
+            "OR p.regionDisplayName LIKE %:kw%) " + // 지역명 조건 추가
+            "AND p.salesStatus = 'ON_SALE'")
+     Page<Product> findByKeyword(@Param("kw") String keyword, Pageable pageable);
 
 
 }

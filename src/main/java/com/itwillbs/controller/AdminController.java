@@ -1,5 +1,7 @@
 package com.itwillbs.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,22 +11,28 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itwillbs.domain.AdminDashboardPageVO;
-import com.itwillbs.domain.AdminInquiryListPageVO;
 import com.itwillbs.domain.AdminInquirySearchConditionVO;
+import com.itwillbs.domain.AdminMemberListPageVO;
 import com.itwillbs.domain.AdminMemberSummaryVO;
 import com.itwillbs.domain.AdminProductListPageVO;
 import com.itwillbs.domain.AdminProductSearchConditionVO;
 import com.itwillbs.domain.AdminProductSummaryVO;
 import com.itwillbs.domain.AdminReportSummaryVO;
-import com.itwillbs.domain.AdminMemberListPageVO;
+import com.itwillbs.dto.AdminOrderSummaryDTO;
+import com.itwillbs.mapper.UserMapper;
 import com.itwillbs.service.AdminInquiryService;
 import com.itwillbs.service.AdminMemberDashboardService;
+import com.itwillbs.service.AdminMemberService;
 import com.itwillbs.service.AdminProductDashboardService;
 import com.itwillbs.service.AdminProductService;
 import com.itwillbs.service.AdminReportDashboardService;
-import com.itwillbs.service.AdminMemberService;
+import com.itwillbs.service.OrderService;
+import com.itwillbs.service.UserService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
+@RequiredArgsConstructor
 public class AdminController {
 
     private final AdminInquiryService adminInquiryService;
@@ -34,27 +42,16 @@ public class AdminController {
     private final AdminReportDashboardService reportService;
     private final AdminMemberService adminMemberService; // ✅ 추가
     private final AdminProductService adminProductService;
+    private final OrderService orderService;
 
 
-    public AdminController(
-    	    AdminMemberDashboardService memberService,
-    	    AdminProductDashboardService productService,
-    	    AdminReportDashboardService reportService,
-    	    AdminMemberService adminMemberService,
-    	    AdminProductService adminProductService,   // ✅ 추가
-    	    AdminInquiryService adminInquiryService
-    	) {
-    	    this.memberService = memberService;
-    	    this.productService = productService;
-    	    this.reportService = reportService;
-    	    this.adminMemberService = adminMemberService;
-    	    this.adminProductService = adminProductService; // ✅ 초기화
-    	    this.adminInquiryService = adminInquiryService;
-    	}
 
 
     @GetMapping("/admin/dashboard")
     public String dashboard(Model model) {
+    	
+    	// 최근 주문 내역 가졍괴
+    	List<AdminOrderSummaryDTO> recentOrders = orderService.getRecentOrders();
 
         AdminMemberSummaryVO memberSummary =
             memberService.getMemberSummary();
@@ -64,7 +61,8 @@ public class AdminController {
 
         AdminReportSummaryVO reportSummary =
             reportService.getRecentReports();
-
+        model.addAttribute("recentOrders", recentOrders);
+        
         model.addAttribute(
             "page",
             new AdminDashboardPageVO(
@@ -206,4 +204,7 @@ public class AdminController {
     public String productSettings() {
         return "admin/product-settings";
     }
+    
+    
+    
 }
