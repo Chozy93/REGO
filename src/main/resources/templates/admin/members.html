@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="/css/admin/admin-sidebar.css">
 </th:block>
 
+
+<th:block th:fragment="pageJs">
+	<script src="/js/admin/members.js"></script>
+</th:block>
+
 <div layout:fragment="content" class="admin-page">
   <!-- Sidebar -->
   <th:block th:replace="fragments/admin-sidebar :: admin-sidebar('members')"></th:block>
@@ -74,9 +79,15 @@
               2024-01-01 12:00
             </td>
 
-            <td th:text="${member.role}">
-              USER
-            </td>
+			<td>
+			    <select class="admin-role-select" 
+			            th:data-user-id="${member.userId}"
+			            onchange="changeUserRole(this)"> <option th:each="role : ${T(com.itwillbs.entity.enumtype.UserRole).values()}"
+			                th:value="${role.name()}"
+			                th:text="${role.label}"
+			                th:selected="${role == member.role}">일반유저</option>
+			    </select>
+			</td>
 
             <td>
 				<span class="badge"

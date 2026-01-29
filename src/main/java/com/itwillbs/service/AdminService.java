@@ -8,12 +8,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.itwillbs.domain.ReportVO;
 import com.itwillbs.entity.Notice;
 import com.itwillbs.entity.Report;
+import com.itwillbs.entity.User;
 import com.itwillbs.entity.enumtype.ReportStatus;
+import com.itwillbs.entity.enumtype.UserRole;
 import com.itwillbs.repository.NoticeRepository;
 import com.itwillbs.repository.ReportRepository;
+import com.itwillbs.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +25,25 @@ public class AdminService {
 
 	private final NoticeRepository noticeRepository;
 	private final ReportRepository reportRepository;
+	private final UserRepository userRepository;
+	
+	
+	
+	/**
+     * 유저 권한 변경 로직
+     */
+    @Transactional
+    public void updateUserRole(Long userId, UserRole role) {
+        // 1. 해당 유저가 존재하는지 확인
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다. ID: " + userId));
+
+        // 2. 권한 업데이트 (더티 체킹으로 인해 트랜잭션 종료 시 자동 반영)
+        user.updateRole(role);
+        
+        // (선택 사항) 로그 기록 등 추가 로직 수행
+        // log.info("User {}'s role changed to {}", userId, role);
+    }
 	
 	
 	// 상단 통계 데이터 가져오기
