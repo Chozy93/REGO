@@ -8,6 +8,11 @@
 	<link rel="stylesheet" href="/css/admin/admin-sidebar.css">
 </th:block>
 
+<th:block th:fragment="pageJs">
+	<script src="/js/admin/notice.js"></script>
+</th:block>
+
+
 <div layout:fragment="content" class="admin-page">
 
     <!-- 좌측 사이드바는 base.html 또는 fragment에서 이미 처리된 상태 -->
@@ -74,7 +79,7 @@
 		                <th>제목</th>
 		                <th style="width:120px;">상태</th>
 		                <th style="width:160px;">등록일</th>
-		                <th style="width:120px;">관리</th>
+		               
 		            </tr>
 		        </thead>
 
@@ -91,19 +96,19 @@
 							            </a>
 		                </td>
 		                
-		                <td>
-		                    <span th:if="${notice.isActive}" class="badge badge-primary">노출중</span>
-		                    <span th:unless="${notice.isActive}" class="badge">비노출</span>
-		                </td>
+						<td>
+						    <span th:if="${notice.isActive}" class="badge badge-primary" 
+						          th:onclick="'toggleStatus(' + ${notice.noticeId} + ', false)'" 
+						          style="cursor:pointer;">노출중</span>
+						    
+						    <span th:unless="${notice.isActive}" class="badge" 
+						          th:onclick="'toggleStatus(' + ${notice.noticeId} + ', true)'" 
+						          style="cursor:pointer;">비노출</span>
+						</td>
 		                
 		                <td th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd')}">2026-01-10</td>
 		                
-		                <td>
-		                    <a th:href="@{/admin/notice_edit/{id}(id=${notice.noticeId})}" class="table-link">수정</a>
-		                    <a href="javascript:void(0);" 
-		                       th:onclick="'deleteNotice(' + ${notice.noticeId} + ')'" 
-		                       class="table-link danger">삭제</a>
-		                </td>
+		               
 		            </tr>
 		            
 		            <tr th:if="${notices.isEmpty()}">

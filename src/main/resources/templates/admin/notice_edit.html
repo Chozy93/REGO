@@ -59,11 +59,13 @@
                     <label class="form-label">설정</label>
                     <div class="checkbox-group">
                         <label class="checkbox-item">
-                            <input type="checkbox" name="isActive" th:checked="${notice.isActive}"> 노출 여부
-                        </label>
+                            <input type="checkbox" name="active" th:checked="${notice.active}"> 노출 여부
+							<input type="hidden" name="_active" value="on"/>
+						</label>
                         <label class="checkbox-item">
-                            <input type="checkbox" name="isPinned" th:checked="${notice.isPinned}"> 상단 고정
-                        </label>
+                            <input type="checkbox" name="pinned" th:checked="${notice.pinned}"> 상단 고정
+							<input type="hidden" name="_pinned" value="on"/>
+						</label>
                     </div>
                 </div>
 
