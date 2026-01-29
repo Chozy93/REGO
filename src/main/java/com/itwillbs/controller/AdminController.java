@@ -112,13 +112,14 @@ public class AdminController {
     @PatchMapping("/admin/users/{userId}/role")
     public ResponseEntity<String> updateUserRole(
             @PathVariable("userId") Long userId,
-            @RequestParam("role") UserRole role) {
+            @RequestParam("role") String roleStr) {
         
-        try {
+    	try {
+            UserRole role = UserRole.valueOf(roleStr); // 여기서 변환
             adminService.updateUserRole(userId, role);
             return ResponseEntity.ok("권한이 변경되었습니다.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("변경 실패");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("변경 실패: " + e.getMessage());
         }
     }
     

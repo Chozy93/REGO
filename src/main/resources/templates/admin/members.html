@@ -80,13 +80,14 @@
             </td>
 
 			<td>
-			    <select class="admin-role-select" 
-			            th:data-user-id="${member.userId}"
-			            onchange="changeUserRole(this)"> <option th:each="role : ${T(com.itwillbs.entity.enumtype.UserRole).values()}"
-			                th:value="${role.name()}"
-			                th:text="${role.label}"
-			                th:selected="${role == member.role}">일반유저</option>
-			    </select>
+				<select class="admin-role-select" 
+				        th:data-user-id="${member.userId}"
+				        onchange="changeUserRole(this)"> 
+				    <option th:each="role : ${T(com.itwillbs.entity.enumtype.UserRole).values()}"
+				            th:value="${role.name()}"
+				            th:text="${role.label}"
+				            th:selected="${role.name() == #strings.toString(member.role)}">일반유저</option>
+				</select>
 			</td>
 
 			<td>
