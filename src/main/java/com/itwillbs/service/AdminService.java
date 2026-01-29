@@ -1,6 +1,8 @@
 package com.itwillbs.service;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -8,16 +10,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.itwillbs.dto.MonthlyCountDTO;
 import com.itwillbs.dto.OrderListResponseDTO;
 import com.itwillbs.entity.Notice;
 import com.itwillbs.entity.Report;
 import com.itwillbs.entity.User;
 import com.itwillbs.entity.enumtype.EscrowStatus;
+import com.itwillbs.entity.enumtype.ProductSalesStatus;
 import com.itwillbs.entity.enumtype.ReportStatus;
 import com.itwillbs.entity.enumtype.UserRole;
 import com.itwillbs.entity.enumtype.UserStatus;
 import com.itwillbs.repository.NoticeRepository;
 import com.itwillbs.repository.OrderRepository;
+import com.itwillbs.repository.ProductRepository;
 import com.itwillbs.repository.ReportRepository;
 import com.itwillbs.repository.UserRepository;
 
@@ -31,6 +36,7 @@ public class AdminService {
 	private final ReportRepository reportRepository;
 	private final UserRepository userRepository;
 	private final OrderRepository orderRepository;
+	private final ProductRepository productRepository;
 	
 	
 	/**
@@ -156,5 +162,49 @@ public class AdminService {
         return orderRepository.countByEscrowStatus(EscrowStatus.CANCELLED);
     }
 
+    
+    
+    // *********
+    // ----------- 통계 ----
+    // *******
+    /**
+     * [공통 로직] 
+     * DB에서 가져온 월별 통계(데이터가 있는 달만 존재)를 
+     * 1월~12월까지 0이 채워진 12개의 리스트로 변환합니다.
+     */
+    private List<Long> convertToMonthlyList(List<MonthlyCountDTO> results) {
+        Long[] counts = new Long[12];
+        Arrays.fill(counts, 0L);
 
+        if (results != null) {
+            for (MonthlyCountDTO dto : results) {
+                // 월(month)은 1~12이므로 배열 인덱스(0~11)를 위해 -1 해줌
+                int monthIndex = dto.getMonth() - 1; 
+                if (monthIndex >= 0 && monthIndex < 12) {
+                    counts[monthIndex] = dto.getCount();
+                }
+            }
+        }
+        return Arrays.asList(counts);
+    }
+    
+ // 1. 회원 가입 추이
+    public List<Long> getUserCountsForChart() {
+        return convertToMonthlyList(userRepository.getMonthlyUserCounts());
+    }
+
+    // 2. 상품 등록 추이
+    public List<Long> getProductCountsForChart() {
+        return convertToMonthlyList(productRepository.getMonthlyProductCounts());
+    }
+
+    // 3. 거래 완료 추이 (updatedAt 기준)
+    public List<Long> getOrderCountsForChart() {
+    	// 호출 시 Enum 값을 직접 전달
+        List<MonthlyCountDTO> results = productRepository.getMonthlyOrderCounts(ProductSalesStatus.SOLD);
+        return convertToMonthlyList(results);
+    }
+    
+    
+  
 }

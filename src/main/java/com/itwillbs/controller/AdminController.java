@@ -1,5 +1,6 @@
 package com.itwillbs.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -112,13 +113,14 @@ public class AdminController {
     @PatchMapping("/admin/users/{userId}/role")
     public ResponseEntity<String> updateUserRole(
             @PathVariable("userId") Long userId,
-            @RequestParam("role") UserRole role) {
+            @RequestParam("role") String roleStr) {
         
-        try {
+    	try {
+            UserRole role = UserRole.valueOf(roleStr); // 여기서 변환
             adminService.updateUserRole(userId, role);
             return ResponseEntity.ok("권한이 변경되었습니다.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("변경 실패");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("변경 실패: " + e.getMessage());
         }
     }
     
@@ -312,9 +314,43 @@ public class AdminController {
     }
     
 
-    @GetMapping("admin/statistics")
+    
+    
+    // --------- 통계 가져오기
+    
+    @GetMapping("/admin/statistics")
     public String statistics(Model model) {
-        model.addAttribute("activeMenu", "statistics");
+        // db에서 값 가져오기
+    	 // JS에서 사용하기 편하게 labels 넘기기
+        List<String> labels = Arrays.asList("1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월");
+    	
+        // 회원 가입 추이
+        List<Long> userCounts = adminService.getUserCountsForChart();
+      
+    	
+     // 상품 등록  추이
+        List<Long> productCounts = adminService.getUserCountsForChart();
+        
+        // 거래 완료 추이
+        List<Long> orderCounts = adminService.getOrderCountsForChart();
+        
+        
+     // 카테고리별 상품 분포 (구현해야함)
+        
+        
+        
+        // 지역별 거래량 (구현해야함)
+        
+        
+
+        
+        
+        model.addAttribute("labels", labels);
+        model.addAttribute("userCounts", userCounts);
+        model.addAttribute("productCounts", productCounts);
+        model.addAttribute("orderCounts", orderCounts);
+        
+        
         return "admin/statistics";
     }
 
