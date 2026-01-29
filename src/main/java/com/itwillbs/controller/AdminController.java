@@ -1,5 +1,6 @@
 package com.itwillbs.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -313,9 +314,43 @@ public class AdminController {
     }
     
 
-    @GetMapping("admin/statistics")
+    
+    
+    // --------- 통계 가져오기
+    
+    @GetMapping("/admin/statistics")
     public String statistics(Model model) {
-        model.addAttribute("activeMenu", "statistics");
+        // db에서 값 가져오기
+    	 // JS에서 사용하기 편하게 labels 넘기기
+        List<String> labels = Arrays.asList("1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월");
+    	
+        // 회원 가입 추이
+        List<Long> userCounts = adminService.getUserCountsForChart();
+      
+    	
+     // 상품 등록  추이
+        List<Long> productCounts = adminService.getUserCountsForChart();
+        
+        // 거래 완료 추이
+        List<Long> orderCounts = adminService.getOrderCountsForChart();
+        
+        
+     // 카테고리별 상품 분포 (구현해야함)
+        
+        
+        
+        // 지역별 거래량 (구현해야함)
+        
+        
+
+        
+        
+        model.addAttribute("labels", labels);
+        model.addAttribute("userCounts", userCounts);
+        model.addAttribute("productCounts", productCounts);
+        model.addAttribute("orderCounts", orderCounts);
+        
+        
         return "admin/statistics";
     }
 
