@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -87,6 +88,24 @@ public class CustomerController {
 	    return "redirect:/customer/notice"; // 등록 후 리스트로 이동
 	}
 	
+	
+	// 공지사항 수정
+	
+	// 1. 수정 페이지 보기
+    @GetMapping("/customer/notice-edit")
+    public String editNoticePage(@RequestParam("id") Long id, Model model) {
+        // ID로 기존 공지사항 정보를 가져와서 폼에 채워줌
+        NoticeVO notice = customerService.getNoticeById(id);
+        model.addAttribute("notice", notice);
+        return "admin/notice_edit"; // 수정 폼 HTML 파일명
+    }
+
+    // 2. 수정 실행 (저장)
+    @PostMapping("/customer/notice-edit")
+    public String updateNotice(@ModelAttribute NoticeVO noticeVO) {
+    	customerService.updateNotice(noticeVO);
+        return "redirect:/admin/notices"; // 수정 후 리스트로 이동
+    }
 
 
 

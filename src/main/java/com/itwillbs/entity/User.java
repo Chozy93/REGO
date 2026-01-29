@@ -144,6 +144,12 @@ public class User {
     public void changePassword(String encodedPassword) {
         this.password = encodedPassword;
     }
+    
+    
+ // 권한 변경을 위한 메서드
+    public void updateRole(UserRole role) {
+        this.role = role;
+    }
 }
 
 

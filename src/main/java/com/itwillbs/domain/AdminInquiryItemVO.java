@@ -12,16 +12,20 @@ public class AdminInquiryItemVO {
     private Long id;
     private String title;
     private String inquiryType;
+    private String content;
     private String status;
     private LocalDateTime createdAt;
+    private String answerContent;
 
     public static AdminInquiryItemVO from(AdminInquiryListDTO dto) {
         AdminInquiryItemVO vo = new AdminInquiryItemVO();
         vo.id = dto.getId();
         vo.title = dto.getTitle();
+        vo.content = dto.getContent();
         vo.inquiryType = dto.getInquiryType();
         vo.status = dto.getStatus();
         vo.createdAt = dto.getCreatedAt();
+        vo.answerContent = dto.getAnswerContent();
         return vo;
     }
 }

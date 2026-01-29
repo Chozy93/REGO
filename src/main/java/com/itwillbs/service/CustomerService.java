@@ -76,6 +76,23 @@ public class CustomerService {
         return new NoticeVO(notice);
     }
     
+    // 공지사항 게시글 보기
+    public NoticeVO getNoticeById(Long id) {
+        Notice notice = noticeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+        return notice.toVO();
+    }
+
+    // 공지사항 수정
+    public void updateNotice(NoticeVO vo) {
+        Notice notice = noticeRepository.findById(vo.getNoticeId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + vo.getNoticeId()));
+        
+        // 엔티티 내부에 만들어두신 update 메서드 활용
+        notice.update(vo);
+    }
+    
+    
     public void inquiriesRegister(InquiryCreateConditionVO conditionVO) {
 
         InquiryType inquiryType = InquiryType.from(conditionVO.getInquiryType());

@@ -9,6 +9,11 @@
 
 </th:block>
 
+<th:block th:fragment="pageJs">
+	<script src="/js/admin/reports.js"></script>
+</th:block>
+
+
 <div layout:fragment="content" class="admin-page">
 	
 	<th:block th:replace="fragments/admin-sidebar :: admin-sidebar('reports')"></th:block>
@@ -26,15 +31,15 @@
 	                <div class="admin-summary">
 	                    <div class="summary-card">
 	                        <span class="summary-label">전체</span>
-	                        <strong class="summary-value">1,204</strong>
+	                        <strong class="summary-value" th:text="${stats.total}">0</strong>
 	                    </div>
 	                    <div class="summary-card">
 	                        <span class="summary-label">처리중</span>
-	                        <strong class="summary-value">23</strong>
+	                        <strong class="summary-value" th:text="${stats.pending}">0</strong>
 	                    </div>
 	                    <div class="summary-card">
 	                        <span class="summary-label">처리완료</span>
-	                        <strong class="summary-value">8</strong>
+	                        <strong class="summary-value" th:text="${stats.done}">0</strong>
 	                    </div>
 	                </div>
 	            </div>
@@ -68,32 +73,81 @@
 	                    <th>관리</th>
 	                </tr>
 	                </thead>
-	                <tbody>
-	                <tr>
-	                    <td><input type="checkbox"></td>
-	                    <td>RPT-20231205</td>
-	                    <td>
-	                        <div class="report-title">허위매물 신고</div>
-	                        <div class="report-desc">해당 게시글이 실제 거래와 다릅니다.</div>
-	                    </td>
-	                    <td>게시글</td>
-	                    <td><span class="badge">대기중</span></td>
-	                    <td>2023-12-05</td>
-	                    <td><a href="#" class="table-link">처리</a></td>
-	                </tr>
-	                </tbody>
+					<tbody>
+					    <tr th:each="report : ${reports}" th:if="${reports != null}">
+					        <td><input type="checkbox"></td>
+					        
+					        <td th:text="${report?.reportId != null ? 'RPT-' + report.reportId : 'N/A'}">RPT-000</td>
+					        
+					        <td>
+					            <div class="report-title" th:text="${report?.detail}">신고 사유</div>
+								<div class="report-desc" th:switch="${report?.reason}">
+								    <span th:case="'SPAM'">스팸/홍보</span>
+								    <span th:case="'INAPPROPRIATE'">부적절한 게시물</span>
+								    <span th:case="'ABUSE'">욕설 및 비방</span>
+								    <span th:case="'FRAUD'">허위 매물</span>
+								    <span th:case="OTHER">기타 신고</span>
+								</div>
+					        </td>
+					        
+					        <td th:text="${report?.targetType}">유형</td>
+					        
+					        <td>
+								<span class="badge" 
+								          th:classappend="${report.status.name() == 'PENDING' ? 'badge-danger' : 'badge-success'}"
+								          th:text="${report.status.label}">대기중</span>
+					        </td>
+					        
+					        <td th:text="${report?.createdAt != null ? #temporals.format(report.createdAt, 'yyyy-MM-dd') : '-'}">2023-12-05</td>
+					        
+							<td>
+							    <button th:if="${report.status.name() == 'PENDING'}"
+							            type="button" 
+							            class="table-link" 
+							            th:onclick="'completeReport(' + ${report.reportId} + ')'">
+							        처리
+							    </button>
+							    <span th:unless="${report.status.name() == 'PENDING'}" style="color: #ccc;">-</span>
+							</td>
+					    </tr>
+
+					    <tr th:if="${reports == null || #lists.isEmpty(reports)}">
+					        <td colspan="7" style="text-align: center; padding: 30px; color: #999;">
+					            신고 내역이 존재하지 않습니다.
+					        </td>
+					    </tr>
+					</tbody>
 	            </table>
 	        </div>
 
 	        <!-- 페이지네이션 -->
-			<div class="admin-pagination">
-			  <div class="admin-page-buttons">
-			    <button class="admin-page-btn">Previous</button>
-			    <button class="admin-page-btn is-active">1</button>
-			    <button class="admin-page-btn">2</button>
-			    <button class="admin-page-btn">3</button>
-			    <button class="admin-page-btn">Next</button>
-			  </div>
+			<div class="admin-pagination" th:if="${!reportPage.empty}">
+			    <div class="admin-page-buttons">
+			        
+			        <a th:href="@{/admin/reports(page=${reportPage.number - 1})}" 
+			           class="admin-page-btn" 
+			           th:classappend="${reportPage.first} ? 'disabled'"
+			           th:style="${reportPage.first} ? 'pointer-events: none; opacity: 0.5' : ''">
+			                &lt;
+			        </a>
+
+			        <th:block th:with="start=${(reportPage.number/5)*5}, end=${(start + 4 < reportPage.totalPages) ? start + 4 : reportPage.totalPages - 1}">
+			            <a th:if="${end >= 0}"
+			               th:each="i : ${#numbers.sequence(start, end)}"
+			               th:href="@{/admin/reports(page=${i})}"
+			               class="admin-page-btn"
+			               th:classappend="${i == reportPage.number} ? 'is-active'"
+			               th:text="${i + 1}">1</a>
+			        </th:block>
+
+			        <a th:href="@{/admin/reports(page=${reportPage.number + 1})}" 
+			           class="admin-page-btn" 
+			           th:classappend="${reportPage.last} ? 'disabled'"
+			           th:style="${reportPage.last} ? 'pointer-events: none; opacity: 0.5' : ''">
+			             &gt;
+			        </a>
+			        
+			    </div>
 			</div>
 
 	    </section>
