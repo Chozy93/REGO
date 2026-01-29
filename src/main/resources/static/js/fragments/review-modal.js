@@ -44,12 +44,12 @@ $(function () {
   $('.review-modal__backdrop').on('click', closeReviewModal);
 
   /* ===============================
-     별 클릭 → rating (1~5 → 2~10)
+     별 클릭 → rating (1~5)
   =============================== */
   $('.review-rating__star').on('click', function () {
 
-    const index  = $(this).index();     // 0 ~ 4
-    const rating = (index + 1) * 2;     // 2 ~ 10
+    const index  = $(this).index();   // 0 ~ 4
+    const rating = index + 1;         // 1 ~ 5
 
     $form.find('input[name="rating"]').val(rating);
 

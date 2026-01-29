@@ -69,6 +69,10 @@ public class ReviewService {
     
     
     private void updateSellerProfileRating(Long sellerId, int newRating) {
+    	  // 방어: 평점 범위
+        if (newRating < 1 || newRating > 5) {
+            throw new IllegalArgumentException("평점은 1~5 사이여야 합니다.");
+        }
 
         SellerProfile profile = sellerProfileRepository.findById(sellerId)
                 .orElseThrow(() ->
@@ -79,8 +83,11 @@ public class ReviewService {
         double oldAvg = profile.getRatingAvg();
 
         int newCount = oldCount + 1;
-        double newAvg =
+        double rawAvg =
                 ((oldAvg * oldCount) + newRating) / newCount;
+
+        // ⭐ 소수점 1자리 올림 정책
+        double newAvg = Math.ceil(rawAvg * 10) / 10.0;
 
         profile.increaseReviews();   // total_reviews +1
         profile.applyRating(newAvg); // rating_avg 반영

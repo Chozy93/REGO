@@ -48,13 +48,24 @@ document.addEventListener("click", (e) => {
 
     const modal = document.getElementById("reportModal");
 
-    const reasonEl =
-      modal.querySelector("input[name='report-reason']:checked");
+	const reasonEl =
+	  modal.querySelector("input[name='report-reason']:checked");
 
-    if (!reasonEl) {
-      alert("신고 사유를 선택해주세요.");
-      return;
-    }
+	const detailEl =
+	  modal.querySelector(".report-textarea");
+
+	const detailValue = detailEl?.value.trim();
+
+	if (!reasonEl) {
+	  alert("신고 사유를 선택해주세요.");
+	  return;
+	}
+
+	if (!detailValue) {
+	  alert("신고 내용을 입력해주세요.");
+	  detailEl.focus();
+	  return;
+	}
 
     const productId = modal.dataset.productId;
 

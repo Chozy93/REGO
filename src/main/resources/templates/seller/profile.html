@@ -58,7 +58,7 @@
 
           <div class="seller-actions">
 <!--            <button class="btn btn-primary profile-card-btn">팔로우</button>-->
-            <button class="btn btn-outline profile-card-btn">프로필 공유</button>
+            <button class="btn btn-outline profile-card-btn" id="btnProfileShare">프로필 공유</button>
           </div>
         </div>
 
@@ -75,10 +75,10 @@
             <span class="seller-stat-label">후기</span>
           </div>
 
-          <div class="seller-stat">
-            <strong class="seller-stat-value">0</strong>
-            <span class="seller-stat-label">팔로워</span>
-          </div>
+<!--          <div class="seller-stat">-->
+<!--            <strong class="seller-stat-value">0</strong>-->
+<!--            <span class="seller-stat-label">팔로워</span>-->
+<!--          </div>-->
         </div>
 
       </div>
@@ -129,10 +129,10 @@
           </div>
 
           <div class="more-wrap">
-            <a th:href="@{/search(sellerId=${page.profile.sellerId},status='SELLING')}"
-               class="btn btn-soft">
-              판매중 상품 전체보기
-            </a>
+			<a th:href="@{/product/search(keyword=${page.profile.nickname})}"
+			   class="btn btn-soft">
+			  상품 전체보기
+			</a>
           </div>
         </th:block>
 
@@ -159,10 +159,10 @@
           </div>
 
           <div class="more-wrap">
-            <a th:href="@{/search(sellerId=${page.profile.sellerId},status='COMPLETED')}"
-               class="btn btn-soft">
-              거래완료 상품 전체보기
-            </a>
+			<a th:href="@{/product/search(keyword=${page.profile.nickname})}"
+			   class="btn btn-soft">
+			  상품 전체보기
+			</a>
           </div>
         </th:block>
 
