@@ -36,14 +36,29 @@
                 </div>
 
                 <div class="product-grid">
-                    <div class="product-card" th:each="product : ${products}">
+					<div class="product-card"
+					     th:each="product : ${products}"
+					     th:classappend="${product.salesStatusCode != 'ON_SALE'} ? 'dim'">
+
                         <a th:href="@{/product/{id}(id=${product.productId})}">
-                            <div class="image-wrapper">
-                                <img th:src="${product.mainImageUrl != null ? product.mainImageUrl : '/images/default-product.png'}" alt="상품이미지">
-                                <button class="wish-btn">
-                                    <span class="material-symbols-outlined">favorite</span>
-                                </button>
-                            </div>
+							<div class="image-wrapper">
+
+							    <div th:if="${product.salesStatusCode != 'ON_SALE'}"
+							         class="status-overlay"
+							         th:classappend="${product.salesStatusCode.toLowerCase()}"
+							         th:text="${product.salesStatusCode}">
+							    </div>
+
+							    <img th:src="${product.mainImageUrl != null ? product.mainImageUrl : '/images/default-product.png'}"
+							         alt="상품이미지">
+
+							    <button class="wish-btn">
+							        <span class="material-symbols-outlined">favorite</span>
+							    </button>
+							</div>
+
+
+
                             <div class="info">
                                 <h4 class="title" th:text="${product.productName}">상품명</h4>
                                 <p class="price" th:text="${#numbers.formatInteger(product.price, 0, 'COMMA') + '원'}">0원</p>
