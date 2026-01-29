@@ -79,7 +79,10 @@
 .modal-close-btn:hover {
   color: var(--color-text);
 }
-
+#reportModal .modal-footer .report-btn{
+	border: 1px solid var(--color-surface);
+	border-radius: var(--radius-md);
+}
 
 
 /* =========================

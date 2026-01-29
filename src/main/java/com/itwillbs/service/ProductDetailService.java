@@ -67,12 +67,8 @@ public class ProductDetailService {
         List<String> imageUrls =
                 productDetailMapper.selectProductImages(productId);
 
-        if (imageUrls == null || imageUrls.isEmpty()) {
-            if (dto.getMainImageUrl() != null && !dto.getMainImageUrl().isBlank()) {
-                imageUrls = List.of(dto.getMainImageUrl());
-            } else {
-                imageUrls = Collections.emptyList();
-            }
+        if (imageUrls == null) {
+            imageUrls = Collections.emptyList();
         }
 
         dto.setImageUrls(imageUrls);
