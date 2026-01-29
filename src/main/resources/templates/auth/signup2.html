@@ -379,6 +379,9 @@
 	    // 6. 최종 전송 시 유효성 검사 
 	    signupForm.addEventListener('submit', (e) => {
 	        console.log("가입 제출 시도 중...");
+			if (phoneInput) {
+			        phoneInput.value = phoneInput.value.replace(/[^0-9]/g, '');
+			    }
 	        const birthReg = /^(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/;
 	        const nameRegex = /^[가-힣]{2,5}$/; 
 	        const nameValue = nameInput.value;
