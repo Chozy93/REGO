@@ -246,5 +246,46 @@ private User buyer;
         this.buyer = buyer;
         this.updatedAt = LocalDateTime.now();
     }
+    
+    public void updateFromCondition(
+    	    SellerProductRegisterConditionVO conditionVO,
+    	    Category category,
+    	    String mainImageUrl
+    	) {
+    	    /* =========================
+    	       상품 기본 정보
+    	    ========================= */
+    	    this.productName = conditionVO.getTitle();
+    	    this.description = conditionVO.getDescription();
+    	    this.price = conditionVO.getPrice();
+    	    this.mainImageUrl=mainImageUrl;
+    	    /* =========================
+    	       상품 상태 / 거래 방식
+    	    ========================= */
+    	    this.conditionStatus =
+    	        ProductConditionStatus.from(conditionVO.getConditionStatus());
+
+    	    this.tradeType =
+    	        TradeType.from(conditionVO.getTradeType());
+
+    	    /* =========================
+    	       카테고리
+    	    ========================= */
+    	    this.category = category;
+
+    	    /* =========================
+    	       지역 정보
+    	    ========================= */
+    	    this.regionSidoCode = conditionVO.getRegionSidoCode();
+    	    this.regionSigunguCode = conditionVO.getRegionSigunguCode();
+    	    this.regionEupmyeondongCode = conditionVO.getRegionEupmyeondongCode();
+    	    this.regionDisplayName = conditionVO.getRegionDisplayName();
+
+    	    /* =========================
+    	       수정 시각
+    	    ========================= */
+    	    this.updatedAt = LocalDateTime.now();
+    	}
+
 
 }

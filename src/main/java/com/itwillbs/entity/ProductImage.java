@@ -72,4 +72,15 @@ public class ProductImage {
     public ProductImageVO toVO() {
         return new ProductImageVO(this);
     }
+    
+    /* =========================
+    정렬 순서 변경
+    - 이미지 삭제 후 재정렬
+    - 대표 이미지 결정 기준
+    - 순서 변경 UI 확장 대비
+ ========================= */
+ public void changeSortOrder(int sortOrder) {
+     this.sortOrder = sortOrder;
+ }
+
 }

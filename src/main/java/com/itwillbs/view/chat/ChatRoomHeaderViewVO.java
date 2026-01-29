@@ -12,7 +12,7 @@ public class ChatRoomHeaderViewVO {
     ========================= */
     private final Long roomId;
     private final Long productId;
-
+    private String roomType;   // ← 추가 (PRODUCT / ADMIN_DM)
     /* =========================
        채팅 상대
     ========================= */
@@ -41,7 +41,7 @@ public class ChatRoomHeaderViewVO {
     public ChatRoomHeaderViewVO(
             Long roomId,
             Long productId,
-
+            String roomType,
             Long opponentUserId,
             String opponentUserName,
             String opponentProfileImageUrl,
@@ -57,7 +57,7 @@ public class ChatRoomHeaderViewVO {
     ) {
         this.roomId = roomId;
         this.productId = productId;
-
+        this.roomType=roomType;
         this.opponentUserId = opponentUserId;
         this.opponentUserName = opponentUserName != null ? opponentUserName : "";
         this.opponentProfileImageUrl =
