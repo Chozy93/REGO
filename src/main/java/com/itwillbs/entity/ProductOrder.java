@@ -113,4 +113,16 @@ public class ProductOrder {
         this.carrierCode = carrierCode;
         this.trackingNumber = trackingNumber;
     }
+    
+    
+    /**
+     * 구매 확정 처리 (에스크로 해제)
+     */
+    public void confirmPurchase() {
+        // 이미 RELEASED된 경우를 방지하기 위한 검증 (선택사항)
+        if (this.escrowStatus == EscrowStatus.RELEASED) {
+            throw new IllegalStateException("이미 구매 확정된 주문입니다.");
+        }
+        this.escrowStatus = EscrowStatus.RELEASED;
+    }
 }
