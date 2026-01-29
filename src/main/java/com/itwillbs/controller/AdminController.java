@@ -28,6 +28,7 @@ import com.itwillbs.domain.AdminProductSummaryVO;
 import com.itwillbs.domain.AdminReportSummaryVO;
 import com.itwillbs.dto.AdminOrderSummaryDTO;
 import com.itwillbs.entity.Notice;
+import com.itwillbs.entity.Report;
 import com.itwillbs.service.AdminInquiryService;
 import com.itwillbs.service.AdminMemberDashboardService;
 import com.itwillbs.service.AdminMemberService;
@@ -211,10 +212,28 @@ public class AdminController {
     	return "admin/notice_write";
     }
 
-    @GetMapping("/admin/reports")
-    public String reports(Model model) {
-        model.addAttribute("activeMenu", "reports");
+    // 신고하기 페이지
+    @GetMapping("admin/reports")
+    public String reportList(@RequestParam(value = "status", required = false) String status,
+                             @PageableDefault(size = 10) Pageable pageable,
+                             Model model) {
+    	
+    	// 리스트 가져오기
+    	Page<Report> reportPage = adminService.getReportList(pageable);
+    	// 1. 실제 데이터 리스트 (.getContent() 사용)
+        model.addAttribute("reports", reportPage.getContent());
+       // 2. 페이지 정보 전체 (페이지네이션용)
+        model.addAttribute("reportPage", reportPage);
+        model.addAttribute("stats", adminService.getReportStats());
         return "admin/reports";
+    }
+    
+ // 처리 완료 버튼 클릭 시
+    @PostMapping("/report-done")
+    @ResponseBody
+    public ResponseEntity<String> markAsDone(@RequestParam("id") Long id) {
+    	adminService.completeReport(id);
+        return ResponseEntity.ok("success");
     }
 
     @GetMapping("admin/statistics")
