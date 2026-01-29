@@ -168,3 +168,8 @@
     margin-top: var(--space-24);
 }
 
+.admin-page-btn.disabled {
+    pointer-events: none; /* 클릭 방지 */
+    opacity: 0.5;
+    background-color: #eee;
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+    <link rel="stylesheet" href="/css/admin/notices.css">
+    <link rel="stylesheet" href="/css/admin/admin-sidebar.css">
+    <style>
+        /* 수정 페이지 전용 추가 스타일 */
+        .form-container { background: #fff; padding: 30px; border-radius: 8px; border: 1px solid #eee; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        textarea.form-control { height: 300px; resize: none; }
+        .checkbox-group { display: flex; gap: 20px; margin-top: 10px; }
+        .checkbox-item { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .admin-footer { margin-top: 30px; display: flex; gap: 10px; justify-content: flex-end; }
+    </style>
+</th:block>
+
+<div layout:fragment="content" class="admin-page">
+
+    <th:block th:replace="fragments/admin-sidebar :: admin-sidebar('notices')"></th:block>
+
+    <section class="admin-content">
+        <div class="admin-head">
+            <h1 class="admin-title">공지사항 수정</h1>
+            <p class="admin-desc">선택한 공지사항의 내용을 변경합니다.</p>
+        </div>
+
+        <div class="form-container">
+            <form th:action="@{/customer/notice-edit}" method="post">
+                <input type="hidden" name="noticeId" th:value="${notice.noticeId}">
+
+                <div class="form-group">
+                    <label class="form-label">제목</label>
+                    <input type="text" name="title" class="form-control" 
+                           th:value="${notice.title}" placeholder="공지사항 제목을 입력하세요" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">카테고리</label>
+                    <select name="category" class="form-control" style="width: 200px;">
+                        <option value="일반" th:selected="${notice.category == '일반'}">일반</option>
+                        <option value="점검" th:selected="${notice.category == '점검'}">점검</option>
+                        <option value="이벤트" th:selected="${notice.category == '이벤트'}">이벤트</option>
+                        <option value="안내" th:selected="${notice.category == '안내'}">안내</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">내용</label>
+                    <textarea name="content" class="form-control" 
+                              th:text="${notice.content}" placeholder="내용을 입력하세요" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">설정</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="active" th:checked="${notice.active}"> 노출 여부
+							<input type="hidden" name="_active" value="on"/>
+						</label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="pinned" th:checked="${notice.pinned}"> 상단 고정
+							<input type="hidden" name="_pinned" value="on"/>
+						</label>
+                    </div>
+                </div>
+
+                <div class="admin-footer">
+                    <a href="/admin/notices" class="btn" style="background:#666; color:#fff;">취소</a>
+                    <button type="submit" class="btn btn-primary">수정 완료</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+</html>

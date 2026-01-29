@@ -2,6 +2,11 @@ package com.itwillbs.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.itwillbs.domain.AdminDashboardPageVO;
 import com.itwillbs.domain.AdminInquirySearchConditionVO;
@@ -21,12 +27,14 @@ import com.itwillbs.domain.AdminProductSearchConditionVO;
 import com.itwillbs.domain.AdminProductSummaryVO;
 import com.itwillbs.domain.AdminReportSummaryVO;
 import com.itwillbs.dto.AdminOrderSummaryDTO;
+import com.itwillbs.entity.Notice;
 import com.itwillbs.service.AdminInquiryService;
 import com.itwillbs.service.AdminMemberDashboardService;
 import com.itwillbs.service.AdminMemberService;
 import com.itwillbs.service.AdminProductDashboardService;
 import com.itwillbs.service.AdminProductService;
 import com.itwillbs.service.AdminReportDashboardService;
+import com.itwillbs.service.AdminService;
 import com.itwillbs.service.OrderService;
 
 import lombok.RequiredArgsConstructor;
@@ -43,6 +51,7 @@ public class AdminController {
     private final AdminMemberService adminMemberService; // ✅ 추가
     private final AdminProductService adminProductService;
     private final OrderService orderService;
+    private final AdminService adminService;
 
 
 
@@ -170,9 +179,31 @@ public class AdminController {
 
     
     @GetMapping("/admin/notices")
-    public String notices(Model model) {
-        model.addAttribute("activeMenu", "notices");
+    public String notices(Model model, 
+            @PageableDefault(size = 10) Pageable pageable) {
+    	// 1. 상단 요약 정보 (전체/노출/비노출)
+        model.addAttribute("stats", adminService.getNoticeStats());
+        
+        // 2. 공지사항 리스트 데이터
+        Page<Notice> noticePage = adminService.getAdminNoticeList(pageable);
+        model.addAttribute("notices", noticePage);
         return "admin/notices";
+    }
+    
+    
+    
+    
+    // 공지사항 is_active 설정
+    
+    @PostMapping("/admin/notice/toggle-status")
+    @ResponseBody // 페이지 이동이 아닌 데이터만 응답
+    public ResponseEntity<String> toggleStatus(@RequestParam("id") Long id, @RequestParam("status") boolean status) {
+        try {
+            adminService.updateStatus(id, status);
+            return ResponseEntity.ok("Success");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fail");
+        }
     }
     
     @GetMapping("/admin/notice_write")
