@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itwillbs.mapper.AdminInquiryMapper">
+
+    <!-- 문의 목록 카운트 -->
+    <select id="countInquiries" resultType="int">
+        SELECT COUNT(*)
+        FROM inquiries
+        <where>
+            <if test="status != null and status != ''">
+                status = #{status}
+            </if>
+
+            <if test="keyword != null and keyword != ''">
+                AND title LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+
+            <if test="period == 'WEEK'">
+                AND created_at >= NOW() - INTERVAL 7 DAY
+            </if>
+
+            <if test="period == 'MONTH'">
+                AND created_at >= NOW() - INTERVAL 1 MONTH
+            </if>
+        </where>
+    </select>
+
+    <!-- 문의 목록 -->
+    <select id="findInquiries"
+            resultType="com.itwillbs.dto.AdminInquiryListDTO">
+        SELECT
+            id,
+            title,
+            content,
+            answer_content AS answerContent,
+            inquiry_type AS inquiryType,
+            status,
+            created_at AS createdAt
+        FROM inquiries
+        <where>
+            <if test="status != null and status != ''">
+                status = #{status}
+            </if>
+
+            <if test="keyword != null and keyword != ''">
+                AND title LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+
+            <if test="period == 'WEEK'">
+                AND created_at >= NOW() - INTERVAL 7 DAY
+            </if>
+
+            <if test="period == 'MONTH'">
+                AND created_at >= NOW() - INTERVAL 1 MONTH
+            </if>
+        </where>
+        ORDER BY created_at DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!-- 문의 상세 -->
+    <select id="selectInquiryDetail"
+            parameterType="long"
+            resultType="com.itwillbs.domain.AdminInquiryDetailVO">
+        SELECT
+            id,
+            inquiry_type AS inquiryType,
+            title,
+            content,
+            status,
+            created_at AS createdAt,
+            answer_content AS answerContent,
+            answered_at AS answeredAt
+        FROM inquiries
+        WHERE id = #{id}
+    </select>
+
+    <!-- 문의 답변 등록 -->
+    <update id="updateInquiryAnswer">
+        UPDATE inquiries
+        SET
+            answer_content = #{answerContent},
+            status = 'DONE',
+            answered_at = NOW(),
+            updated_at = NOW(),
+            answered_by = #{adminId}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 전체 카운트 -->
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM inquiries
+    </select>
+
+    <!-- 대기 -->
+    <select id="countWaiting" resultType="int">
+        SELECT COUNT(*) FROM inquiries WHERE status = 'WAITING'
+    </select>
+
+    <!-- 완료 -->
+    <select id="countDone" resultType="int">
+        SELECT COUNT(*) FROM inquiries WHERE status = 'DONE'
+    </select>
+
+</mapper>

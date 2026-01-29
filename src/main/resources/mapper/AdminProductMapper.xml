@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itwillbs.mapper.AdminProductMapper">
+
+    <!-- 상품 리스트 -->
+    <select id="selectAdminProductListByCondition"
+            parameterType="com.itwillbs.domain.AdminProductSearchConditionVO"
+            resultType="com.itwillbs.dto.AdminProductListDTO">
+
+        SELECT
+            p.product_id     AS productId,
+            p.product_name   AS productName,
+            p.price          AS price,
+            p.sales_status   AS salesStatus,
+            p.trade_type     AS tradeType,
+            p.view_count     AS viewCount,
+            p.like_count     AS likeCount,
+            p.created_at     AS createdAt,
+            p.seller_id      AS sellerId,
+            p.main_image_url AS mainImageUrl
+        FROM products p
+
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND p.product_name LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="salesStatus != null and salesStatus != ''">
+                AND p.sales_status = #{salesStatus}
+            </if>
+        </where>
+
+        ORDER BY p.created_at DESC
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <!-- 검색 조건 기준 전체 개수 -->
+    <select id="countAdminProductByCondition"
+            parameterType="com.itwillbs.domain.AdminProductSearchConditionVO"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM products p
+
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND p.product_name LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+            <if test="salesStatus != null and salesStatus != ''">
+                AND p.sales_status = #{salesStatus}
+            </if>
+        </where>
+    </select>
+
+    <!-- 상태별 카운트 -->
+    <select id="countBySalesStatus" resultType="int">
+        SELECT COUNT(*)
+        FROM products
+        WHERE sales_status = #{salesStatus}
+    </select>
+
+</mapper>

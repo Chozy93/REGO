@@ -297,6 +297,9 @@ signupForm.addEventListener('submit', (e) => {
     first.el?.focus?.();
     return;
   }
-
+  
+  /* 🌟 추가: 전부 통과했다면 전송 직전에 휴대폰 번호 하이픈 제거 */
+    const purePhone = phoneInput.value.replace(/[^0-9]/g, '');
+    phoneInput.value = purePhone;
   /* 전부 통과 → 정상 submit */
 });

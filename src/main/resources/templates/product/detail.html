@@ -66,13 +66,20 @@
           </div>
           <hr class="seller-divider">
           <div class="action-card product-detail">
-            <button type="button" class="product-card__like-btn"
-                    th:data-product-id="${page.product.productId}"
-                    th:data-login="${page.login}"
-                    th:disabled="${page.isMine}">
-              <span class="material-symbols-outlined" th:classappend="${page.product.liked} ? ' filled' : ''">favorite</span>
-            </button>
-            <button type="button" id="dealBtn" class="btn-primary"
+			<th:block th:if="${page.isMine}">
+			    <a th:href="@{/product/edit/{id}(id=${page.product.productId})}" class="btn-chat" style="flex: 1; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+			      <span class="material-symbols-outlined" style="margin-right: 4px;">edit</span>
+			      상품 수정하기
+			    </a>
+			    </th:block>
+
+			  <th:block th:unless="${page.isMine}">
+			    <button type="button" class="product-card__like-btn"
+			            th:data-product-id="${page.product.productId}"
+			            th:data-login="${page.login}">
+			      <span class="material-symbols-outlined" th:classappend="${page.product.liked} ? ' filled' : ''">favorite</span>
+			    </button>
+            <button type="button" id="dealBtn" class="btn-chat"
                     th:data-product-id="${page.product.productId}"
                     th:data-mine="${page.isMine}"
                     th:data-login="${page.login}">채팅하기</button>

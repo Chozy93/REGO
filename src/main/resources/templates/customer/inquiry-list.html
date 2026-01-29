@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/customer/customer.css">
+  <link rel="stylesheet" href="/css/customer/inquiry-list.css">
+  <link rel="stylesheet" href="/css/customer/sidebar.css">
+</th:block>
+
+<div layout:fragment="content" class="container-content">
+
+  <div class="customer-layout">
+
+    <th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='inquiry')"></th:block>
+	<!-- ===============================
+	     Inquiry list Main Content
+	=============================== -->
+    <main class="customer-main">
+		<!-- Header -->
+      <div class="customer-header">
+		<div class="customer-header">
+		        <a href="#" class="customer-back" onclick="history.back()">
+		          <span class="material-symbols-outlined">arrow_back</span>
+		        </a>
+          <div>
+            <h2 class="customer-title">1:1 문의 내역</h2>
+            <p class="customer-desc">고객님의 소중한 문의 내역입니다.</p>
+          </div>
+        </div>
+
+      </div>
+
+	  
+	  
+	  
+      <div class="filter-section">
+          
+
+		<button type="button" class="btn-primary" th:onclick="|location.href='@{/customer/inquiry}'|">
+		        <span class="material-symbols-outlined">edit_square</span>
+		        1:1 문의하기
+		    </button>
+		
+      </div>
+
+      <div class="customer-card">
+          <div class="table-header-row">
+              <div class="col-type">유형</div>
+              <div class="col-title">제목</div>
+              <div class="col-date">접수일</div>
+              <div class="col-status">상태</div>
+          </div>
+          
+		  <div class="table-body">
+		      <div th:if="${#lists.isEmpty(inquiries)}" class="table-row" style="justify-content: center; padding: 40px 0;">
+		          <p style="color: var(--color-text-muted);">문의 내역이 없습니다.</p>
+		      </div>
+
+		      <div th:each="item : ${inquiries}" class="table-row">
+		          <div class="col-type">
+		              <span class="type-text" th:text="${item.inquiryType.label}">문의 유형</span>
+		          </div>
+		          
+		          <div class="col-title">
+		              <a th:href="@{/customer/inquiry/detail/{id}(id=${item.id})}" style="text-decoration: none; color: inherit;">
+		                  <h3 th:text="${item.title}">제목</h3>
+		              </a>
+		          </div>
+		          
+		          <div class="col-date">
+		              <span class="date-text" th:text="${#temporals.format(item.createdAt, 'yyyy.MM.dd')}">2023.11.02</span>
+		          </div>
+		          
+		          <div class="col-status">
+		              <span class="badge" 
+		                    th:classappend="${item.status.name() == 'DONE' ? 'badge-complete' : 'badge-wait'}"
+		                    th:text="${item.status.label}">답변대기</span>
+		          </div>
+		      </div>
+		  </div>
+
+		  <div class="pagination" th:if="${page.totalPages > 0}">
+		      <button type="button" class="btn-page-arrow" 
+		              th:disabled="${!page.hasPrevious()}"
+		              th:onclick="|location.href='@{/customer/inquiries(page=${page.number}, status=${selectedStatus})}'|">
+		          <span class="material-symbols-outlined">chevron_left</span>
+		      </button>
+
+		      <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+		          <button type="button" class="btn-page" 
+		                  th:classappend="${i == page.number ? 'active' : ''}"
+		                  th:onclick="|location.href='@{/customer/inquiries(page=${i + 1}, status=${selectedStatus})}'|"
+		                  th:text="${i + 1}">1</button>
+		      </th:block>
+
+		      <button type="button" class="btn-page-arrow" 
+		              th:disabled="${!page.hasNext()}"
+		              th:onclick="|location.href='@{/customer/inquiries(page=${page.number + 2}, status=${selectedStatus})}'|">
+		          <span class="material-symbols-outlined">chevron_right</span>
+		      </button>
+		  </div>
+      </div>
+
+      <div class="info-box" style="background-color: var(--color-surface-2); padding: var(--space-24); border-radius: var(--radius-xl); display: flex; gap: 16px;">
+          <span class="material-symbols-outlined" style="color: var(--color-primary);">info</span>
+          <div class="info-content">
+              <h4 style="font-weight: var(--fw-bold); margin-bottom: 8px;">안내사항</h4>
+              <ul style="font-size: var(--fs-14); color: var(--color-text-muted); padding-left: 20px;">
+                  <li>1:1 문의 내역은 최근 1년까지 조회 가능합니다.</li>
+                  <li>답변이 완료된 문의는 수정이나 삭제가 불가능합니다.</li>
+                  <li>추가 문의가 있으신 경우 새로운 문의를 등록해주세요.</li>
+              </ul>
+          </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<th:block th:fragment="pageJs">
+	<script th:src="@{/js/customer/inquiry-list.js}" defer></script>
+  </th:block>
+
+</html>

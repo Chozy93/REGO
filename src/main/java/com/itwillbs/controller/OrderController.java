@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -242,6 +243,27 @@ public class OrderController {
         
         model.addAttribute("order", order);
         return "payment/order-detail"; // 질문하신 이미지의 상세 레이아웃 페이지
+    }
+    
+    
+    
+    // 거래 완료 버튼 눌렀을 때 product 상태 SOLD로 바꾸끼
+    @PostMapping("/mypage/purchase/confirm/{productId}")
+    @ResponseBody
+    public ResponseEntity<String> confirmPurchase(
+        @PathVariable("productId") Long productId,
+        @AuthenticationPrincipal CustomUserDetails userDetails // 로그인한 유저 정보
+    ) {
+        try {
+            Long buyerId = userDetails.getUserId();
+            // 서비스에서 상태 변경 처리
+            orderService.confirmProductStatus(productId, buyerId);
+            return ResponseEntity.ok("거래가 완료되었습니다.");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("처리 중 오류가 발생했습니다.");
+        }
     }
     
     

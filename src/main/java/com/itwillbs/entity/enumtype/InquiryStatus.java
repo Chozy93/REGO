@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum InquiryStatus {
 
     PENDING("접수됨"),
-    ANSWERED("답변 완료"),
+    DONE("답변 완료"),
     CANCELED("취소됨");
 
     private final String label;

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/admin/order.css">
+  <link rel="stylesheet" href="/css/admin/admin-sidebar.css">
+</th:block>
+
+
+<th:block th:fragment="pageJs">
+	<script src="/js/admin/order.js"></script>
+</th:block>
+
+<div layout:fragment="content" class="admin-page">
+  <!-- Sidebar -->
+  <th:block th:replace="fragments/admin-sidebar :: admin-sidebar('orders')"></th:block>
+
+	<main class="admin-main">
+	        <header class="main-header">
+	            <div class="header-title">
+	                <h2>거래 관리</h2>
+	                <p>플랫폼에서 발생한 모든 거래 내역 목록을 확인하고 관리합니다.</p>
+	            </div>
+	            <div class="header-stats">
+	                <div class="stat-box">
+	                    <span class="stat-label">총 거래</span>
+	                    <span class="stat-value">12,458</span>
+	                </div>
+	                <div class="stat-box">
+	                    <span class="stat-label danger">분쟁 접수</span>
+	                    <span class="stat-value danger">5</span>
+	                </div>
+	            </div>
+	        </header>
+
+	        <section class="filter-section">
+	            <div class="filter-group">
+	                <select class="filter-select">
+	                    <option>전체 기간</option>
+	                    <option>오늘</option>
+	                </select>
+	                <div class="search-wrapper">
+	                    <span class="material-symbols-outlined search-icon">search</span>
+	                    <input type="text" placeholder="거래번호, 상품명 또는 사용자 검색" class="filter-input">
+	                </div>
+	                <select class="filter-select">
+	                    <option>전체 상태</option>
+	                    <option>거래 완료</option>
+	                </select>
+	                <button class="btn-search">검색</button>
+	            </div>
+	        </section>
+
+	        <section class="table-container">
+	            <table class="admin-table">
+	                <thead>
+	                    <tr>
+	                        <th><input type="checkbox"></th>
+	                        <th>거래 ID</th>
+	                        <th>구매 상품</th>
+	                        <th>구매자</th>
+	                        <th>판매자</th>
+	                        <th class="text-right">거래 금액</th>
+	                        <th class="text-center">거래일</th>
+	                        <th class="text-center">상태</th>
+	                        <th class="text-right">관리</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    <tr>
+	                        <td><input type="checkbox"></td>
+	                        <td class="trx-id">#TRX-20231015-01</td>
+	                        <td>
+	                            <div class="product-cell">
+	                                <img src="https://via.placeholder.com/40" alt="prod">
+	                                <div>
+	                                    <p class="font-bold">애플워치 SE 40mm</p>
+	                                    <p class="text-xs color-gray">디지털기기</p>
+	                                </div>
+	                            </div>
+	                        </td>
+	                        <td>김철수</td>
+	                        <td>박민영</td>
+	                        <td class="text-right font-bold">220,000원</td>
+	                        <td class="text-center color-gray">2023.10.15</td>
+	                        <td class="text-center">
+	                            <span class="badge badge-success">거래 완료</span>
+	                        </td>
+	                        <td class="text-right">
+	                            <button class="btn-icon"><span class="material-symbols-outlined">visibility</span></button>
+	                            <button class="btn-icon"><span class="material-symbols-outlined">more_vert</span></button>
+	                        </td>
+	                    </tr>
+	                    <tr class="row-danger">
+	                        <td><input type="checkbox"></td>
+	                        <td class="trx-id danger">#TRX-20231201-99</td>
+	                        <td>
+	                            <div class="product-cell">
+	                                <img src="https://via.placeholder.com/40" alt="prod">
+	                                <div>
+	                                    <p class="font-bold">샤넬 가방</p>
+	                                    <p class="text-xs color-danger">명품/잡화</p>
+	                                </div>
+	                            </div>
+	                        </td>
+	                        <td>최유나</td>
+	                        <td>김명수</td>
+	                        <td class="text-right font-bold">2,500,000원</td>
+	                        <td class="text-center color-gray">2023.12.01</td>
+	                        <td class="text-center">
+	                            <span class="badge badge-danger">분쟁 접수</span>
+	                        </td>
+	                        <td class="text-right">
+	                            <button class="btn-icon danger"><span class="material-symbols-outlined">gavel</span></button>
+	                            <button class="btn-icon"><span class="material-symbols-outlined">visibility</span></button>
+	                        </td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	            
+	            <div class="pagination">
+	              
+	                <div class="page-buttons">
+	                    <button class="btn-page">Previous</button>
+	                    <button class="btn-page active">1</button>
+	                    <button class="btn-page">2</button>
+	                    <button class="btn-page">Next</button>
+	                </div>
+	            </div>
+	        </section>
+	    </main>
+</div>
+
+
+
+</html>

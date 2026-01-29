@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+    <link rel="stylesheet" href="/css/admin/reports.css">
+	<link rel="stylesheet" href="/css/admin/admin-sidebar.css">
+
+</th:block>
+
+<th:block th:fragment="pageJs">
+	<script src="/js/admin/reports.js"></script>
+</th:block>
+
+
+<div layout:fragment="content" class="admin-page">
+	
+	<th:block th:replace="fragments/admin-sidebar :: admin-sidebar('reports')"></th:block>
+
+	    <section class="admin-content">
+
+	        <!-- 상단 헤더 -->
+	        <div class="admin-head">
+	            <div>
+	                <h1 class="admin-title">신고 관리</h1>
+	                <p class="admin-desc">회원 및 게시물에 대한 신고 내역을 관리합니다.</p>
+	            </div>
+
+	            <div class="admin-head-right">
+	                <div class="admin-summary">
+	                    <div class="summary-card">
+	                        <span class="summary-label">전체</span>
+	                        <strong class="summary-value" th:text="${stats.total}">0</strong>
+	                    </div>
+	                    <div class="summary-card">
+	                        <span class="summary-label">처리중</span>
+	                        <strong class="summary-value" th:text="${stats.pending}">0</strong>
+	                    </div>
+	                    <div class="summary-card">
+	                        <span class="summary-label">처리완료</span>
+	                        <strong class="summary-value" th:text="${stats.done}">0</strong>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+
+	        <!-- 필터 -->
+	        <div class="admin-filter">
+	            <div class="filter-left">
+	                <select class="filter-select">
+	                    <option>전체 상태</option>
+	                    <option>대기중</option>
+	                    <option>처리중</option>
+	                    <option>처리완료</option>
+	                </select>
+	                <input class="filter-input" placeholder="신고 사유, 대상 검색">
+	            </div>
+	            <button class="page-btn is-active">검색</button>
+	        </div>
+
+	        <!-- 테이블 -->
+	        <div class="admin-table-wrap">
+	            <table>
+	                <thead>
+	                <tr>
+	                    <th></th>
+	                    <th>신고번호</th>
+	                    <th>신고 내용</th>
+	                    <th>유형</th>
+	                    <th>상태</th>
+	                    <th>접수일</th>
+	                    <th>관리</th>
+	                </tr>
+	                </thead>
+					<tbody>
+					    <tr th:each="report : ${reports}" th:if="${reports != null}">
+					        <td><input type="checkbox"></td>
+					        
+					        <td th:text="${report?.reportId != null ? 'RPT-' + report.reportId : 'N/A'}">RPT-000</td>
+					        
+					        <td>
+					            <div class="report-title" th:text="${report?.detail}">신고 사유</div>
+								<div class="report-desc" th:switch="${report?.reason}">
+								    <span th:case="'SPAM'">스팸/홍보</span>
+								    <span th:case="'INAPPROPRIATE'">부적절한 게시물</span>
+								    <span th:case="'ABUSE'">욕설 및 비방</span>
+								    <span th:case="'FRAUD'">허위 매물</span>
+								    <span th:case="OTHER">기타 신고</span>
+								</div>
+					        </td>
+					        
+					        <td th:text="${report?.targetType}">유형</td>
+					        
+					        <td>
+								<span class="badge" 
+								          th:classappend="${report.status.name() == 'PENDING' ? 'badge-danger' : 'badge-success'}"
+								          th:text="${report.status.label}">대기중</span>
+					        </td>
+					        
+					        <td th:text="${report?.createdAt != null ? #temporals.format(report.createdAt, 'yyyy-MM-dd') : '-'}">2023-12-05</td>
+					        
+							<td>
+							    <button th:if="${report.status.name() == 'PENDING'}"
+							            type="button" 
+							            class="table-link" 
+							            th:onclick="'completeReport(' + ${report.reportId} + ')'">
+							        처리
+							    </button>
+							    <span th:unless="${report.status.name() == 'PENDING'}" style="color: #ccc;">-</span>
+							</td>
+					    </tr>
+
+					    <tr th:if="${reports == null || #lists.isEmpty(reports)}">
+					        <td colspan="7" style="text-align: center; padding: 30px; color: #999;">
+					            신고 내역이 존재하지 않습니다.
+					        </td>
+					    </tr>
+					</tbody>
+	            </table>
+	        </div>
+
+	        <!-- 페이지네이션 -->
+			<div class="admin-pagination" th:if="${!reportPage.empty}">
+			    <div class="admin-page-buttons">
+			        
+			        <a th:href="@{/admin/reports(page=${reportPage.number - 1})}" 
+			           class="admin-page-btn" 
+			           th:classappend="${reportPage.first} ? 'disabled'"
+			           th:style="${reportPage.first} ? 'pointer-events: none; opacity: 0.5' : ''">
+			                &lt;
+			        </a>
+
+			        <th:block th:with="start=${(reportPage.number/5)*5}, end=${(start + 4 < reportPage.totalPages) ? start + 4 : reportPage.totalPages - 1}">
+			            <a th:if="${end >= 0}"
+			               th:each="i : ${#numbers.sequence(start, end)}"
+			               th:href="@{/admin/reports(page=${i})}"
+			               class="admin-page-btn"
+			               th:classappend="${i == reportPage.number} ? 'is-active'"
+			               th:text="${i + 1}">1</a>
+			        </th:block>
+
+			        <a th:href="@{/admin/reports(page=${reportPage.number + 1})}" 
+			           class="admin-page-btn" 
+			           th:classappend="${reportPage.last} ? 'disabled'"
+			           th:style="${reportPage.last} ? 'pointer-events: none; opacity: 0.5' : ''">
+			             &gt;
+			        </a>
+			        
+			    </div>
+			</div>
+
+	    </section>
+	</div>
+
+
+</html>
