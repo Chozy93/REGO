@@ -96,6 +96,9 @@ public class SellerService {
 	        );
 	    }
 	 
+	 
+	 
+	 
 	 //상품 지역 검색
 	 public List<ProductRegionDTO> searchProductRegions(String keyword) {
 

@@ -100,9 +100,8 @@
 				    <span class="chat-label">채팅</span>
 				  </a>
 				  <a sec:authorize="hasRole('USER')"
-				     href="/seller/myprofile"
+				     th:href="@{/seller/profile/{id}(id=${loginUser.userId})}"
 				     class="my-shop">
-
 				    <span class="material-symbols-outlined my-shop-icon">
 				      storefront
 				    </span>
@@ -125,14 +124,7 @@
 
 			    </div>
 		</div>
-        <div class="hot-keywords keyword-row">
-          <span class="hot-label">인기</span>
-          <a href="#">자전거</a>
-          <a href="#">아이패드</a>
-          <a href="#">의자</a>
-          <a href="#">스타벅스</a>
-          <a href="#">냉장고</a>
-        </div>
+    
       </div>
 	 
    
