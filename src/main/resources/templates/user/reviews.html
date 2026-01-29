@@ -119,7 +119,7 @@
 									<div class="review-rating__stars mb-2">
 									    <span th:each="i : ${#numbers.sequence(1, 5)}" 
 									          class="review-rating__star material-symbols-outlined text-[16px]" 
-									          th:classappend="${(i * 2) <= review.rating} ? 'filled' : ''">star</span>
+									          th:classappend="${i <= review.rating} ? 'filled' : ''">star</span>
 									</div>
                                     <p class="text-sm text-gray-700 leading-snug mb-3 line-clamp-2" th:text="${review.content}">내용</p>
 									<div class="flex items-center justify-between mt-auto pt-3 border-t border-[#f8faf9]">
@@ -151,7 +151,7 @@
 									<div class="review-rating__stars mb-2">
 									    <span th:each="i : ${#numbers.sequence(1, 5)}" 
 									          class="review-rating__star material-symbols-outlined text-[16px]" 
-									          th:classappend="${(i * 2) <= review.rating} ? 'filled' : ''">star</span>
+									          th:classappend="${i <= review.rating} ? 'filled' : ''">star</span>
 									</div>
                                     <p class="text-sm text-gray-700 leading-snug mb-3 line-clamp-2" th:text="${review.content}">내가 쓴 내용</p>
                                     <div class="flex items-center justify-between mt-auto pt-3 border-t border-[#f8faf9]">
