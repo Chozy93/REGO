@@ -12,4 +12,6 @@ public class AdminInquiryListDTO {
     private String inquiryType;
     private String status;
     private LocalDateTime createdAt;
+    private String content;
+    private String answerContent;
 }
