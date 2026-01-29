@@ -302,7 +302,7 @@
 							$modal.find('.review-product__image img').attr('src', realImgPath);
 							    $modal.find('.review-product__title').text(data.productName);
 							
-					        const starCount = data.rating / 2;
+					        const starCount = data.rating;
 			                $modal.find('.review-rating__star').removeClass('is-active');
 			                $modal.find('.review-rating__star').each(function(i) {
 			                    if (i < starCount) $(this).addClass('is-active');
@@ -330,7 +330,7 @@
 			    if ($form.find('textarea[name="content"]').prop('readonly')) return;
 
 			    const index = $(this).index();
-			    const rating = (index + 1) * 2;
+			    const rating = (index + 1);
 			    console.log("별점 선택됨: " + (index + 1) + "개 (점수: " + rating + ")");
 			    
 			    $form.find('input[name="rating"]').val(rating);

@@ -8,6 +8,21 @@
   <link rel="stylesheet" href="/css/admin/statistics.css">
 </th:block>
 
+<th:block th:fragment="pageJs">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.chartData = {
+            labels: /*[[${labels}]]*/ [],
+            userCounts: /*[[${userCounts}]]*/ [],
+            productCounts: /*[[${productCounts}]]*/ [],
+            orderCounts: /*[[${orderCounts}]]*/ [],
+        };
+        /*]]>*/
+    </script>
+    <script src="/js/admin/statistics.js"></script>
+</th:block>
+
 <div layout:fragment="content" class="admin-page">
 
   <!-- 사이드바 -->
@@ -15,75 +30,82 @@
 
   <!-- 메인 영역 -->
   <main class="admin-main">
+          <header class="main-header">
+              <div class="header-title">
+                  <h2>통계</h2>
+                  <p>플랫폼의 주요 지표와 성과를 한눈에 파악하세요.</p>
+              </div>
+              <div class="header-controls">
+                  <select class="filter-select">
+                      <option>이번 달 (1월)</option>
+                      <option>지난 달 (12월)</option>
+                      <option>최근 3개월</option>
+                  </select>
+               
+              </div>
+          </header>
 
-    <!-- 페이지 헤더 -->
-    <div class="admin-main-head between">
-      <h1 class="admin-main-title">통계</h1>
-      <button class="btn btn-primary">이번달 (12월)</button>
-    </div>
+          <div class="stats-grid">
+			<section class="stats-card">
+			    <div class="card-header">
+			        <h3>회원 가입 추이</h3>
+			        <span class="trend positive">+12.5%</span>
+			    </div>
+			    <div class="chart-area"> <canvas id="userTrendChart"></canvas>
+			    </div>
+			</section>
 
-    <!-- 상단 요약 카드 -->
-    <section class="admin-summary">
-      <div class="summary-card">
-        <p class="summary-label">회원 가입 추이</p>
-        <img src="/img/mock/chart-line-green.png" alt="">
-      </div>
+			<section class="stats-card">
+			    <div class="card-header">
+			        <h3>상품 등록 추이</h3>
+			        <span class="trend negative">-2.3%</span>
+			    </div>
+			    <div class="chart-area"> <canvas id="productTrendChart"></canvas>
+			    </div>
+			</section>
 
-      <div class="summary-card">
-        <p class="summary-label">상품 등록 추이</p>
-        <img src="/img/mock/chart-bar-blue.png" alt="">
-      </div>
+			<section class="stats-card">
+			    <div class="card-header">
+			        <h3>거래 완료 추이</h3>
+			        <span class="trend positive">+5.8%</span>
+			    </div>
+			    <div class="chart-area"> <canvas id="orderTrendChart"></canvas>
+			    </div>
+			</section>
 
-      <div class="summary-card">
-        <p class="summary-label">거래 완료 추이</p>
-        <img src="/img/mock/chart-line-orange.png" alt="">
-      </div>
-    </section>
+			  <section class="stats-card pie-section">
+			      <div class="card-header">
+			          <h3>카테고리별 상품 분포</h3>
+			      </div>
+			      <div class="chart-area pie-container">
+			          <canvas id="categoryPieChart"></canvas>
+			          </div>
+			  </section>
 
-    <!-- 하단 영역 -->
-    <section class="admin-bottom">
-      <div class="dashboard-card">
-        <h3 class="card-title">카테고리별 상품</h3>
-        <img src="/img/mock/chart-donut.png" alt="">
-      </div>
-
-      <div class="dashboard-card">
-        <div class="between">
-          <h3 class="card-title">지역별 거래량 TOP 5</h3>
-          <a href="#" class="card-link">전체보기</a>
-        </div>
-
-        <ul class="region-rank">
-          <li>
-            <span>서울 강남구</span>
-            <span class="bar"><i style="width:90%"></i></span>
-            <span class="count">2,405</span>
-          </li>
-          <li>
-            <span>서울 송파구</span>
-            <span class="bar"><i style="width:75%"></i></span>
-            <span class="count">1,820</span>
-          </li>
-          <li>
-            <span>경기 성남시</span>
-            <span class="bar"><i style="width:60%"></i></span>
-            <span class="count">1,450</span>
-          </li>
-          <li>
-            <span>부산 해운대</span>
-            <span class="bar"><i style="width:45%"></i></span>
-            <span class="count">1,210</span>
-          </li>
-          <li>
-            <span>대구 수성구</span>
-            <span class="bar"><i style="width:35%"></i></span>
-            <span class="count">980</span>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-  </main>
+              <section class="stats-card rank-section">
+                  <div class="card-header">
+                      <h3>지역별 거래량 TOP 5</h3>
+                  </div>
+                  <div class="rank-list">
+                      <div class="rank-item">
+                          <span class="loc-name">서울 강남구</span>
+                          <div class="bar-wrap"><div class="bar" style="width: 85%"></div></div>
+                          <span class="count">2,405</span>
+                      </div>
+                      <div class="rank-item">
+                          <span class="loc-name">서울 송파구</span>
+                          <div class="bar-wrap"><div class="bar" style="width: 65%"></div></div>
+                          <span class="count">1,820</span>
+                      </div>
+                      <div class="rank-item">
+                          <span class="loc-name">경기 성남시</span>
+                          <div class="bar-wrap"><div class="bar" style="width: 50%"></div></div>
+                          <span class="count">1,450</span>
+                      </div>
+                  </div>
+              </section>
+          </div>
+      </main>
 </div>
 
 </html>

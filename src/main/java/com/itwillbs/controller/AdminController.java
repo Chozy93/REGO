@@ -1,9 +1,11 @@
 package com.itwillbs.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,7 @@ import com.itwillbs.domain.AdminProductSearchConditionVO;
 import com.itwillbs.domain.AdminProductSummaryVO;
 import com.itwillbs.domain.AdminReportSummaryVO;
 import com.itwillbs.dto.AdminOrderSummaryDTO;
+import com.itwillbs.dto.OrderListResponseDTO;
 import com.itwillbs.entity.Notice;
 import com.itwillbs.entity.Report;
 import com.itwillbs.entity.enumtype.UserRole;
@@ -110,13 +113,14 @@ public class AdminController {
     @PatchMapping("/admin/users/{userId}/role")
     public ResponseEntity<String> updateUserRole(
             @PathVariable("userId") Long userId,
-            @RequestParam("role") UserRole role) {
+            @RequestParam("role") String roleStr) {
         
-        try {
+    	try {
+            UserRole role = UserRole.valueOf(roleStr); // 여기서 변환
             adminService.updateUserRole(userId, role);
             return ResponseEntity.ok("권한이 변경되었습니다.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("변경 실패");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("변경 실패: " + e.getMessage());
         }
     }
     
@@ -284,18 +288,69 @@ public class AdminController {
     
     
     
-    // 거래 관리 페이지
+    // -------------- 거래 관리 페이지
     @GetMapping("/admin/orders")
-    public String getOrders() {
-        
-        return "admin/order";
+    public String getOrderList(
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "search", required = false) String search,
+            Model model) {
+
+        // 1. 서비스 호출하여 페이징된 데이터 가져오기
+        // DTO는 조회 전용으로 설계된 OrderListResponseDTO를 사용한다고 가정합니다.
+        Page<OrderListResponseDTO> orderPage = adminService.findAllOrders(status, search, pageable);
+
+        // 2. View에 데이터 전달
+        model.addAttribute("orders", orderPage.getContent()); // 리스트 데이터
+        model.addAttribute("page", orderPage);                // 페이징 정보
+        model.addAttribute("currentStatus", status);          // 필터 유지용
+        model.addAttribute("searchKeyword", search);          // 검색어 유지용
+
+        // 3. 통계 데이터 (상단 stat-box용)
+        model.addAttribute("totalCount", adminService.getTotalCount());
+        model.addAttribute("disputeCount", adminService.getDisputeCount());
+
+        return "admin/order"; // admin/order.html 반환
     }
     
-    
 
-    @GetMapping("admin/statistics")
+    
+    
+    // --------- 통계 가져오기
+    
+    @GetMapping("/admin/statistics")
     public String statistics(Model model) {
-        model.addAttribute("activeMenu", "statistics");
+        // db에서 값 가져오기
+    	 // JS에서 사용하기 편하게 labels 넘기기
+        List<String> labels = Arrays.asList("1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월");
+    	
+        // 회원 가입 추이
+        List<Long> userCounts = adminService.getUserCountsForChart();
+      
+    	
+     // 상품 등록  추이
+        List<Long> productCounts = adminService.getUserCountsForChart();
+        
+        // 거래 완료 추이
+        List<Long> orderCounts = adminService.getOrderCountsForChart();
+        
+        
+     // 카테고리별 상품 분포 (구현해야함)
+        
+        
+        
+        // 지역별 거래량 (구현해야함)
+        
+        
+
+        
+        
+        model.addAttribute("labels", labels);
+        model.addAttribute("userCounts", userCounts);
+        model.addAttribute("productCounts", productCounts);
+        model.addAttribute("orderCounts", orderCounts);
+        
+        
         return "admin/statistics";
     }
 
