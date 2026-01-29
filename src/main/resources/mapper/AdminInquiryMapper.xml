@@ -34,6 +34,8 @@
         SELECT
             id,
             title,
+            content,
+            answer_content AS answerContent,
             inquiry_type AS inquiryType,
             status,
             created_at AS createdAt
@@ -82,7 +84,9 @@
         SET
             answer_content = #{answerContent},
             status = 'DONE',
-            answered_at = NOW()
+            answered_at = NOW(),
+            updated_at = NOW(),
+            answered_by = #{adminId}
         WHERE id = #{id}
     </update>
 

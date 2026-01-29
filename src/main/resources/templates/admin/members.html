@@ -79,11 +79,14 @@
             </td>
 
             <td>
-              <span class="badge"
-                    th:classappend="${member.status == 'ACTIVE'} ? ' badge-primary' : ''"
-                    th:text="${member.status}">
-                상태
-              </span>
+				<span class="badge"
+				        th:classappend="${member.status == 'ACTIVE' ? 'badge-primary' : 
+				                         (member.status == 'BANNED' ? 'badge-danger' : 'badge-gray')}"
+				        th:text="${member.status == 'ACTIVE' ? '활동' : 
+				                  (member.status == 'BANNED' ? '정지' : 
+				                  (member.status == 'WITHDRAWN' ? '탈퇴' : member.status))}">
+				    상태
+				  </span>
             </td>
 
 

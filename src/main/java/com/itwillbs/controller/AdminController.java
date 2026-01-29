@@ -2,6 +2,8 @@ package com.itwillbs.controller;
 
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +21,6 @@ import com.itwillbs.domain.AdminProductSearchConditionVO;
 import com.itwillbs.domain.AdminProductSummaryVO;
 import com.itwillbs.domain.AdminReportSummaryVO;
 import com.itwillbs.dto.AdminOrderSummaryDTO;
-import com.itwillbs.mapper.UserMapper;
 import com.itwillbs.service.AdminInquiryService;
 import com.itwillbs.service.AdminMemberDashboardService;
 import com.itwillbs.service.AdminMemberService;
@@ -27,7 +28,6 @@ import com.itwillbs.service.AdminProductDashboardService;
 import com.itwillbs.service.AdminProductService;
 import com.itwillbs.service.AdminReportDashboardService;
 import com.itwillbs.service.OrderService;
-import com.itwillbs.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -138,8 +138,9 @@ public class AdminController {
 
     // 문의 답변 작성 (답변대기)
     @GetMapping("/admin/inquiries/{id}/answer")
-    public String inquiryAnswer(@PathVariable Long id, Model model) {
+    public String inquiryAnswer(@PathVariable("id") Long id, Model model) {
 
+    	// 상세 정보 조회
         model.addAttribute(
             "inquiry",
             adminInquiryService.getInquiryDetail(id)
@@ -152,11 +153,18 @@ public class AdminController {
     // 답변 등록
     @PostMapping("/admin/inquiries/{id}/answer")
     public String submitInquiryAnswer(
-            @PathVariable Long id,
-            @RequestParam String answerContent
+            @PathVariable("id") Long id,
+            @RequestParam("answerContent") String answerContent,
+            @AuthenticationPrincipal UserDetails userDetails
     ) {
-        adminInquiryService.answerInquiry(id, answerContent);
-        return "redirect:/admin/inquiries/" + id;
+    	
+    	// 로그인이 안 되어 있다면 userDetails는 null이 됩니다.
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        
+        adminInquiryService.answerInquiry(id, answerContent, userDetails.getUsername());
+        return "redirect:/admin/inquiries";
     }
 
 

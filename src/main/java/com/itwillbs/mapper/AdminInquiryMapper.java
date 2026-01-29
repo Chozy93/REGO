@@ -22,7 +22,8 @@ public interface AdminInquiryMapper {
     // 답변 등록
     void updateInquiryAnswer(
         @Param("id") Long id,
-        @Param("answerContent") String answerContent
+        @Param("answerContent") String answerContent,
+        @Param("adminId") Long adminId
     );
 
     // 카운트
