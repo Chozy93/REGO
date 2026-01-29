@@ -9,6 +9,11 @@
 
 </th:block>
 
+<th:block th:fragment="pageJs">
+	<script src="/js/admin/reports.js"></script>
+</th:block>
+
+
 <div layout:fragment="content" class="admin-page">
 	
 	<th:block th:replace="fragments/admin-sidebar :: admin-sidebar('reports')"></th:block>
@@ -75,22 +80,35 @@
 					        <td th:text="${report?.reportId != null ? 'RPT-' + report.reportId : 'N/A'}">RPT-000</td>
 					        
 					        <td>
-					            <div class="report-title" th:text="${report?.reason}">신고 사유</div>
-					            <div class="report-desc" th:text="${report?.detail}">상세 내용</div>
+					            <div class="report-title" th:text="${report?.detail}">신고 사유</div>
+								<div class="report-desc" th:switch="${report?.reason}">
+								    <span th:case="'SPAM'">스팸/홍보</span>
+								    <span th:case="'INAPPROPRIATE'">부적절한 게시물</span>
+								    <span th:case="'ABUSE'">욕설 및 비방</span>
+								    <span th:case="'FRAUD'">허위 매물</span>
+								    <span th:case="OTHER">기타 신고</span>
+								</div>
 					        </td>
 					        
 					        <td th:text="${report?.targetType}">유형</td>
 					        
 					        <td>
-					            <span class="badge" 
-					                  th:if="${report != null}"
-					                  th:classappend="${report.status == 'PENDING' ? 'badge-danger' : 'badge-success'}"
-					                  th:text="${report.status == 'PENDING' ? '대기중' : '처리완료'}">대기중</span>
+								<span class="badge" 
+								          th:classappend="${report.status.name() == 'PENDING' ? 'badge-danger' : 'badge-success'}"
+								          th:text="${report.status.label}">대기중</span>
 					        </td>
 					        
 					        <td th:text="${report?.createdAt != null ? #temporals.format(report.createdAt, 'yyyy-MM-dd') : '-'}">2023-12-05</td>
 					        
-					        <td><a th:href="@{/admin/reports/{id}(id=${report?.reportId})}" class="table-link">처리</a></td>
+							<td>
+							    <button th:if="${report.status.name() == 'PENDING'}"
+							            type="button" 
+							            class="table-link" 
+							            th:onclick="'completeReport(' + ${report.reportId} + ')'">
+							        처리
+							    </button>
+							    <span th:unless="${report.status.name() == 'PENDING'}" style="color: #ccc;">-</span>
+							</td>
 					    </tr>
 
 					    <tr th:if="${reports == null || #lists.isEmpty(reports)}">

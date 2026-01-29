@@ -69,18 +69,18 @@ public class AdminService {
     // 신고하기 리스트 가져오기
     public Page<Report> getReportList(Pageable pageable) {
        
- 
         return reportRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
 
  
 
-    
-    // 신고하기 완료시
+    // 신고하기 상태 변환
     @Transactional
-    public void completeReport(Long id) {
-        Report report = reportRepository.findById(id)
+    public void updateReportStatus(Long reportId, String newStatus) {
+        Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 신고가 존재하지 않습니다."));
-        report.markDone(); // 엔티티 내 메서드 호출
+        
+        // String을 Enum으로 변환하거나 직접 문자열 세팅
+        report.markDone();
     }
 }

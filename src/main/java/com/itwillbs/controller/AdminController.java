@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -228,13 +229,23 @@ public class AdminController {
         return "admin/reports";
     }
     
- // 처리 완료 버튼 클릭 시
-    @PostMapping("/report-done")
+ // 처리 완료 버튼 클릭 시 신고 상태 변경하기
     @ResponseBody
-    public ResponseEntity<String> markAsDone(@RequestParam("id") Long id) {
-    	adminService.completeReport(id);
-        return ResponseEntity.ok("success");
+    @PatchMapping("/admin/reports/{reportId}/status")
+    public ResponseEntity<String> updateReportStatus(
+            @PathVariable("reportId") Long reportId,
+            @RequestParam("newStatus") String newStatus) {
+        
+        try {
+            adminService.updateReportStatus(reportId, newStatus);
+            return ResponseEntity.ok("상태가 변경되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("변경 실패: " + e.getMessage());
+        }
     }
+    
+    
+    
 
     @GetMapping("admin/statistics")
     public String statistics(Model model) {
