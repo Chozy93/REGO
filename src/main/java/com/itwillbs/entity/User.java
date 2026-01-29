@@ -150,6 +150,11 @@ public class User {
     public void updateRole(UserRole role) {
         this.role = role;
     }
+    
+ // 상태 변경 비즈니스 메서드
+    public void updateStatus(UserStatus status) {
+        this.userStatus = status;
+    }
 }
 
 

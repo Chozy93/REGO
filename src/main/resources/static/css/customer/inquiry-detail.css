@@ -1,0 +1,109 @@
+/* 문의 상세 컨테이너 */
+.inquiry-detail-container {
+    background-color: #ffffff; /* 흰색 배경 명시 */
+    border: 1px solid #e5e7eb;  /* 연한 회색 테두리 */
+    border-radius: 16px;       /* 변수 대신 수치 입력 (안전함) */
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* 살짝 그림자 추가 */
+}
+
+/* 헤더 영역 */
+.detail-header {
+    padding: 32px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.meta-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-size: var(--fs-14);
+}
+
+.detail-title {
+    font-size: 28px;
+    font-weight: var(--fw-bold);
+    color: var(--color-text-main);
+}
+
+/* 본문 내용 영역 */
+.detail-content {
+    padding: 32px;
+    min-height: 250px;
+    line-height: 1.8;
+    color: #1f2937;
+    background-color: #ffffff; /* 여기도 흰색 배경 */
+    white-space: pre-line;
+}
+/* 답변 영역 */
+.answer-section {
+    background-color: var(--color-surface-2);
+    padding: 32px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    gap: 20px;
+}
+
+.admin-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.answer-body {
+    flex: 1;
+}
+
+.admin-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.admin-name {
+    font-weight: var(--fw-bold);
+}
+
+.admin-date {
+    font-size: var(--fs-12);
+    color: var(--color-text-muted);
+}
+
+/* 하단 목록 돌아가기 버튼 디자인 */
+.detail-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    padding-bottom: 60px;
+}
+
+
+.btn-secondary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background-color: #ffffff; /* 버튼 배경 흰색 */
+    border: 1px solid #d1d5db;  /* 테두리 */
+    border-radius: 12px;
+    color: #4b5563;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #f3f4f6; /* 호버 시 약간 어둡게 */
+    border-color: #9ca3af;
+}
+
+.btn-secondary .material-symbols-outlined {
+    font-size: 20px;
+}

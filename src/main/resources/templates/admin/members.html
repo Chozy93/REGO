@@ -89,17 +89,20 @@
 			    </select>
 			</td>
 
-            <td>
-				<span class="badge"
-				        th:classappend="${member.status == 'ACTIVE' ? 'badge-primary' : 
-				                         (member.status == 'BANNED' ? 'badge-danger' : 'badge-gray')}"
-				        th:text="${member.status == 'ACTIVE' ? '활동' : 
-				                  (member.status == 'BANNED' ? '정지' : 
-				                  (member.status == 'WITHDRAWN' ? '탈퇴' : member.status))}">
-				    상태
-				  </span>
-            </td>
-
+			<td>
+			    <select class="badge"
+			            th:data-user-id="${member.userId}"
+			            th:classappend="${#strings.toString(member.status) == 'ACTIVE' ? 'badge-primary' : 
+			                             (#strings.toString(member.status) == 'BANNED' ? 'badge-danger' : 'badge-gray')}"
+			            onchange="changeUserStatus(this)"
+			            style="border: none; cursor: pointer; appearance: none; -webkit-appearance: none; text-align: center;">
+			        
+			        <option th:each="status : ${T(com.itwillbs.entity.enumtype.UserStatus).values()}"
+			                th:value="${status.name()}"
+			                th:text="${status.label}"
+			                th:selected="${#strings.toString(status) == #strings.toString(member.status)}">상태</option>
+			    </select>
+			</td>
 
           </tr>
         </tbody>

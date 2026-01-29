@@ -103,12 +103,12 @@ public class Inquiry {
         this.answerContent = answerContent;
         this.answeredBy = adminUserId;
         this.answeredAt = LocalDateTime.now();
-        this.status = InquiryStatus.ANSWERED;
+        this.status = InquiryStatus.DONE;
         this.updatedAt = LocalDateTime.now();
     }
 
     public void cancel() {
-        if (this.status == InquiryStatus.ANSWERED) {
+        if (this.status == InquiryStatus.DONE) {
             throw new IllegalStateException("답변 완료된 문의는 취소할 수 없습니다.");
         }
         this.status = InquiryStatus.CANCELED;

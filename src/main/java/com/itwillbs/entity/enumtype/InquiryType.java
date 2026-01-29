@@ -10,6 +10,8 @@ public enum InquiryType {
     ACCOUNT("계정 / 로그인"),
     PAYMENT("결제 / 주문"),
     SYSTEM("시스템 / 오류"),
+    PRODUCT("상품 관련"),
+    DELIVERY("배송"),
     ETC("기타");
 
     private final String label;

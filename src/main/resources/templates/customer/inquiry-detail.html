@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/customer/customer.css">
+  <link rel="stylesheet" href="/css/customer/inquiry-detail.css">
+  <link rel="stylesheet" href="/css/customer/sidebar.css">
+</th:block>
+
+<div layout:fragment="content" class="container-content">
+
+  <div class="customer-layout">
+
+    <th:block th:replace="fragments/sidebar/policy-sidebar :: sidebar(currentMenu='inquiry')"></th:block>
+	<!-- ===============================
+	     Inquiry list Main Content
+	=============================== -->
+	<main class="customer-main">
+	      <div class="customer-header" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+	        <a href="javascript:history.back()" class="btn-icon-only">
+	          <span class="material-symbols-outlined">arrow_back</span>
+	        </a>
+	        <h2 class="customer-title">1:1 문의 상세</h2>
+	      </div>
+
+	      <div class="inquiry-detail-container">
+	        
+	        <div class="detail-header">
+	          <div class="meta-info">
+	            <span class="badge" th:text="${item.inquiryType.label}">배송/택배</span>
+	            <span class="date-text" th:text="${#temporals.format(item.createdAt, 'yyyy.MM.dd')}">2023.11.02</span>
+	            <span class="badge" 
+	                  th:classappend="${item.status.name() == 'DONE' ? 'badge-complete' : 'badge-wait'}"
+	                  th:text="${item.status.label}">답변완료</span>
+	          </div>
+	          <h1 class="detail-title" th:text="${item.title}">문의 제목이 출력됩니다.</h1>
+	        </div>
+
+	        <div class="detail-content" th:text="${item.content}">
+	          문의 내용이 출력되는 곳입니다.
+	        </div>
+
+	        <div class="answer-section" th:if="${item.status.name() == 'DONE'}">
+	          <div class="admin-icon">
+	            <span class="material-symbols-outlined">support_agent</span>
+	          </div>
+	          <div class="answer-body">
+	            <div class="admin-info">
+	              <span class="admin-name">RE: GO 운영진</span>
+	              <span class="admin-date" th:text="${#temporals.format(item.answeredAt, 'yyyy.MM.dd HH:mm')}">2023.11.03 10:42</span>
+	            </div>
+	            <div class="answer-text" th:text="${item.answerContent}">
+	              여기에 관리자의 답변 내용이 출력됩니다.
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+
+	      <div class="detail-actions">
+	        <button type="button" class="btn-secondary" onclick="location.href='/customer/inquiries'">
+	          <span class="material-symbols-outlined">list</span>
+	          목록으로 돌아가기
+	        </button>
+	      </div>
+
+	    </main>
+  </div>
+</div>
+
+<th:block th:fragment="pageJs">
+	<script th:src="@{/js/customer/inquiry-detail.js}" defer></script>
+  </th:block>
+
+</html>

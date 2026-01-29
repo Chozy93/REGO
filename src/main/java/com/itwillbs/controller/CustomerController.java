@@ -8,15 +8,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itwillbs.domain.FaqVO;
 import com.itwillbs.domain.NoticeVO;
+import com.itwillbs.dto.InquiryRequestDTO;
+import com.itwillbs.entity.Inquiry;
 import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.service.CustomerService;
 import com.itwillbs.view.condition.InquiryCreateConditionVO;
@@ -123,7 +128,66 @@ public class CustomerController {
 	
 	
 	
+	// ---------------------------- 1:1문의 -------------------------------
+		
+	// 1:1 문의 리스트 조회
+	@GetMapping("/customer/inquiries")
+	public String getInquiryList(
+	        @AuthenticationPrincipal UserDetails userDetails,
+	        @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+	        @RequestParam(value = "status", required = false) String status,
+	        Model model) {
+	    
+	    if (userDetails == null) return "redirect:/login";
 
+	    String userId = userDetails.getUsername();
+	    
+	    // 서비스로부터 Page<InquiryRequestDTO>를 받음
+	    Page<Inquiry> inquiryPage = customerService.findMyInquiries(userId, status, pageable);
+
+	    model.addAttribute("inquiries", inquiryPage.getContent()); // 결과 리스트 (List<InquiryRequestDTO>)
+	    model.addAttribute("page", inquiryPage);                   // 페이징 관련 정보 객체
+	    model.addAttribute("selectedStatus", status);               // 필터 유지를 위해 선택된 타입 전달
+	    
+	    return "customer/inquiry-list";
+	}
+	
+	
+	
+	// 1:1 문의 등록하기
+	@PostMapping("/customer/inquiries") // POST 요청 처리
+	public String createInquiry(InquiryRequestDTO inquiryDto,
+			@AuthenticationPrincipal UserDetails userDetails) {
+		// 1. 로그인 체크 (시큐리티 설정에 따라 생략 가능하지만 안전하게 추가)
+	    if (userDetails == null) {
+	        return "redirect:/login";
+	    }
+
+	    // 2. 서비스 호출 (사용자 아이디와 DTO 전달)
+	     customerService.registerInquiry(inquiryDto, userDetails.getUsername());
+
+	    // 로그로 데이터 잘 들어오는지 확인
+	    System.out.println("문의 등록 요청: " + inquiryDto.toString());
+
+	    // 3. 등록 완료 후 '문의 내역 목록' 페이지로 리다이렉트
+	    return "redirect:/customer/inquiries";
+	}
+	
+	
+	// 문의 상세페이지
+	@GetMapping("/customer/inquiry/detail/{id}") // URL에 문의글 번호(id)를 받도록 수정
+	public String getInquiryDetail(@PathVariable("id") Long id, Model model) {
+	    
+	    // 1. 서비스에서 ID로 문의 내역 단건 조회
+	    // .get() 대신 .orElseThrow() 등을 사용하는 것이 안전합니다.
+	    Inquiry inquiry = customerService.findById(id); 
+	    
+	    // 2. HTML에서 'item'이라는 이름으로 쓰고 있으므로 이름을 "item"으로 지정
+	    model.addAttribute("item", inquiry);
+	    
+	    return "customer/inquiry-detail";
+	}
+	
 	
 	
 	// 안전 거래 가이드
@@ -131,6 +195,9 @@ public class CustomerController {
 	public String getSafeGuide() {
 		return "customer/safe-guide";
 	}
+	
+
+	
 
 	// 1:1 문의
 		@GetMapping("/customer/inquiry")

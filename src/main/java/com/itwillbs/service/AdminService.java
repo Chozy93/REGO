@@ -13,6 +13,7 @@ import com.itwillbs.entity.Report;
 import com.itwillbs.entity.User;
 import com.itwillbs.entity.enumtype.ReportStatus;
 import com.itwillbs.entity.enumtype.UserRole;
+import com.itwillbs.entity.enumtype.UserStatus;
 import com.itwillbs.repository.NoticeRepository;
 import com.itwillbs.repository.ReportRepository;
 import com.itwillbs.repository.UserRepository;
@@ -45,6 +46,25 @@ public class AdminService {
         // log.info("User {}'s role changed to {}", userId, role);
     }
 	
+    
+	/**
+     * 유저 상태(banned, active) 변경 로직
+     */
+    
+    @Transactional
+    public void updateUserStatus(Long userId, UserStatus status) {
+        // 1. 유저 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원을 찾을 수 없습니다. ID: " + userId));
+
+        // 2. 상태 변경 (JPA 더티 체킹으로 자동 저장)
+        user.updateStatus(status);
+        
+        // 로그 남기기 (선택사항)
+        // log.info("User {} status changed to {}", userId, status);
+    }
+    
+    
 	
 	// 상단 통계 데이터 가져오기
     public Map<String, Long> getNoticeStats() {
