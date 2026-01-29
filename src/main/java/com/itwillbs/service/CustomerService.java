@@ -9,18 +9,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.itwillbs.domain.FaqVO;
 import com.itwillbs.domain.NoticeVO;
+import com.itwillbs.dto.InquiryRequestDTO;
+import com.itwillbs.entity.Faq;
 import com.itwillbs.entity.Inquiry;
 import com.itwillbs.entity.Notice;
-import com.itwillbs.entity.ProductOrder;
 import com.itwillbs.entity.User;
 import com.itwillbs.entity.enumtype.InquiryType;
 import com.itwillbs.mapper.CustomerMapper;
-import com.itwillbs.repository.InquiryRepository;
-import com.itwillbs.entity.Faq;
-
 import com.itwillbs.repository.FaqRepository;
+import com.itwillbs.repository.InquiryRepository;
 import com.itwillbs.repository.NoticeRepository;
-import com.itwillbs.repository.ProductOrderRepository;
+import com.itwillbs.repository.UserRepository;
 import com.itwillbs.security.util.SecurityUtil;
 import com.itwillbs.view.MyOrderSelectViewVO;
 import com.itwillbs.view.condition.FaqCreateConditionVO;
@@ -36,7 +35,8 @@ public class CustomerService {
 	private final InquiryRepository inquiryRepository;
 	private final CustomerMapper customerMapper;
 
-	private final FaqRepository faqRepository; 
+	private final FaqRepository faqRepository;
+	private final UserRepository userRepository;
 	
 	// -------- 공지사항 쓰기
     public void register(Long writerId, NoticeVO vo) {
@@ -143,7 +143,55 @@ public class CustomerService {
         return customerMapper.selectMyOrdersForInquiry(userId);
     }
 
+    
+    
+    // ------------ 1:1 문의 페이지 
+    // 1:1 문의 저장
+    @Transactional
+    public void registerInquiry(InquiryRequestDTO dto, String username) {
+        // 1. 유저 조회 (로그인한 유저가 DB에 있는지 확인)
+        User user = userRepository.findByEmail(username) // 프로젝트에 따라 findByLoginId 등 사용
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
+        // 2. 엔티티 생성 
+        Inquiry inquiry = Inquiry.create(
+                user,
+                dto.getInquiryType(),
+                dto.getTitle(),
+                dto.getContent(),
+                dto.getOrderId()
+        );
+
+        // 3. 저장
+        inquiryRepository.save(inquiry);
+    }
+    
+
+    
+    // 1:1 문의 리스트 가져오기
+    public Page<Inquiry> findMyInquiries(String email, String typeStr, Pageable pageable) {
+    	InquiryType type = null;
+        
+        // 1. 문자열로 들어온 타입을 Enum으로 안전하게 변환
+        if (typeStr != null && !typeStr.isEmpty() && !"전체 문의 유형".equals(typeStr)) {
+            try {
+                type = InquiryType.valueOf(typeStr); 
+            } catch (IllegalArgumentException e) {
+                // 변환 실패 시(잘못된 값이 올 경우) null로 두어 전체 검색이 되게 함
+                type = null;
+            }
+        }
+        
+        // 2. Repository 호출
+        return inquiryRepository.findMyInquiries(email, type, pageable);
+    }
+    
+    // 문의 상세내역
+    public Inquiry findById(Long id) {
+        return inquiryRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("해당 문의글이 존재하지 않습니다. id=" + id));
+    }
+    
     
     // --------------------- faq 페이지
     

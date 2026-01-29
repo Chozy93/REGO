@@ -31,6 +31,7 @@ import com.itwillbs.dto.AdminOrderSummaryDTO;
 import com.itwillbs.entity.Notice;
 import com.itwillbs.entity.Report;
 import com.itwillbs.entity.enumtype.UserRole;
+import com.itwillbs.entity.enumtype.UserStatus;
 import com.itwillbs.service.AdminInquiryService;
 import com.itwillbs.service.AdminMemberDashboardService;
 import com.itwillbs.service.AdminMemberService;
@@ -119,7 +120,20 @@ public class AdminController {
         }
     }
     
-    
+    // user status 상태 변경
+    @ResponseBody
+    @PatchMapping("/admin/users/{userId}/status")
+    public ResponseEntity<String> updateUserStatus(
+            @PathVariable("userId") Long userId,
+            @RequestParam("status") UserStatus status) { // Enum으로 바로 매핑
+        
+        try {
+            adminService.updateUserStatus(userId, status);
+            return ResponseEntity.ok("상태가 변경되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("변경 실패");
+        }
+    }
     
     
     
@@ -268,6 +282,14 @@ public class AdminController {
         }
     }
     
+    
+    
+    // 거래 관리 페이지
+    @GetMapping("/admin/orders")
+    public String getOrders() {
+        
+        return "admin/order";
+    }
     
     
 
