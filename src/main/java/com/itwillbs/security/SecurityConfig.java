@@ -26,6 +26,7 @@ public class SecurityConfig {
     
     private final CustomAjaxLoginSuccessHandler customAjaxLoginSuccessHandler;
     
+    private final LoginRequiredEntryPoint loginRequiredEntryPoint;
 
     /* =========================
        AuthenticationManager
@@ -51,11 +52,63 @@ public class SecurityConfig {
             /* ---------- HTTP Basic 비활성화 ---------- */
             .httpBasic(basic -> basic.disable())
 
-            /* ---------- 요청 권한 ---------- */
             .authorizeHttpRequests(auth -> auth
-                // 🔧 개발 단계: 모든 요청 허용
-                .anyRequest().permitAll()
-            )
+            		 /* =========================
+                    로그인 필요
+                 ========================= */
+                 .requestMatchers(
+                     "/chat/**",
+                     "/mypage/**",
+                     "/review/**",
+                     "/customer/inquiries/**",
+                     "/report/**",
+                     "/seller/product/**",
+                     "/order/**",
+                     "/direct/**",
+                     "/myrepay/**",
+                     "/pay/**"
+                     
+                 ).authenticated()
+
+                    /* =========================
+                       공개 페이지
+                    ========================= */
+                    .requestMatchers(
+                        "/",
+                        "/products/**",
+                        "/customer/**",
+                        "/css/**",
+                        "/js/**",
+                        "/images/**",
+                        "/callback/**",
+                        "/login-required",
+                        "/auth/**",
+                        "/complete-info",
+                        "/login/**",
+                        "/signup/**",
+                        "/api/**",
+                        "/seller/profile/**",
+                        "/product/**"
+                    ).permitAll()
+
+                   
+                 
+                    /* =========================
+                       관리자 전용
+                    ========================= */
+                    .requestMatchers(
+                        "/admin/**"
+                    ).hasRole("ADMIN")
+
+                    /* =========================
+                       그 외는 차단
+                    ========================= */
+                    .anyRequest().denyAll()
+                )
+            .exceptionHandling(ex -> ex
+                	    .authenticationEntryPoint(loginRequiredEntryPoint)
+                		)
+
 
             /* ---------- 일반 폼 로그인 (SSR + 모달) ---------- */
             .formLogin(login -> login

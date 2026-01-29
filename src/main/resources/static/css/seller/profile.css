@@ -315,19 +315,23 @@
   transform: none;
 }
 
-.seller-products.is-completed .product-card::after {
-  content: "거래완료";
+.seller-products.is-completed
+.product-card__image::after {
+  content: "SOLD";
   position: absolute;
   inset: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--fs-16);
+
+  font-size: 22px;
   font-weight: var(--fw-bold);
   letter-spacing: 0.05em;
+
   color: #fff;
   background: rgba(0, 0, 0, 0.45);
-  border-radius: inherit;
+
   pointer-events: none;
 }
 

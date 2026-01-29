@@ -44,7 +44,9 @@
               RE:GO에서 지금 바로 만나보세요.
             </p>
 			
-			<a th:href="@{/signup/step1}" class="btn btn-primary hero-btn">
+			<a th:if="${loginUser == null}"
+			   th:href="@{/signup/step1}"
+			   class="btn btn-primary hero-btn">
 			  지금 시작하기
 			</a>
           </div>

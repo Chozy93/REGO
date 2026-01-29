@@ -138,7 +138,7 @@ public class CustomerController {
 	        @RequestParam(value = "status", required = false) String status,
 	        Model model) {
 	    
-	    if (userDetails == null) return "redirect:/login";
+	    
 
 	    String userId = userDetails.getUsername();
 	    
@@ -158,10 +158,6 @@ public class CustomerController {
 	@PostMapping("/customer/inquiries") // POST 요청 처리
 	public String createInquiry(InquiryRequestDTO inquiryDto,
 			@AuthenticationPrincipal UserDetails userDetails) {
-		// 1. 로그인 체크 (시큐리티 설정에 따라 생략 가능하지만 안전하게 추가)
-	    if (userDetails == null) {
-	        return "redirect:/login";
-	    }
 
 	    // 2. 서비스 호출 (사용자 아이디와 DTO 전달)
 	     customerService.registerInquiry(inquiryDto, userDetails.getUsername());
