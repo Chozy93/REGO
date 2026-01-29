@@ -29,15 +29,15 @@
 		        <div class="admin-summary">
 		            <div class="summary-card">
 		                <span class="summary-label">전체</span>
-		                <strong class="summary-value">120</strong>
+		                <strong class="summary-value" th:text="${stats.total}">0</strong>
 		            </div>
 		            <div class="summary-card">
 		                <span class="summary-label">노출중</span>
-		                <strong class="summary-value">98</strong>
+		                <strong class="summary-value" th:text="${stats.active}">0</strong>
 		            </div>
 		            <div class="summary-card">
 		                <span class="summary-label">비노출</span>
-		                <strong class="summary-value">22</strong>
+		                <strong class="summary-value" th:text="${stats.hidden}">0</strong>
 		            </div>
 		        </div>
 
@@ -66,60 +66,74 @@
         </div>
 
         <!-- 리스트 테이블 -->
-        <div class="admin-table-wrap">
-            <table class="admin-table">
-                <thead>
-                <tr>
-                    <th style="width:60px;">번호</th>
-                    <th>제목</th>
-                    <th style="width:120px;">상태</th>
-                    <th style="width:160px;">등록일</th>
-                    <th style="width:120px;">관리</th>
-                </tr>
-                </thead>
+		<div class="admin-table-wrap">
+		    <table class="admin-table">
+		        <thead>
+		            <tr>
+		                <th style="width:60px;">번호</th>
+		                <th>제목</th>
+		                <th style="width:120px;">상태</th>
+		                <th style="width:160px;">등록일</th>
+		                <th style="width:120px;">관리</th>
+		            </tr>
+		        </thead>
 
-                <tbody>
-                <tr>
-                    <td>120</td>
-                    <td class="table-title">
-                        서비스 점검 안내 (1/15)
-                    </td>
-                    <td>
-                        <span class="badge badge-primary">노출중</span>
-                    </td>
-                    <td>2026-01-10</td>
-                    <td>
-                        <a href="#" class="table-link">수정</a>
-                        <a href="#" class="table-link danger">삭제</a>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>119</td>
-                    <td class="table-title">
-                        개인정보 처리방침 개정 안내
-                    </td>
-                    <td>
-                        <span class="badge">비노출</span>
-                    </td>
-                    <td>2026-01-05</td>
-                    <td>
-                        <a href="#" class="table-link">수정</a>
-                        <a href="#" class="table-link danger">삭제</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+		        <tbody>
+		            <tr th:each="notice, iterStat : ${notices}">
+		                <td th:text="${notices.totalElements - (notices.number * notices.size) - iterStat.index}">1</td>
+		                
+		                <td class="table-title">
+		                    <span th:if="${notice.isPinned}" class="pinned-icon" title="상단고정">📌</span>
+							<a th:href="@{/customer/notice-detail(id=${notice.noticeId})}" 
+							               th:text="${notice.title}"
+							               style="text-decoration: none; color: inherit;">
+							                서비스 점검 안내
+							            </a>
+		                </td>
+		                
+		                <td>
+		                    <span th:if="${notice.isActive}" class="badge badge-primary">노출중</span>
+		                    <span th:unless="${notice.isActive}" class="badge">비노출</span>
+		                </td>
+		                
+		                <td th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd')}">2026-01-10</td>
+		                
+		                <td>
+		                    <a th:href="@{/admin/notice_edit/{id}(id=${notice.noticeId})}" class="table-link">수정</a>
+		                    <a href="javascript:void(0);" 
+		                       th:onclick="'deleteNotice(' + ${notice.noticeId} + ')'" 
+		                       class="table-link danger">삭제</a>
+		                </td>
+		            </tr>
+		            
+		            <tr th:if="${notices.isEmpty()}">
+		                <td colspan="5" style="text-align: center; padding: 50px 0;">
+		                    등록된 공지사항이 없습니다.
+		                </td>
+		            </tr>
+		        </tbody>
+		    </table>
+		</div>
 
         <!-- 페이지네이션 -->
-		<div class="admin-pagination">
+		<div class="admin-pagination" th:if="${notices.totalPages > 0}">
 		  <div class="admin-page-buttons">
-		    <button class="admin-page-btn">Previous</button>
-		    <button class="admin-page-btn is-active">1</button>
-		    <button class="admin-page-btn">2</button>
-		    <button class="admin-page-btn">3</button>
-		    <button class="admin-page-btn">Next</button>
+		    
+		    <a th:href="@{/admin/notices(page=${notices.number - 1})}" 
+		       class="admin-page-btn" 
+		       th:classappend="${notices.first} ? 'disabled' : ''"> < </a>
+
+		    <th:block th:each="pageNumber : ${#numbers.sequence(0, notices.totalPages - 1)}">
+		      <a th:href="@{/admin/notices(page=${pageNumber})}" 
+		         class="admin-page-btn"
+		         th:classappend="${pageNumber == notices.number} ? 'is-active' : ''"
+		         th:text="${pageNumber + 1}">1</a>
+		    </th:block>
+
+		    <a th:href="@{/admin/notices(page=${notices.number + 1})}" 
+		       class="admin-page-btn"
+		       th:classappend="${notices.last} ? 'disabled' : ''"> > </a>
+		       
 		  </div>
 		</div>
     </section>
