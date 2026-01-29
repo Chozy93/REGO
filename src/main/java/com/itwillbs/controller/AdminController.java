@@ -30,6 +30,7 @@ import com.itwillbs.domain.AdminReportSummaryVO;
 import com.itwillbs.dto.AdminOrderSummaryDTO;
 import com.itwillbs.entity.Notice;
 import com.itwillbs.entity.Report;
+import com.itwillbs.entity.enumtype.UserRole;
 import com.itwillbs.service.AdminInquiryService;
 import com.itwillbs.service.AdminMemberDashboardService;
 import com.itwillbs.service.AdminMemberService;
@@ -102,6 +103,27 @@ public class AdminController {
 
         return "admin/members";
     }
+    
+    // user ROLE권한 부여
+    @ResponseBody
+    @PatchMapping("/admin/users/{userId}/role")
+    public ResponseEntity<String> updateUserRole(
+            @PathVariable("userId") Long userId,
+            @RequestParam("role") UserRole role) {
+        
+        try {
+            adminService.updateUserRole(userId, role);
+            return ResponseEntity.ok("권한이 변경되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("변경 실패");
+        }
+    }
+    
+    
+    
+    
+    
+    // 상품 관리 페이지
 
     @GetMapping("/admin/products")
     public String products(
@@ -121,6 +143,8 @@ public class AdminController {
 
 
 
+    // 문의 관리 페이지
+    
     @GetMapping("/admin/inquiries")
     public String inquiries(
             @ModelAttribute AdminInquirySearchConditionVO condition,

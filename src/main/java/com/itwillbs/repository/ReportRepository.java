@@ -30,9 +30,11 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     // 상태별 필터링
     Page<Report> findByStatusOrderByCreatedAtDesc(ReportStatus status, Pageable pageable);
 
+    // 처리중
     @Query("SELECT COUNT(r) FROM Report r WHERE r.status = :status")
     long countByStatus(@Param("status") ReportStatus status);
 
+    
     // 검색 (제목/내용 키워드 - 필요시)
     Page<Report> findByReasonContainingOrDetailContaining(String reason, String detail, Pageable pageable);
 }
