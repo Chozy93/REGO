@@ -287,3 +287,13 @@
 	border: 1px solid var(--color-border);
 	background-color: var(--color-text);
 }
+
+.chat-room-admin-badge {
+  margin-left: 6px;
+  padding: 2px 6px;
+  font-size: 11px;
+  border-radius: 6px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-weight: 600;
+}

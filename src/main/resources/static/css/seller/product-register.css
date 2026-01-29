@@ -683,4 +683,45 @@ border: 1px solid var(--color-border);
     max-width: 100%;
   }
 }
+/* =========================
+   Image Delete Button
+========================= */
 
+.spr-image-thumb {
+  position: relative; /* 기준점 */
+}
+
+.spr-image-thumb__remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+
+  width: 24px;
+  height: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+
+  font-size: 16px;
+  line-height: 1;
+
+  cursor: pointer;
+  z-index: 5;
+}
+
+/* hover 강조 */
+.spr-image-thumb__remove:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+.spr-image-thumb img {
+  pointer-events: none;
+}
+.spr-image-thumb__remove {
+  pointer-events: auto;
+  z-index: 10;
+}

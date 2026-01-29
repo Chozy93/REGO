@@ -1,7 +1,7 @@
 /* ==========================================================================
-   Seller Product Register JS (FINAL)
+   Seller Product Register JS (REGISTER ONLY)
    - Category Tab
-   - Image Upload / Preview
+   - Image Upload / Preview (최대 10장)
    - AutoNumeric Price
    - GPT Price Recommend
    - Form Validation
@@ -32,25 +32,29 @@ $(function () {
     $(".spr-subchip").removeClass("is-active");
   });
 
-  // 2차 카테고리 (단일 정의)
+  // 2차 카테고리
   $(".spr-category__sub").on("click", ".spr-subchip", function () {
     $(".spr-subchip").removeClass("is-active");
     $(this).addClass("is-active");
     $inputCategoryId.val($(this).data("categoryId"));
   });
 
-
   /* ==================================================
-     Image Upload / Preview
+     Image Upload / Preview (REGISTER ONLY)
   ================================================== */
   const $imageInput = $('#imageInput');
   const $imagePreview = $('#imagePreview');
   const $imageCount = $('#imageCount');
+
   let imageFiles = [];
+
+  function updateImageCount() {
+    $imageCount.text(imageFiles.length);
+  }
 
   function renderImages() {
     $imagePreview.empty();
-    $imageCount.text(imageFiles.length);
+    updateImageCount();
 
     imageFiles.forEach((file, idx) => {
       const reader = new FileReader();
@@ -68,37 +72,45 @@ $(function () {
     });
   }
 
+  // 이미지 선택
   $imageInput.on('change', function () {
     const files = Array.from(this.files);
+    const totalAfter = imageFiles.length + files.length;
 
-    if (files.length + imageFiles.length > 10) {
+    if (totalAfter > 10) {
       alert('이미지는 최대 10장까지 업로드할 수 있습니다.');
       this.value = '';
       return;
     }
 
     files.forEach(f => {
-      if (f.type.startsWith('image/')) imageFiles.push(f);
+      if (f.type && f.type.startsWith('image/')) {
+        imageFiles.push(f);
+      }
     });
 
     this.value = '';
     renderImages();
   });
 
+  // 이미지 삭제
   $imagePreview.on('click', '.spr-image-thumb__remove', function () {
     const idx = Number($(this).closest('.spr-image-thumb').data('index'));
     imageFiles.splice(idx, 1);
     renderImages();
   });
 
+  // 대표 이미지 변경 (클릭 시 앞으로)
   $imagePreview.on('click', '.spr-image-thumb img', function () {
     const idx = Number($(this).closest('.spr-image-thumb').data('index'));
     if (idx === 0) return;
+
     const img = imageFiles.splice(idx, 1)[0];
     imageFiles.unshift(img);
     renderImages();
   });
 
+  updateImageCount();
 
   /* ==================================================
      AutoNumeric Price
@@ -110,7 +122,6 @@ $(function () {
     minimumValue: '0',
     maximumValue: '1000000000',
   });
-
 
   /* ==================================================
      GPT 가격 추천
@@ -132,16 +143,15 @@ $(function () {
       contentType: 'application/json',
       data: JSON.stringify({ title, description, conditionStatus, categoryName }),
 
-      beforeSend: function () {
+      beforeSend() {
         $('.spr-ai-btn').prop('disabled', true).text('AI 분석 중...');
       },
 
-      success: function (res) {
+      success(res) {
         $('.spr-ai-info__price strong')
           .text(`${res.minPrice.toLocaleString()} ~ ${res.maxPrice.toLocaleString()} 원`);
-		  // 🔥 reason 표시
-		  $('.spr-ai-info__reason')
-		    .text(res.reason);
+
+        $('.spr-ai-info__reason').text(res.reason);
 
         $('.spr-ai-info__apply')
           .data('min', res.minPrice)
@@ -150,33 +160,26 @@ $(function () {
         $('.spr-ai-info').fadeIn(150);
       },
 
-      error: function () {
+      error() {
         alert('AI 추천 가격을 불러오지 못했습니다.');
       },
 
-      complete: function () {
+      complete() {
         $('.spr-ai-btn').prop('disabled', false).text('GPT 가격 추천 받기');
       }
     });
   });
 
-  // 평균가 적용 (천원 단위 보정)
+  // 평균가 적용
   $('.spr-ai-info__apply').on('click', function () {
     const min = Number($(this).data('min'));
     const max = Number($(this).data('max'));
-
     if (!min || !max) return;
 
-    // 1. 평균 계산
     const avg = (min + max) / 2;
-
-    // 2. 천원 단위로 반올림
     const normalized = Math.round(avg / 1000) * 1000;
-
-    // 3. AutoNumeric으로 세팅
     priceAutoNumeric.set(normalized);
   });
-
 
   /* ==================================================
      Form Validation + Submit
@@ -220,23 +223,36 @@ $(function () {
       e.preventDefault(); return;
     }
 
-    // 이미지 재구성
-    if (imageFiles.length > 0) {
-      const $form = $(this);
-      $form.find('input[name="images"]').remove();
-
-      imageFiles.forEach(file => {
-        const dt = new DataTransfer();
-        dt.items.add(file);
-
-        $('<input>')
-          .attr({ type: 'file', name: 'images' })
-          .prop('files', dt.files)
-          .css('display', 'none')
-          .appendTo($form);
-      });
+    if (imageFiles.length === 0) {
+      alert('상품 이미지를 최소 1장 이상 등록해주세요.');
+      e.preventDefault(); return;
     }
 
+    if (imageFiles.length > 10) {
+      alert('이미지는 최대 10장까지 업로드할 수 있습니다.');
+      e.preventDefault(); return;
+    }
+
+    const $form = $(this);
+
+    /* =========================
+       이미지 file input 재구성
+       - name="images"
+    ========================= */
+    $form.find('input[name="images"]').remove();
+
+    imageFiles.forEach(file => {
+      const dt = new DataTransfer();
+      dt.items.add(file);
+
+      $('<input>')
+        .attr({ type: 'file', name: 'images' })
+        .prop('files', dt.files)
+        .css('display', 'none')
+        .appendTo($form);
+    });
+
+    // AutoNumeric 언포맷
     priceAutoNumeric.unformat();
   });
 

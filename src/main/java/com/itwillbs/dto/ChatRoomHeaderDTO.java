@@ -14,7 +14,7 @@ public class ChatRoomHeaderDTO {
     ========================= */
     private Long roomId;
     private Long productId;
-
+    private String roomType;   // ← 추가 (PRODUCT / ADMIN_DM)
     /* =========================
        상대방 기본 정보
     ========================= */

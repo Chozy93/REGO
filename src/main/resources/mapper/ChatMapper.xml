@@ -117,6 +117,7 @@
     SELECT
         cr.room_id                         AS roomId,
         cr.product_id                      AS productId,
+        cr.room_type                       AS roomType,   <!-- ★ 추가 -->
 
         /* =========================
            상대방 기본 정보
@@ -141,14 +142,13 @@
 
         /* =========================
            상대방 신뢰도 (seller_profile)
-           - 있으면 사용
-           - 없으면 0.0 / 0
         ========================= */
         COALESCE(sp.rating_avg, 0.0)       AS opponentRatingAvg,
         COALESCE(sp.total_reviews, 0)      AS opponentTotalReviews,
 
         /* =========================
            상품 정보
+           - ADMIN_DM 인 경우 NULL
         ========================= */
         p.product_name                     AS productName,
         p.price                            AS productPrice,
@@ -176,13 +176,14 @@
                 END
             )
 
-        /* 상품 */
-        JOIN products p
+        /* 상품 (★ LEFT JOIN 으로 변경) */
+        LEFT JOIN products p
             ON p.product_id = cr.product_id
 
     WHERE cr.room_id = #{roomId}
 
 </select>
+
 
 	
 	<!--	채팅방 메세지들-->

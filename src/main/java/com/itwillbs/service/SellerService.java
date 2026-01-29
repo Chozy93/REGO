@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.itwillbs.dto.ProductImageViewDTO;
 import com.itwillbs.dto.ProductRegionDTO;
+import com.itwillbs.dto.SellerProductEditViewDTO;
 import com.itwillbs.entity.Category;
 import com.itwillbs.entity.Product;
 import com.itwillbs.entity.ProductImage;
@@ -168,7 +170,112 @@ public class SellerService {
 	        ========================= */
 	        return product.getProductId();
 	    }
-	
+	 
+	 //상품 수정 메서드
+	 @Transactional
+	 public void productEdit(
+	     Long productId,
+	     SellerProductRegisterConditionVO conditionVO,
+	     List<Long> deleteImageIds,
+	     List<MultipartFile> newImages
+	 ) {
+	     Product product = productRepository.findById(productId)
+	         .orElseThrow(() -> new IllegalArgumentException("상품 없음"));
+
+	     Long currentUserId = SecurityUtil.getCurrentUserId();
+	     if (!product.getSeller().getUserId().equals(currentUserId)) {
+	         throw new IllegalArgumentException("권한 없음");
+	     }
+
+	     /* 카테고리 조회 */
+	     Category category = categoryRepository.findById(conditionVO.getCategoryId())
+	         .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 카테고리"));
+
+	     /* 이미지 삭제 */
+	     if (deleteImageIds != null && !deleteImageIds.isEmpty()) {
+	         productImageRepository.deleteByImageIdInAndProduct(deleteImageIds, product);
+	     }
+
+	     /* 신규 이미지 업로드 */
+	     if (newImages != null && !newImages.isEmpty()) {
+	         List<String> newUrls = cloudinaryImageService.upload(newImages);
+
+	         int sortOrder =
+	             productImageRepository.findMaxSortOrderByProduct(product) + 1;
+
+	         for (String url : newUrls) {
+	             ProductImage.create(product, url, sortOrder++);
+	         }
+	     }
+
+	     /* 이미지 재정렬 */
+	     List<ProductImage> images =
+	         productImageRepository.findByProductOrderBySortOrderAsc(product);
+
+	     int order = 1;
+	     for (ProductImage image : images) {
+	         image.changeSortOrder(order++);
+	     }
+
+	     /* 대표 이미지 결정 */
+	     String mainImageUrl =
+	         images.isEmpty() ? null : images.get(0).getImageUrl();
+
+	     /* 🔥 마지막에 한 번만 상품 업데이트 */
+	     product.updateFromCondition(conditionVO, category,mainImageUrl);
+	     
+	 }
+
+
+	 @Transactional(readOnly = true)
+	 public SellerProductEditViewDTO getProductEditView(
+	         Long productId,
+	         Long currentUserId
+	 ) {
+	     /* =========================
+	        1. 상품 조회
+	     ========================= */
+	     Product product = productRepository.findById(productId)
+	         .orElseThrow(() ->
+	             new IllegalArgumentException("상품이 존재하지 않습니다.")
+	         );
+
+	     /* =========================
+	        2. 권한 검증 (DB 추가 조회 없음)
+	     ========================= */
+	     if (!product.getSeller().getUserId().equals(currentUserId)) {
+	         throw new IllegalArgumentException("상품 수정 권한이 없습니다.");
+	     }
+
+	     /* =========================
+	        3. Product → ConditionVO 변환
+	        - 등록/수정 공용 폼 바인딩용
+	     ========================= */
+	     SellerProductRegisterConditionVO condition =
+	         SellerProductRegisterConditionVO.from(product);
+
+	     /* =========================
+	        4. 기존 이미지 조회 → ViewDTO 변환
+	     ========================= */
+	     List<ProductImageViewDTO> images =
+	         productImageRepository
+	             .findByProductOrderBySortOrderAsc(product)
+	             .stream()
+	             .map(image ->
+	                 new ProductImageViewDTO(
+	                     image.getImageId(),
+	                     image.getImageUrl(),
+	                     image.getSortOrder()
+	                 )
+	             )
+	             .toList();
+
+	     /* =========================
+	        5. 수정 페이지 View DTO 반환
+	     ========================= */
+	     return new SellerProductEditViewDTO(condition, images);
+	 }
+
 
 }
 

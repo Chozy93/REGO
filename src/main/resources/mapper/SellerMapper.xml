@@ -4,7 +4,25 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.itwillbs.mapper.SellerMapper">
+<resultMap id="SellerReviewViewMap"
+           type="com.itwillbs.view.seller.SellerReviewViewVO">
 
+    <id property="reviewId" column="review_id"/>
+
+    <result property="buyerNickname" column="buyer_nickname"/>
+    <result property="buyerProfileImg" column="buyer_profile_img"/>
+
+    <result property="productId" column="product_id"/>
+    <result property="productTitle" column="product_title"/>
+    <result property="productThumbnailImg" column="product_thumbnail_img"/>
+
+    <result property="rating" column="rating"/>
+    <result property="content" column="content"/>
+
+    <result property="createdAt"
+            column="created_at"
+            javaType="java.time.LocalDateTime"/>
+</resultMap>
   <!-- =========================
        판매자 프로필 요약
        ※ seller_profile 캐시 컬럼 사용
@@ -79,21 +97,20 @@
        - 정렬 4종
        - offset / size
   ========================= -->
-  <select id="selectSellerReviews"
-        resultType="com.itwillbs.view.seller.SellerReviewViewVO">
+<select id="selectSellerReviews" resultMap="SellerReviewViewMap">
 
   SELECT
-      r.id                 AS reviewId,
+      r.id                 AS review_id,
       r.rating             AS rating,
       r.content            AS content,
-      r.created_at         AS createdAt,
+      r.created_at         AS created_at,
 
-      bu.nickname          AS buyerNickname,
-      bu.profile_img       AS buyerProfileImg,
+      bu.nickname          AS buyer_nickname,
+      bu.profile_img       AS buyer_profile_img,
 
-      p.product_id         AS productId,
-      p.product_name       AS productTitle,
-      p.main_image_url     AS productThumbnailImg
+      p.product_id         AS product_id,
+      p.product_name       AS product_title,
+      p.main_image_url     AS product_thumbnail_img
 
   FROM reviews r
   JOIN users bu
@@ -119,6 +136,7 @@
 
   LIMIT #{size} OFFSET #{offset}
 </select>
+
 
 <!--	상품 지역 검색 -->
   <select id="searchProductRegions"

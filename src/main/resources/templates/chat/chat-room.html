@@ -7,50 +7,70 @@
 
     <div class="chat-room">
 
-		<!-- =========================
-		     Chat Header
-		========================== -->
-		<header class="chat-room-header">
-		    <div class="chat-room-partner">
-		        <img class="chat-room-avatar"
-		             th:src="${chatRoom.header.opponentProfileImageUrl}"
-		             alt="">
+        <!-- =========================
+             Chat Header
+        ========================== -->
+        <header class="chat-room-header">
+            <div class="chat-room-partner">
+                <img class="chat-room-avatar"
+                     th:src="${chatRoom.header.opponentProfileImageUrl}"
+                     alt="">
 
-		        <div class="chat-room-partner-info">
-		            <strong class="chat-room-partner-name"
-		                    th:text="${chatRoom.header.opponentUserName}">
-		                상대방닉네임
-		            </strong>
+                <div class="chat-room-partner-info">
+                    <strong class="chat-room-partner-name"
+                            th:text="${chatRoom.header.opponentUserName}">
+                        상대방닉네임
+                    </strong>
 
-		            <!-- 평점 -->
-		            <div class="chat-room-partner-rating">
-		                ★
-		                <span th:text="${chatRoom.header.opponentRatingAvg}">0.0</span>
-		                (<span th:text="${chatRoom.header.opponentTotalReviews}">0</span>)
-		            </div>
+                    <!-- 관리자 DM 뱃지 -->
+                    <span class="chat-room-admin-badge"
+                          th:if="${chatRoom.header.roomType == 'ADMIN_DM'}">
+                        관리자
+                    </span>
 
-		            <!-- 상품 정보 -->
-					<div class="chat-room-product">
-					    <span class="chat-room-product-title"
-					          th:text="${chatRoom.header.productName}">
-					        상품명
-					    </span>
-					    ·
-					    <span th:text="${#numbers.formatInteger(chatRoom.header.productPrice, 3, 'COMMA')}">
-					        0
-					    </span>원
-					</div>
-		        </div>
-		    </div>
+                    <!-- 평점 -->
+                    <div class="chat-room-partner-rating">
+                        ★
+                        <span th:text="${chatRoom.header.opponentRatingAvg}">0.0</span>
+                        (<span th:text="${chatRoom.header.opponentTotalReviews}">0</span>)
+                    </div>
 
-		    <div class="chat-room-actions">
-		        <a class="btn btn-outline"
-		           th:href="@{/product/{id}(id=${chatRoom.header.productId})}">
-		            상품 보기
-		        </a>
-		    </div>
-		</header>
+                    <!-- =========================
+                         상품 정보 (PRODUCT 전용)
+                    ========================== -->
+                    <div class="chat-room-product"
+                         th:if="${chatRoom.header.roomType == 'PRODUCT'}">
+                        <span class="chat-room-product-title"
+                              th:text="${chatRoom.header.productName}">
+                            상품명
+                        </span>
+                        ·
+                        <span th:text="${#numbers.formatInteger(chatRoom.header.productPrice, 3, 'COMMA')}">
+                            0
+                        </span>원
+                    </div>
 
+                    <!-- =========================
+                         관리자 DM 안내 (ADMIN_DM 전용)
+                    ========================== -->
+                    <div class="chat-room-product chat-room-admin-label"
+                         th:if="${chatRoom.header.roomType == 'ADMIN_DM'}">
+                        고객센터 · 관리자 메시지
+                    </div>
+                </div>
+            </div>
+
+            <!-- =========================
+                 Actions (PRODUCT 전용)
+            ========================== -->
+            <div class="chat-room-actions"
+                 th:if="${chatRoom.header.roomType == 'PRODUCT'}">
+                <a class="btn btn-outline"
+                   th:href="@{/product/{id}(id=${chatRoom.header.productId})}">
+                    상품 보기
+                </a>
+            </div>
+        </header>
 
         <!-- =========================
              Message Area
@@ -60,27 +80,21 @@
             <!-- =========================
                  Message List
             ========================== -->
-			<div th:each="message : ${chatRoom.messages}"
-			     class="chat-room-message"
-			     th:classappend="${message.isMine} ? ' chat-room-message-me' : ''">
+            <div th:each="message : ${chatRoom.messages}"
+                 class="chat-room-message"
+                 th:classappend="${message.isMine} ? ' chat-room-message-me' : ''">
 
-<!--			    <img th:if="${!message.isMine}"-->
-<!--			         class="chat-room-message-avatar"-->
-<!--			         th:src="${chatRoom.header.opponentProfileImageUrl}"-->
-<!--			         alt="">-->
+                <div class="chat-room-bubble"
+                     th:classappend="${message.isMine}
+                                      ? ' chat-room-bubble-me'
+                                      : ' chat-room-bubble-other'">
 
-			    <div class="chat-room-bubble"
-			         th:classappend="${message.isMine}
-			                          ? ' chat-room-bubble-me'
-			                          : ' chat-room-bubble-other'">
+                    <p th:text="${message.content}"></p>
 
-			        <p th:text="${message.content}"></p>
-
-			        <span class="chat-room-time"
-			              th:text="${message.createdAtText}"></span>
-			    </div>
-			</div>
-
+                    <span class="chat-room-time"
+                          th:text="${message.createdAtText}"></span>
+                </div>
+            </div>
 
             <!-- 메시지 없음 -->
             <div class="chat-room-empty"
@@ -93,35 +107,33 @@
         <!-- =========================
              Input Area
         ========================== -->
-		<footer class="chat-room-input">
-		  <div class="chat-room-input-box">
+        <footer class="chat-room-input">
+            <div class="chat-room-input-box">
 
-		    <button class="chat-room-input-btn">
-		      +
-		    </button>
+                <button class="chat-room-input-btn">
+                    +
+                </button>
 
-		    <textarea id="chatMessageInput"
-		              class="chat-room-textarea"
-		              placeholder="메시지를 입력하세요"
-		              rows="1"></textarea>
+                <textarea id="chatMessageInput"
+                          class="chat-room-textarea"
+                          placeholder="메시지를 입력하세요"
+                          rows="1"></textarea>
 
-		    <button id="chatSendBtn"
-		            class="chat-room-send-btn">
-		      전송
-		    </button>
+                <button id="chatSendBtn"
+                        class="chat-room-send-btn">
+                    전송
+                </button>
 
-		  </div>
-		</footer>
+            </div>
+        </footer>
 
     </div>
-	
-    <!-- =========================
-         Chat Modals
-    ========================== -->
 
-   
-<script>
-	window.chatOpponentProfileImageUrl =
-	   /*[[${chatRoom.header.opponentProfileImageUrl}]]*/ '';
-</script>
+    <!-- =========================
+         Global JS Variables
+    ========================== -->
+    <script>
+        window.chatOpponentProfileImageUrl =
+           /*[[${chatRoom.header.opponentProfileImageUrl}]]*/ '';
+    </script>
 </div>

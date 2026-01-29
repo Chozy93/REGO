@@ -16,6 +16,7 @@ import com.itwillbs.entity.ChatMessage;
 import com.itwillbs.entity.ChatRoom;
 import com.itwillbs.entity.Product;
 import com.itwillbs.entity.User;
+import com.itwillbs.entity.enumtype.ChatRoomType;
 import com.itwillbs.mapper.ChatMapper;
 import com.itwillbs.repository.ChatMessageRepository;
 import com.itwillbs.repository.ChatRoomRepository;
@@ -233,7 +234,7 @@ public class ChatService {
         ChatRoomHeaderViewVO headerVO = new ChatRoomHeaderViewVO(
             headerDTO.getRoomId(),
             headerDTO.getProductId(),
-
+            headerDTO.getRoomType(),
             headerDTO.getOpponentUserId(),
             headerDTO.getOpponentUserNickName(),
             headerDTO.getOpponentProfileImg(),
@@ -274,4 +275,30 @@ public class ChatService {
         }
         return time.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));
     }
+    
+    
+    
+    //관리자 채팅창 생성
+    @Transactional
+    public ChatRoom getOrCreateAdminDmRoom(
+            Long adminId,
+            Long userId
+    ) {
+        User admin = userRepository.getReferenceById(adminId);
+        User user  = userRepository.getReferenceById(userId);
+
+        return chatRoomRepository
+                .findBySellerAndBuyerAndRoomType(
+                        admin,
+                        user,
+                        ChatRoomType.ADMIN_DM
+                )
+                .orElseGet(() ->
+                        chatRoomRepository.save(
+                                ChatRoom.createAdminDm(admin, user)
+                        )
+                );
+    }
+
+
 }
