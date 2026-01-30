@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/css/admin/admin-sidebar.css">
 </th:block>
 
-<div layout:fragment="content" class="admin-page">
+<div layout:fragment="content" class="admin-layout">
 
   <!-- Sidebar -->
   <th:block th:replace="fragments/admin-sidebar :: admin-sidebar('products')"></th:block>
@@ -100,7 +100,7 @@
 
             <td>
               <div class="admin-product">
-                <img src="/img/sample/product1.png"
+                <img th:src="${p.mainImageUrl}"
                      class="admin-product-image" alt="">
                 <div>
                   <div class="admin-product-name"

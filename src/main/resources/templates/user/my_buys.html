@@ -290,8 +290,11 @@
 			        
 			        $modal.find('.review-rating__star').css('cursor', 'default');
 
-					fetch(`/reviews/${productId}`)
-					    .then(res => res.json())
+					fetch(`/mypage/review-detail/${productId}`) 
+					    .then(res => {
+					        if (!res.ok) throw new Error(`서버 에러: ${res.status}`);
+					        return res.json();
+					    })
 					    .then(data => {
 					        console.log("불러온 리뷰 데이터: ", data);
 					        $form.find('textarea[name="content"]').val(data.content);

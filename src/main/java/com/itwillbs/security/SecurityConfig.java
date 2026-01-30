@@ -65,7 +65,10 @@ public class SecurityConfig {
                      "/seller/product/**",
                      "/order/**",
                      "/direct/**",
+                     "/seller/**",
                      "/myrepay/**",
+                     "/ws/**",          // WebSocket endpoint
+                     "/stomp/**",        // 네가 쓴 endpoint 이름
                      "/pay/**"
                      
                  ).authenticated()
