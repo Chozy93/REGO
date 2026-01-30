@@ -115,7 +115,7 @@ public class ChatController {
     
     @GetMapping("/dm/{userId}")
     public String openAdminDm(
-            @PathVariable Long userId,
+            @PathVariable("userId") Long userId,
             @AuthenticationPrincipal CustomUserDetails loginUser
     ) {
         Long adminId = loginUser.getUser().getUserId();
