@@ -18,27 +18,41 @@ import jakarta.servlet.http.HttpServletRequest;
 @Component
 public class ChatHandshakeInterceptor implements HandshakeInterceptor {
 
-    @Override
-    public boolean beforeHandshake(
-            ServerHttpRequest request,
-            ServerHttpResponse response,
-            WebSocketHandler wsHandler,
-            Map<String, Object> attributes
-    ) {
+	  @Override
+	    public boolean beforeHandshake(
+	            ServerHttpRequest request,
+	            ServerHttpResponse response,
+	            WebSocketHandler wsHandler,
+	            Map<String, Object> attributes
+	    ) {
 
-        if (request instanceof ServletServerHttpRequest servletRequest) {
+	        if (request instanceof ServletServerHttpRequest servletRequest) {
 
-            Authentication auth =
-                    SecurityContextHolder.getContext().getAuthentication();
+	            HttpServletRequest httpRequest =
+	                    servletRequest.getServletRequest();
 
-            if (auth != null && auth.isAuthenticated()
-                    && auth.getPrincipal() instanceof CustomUserDetails user) {
+	            var session = httpRequest.getSession(false);
+	            if (session == null) {
+	                return true; // ❗ 연결은 허용 (차단 X)
+	            }
 
-                attributes.put("userId", user.getUserId());
-            }
-        }
-        return true;
-    }
+	            Object securityContext =
+	                    session.getAttribute("SPRING_SECURITY_CONTEXT");
+
+	            if (securityContext instanceof org.springframework.security.core.context.SecurityContext context) {
+
+	                Authentication auth = context.getAuthentication();
+
+	                if (auth != null && auth.isAuthenticated()
+	                        && auth.getPrincipal() instanceof CustomUserDetails user) {
+
+	                    attributes.put("userId", user.getUserId());
+	                }
+	            }
+	        }
+
+	        return true;
+	    }
 
     @Override
     public void afterHandshake(

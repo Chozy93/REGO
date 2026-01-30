@@ -1,6 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.9'
+    id 'war'
+    id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -25,8 +26,25 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 
-dependencies {
+//war 파일 만들기용
+bootJar{
+	enabled = false
+}
 
+bootWar{
+	enabled = true
+	archiveBaseName = 'SpringBoot'
+	archiveVersion ='0.0.1-SNAPSHOT'
+	mainClass = 'com.itwillbs.RegoApplication'
+}
+
+
+dependencies {
+	
+	//war(내장 톰캣 제거 - 외부 톰캣 사용 시)
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	implementation 'jakarta.activation:jakarta.activation-api:2.0.1'
+	
     // Spring Core
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
