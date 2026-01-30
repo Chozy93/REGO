@@ -36,7 +36,7 @@ public class ChatRoom {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "product_id",
-        nullable = false,
+        nullable = true,
         foreignKey = @ForeignKey(name = "fk_chat_room_product")
     )
     private Product product;
@@ -68,7 +68,7 @@ public class ChatRoom {
     ========================= */
     @Enumerated(EnumType.STRING)
     @Column(name = "room_status", nullable = false)
-    private ChatRoomStatus roomStatus;
+    private ChatRoomStatus roomStatus= ChatRoomStatus.ACTIVE;
 
     /* =========================
        날짜
