@@ -6,6 +6,7 @@ import com.itwillbs.dto.ReviewDTO;
 import com.itwillbs.entity.Review;
 import com.itwillbs.entity.SellerProfile;
 import com.itwillbs.entity.User;
+import com.itwillbs.mapper.MypageMapper;
 import com.itwillbs.repository.ProductRepository;
 import com.itwillbs.repository.ReviewRepository;
 import com.itwillbs.repository.SellerProfileRepository;
@@ -25,6 +26,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final SellerProfileRepository sellerProfileRepository;
+    private final MypageMapper mypageMapper;
 
     public void writeReview(ReviewConditionVO conditionVO) {
 
@@ -119,5 +121,17 @@ public class ReviewService {
         dto.setProductImageUrl(product.getMainImageUrl());
         return dto;
     }
+
+
+	public ReviewDTO getReviewByProductId(Long productId) {
+
+    ReviewDTO review = mypageMapper.getReviewDetailByProductId(productId);
+    
+    if (review == null) {
+        throw new RuntimeException("해당 상품의 리뷰를 찾을 수 없습니다.");
+    }
+    
+    return review;
+}
     
 }
