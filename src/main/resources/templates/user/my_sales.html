@@ -134,7 +134,7 @@
 						                        <span class="material-symbols-outlined" style="font-size: 18px;">more_vert</span>
 						                    </button>
 						                    <div class="menu-dropdown py-2 shadow-xl">
-						                        <button th:onclick="|event.stopPropagation(); location.href='/product/edit/${product.productId}'|" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2">
+						                        <button th:onclick="|event.stopPropagation(); location.href='/seller/product/edit/${product.productId}'|" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2">
 						                            <span class="material-symbols-outlined text-[18px]">edit</span> 수정하기
 						                        </button>
 						                        <button th:if="${product.salesStatusCode != 'SOLD'}" onclick="handleStatusChange(event, 'SOLD')" class="w-full text-left px-4 py-2 text-sm text-primary font-bold hover:bg-gray-100 flex items-center gap-2">
