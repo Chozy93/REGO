@@ -65,6 +65,7 @@ public class SecurityConfig {
                      "/seller/product/**",
                      "/order/**",
                      "/direct/**",
+                     "/seller/**",
                      "/myrepay/**",
                      "/pay/**"
                      
