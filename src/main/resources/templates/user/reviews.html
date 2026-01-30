@@ -100,8 +100,8 @@
                         </div>
 
                         <div id="reviewGrid" class="flex flex-col gap-4">
-                            <div th:each="review : ${receivedReviews}" class="review-item bg-white rounded-2xl p-5 shadow-sm border border-[#f0f4f2] flex flex-col md:flex-row gap-5 hover:border-primary/50 transition-all group" 
-                                 data-type="RECEIVED" th:data-date="${review.createdAt}" th:data-rating="${review.rating}">
+                            <div th:each="review : ${receivedReviews}" class="review-item bg-white rounded-2xl p-5 shadow-sm border border-[#f0f4f2] flex flex-col md:flex-row gap-5 hover:border-primary/50 cursor-pointer" 
+                                 th:data-product-id="${review.productId}" data-type="RECEIVED" th:data-date="${review.createdAt}" th:data-rating="${review.rating}">
                                 <div class="flex-shrink-0">
                                     <div class="relative w-full md:w-28 aspect-square rounded-xl bg-gray-100 overflow-hidden border border-[#f0f4f2]">
                                         <img th:src="${review.productImageUrl}" class="w-full h-full object-cover">
@@ -133,7 +133,7 @@
                                 </div>
                             </div>
                             <div th:each="review : ${sentReviews}" class="review-item bg-white rounded-2xl p-5 shadow-sm border border-[#f0f4f2] flex flex-col md:flex-row gap-5 hover:border-primary/50 transition-all group" 
-                                 data-type="SENT" th:data-date="${review.createdAt}" th:data-rating="${review.rating}">
+                                 th:data-product-id="${review.productId}" data-type="SENT" th:data-date="${review.createdAt}" th:data-rating="${review.rating}">
                                 <div class="flex-shrink-0">
                                     <div class="relative w-full md:w-28 aspect-square rounded-xl bg-gray-100 overflow-hidden border border-[#f0f4f2]">
                                         <img th:src="${review.productImageUrl}" class="w-full h-full object-cover">
@@ -187,6 +187,17 @@
                 
                 let currentFilter = 'ALL';
 
+				items.forEach(item => {
+				        item.style.cursor = 'pointer'; 
+				        
+				        item.addEventListener('click', function() {
+				            const productId = this.getAttribute('data-product-id');
+				            if (productId) {
+				                location.href = '/product/' + productId;
+				            }
+				        });
+				    });
+				
                 function updateUI() {
                     const filteredItems = items.filter(item => {
                         const type = item.getAttribute('data-type');
