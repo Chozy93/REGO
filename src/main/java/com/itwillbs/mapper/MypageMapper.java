@@ -31,4 +31,5 @@ public interface MypageMapper {
 	
 	List<ReviewDTO> getReceivedReviews(@Param("userId") Long userId);
 	List<ReviewDTO> getSentReviews(@Param("userId") Long userId);
+	ReviewDTO getReviewDetailByProductId(@Param("productId") Long productId);
 }
