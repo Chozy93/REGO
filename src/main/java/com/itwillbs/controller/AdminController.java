@@ -29,10 +29,14 @@ import com.itwillbs.domain.AdminProductListPageVO;
 import com.itwillbs.domain.AdminProductSearchConditionVO;
 import com.itwillbs.domain.AdminProductSummaryVO;
 import com.itwillbs.domain.AdminReportSummaryVO;
+import com.itwillbs.domain.ReportDetailResponseDTO;
 import com.itwillbs.dto.AdminOrderSummaryDTO;
 import com.itwillbs.dto.OrderListResponseDTO;
 import com.itwillbs.entity.Notice;
+import com.itwillbs.entity.Product;
 import com.itwillbs.entity.Report;
+import com.itwillbs.entity.User;
+import com.itwillbs.entity.enumtype.ReportTargetType;
 import com.itwillbs.entity.enumtype.UserRole;
 import com.itwillbs.entity.enumtype.UserStatus;
 import com.itwillbs.service.AdminInquiryService;
@@ -43,6 +47,8 @@ import com.itwillbs.service.AdminProductService;
 import com.itwillbs.service.AdminReportDashboardService;
 import com.itwillbs.service.AdminService;
 import com.itwillbs.service.OrderService;
+import com.itwillbs.service.ProductService;
+import com.itwillbs.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -59,7 +65,8 @@ public class AdminController {
     private final AdminProductService adminProductService;
     private final OrderService orderService;
     private final AdminService adminService;
-
+    private final UserService userService;
+    private final ProductService products;
 
 
 
@@ -271,6 +278,35 @@ public class AdminController {
         return "admin/reports";
     }
     
+    
+    
+    // 신고 상세정보
+    @GetMapping("/admin/reports/{id}")
+    @ResponseBody
+    public ReportDetailResponseDTO getReportDetail(@PathVariable("id") Long id) {
+        Report report = adminService.getReport(id);
+
+        User reporter = report.getReporter();
+
+        String targetInfo;
+
+        if (report.getTargetType() == ReportTargetType.PRODUCT) {
+            Product product = products.findById(report.getTargetId());
+            targetInfo = "상품 #" + product.getProductId() + " / " + product.getProductName();
+        } else {
+            User targetUser = userService.findById(report.getTargetId());
+            targetInfo = "회원 " + targetUser.getUsername() + " (" + targetUser.getEmail() + ")";
+        }
+
+        return new ReportDetailResponseDTO(
+            report.getReason(),
+            report.getDetail(),
+            reporter.getUsername() + " (" + reporter.getEmail() + ")",
+            targetInfo
+        );
+    }
+    
+    
  // 처리 완료 버튼 클릭 시 신고 상태 변경하기
     @ResponseBody
     @PatchMapping("/admin/reports/{reportId}/status")
@@ -375,6 +411,9 @@ public class AdminController {
         return "admin/product-settings";
     }
     
+    
+ 
+
     
     
 }

@@ -99,4 +99,9 @@ public class UserService {
 	    return userMapper.countByPhoneNumber(phoneNumber) > 0;
 	}
 	
+	   public User findById(Long userId) {
+	        return userRepository.findById(userId)
+	            .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. id=" + userId));
+	    }
+	
     }

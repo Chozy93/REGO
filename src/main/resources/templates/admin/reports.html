@@ -104,7 +104,7 @@
 							    <button th:if="${report.status.name() == 'PENDING'}"
 							            type="button" 
 							            class="table-link" 
-							            th:onclick="'completeReport(' + ${report.reportId} + ')'">
+							            th:onclick="'openReportModal(' + ${report.reportId} + ')'">
 							        처리
 							    </button>
 							    <span th:unless="${report.status.name() == 'PENDING'}" style="color: #ccc;">-</span>
@@ -151,6 +151,42 @@
 			</div>
 
 	    </section>
+		
+		<!--modal -->
+		<div id="reportModal" class="modal is-hidden">
+		  <div class="modal-overlay" onclick="closeReportModal()"></div>
+
+		  <div class="modal-content">
+		    <h3>신고 상세</h3>
+
+		    <div class="modal-row">
+		      <strong>신고 유형</strong>
+		      <span id="modal-reason"></span>
+		    </div>
+
+		    <div class="modal-row">
+		      <strong>신고 내용</strong>
+		      <p id="modal-detail"></p>
+		    </div>
+
+		    <div class="modal-row">
+		      <strong>신고자</strong>
+		      <span id="modal-reporter"></span>
+		    </div>
+
+		    <div class="modal-row">
+		      <strong>신고 대상</strong>
+		      <span id="modal-target"></span>
+		    </div>
+
+		    <div class="modal-actions">
+		      <button onclick="completeReport()">처리 완료</button>
+		      <button onclick="closeReportModal()">닫기</button>
+		    </div>
+		  </div>
+		</div>
+
+		
 	</div>
 
 
