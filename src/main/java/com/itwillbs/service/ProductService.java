@@ -1,18 +1,19 @@
 package com.itwillbs.service;
 
-import com.itwillbs.domain.ProductVO; // VO 임포트!
-import com.itwillbs.dto.ProductByCategoryResponse;
-import com.itwillbs.repository.ProductRepository;
-import com.itwillbs.view.CategoryPageVO;
-import com.itwillbs.view.MainProductCardVO;
-
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import com.itwillbs.domain.ProductVO; // VO 임포트!
+import com.itwillbs.dto.ProductByCategoryResponse;
+import com.itwillbs.entity.Product;
+import com.itwillbs.repository.ProductRepository;
+import com.itwillbs.view.CategoryPageVO;
+import com.itwillbs.view.MainProductCardVO;
+
+import lombok.RequiredArgsConstructor;
 
 
 @Service
@@ -46,6 +47,13 @@ public class ProductService {
             page.getCategoryGroup().getSubCategories(),
             products   // ← String productHtml ❌
         );
+    }
+    
+    public Product findById(Long productId) {
+        return productRepository.findById(productId)
+            .orElseThrow(() -> new IllegalArgumentException(
+                "존재하지 않는 상품입니다. id=" + productId
+            ));
     }
 }
 
