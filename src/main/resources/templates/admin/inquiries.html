@@ -9,6 +9,10 @@
   <link rel="stylesheet" href="/css/admin/inquiries.css">
 </th:block>
 
+<th:block th:fragment="pageJs">
+	<script src="/js/admin/inquires.js"></script>
+</th:block>
+
 <div layout:fragment="content" class="admin-layout">
 
   <!-- 사이드바 -->
@@ -85,14 +89,14 @@
       </div>
 
       <!-- 데이터 행 -->
-      <div class="inquiry-item"
-           th:each="inquiry : ${page.inquiries}"
-           th:onclick="
-             |location.href='
-             + (${inquiry.status} == 'WAITING'
-                ? '/admin/inquiries/' + ${inquiry.id} + '/answer'
-                : '/admin/inquiries/' + ${inquiry.id})
-             + '|">
+	  <div class="inquiry-item"
+	  th:each="inquiry : ${page.inquiries}"
+	       th:data-id="${inquiry.id}"
+	       th:data-title="${inquiry.title}"
+	       th:data-content="${inquiry.content}" 
+	       th:data-status="${inquiry.status}"
+		   th:data-answer="${inquiry.answerContent}"
+	       onclick="openInquiryModal(this)">
 
         <span class="type" th:text="${inquiry.inquiryType}">유형</span>
 
@@ -155,6 +159,42 @@
     </div>
 
   </div>
+  
+  <!--모달창-->
+
+  <div id="inquiryModal" class="admin-modal">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h2 id="modalTitle">문의 상세</h2>
+              <button type="button" class="close-btn" onclick="closeModal()">&times;</button>
+          </div>
+          
+          <form id="modalForm" method="post">
+              <div class="modal-body">
+                  <div class="inquiry-content-area">
+                      <label>문의 내용</label>
+                      <div id="modalInquiryContent" class="content-box"></div>
+                  </div>
+                  
+                  <div id="answerInputArea" class="answer-area">
+                      <label for="answerContent">관리자 답변</label>
+                      <textarea name="answerContent" id="answerContent" 
+                                placeholder="답변 내용을 입력해주세요." required></textarea>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="submit" id="submitBtn" class="btn btn-primary">답변 등록</button>
+                  <button type="button" class="btn btn-secondary" onclick="closeModal()">닫기</button>
+              </div>
+          </form>
+      </div>
+  </div>
+
+  
 </div>
+
+
+
+
 
 </html>

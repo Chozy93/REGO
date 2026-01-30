@@ -847,7 +847,136 @@
 
 
 
+/* 가격 + 찜 버튼 라인 */
+.price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 좌/우 끝 정렬 */
+  gap: 12px;
+}
+
+/* 가격 */
+.price .product-price {
+  font-size: 28px; /* 기존 값 유지하거나 필요 시 조절 */
+  font-weight: 700;
+}
+
+/* 찜 버튼 */
+.price .product-card__like-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 36px;
+  height: 36px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  background: #fff;
+
+  cursor: pointer;
+}
 
 
+/* =========================
+   SIMILAR PRODUCTS – RE:GO FIX
+========================= */
 
+/* 섹션 래퍼 */
+.similar-products {
+  margin-top: 64px;
+}
 
+/* 제목 */
+.similar-products .section-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 28px;
+  color: #111;
+}
+
+/* 그리드 */
+.similar-products .grid-products {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px; /* ⬅ 카드 간격 확보 */
+}
+
+/* 카드 */
+.similar-products .recommend-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  overflow: hidden;
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* hover – 과하지 않게 */
+.similar-products .recommend-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* 링크 전체 클릭 */
+.similar-products .recommend-card > a {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 이미지 */
+.similar-products .card-image-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #f3f4f6;
+  overflow: hidden;
+}
+
+.similar-products .card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.similar-products .recommend-card:hover img {
+  transform: scale(1.04); /* ⬅ 살짝만 */
+}
+
+/* 정보 영역 */
+.similar-products .card-info {
+  padding: 14px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 상품명 */
+.similar-products .card-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111;
+  line-height: 1.4;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 가격 */
+.similar-products .card-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+  .similar-products .grid-products {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

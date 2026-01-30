@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itwillbs.dto.ProductRegionDTO;
+import com.itwillbs.dto.SellerProductEditViewDTO;
 import com.itwillbs.entity.User;
 import com.itwillbs.security.util.SecurityUtil;
 import com.itwillbs.service.SellerService;
@@ -126,13 +127,14 @@ public class SellerController {
 		     return "seller/register-complete";
 		 }
 	
-	 /* =========================
-	    	판매 상품 등록 페이지
-	 	========================= */
-		 @GetMapping("/product/register")
-		 public String productRegister() {
-		     return "seller/product-register";
-		 }
+		 /* =========================
+		   판매 상품 등록 페이지
+		========================= */
+		@GetMapping("/product/register")
+		public String productRegister() {
+		    return "seller/product-register";
+		}
+
 		 
 		 @GetMapping("/entry")
 		 public String sellerEntry(
@@ -185,6 +187,50 @@ public class SellerController {
 
 		     return "redirect:/product/" + productId;
 		 }
+		 
+		 //상품 수정 post 요청
+		 @PostMapping("/product/edit/{productId}")
+		 public String editProduct(
+				    @PathVariable("productId") Long productId,
+		         @ModelAttribute SellerProductRegisterConditionVO conditionVO,
+		         @RequestParam(value = "deleteImageIds", required = false) List<Long> deleteImageIds,
+		         @RequestParam(value = "newImages", required = false) List<MultipartFile> newImages
+		 ) {
+			 sellerService.productEdit(
+		             productId,
+		             conditionVO,
+		             deleteImageIds,
+		             newImages
+		     );
+
+		     return "redirect:/product/" + productId;
+		 }
+		 
+		 
+		 	//수정 페이지 진입
+		 @GetMapping("/product/edit/{productId}")
+		 public String productEditPage(
+				   @PathVariable("productId") Long productId,
+		         Model model
+		 ) {
+		     Long currentUserId = SecurityUtil.getCurrentUserId();
+
+		     SellerProductEditViewDTO editView =
+		         sellerService.getProductEditView(productId, currentUserId);
+
+		     model.addAttribute("isEdit", true);
+		     model.addAttribute("productId", productId);
+
+		     /* 폼 바인딩 */
+		     model.addAttribute("condition", editView.getCondition());
+
+		     /* 기존 이미지 */
+		     model.addAttribute("images", editView.getImages());
+
+
+		     return "seller/product-edit";
+		 }
+
 
 
 }

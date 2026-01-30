@@ -73,9 +73,7 @@
 		                   <div sec:authorize="hasRole('ADMIN')" class="admin-btns" style="display: flex; gap: 10px;">
 		                       <a th:href="@{/customer/notice-edit(id=${notice.noticeId})}" 
 		                          class="list-btn" style="background-color: #f3f4f6; color: #374151;">수정</a>
-		                       <button type="button" class="list-btn" 
-		                               th:onclick="deleteNotice([[${notice.noticeId}]])"
-		                               style="background-color: #fee2e2; color: #ef4444; border: none; cursor: pointer;">삭제</button>
+
 		                   </div>
 		               </div>
 		           </main>

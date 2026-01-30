@@ -43,4 +43,12 @@ public interface NoticeRepository extends JpaRepository<Notice, Long>{
     @Modifying
     @Query("UPDATE Notice n SET n.viewCount = n.viewCount + 1 WHERE n.noticeId = :id")
     int updateViewCount(@Param("id") Long id);
+    
+    
+    
+ // [추가] 관리자용: 활성/비활성 상관없이 전체를 최신순으로 페이징 조회
+    Page<Notice> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    // [추가] 관리자용: 상태별 개수 카운트
+    long countByIsActive(boolean isActive);
 }

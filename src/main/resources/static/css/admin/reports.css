@@ -172,3 +172,112 @@ thead {
     align-items: center;
     margin-top: var(--space-24);
 }
+/* 모달 전체 영역 */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 기존 .modal-overlay 수정 */
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  /* 배경 어둡기 조절 */
+  background: rgba(0, 0, 0, 0.4); 
+  
+  /* 핵심: 부모(.admin-page)가 아닌, 이 오버레이 뒷배경만 흐리게 처리 */
+  /* 이렇게 하면 자식인 .modal-content는 선명하게 유지됩니다. */
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important; 
+  
+  z-index: -1; /* 콘텐츠보다 뒤로 가도록 설정 */
+}
+
+/* 모달 박스 */
+.modal-content {
+  position: relative;
+  width: 440px;
+  max-width: 90%;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 26px 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+/* 제목 */
+.modal-content h3 {
+  margin: 0 0 18px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #222;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+/* 정보 행 */
+.modal-row {
+  margin-bottom: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.modal-row strong {
+  display: block;
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 4px;
+}
+
+.modal-row span,
+.modal-row p {
+  color: #333;
+  word-break: break-word;
+}
+
+/* 버튼 영역 */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+/* 기본 버튼 */
+.modal-actions button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+/* 처리 완료 버튼 */
+.modal-actions button:first-child {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.modal-actions button:first-child:hover {
+  background: #4338ca;
+}
+
+/* 닫기 버튼 */
+.modal-actions button:last-child {
+  background: #f3f4f6;
+  color: #333;
+}
+
+.modal-actions button:last-child:hover {
+  background: #e5e7eb;
+}
+
+
+.is-hidden {
+  display: none;
+}

@@ -21,7 +21,7 @@ public class ReviewConditionVO {
        Review Content
     ========================= */
 
-    /** 평점 (1 ~ 10) */
+    /** 평점 (1 ~ 5) */
     private Integer rating;
 
     /** 리뷰 내용 */

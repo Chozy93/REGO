@@ -329,10 +329,16 @@ public class UserController {
         String email = getUserEmail(authentication);
         
         try {
-            // MypageService 호출
-            mypageService.updatePhoneNumberByEmail(email, verifiedPhone);
-            return ResponseEntity.ok(Map.of("success", true, "phoneNumber", verifiedPhone));
+            String cleanPhone = verifiedPhone.replaceAll("[^0-9]", "");
+            mypageService.updatePhoneNumberByEmail(email, cleanPhone);
+            
+            return ResponseEntity.ok(Map.of("success", true, "phoneNumber", cleanPhone));
         } catch (Exception e) {
+            System.out.println("🚨 [에러 발생 원인]: " + e.getMessage()); 
+            if (e.getCause() != null) {
+                System.out.println("🚨 [상세 원인]: " + e.getCause().getMessage());
+            }
+            e.printStackTrace(); 
             return ResponseEntity.status(500).body(Map.of("success", false, "message", "업데이트 중 오류 발생"));
         }
     }

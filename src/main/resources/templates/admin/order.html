@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+
+<th:block th:fragment="pageCss">
+  <link rel="stylesheet" href="/css/admin/order.css">
+  <link rel="stylesheet" href="/css/admin/admin-sidebar.css">
+</th:block>
+
+
+<th:block th:fragment="pageJs">
+	<script src="/js/admin/order.js"></script>
+</th:block>
+
+<div layout:fragment="content" class="admin-layout">
+  <!-- Sidebar -->
+  <th:block th:replace="fragments/admin-sidebar :: admin-sidebar('orders')"></th:block>
+
+	<main class="admin-main">
+	        <header class="main-header">
+	            <div class="header-title">
+	                <h2>거래 관리</h2>
+	                <p>플랫폼에서 발생한 모든 거래 내역 목록을 확인하고 관리합니다.</p>
+	            </div>
+				<div class="header-stats">
+				    <div class="stat-box">
+				        <span class="stat-label">총 거래</span>
+				        <span class="stat-value" th:text="${#numbers.formatInteger(totalCount, 1, 'COMMA')}">0</span>
+				    </div>
+				    <div class="stat-box">
+				        <span class="stat-label danger">분쟁 접수</span>
+				        <span class="stat-value danger" th:text="${#numbers.formatInteger(disputeCount, 1, 'COMMA')}">0</span>
+				    </div>
+				</div>
+	        </header>
+
+			<section class="filter-section">
+			    <form th:action="@{/admin/orders}" method="get" class="filter-group">
+			        <select name="status" class="filter-select">
+			            <option value="">전체 상태</option>
+			            <option th:each="st : ${T(com.itwillbs.entity.enumtype.EscrowStatus).values()}"
+			                    th:value="${st.name()}"
+			                    th:text="${st.label}"
+			                    th:selected="${currentStatus == st.name()}">상태명</option>
+			        </select>
+			        
+			        <div class="search-wrapper">
+			            <span class="material-symbols-outlined search-icon">search</span>
+			            <input type="text" name="search" th:value="${searchKeyword}" 
+			                   placeholder="거래번호, 상품명 또는 사용자 검색" class="filter-input">
+			        </div>
+			        
+			        <button type="submit" class="btn-search">검색</button>
+			    </form>
+			</section>
+
+	        <section class="table-container">
+	            <table class="admin-table">
+	                <thead>
+	                    <tr>
+	                        <th><input type="checkbox"></th>
+	                        <th>거래 ID</th>
+	                        <th>구매 상품</th>
+	                        <th>구매자</th>
+	                        <th>판매자</th>
+	                        <th class="text-right">거래 금액</th>
+	                        <th class="text-center">거래일</th>
+	                        <th class="text-center">상태</th>
+	                        <th class="text-right">관리</th>
+	                    </tr>
+	                </thead>
+					<tbody>
+					    <tr th:if="${#lists.isEmpty(orders)}">
+					        <td colspan="9" style="text-align: center; padding: 40px;">조회된 거래 내역이 없습니다.</td>
+					    </tr>
+
+					    <tr th:each="item : ${orders}" th:classappend="${item.status == 'CANCELLED' ? 'row-danger' : ''}">
+					        <td><input type="checkbox" th:value="${item.orderId}"></td>
+					        <td class="trx-id" th:classappend="${item.status == 'CANCELLED' ? 'danger' : ''}" 
+					            th:text="${'#TRX-' + item.orderId}">#ID</td>
+					        <td>
+					            <div class="product-cell">
+					                <img th:src="${item.productImgUrl}" alt="prod" onerror="this.src='https://via.placeholder.com/40'">
+					                <div>
+					                    <p class="font-bold" th:text="${item.productName}">상품명</p>
+					                    <p class="text-xs color-gray" th:text="${item.categoryName}">카테고리</p>
+					                </div>
+					            </div>
+					        </td>
+					        <td th:text="${item.buyerName}">구매자</td>
+					        <td th:text="${item.sellerName}">판매자</td>
+					        <td class="text-right font-bold" th:text="${#numbers.formatInteger(item.totalAmount, 1, 'COMMA') + '원'}">0원</td>
+					        <td class="text-center color-gray" th:text="${#temporals.format(item.createdAt, 'yyyy.MM.dd')}">2024.01.01</td>
+					        <td class="text-center">
+					            <span class="badge" 
+					                  th:classappend="${item.status == 'RELEASED' ? 'badge-success' : 
+					                                   (item.status == 'CANCELLED' ? 'badge-danger' : 'badge-wait')}"
+					                  th:text="${item.statusLabel}">상태</span>
+					        </td>
+					        <td class="text-right">
+					            <button th:if="${item.status == 'CANCELLED'}" class="btn-icon danger"><span class="material-symbols-outlined">gavel</span></button>
+					            <button class="btn-icon" th:onclick="|location.href='@{/admin/orders/detail/{id}(id=${item.orderId})}'|">
+					                <span class="material-symbols-outlined">visibility</span>
+					            </button>
+					        </td>
+					    </tr>
+					</tbody>
+	            </table>
+	            
+				<div class="pagination" th:if="${page.totalPages > 0}">
+				    <div class="page-buttons">
+				        <button class="btn-page" th:disabled="${!page.hasPrevious()}"
+				                th:onclick="|location.href='@{/admin/orders(page=${page.number}, status=${currentStatus}, search=${searchKeyword})}'|">&lt;</button>
+
+				        <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+				            <button class="btn-page" th:classappend="${i == page.number ? 'active' : ''}"
+				                    th:onclick="|location.href='@{/admin/orders(page=${i + 1}, status=${currentStatus}, search=${searchKeyword})}'|"
+				                    th:text="${i + 1}">1</button>
+				        </th:block>
+
+				        <button class="btn-page" th:disabled="${!page.hasNext()}"
+				                th:onclick="|location.href='@{/admin/orders(page=${page.number + 2}, status=${currentStatus}, search=${searchKeyword})}'|">&gt;</button>
+				    </div>
+				</div>
+	        </section>
+	    </main>
+</div>
+
+
+
+</html>

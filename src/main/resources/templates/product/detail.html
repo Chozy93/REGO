@@ -25,28 +25,35 @@
 
     <div class="detail-left">
 
-      <section class="product-detail-media">
-        <div class="swiper detail-swiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide" th:if="${page.product.mainImageUrl != null}">
-              <img th:src="${page.product.mainImageUrl}" alt="상품 이미지 1"/>
-            </div>
-            <div class="swiper-slide" th:if="${page.product.mainImageUrl != null}">
-              <img th:src="${page.product.mainImageUrl}" alt="상품 이미지 2"/>
-            </div>
-            <div class="swiper-slide" th:if="${page.product.mainImageUrl != null}">
-              <img th:src="${page.product.mainImageUrl}" alt="상품 이미지 3"/>
-            </div>
-            <div class="swiper-slide" th:if="${page.product.mainImageUrl == null}">
-              <img src="/images/no-image.png" alt="기본 이미지"/>
-            </div>
-          </div>
-          <div class="swiper-pagination"></div>
-          <div class="swiper-button-next"></div>
-          <div class="swiper-button-prev"></div>
+		<section class="product-detail-media">
+		  <div class="swiper detail-swiper">
+		    <div class="swiper-wrapper">
 
-        </div>
-      </section>
+				<!-- 상품 이미지들 -->
+				<div class="swiper-slide"
+				     th:each="imageUrl : ${page.product.imageUrls}">
+				  <img th:src="${imageUrl}"
+				       alt="상품 이미지"
+				       loading="lazy"
+				       onerror="this.onerror=null; this.src='/images/no-image.png';"/>
+				</div>
+
+				<!-- 이미지 하나도 없을 때 (보험) -->
+				<div class="swiper-slide"
+				     th:if="${#lists.isEmpty(page.product.imageUrls)}">
+				  <img src="/images/no-image.png"
+				       alt="기본 이미지"
+				       loading="lazy"/>
+				</div>
+
+		    </div>
+
+		    <div class="swiper-pagination"></div>
+		    <div class="swiper-button-next"></div>
+		    <div class="swiper-button-prev"></div>
+		  </div>
+		</section>
+
 
       <div class="left-bottom-box">
         <section class="info-card seller-card" th:if="${page.sellerInfo != null}">
@@ -69,18 +76,13 @@
           <hr class="seller-divider">
           <div class="action-card product-detail">
 			<th:block th:if="${page.isMine}">
-			    <a th:href="@{/product/edit/{id}(id=${page.product.productId})}" class="btn-chat" style="flex: 1; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+			    <a th:href="@{/seller/product/edit/{id}(id=${page.product.productId})}" class="btn-chat" style="flex: 1; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 			      <span class="material-symbols-outlined" style="margin-right: 4px;">edit</span>
 			      상품 수정하기
 			    </a>
 			    </th:block>
 
 			  <th:block th:unless="${page.isMine}">
-			    <button type="button" class="product-card__like-btn"
-			            th:data-product-id="${page.product.productId}"
-			            th:data-login="${page.login}">
-			      <span class="material-symbols-outlined" th:classappend="${page.product.liked} ? ' filled' : ''">favorite</span>
-			    </button>
             <button type="button" id="dealBtn" class="btn-chat"
                     th:data-product-id="${page.product.productId}"
                     th:data-mine="${page.isMine}"
@@ -110,7 +112,16 @@
             <span class="badge product-status-badge" th:text="${page.product.salesStatusLabel}">판매중</span>
           </div>
         </div>
+	    
+		<div class="price">
         <div class="product-price" th:text="${#numbers.formatInteger(page.product.price, 3, 'COMMA')}">0</div>
+		<button type="button" class="product-card__like-btn"
+							            th:data-product-id="${page.product.productId}"
+							            th:data-login="${page.login}">
+							      <span class="material-symbols-outlined" th:classappend="${page.product.liked} ? ' filled' : ''">favorite</span>
+							    </button>
+								</div>
+		
         <div class="product-meta">조회 <b th:text="${page.product.viewCount}">0</b></div>
       </div>
 

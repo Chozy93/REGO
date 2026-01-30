@@ -7,6 +7,8 @@ import com.itwillbs.entity.User;
 import com.itwillbs.entity.enumtype.ReportTargetType;
 import com.itwillbs.repository.ReportRepository;
 import com.itwillbs.repository.UserRepository;
+import com.itwillbs.security.util.SecurityUtil;
+import com.itwillbs.view.condition.ReportConditionVO;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,39 +27,49 @@ public class ProductReportService {
        - 로그인 / VO 생성 / 중복 체크는 Service 책임
     ========================= */
     @Transactional
-    public void reportProduct(Long productId, String reasonCode) {
+    public void reportProduct(ReportConditionVO condition) {
 
-        if (productId == null) {
+        // ===== 디버그 =====
+        System.out.println("[REPORT] condition.targetId = " + condition.getTargetId());
+        System.out.println("[REPORT] condition.targetTypeCode(before) = " + condition.getTargetTypeCode());
+
+        if (condition.getTargetId() == null) {
             throw new IllegalArgumentException("상품 ID가 없습니다.");
         }
 
-        // 🔥 임시 로그인 사용자 (나중에 SecurityUtil로 교체)
-        User loginUser = userRepository.findById(1L)
-            .orElseThrow(() -> new IllegalStateException("로그인이 필요합니다."));
+        User loginUser = SecurityUtil.getCurrentUser();
+        if (loginUser == null) {
+            throw new IllegalStateException("로그인이 필요합니다.");
+        }
 
-        // ✅ 중복 신고 방지
+        // ===== targetType 확정 (핵심) =====
+        ReportTargetType targetType = ReportTargetType.PRODUCT;
+        condition.setTargetTypeCode(targetType.name());
+
+        System.out.println("[REPORT] targetType(enum) = " + targetType);
+        System.out.println("[REPORT] reporterId = " + loginUser.getUserId());
+
+        // ===== 중복 신고 체크 =====
         boolean alreadyReported =
-        	    reportRepository.existsByTargetTypeAndTargetIdAndReporterUserId(
-        	        ReportTargetType.PRODUCT,
-        	        productId,
-        	        loginUser.getUserId()
-        	    );
+            reportRepository.existsByTargetTypeAndTargetIdAndReporterUserId(
+                targetType,
+                condition.getTargetId(),
+                loginUser.getUserId()
+            );
+
+        System.out.println("[REPORT] alreadyReported = " + alreadyReported);
 
         if (alreadyReported) {
             throw new DuplicateProductReportException();
         }
 
-        // ✅ VO 생성 (Service 책임)
-        ReportVO reportVO = new ReportVO(
-            "PRODUCT",
-            productId,
-            reasonCode,
-            null
-        );
-
-        Report report = new Report(loginUser, reportVO);
+        // ===== 저장 =====
+        Report report = new Report(loginUser, condition);
         reportRepository.save(report);
+
+        System.out.println("[REPORT] saved OK, reportId = " + report.getReportId());
     }
+
 
     /* =========================
     🔍 신고 상태 조회 (DETAIL01_REPORT_STATUS)
@@ -73,7 +85,7 @@ public class ProductReportService {
 
      return reportRepository
          .existsByTargetTypeAndTargetIdAndReporterUserId(
-             ReportTargetType.PRODUCT,
+        		 ReportTargetType.PRODUCT,
              productId,
              loginUser.getUserId()
          );
@@ -93,7 +105,7 @@ public boolean isAlreadyReported(Long productId, Long userId) {
 
   return reportRepository
       .existsByTargetTypeAndTargetIdAndReporterUserId(
-          ReportTargetType.PRODUCT,
+    		  ReportTargetType.PRODUCT,
           productId,
           userId
       );

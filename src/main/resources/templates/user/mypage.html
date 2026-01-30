@@ -76,19 +76,19 @@
 						        </div>
 						    </div>
 
-						    <div class="flex items-center gap-0.5 text-yellow-400">
-						        <th:block th:each="i : ${#numbers.sequence(1, 5)}">
-						            <span th:if="${(i * 2) <= sellerProfile.ratingAvg}" 
-						                  class="material-symbols-outlined filled text-[26px]">star</span>
-						            
-						            <span th:if="${(i * 2) - 1 == sellerProfile.ratingAvg}" 
-						                  class="material-symbols-outlined filled text-[26px]">star_half</span>
-						            
-						            <span th:if="${(i * 2) - 1 > sellerProfile.ratingAvg}" 
-						                  class="material-symbols-outlined text-[26px]" 
-						                  style="font-variation-settings: 'FILL' 0; color: #cbd5e1;">star</span>
-						        </th:block>
-						    </div>
+							<div class="flex items-center gap-0.5 text-yellow-400">
+							    <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+							        <span th:if="${i <= sellerProfile.ratingAvg}" 
+							              class="material-symbols-outlined filled text-[26px]">star</span>
+							        
+							        <span th:if="${i > sellerProfile.ratingAvg && i - 1 < sellerProfile.ratingAvg}" 
+							              class="material-symbols-outlined filled text-[26px]">star_half</span>
+							        
+							        <span th:if="${i - 1 >= sellerProfile.ratingAvg}" 
+							              class="material-symbols-outlined text-[26px]" 
+							              style="font-variation-settings: 'FILL' 0; color: #cbd5e1;">star</span>
+							    </th:block>
+							</div>
 
 						    <div class="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-white/10 text-[13px] text-gray-500">
 						        <div class="flex items-center gap-1">
@@ -178,10 +178,16 @@
 					<span class="font-bold text-[#111813] dark:text-white group-hover:text-primary transition-colors">채팅 목록</span>
 					</div>
 					<div class="flex items-center gap-2">
-					<span class="flex h-2.5 w-2.5 relative">
-					<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-					<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-					</span>
+						<span th:if="${hasUnreadChat}"
+						      class="flex h-2.5 w-2.5 relative">
+						  <span class="animate-ping absolute inline-flex
+						               h-full w-full rounded-full
+						               rounded-full bg-red-400 opacity-75"></span>
+						  <span class="relative inline-flex
+						               rounded-full h-2.5 w-2.5
+						               bg-red-500"></span>
+						</span>
+
 					<span class="material-symbols-outlined text-gray-300 group-hover:text-primary group-hover:translate-x-1 transition-all">chevron_right</span>
 					</div>
 					</a>

@@ -129,17 +129,29 @@
   color: var(--color-text-muted);
 }
 
-/* 리스트 행 */
+
+.inquiry-list-head, 
 .inquiry-item {
   display: grid;
-  grid-template-columns: 100px 1fr 120px 120px 120px;
+  grid-template-columns: 120px 1fr 120px 150px; /* 컬럼을 4개로 고정 */
   align-items: center;
+  padding: 16px 20px;
+}
+/* 리스트 행 */
+.inquiry-item {
+	border-top: 1px solid var(--color-divider);
+	  font-size: var(--fs-14);
+	  cursor: pointer;
+	  transition: background 0.2s;
+}
 
-  padding: 18px 20px;
-  border-top: 1px solid var(--color-divider);
-
-  font-size: var(--fs-14);
-  cursor: pointer;
+/* 리스트 헤더 텍스트 중앙 정렬 유지 */
+.inquiry-list-head span {
+  text-align: center;
+}
+/* 제목은 왼쪽 정렬이 보기 좋음 */
+.inquiry-list-head span:nth-child(2) {
+  text-align: left;
 }
 
 .inquiry-item:hover {
@@ -148,7 +160,8 @@
 
 /* 컬럼 */
 .inquiry-item .type {
-  color: var(--color-text-muted);
+	text-align: center;
+	  color: var(--color-text-muted);
 }
 
 .inquiry-item .title {
@@ -163,10 +176,13 @@
 
 /* 상태 뱃지 */
 .inquiry-item .status {
-  justify-self: center;
-  padding: 4px 12px;
+	display: flex;
+	  justify-content: center; /* 뱃지 내부 텍스트 중앙 */
+	  align-items: center;
+	  justify-self: center;   /* 그리드 셀 안에서 중앙 */
+	  width: 80px;            /* 뱃지 너비 고정 */
   border-radius: var(--radius-pill);
-  font-size: var(--fs-12);
+
 }
 
 .inquiry-item .status.wait {
@@ -212,3 +228,71 @@
     margin-top: var(--space-24);
 }
 
+
+/*모달 css*/
+
+/* 모달 배경 */
+.admin-modal {
+    display: none; /* 기본 숨김 */
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 모달 컨텐츠 창 */
+.modal-content {
+    background: white;
+    width: 500px;
+    border-radius: var(--radius-lg);
+    padding: var(--space-24);
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.close-btn { background: none; border: none; font-size: 24px; cursor: pointer; }
+
+.content-box {
+    background: var(--color-surface-2);
+    padding: 15px;
+    border-radius: var(--radius-md);
+    margin: 10px 0 20px 0;
+    min-height: 100px;
+    white-space: pre-wrap; /* 줄바꿈 유지 */
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    resize: none;
+}
+
+
+/* 모달 푸터 (버튼 영역) */
+.modal-footer {
+    display: flex;          /* 가로 정렬 */
+    justify-content: flex-end; /* 오른쪽 정렬 (중앙 정렬을 원하면 center) */
+    gap: var(--space-8);    /* 버튼 사이 간격 */
+    margin-top: var(--space-20);
+}
+
+/* 버튼 공통 스타일 (필요시 추가) */
+.modal-footer .btn {
+    padding: var(--space-10) var(--space-20);
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    font-size: var(--fs-14);
+    border: none;
+}
+
+/* 닫기 버튼 스타일 */
+.btn-secondary {
+    background-color: var(--color-surface-2);
+    color: var(--color-text-muted);
+}

@@ -26,7 +26,10 @@ public interface MypageMapper {
     // 마이페이지 내 구매상품
     List<Product> getPurchaseListByUserId(@Param("userId") Long userId);
 	List<Product> getLikeListByUserId(@Param("userId") Long userId);
-	void updatePhoneNumber(String email, String verifiedPhone);
+	
+	void updatePhoneNumber(@Param("email") String email, @Param("verifiedPhone") String verifiedPhone);
+	
 	List<ReviewDTO> getReceivedReviews(@Param("userId") Long userId);
 	List<ReviewDTO> getSentReviews(@Param("userId") Long userId);
+	ReviewDTO getReviewDetailByProductId(@Param("productId") Long productId);
 }

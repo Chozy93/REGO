@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.itwillbs.domain.user.UserSignupConditionVO;
 import com.itwillbs.entity.User;
 import com.itwillbs.mapper.UserMapper;
+import com.itwillbs.security.util.SecurityUtil;
 import com.itwillbs.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -164,18 +165,27 @@ public class AuthController {
 	// 1단계 화면 (약관동의)
 	@GetMapping("/signup/step1")
 	public String signupStep1() {
+		 if (SecurityUtil.isLogined()) {
+		        return "redirect:/";
+		    }
 		return "auth2/signup-terms";
 	}
 
 	// 2단계 화면 (정보입력 페이지 열기)
 	@GetMapping("/signup/step2")
 	public String signupStep2Page() {
+		 if (SecurityUtil.isLogined()) {
+		        return "redirect:/";
+		    }
 		return "auth2/signup-step2";
 	}
 
 	@PostMapping("/signup/step2")
 	public String register(UserSignupConditionVO condition) {
 		System.out.println("화면에서 넘어온 데이터: " + condition.toString());
+		 if (SecurityUtil.isLogined()) {
+		        return "redirect:/";
+		    }
 		try {
 			if (condition.getUsername() == null || !condition.getUsername().matches("^[가-힣]{2,5}$")) {
 				System.out.println("유효하지 않은 이름 입력됨: " + condition.getUsername());
@@ -194,6 +204,7 @@ public class AuthController {
 	public ResponseEntity<?> verifyIdentity(@RequestBody Map<String, String> payload) {
 		
 	    String identityVerificationId = payload.get("identityVerificationId");
+	    
 
 	    Map<String, Object> userInfo = getVerifiedUserInfo(identityVerificationId); 
 	    System.out.println("🚩 포트원 userInfo 전체: " + userInfo);
@@ -294,6 +305,9 @@ public class AuthController {
 	// 3단계 화면 (완료 축하)
 	@GetMapping("/signup/step3")
 	public String signupStep3() {
+		 if (SecurityUtil.isLogined()) {
+		        return "redirect:/";
+		    }
 		return "auth2/signup-complete";
 	}
 }

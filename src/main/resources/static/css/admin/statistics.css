@@ -1,117 +1,130 @@
-/* ===============================
-   전체 레이아웃
-=============================== */
+/* 기본 레이아웃 */
 .admin-page {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-32);
-  margin-right: var(--space-24);
-  margin-top: var(--space-24);
+    display: flex;
+    background-color: #f6f8f6;
+    min-height: 100vh;
 }
 
-/* ===============================
-   메인 영역
-=============================== */
 .admin-main {
-  flex: 1;
-  background: var(--color-bg);
+    flex: 1;
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* 헤더 */
-.admin-main-head {
-  margin-bottom: var(--space-24);
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
 }
 
-.admin-main-title {
-  font-size: var(--fs-24);
-  font-weight: var(--fw-bold);
+.header-title h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #111813;
 }
 
-/* ===============================
-   상단 카드
-=============================== */
-.admin-summary {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-24);
+.header-controls {
+    display: flex;
+    gap: 10px;
 }
 
-.summary-card {
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  padding: var(--space-24);
-  box-shadow: var(--shadow-sm);
+/* 필터 및 버튼 */
+.filter-select {
+    padding: 8px 15px;
+    border: 1px solid #e0e4e2;
+    border-radius: 8px;
+    font-size: 14px;
 }
 
-.summary-label {
-  font-size: var(--fs-14);
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-12);
+.btn-export {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 15px;
+    background: #fff;
+    border: 1px solid #e0e4e2;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
 }
 
-/* ===============================
-   하단 영역
-=============================== */
-.admin-bottom {
-  margin-top: var(--space-32);
-  display: grid;
-  grid-template-columns: 1fr 1.6fr;
-  gap: var(--space-24);
+/* 그리드 시스템 */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
 }
 
-.dashboard-card {
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  padding: var(--space-24);
-  box-shadow: var(--shadow-sm);
+.stats-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid #f0f4f2;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
-.card-title {
-  font-size: var(--fs-18);
-  font-weight: var(--fw-semibold);
+.pie-section { grid-column: span 1; }
+.rank-section { grid-column: span 2; }
+
+/* 카드 내부 */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
 }
 
-.card-link {
-  font-size: var(--fs-13);
-  color: var(--color-text-muted);
+.card-header h3 {
+    font-size: 16px;
+    font-weight: bold;
 }
 
-.card-link:hover {
-  color: var(--color-primary);
+.trend {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 6px;
 }
 
-/* ===============================
-   지역 랭킹
-=============================== */
-.region-rank {
-  margin-top: var(--space-20);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-12);
+.trend.positive { color: #13ec5b; background: rgba(19, 236, 91, 0.1); }
+.trend.negative { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+
+/* 랭킹 리스트 */
+.rank-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
 }
 
-.region-rank li {
-  display: grid;
-  grid-template-columns: 120px 1fr 60px;
-  align-items: center;
-  gap: var(--space-12);
-  font-size: var(--fs-14);
+.loc-name { width: 100px; font-size: 14px; }
+.bar-wrap { flex: 1; height: 10px; background: #f0f4f2; border-radius: 5px; overflow: hidden; }
+.bar { height: 100%; background: #13ec5b; }
+.count { width: 50px; text-align: right; font-weight: bold; }
+
+/* 차트 영역 모크 */
+.mock-chart-box {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fafafa;
+    border: 1px dashed #ddd;
+    color: #aaa;
+    border-radius: 8px;
 }
 
-.region-rank .bar {
-  height: 8px;
-  background: var(--color-surface-2);
-  border-radius: var(--radius-pill);
-  overflow: hidden;
+.chart-area {
+    position: relative;
+    height: 100px; /* 기존 220px or 250px에서 160px 정도로 줄여보세요 */
+    width: 80%;
+    margin: 0 auto; /* 중앙 정렬 */
 }
 
-.region-rank .bar i {
-  display: block;
-  height: 100%;
-  background: var(--color-primary);
-}
-
-.region-rank .count {
-  text-align: right;
-  font-weight: var(--fw-medium);
+/* 도넛 차트의 경우 높이를 조금 더 주면 예쁩니다 */
+.pie-section .chart-area {
+    height: 250px;
 }

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import com.itwillbs.domain.ReportVO;
 import com.itwillbs.entity.enumtype.ReportStatus;
 import com.itwillbs.entity.enumtype.ReportTargetType;
+import com.itwillbs.view.condition.ReportConditionVO;
 
 @Entity
 @Table(name = "reports")
@@ -92,6 +93,23 @@ public class Report {
     public ReportVO toVO() {
         return new ReportVO(this);
     }
+    /* =========================
+    생성자 (Condition VO → Entity)
+ ========================= */
+ public Report(User reporter, ReportConditionVO condition) {
+
+     this.reporter = reporter;
+
+     this.targetType =
+         ReportTargetType.valueOf(condition.getTargetTypeCode());
+     this.targetId = condition.getTargetId();
+
+     this.reason = condition.getReasonCode();
+     this.detail = condition.getDetail();
+
+     this.status = ReportStatus.PENDING;
+     this.createdAt = LocalDateTime.now();
+ }
 
     /* =========================
        처리 완료

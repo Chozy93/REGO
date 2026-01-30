@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 import com.itwillbs.domain.ChatRoomVO;
 import com.itwillbs.entity.enumtype.ChatRoomStatus;
+import com.itwillbs.entity.enumtype.ChatRoomType;
 
 @Entity
 @Table(
@@ -35,7 +36,7 @@ public class ChatRoom {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
         name = "product_id",
-        nullable = false,
+        nullable = true,
         foreignKey = @ForeignKey(name = "fk_chat_room_product")
     )
     private Product product;
@@ -67,7 +68,7 @@ public class ChatRoom {
     ========================= */
     @Enumerated(EnumType.STRING)
     @Column(name = "room_status", nullable = false)
-    private ChatRoomStatus roomStatus;
+    private ChatRoomStatus roomStatus= ChatRoomStatus.ACTIVE;
 
     /* =========================
        날짜
@@ -77,7 +78,11 @@ public class ChatRoom {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
+    
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "room_type", nullable = false, length = 20)
+    private ChatRoomType roomType;
     /* =========================
        JPA 전용 기본 생성자
     ========================= */
@@ -104,7 +109,25 @@ public class ChatRoom {
      this.roomStatus = ChatRoomStatus.ACTIVE;
      this.createdAt = LocalDateTime.now();
      this.updatedAt = LocalDateTime.now();
+     this.roomType = ChatRoomType.PRODUCT;
  }
+ 
+ 
+ public static ChatRoom createAdminDm(
+	        User admin,
+	        User user
+	) {
+	    ChatRoom room = new ChatRoom();
+
+	    room.buyer = user;     // 항상 메시지 수신자
+	    room.seller = admin;   // 관리자
+	    room.product = null;
+	    room.roomType = ChatRoomType.ADMIN_DM;
+	    room.createdAt = LocalDateTime.now();
+	    room.updatedAt = room.createdAt;
+
+	    return room;
+	}
 
     /* =========================
        Entity → VO

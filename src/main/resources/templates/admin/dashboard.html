@@ -91,19 +91,46 @@
 				</ul>
             </div>
 
-            <div class="dashboard-panel">
-                <div class="section-head">
-                    <h3 class="section-title">최근 거래 내역</h3>
-                    <a th:href="@{/admin/trades}" class="section-link">더보기</a>
-                </div>
-                <ul class="panel-list">
-					<li class="panel-item">
-					    <span class="item-title"></span>
-					    <span class="item-meta"></span>
-					</li>
-
-                </ul>
-            </div>
+			<div class="dashboard-panel">
+			    <div class="section-head">
+			        <h3 class="section-title">최근 거래 내역</h3>
+			        <a th:href="@{/admin/orders}" class="section-link">더보기</a>
+			    </div>
+			    <ul class="panel-list">
+			        <li class="panel-item" th:each="order : ${recentOrders}">
+			            <div class="panel-item-body">
+			                <div class="between" style="width: 100%; display: flex; align-items: center; justify-content: space-between;">
+			                    <div>
+			                        <span class="item-title" th:text="${order.productName}" style="display: block;">상품명</span>
+			                        <span class="item-meta text-muted">
+			                            <span th:text="'#' + ${order.orderId}">#123</span> · 
+			                            <span th:text="${#temporals.format(order.createdAt, 'MM-dd HH:mm')}">01-29</span>
+			                        </span>
+			                    </div>
+			                    
+			                    <div class="status-badge">
+			                        <span th:if="${order.escrowStatus.name() == 'RELEASED'}" 
+			                              style="color: #13ec5b; background: rgba(19, 236, 91, 0.1); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">
+			                            정산완료
+			                        </span>
+			                        <span th:if="${order.escrowStatus.name() == 'PENDING'}" 
+			                              style="color: #ff9800; background: rgba(255, 152, 0, 0.1); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">
+			                            대기중
+			                        </span>
+			                        <span th:if="${order.escrowStatus.name() == 'HELD'}" 
+			                              style="color: #2196f3; background: rgba(33, 150, 243, 0.1); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">
+			                            결제완료
+			                        </span>
+			                    </div>
+			                </div>
+			            </div>
+			        </li>
+			        
+			        <li class="panel-item" th:if="${#lists.isEmpty(recentOrders)}">
+			            <span class="item-meta text-muted">최근 거래 내역이 없습니다.</span>
+			        </li>
+			    </ul>
+			</div>
 
             <div class="dashboard-panel">
                 <div class="section-head">

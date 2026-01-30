@@ -5,6 +5,17 @@
 
 <mapper namespace="com.itwillbs.mapper.ProductDetailMapper">
 
+<resultMap id="ProductSimilarResultMap"
+           type="com.itwillbs.dto.ProductSimilarDTO">
+
+    <id property="productId" column="product_id"/>
+
+    <result property="productName" column="product_name"/>
+    <result property="price" column="price"/>
+    <result property="thumbnailUrl" column="thumbnailUrl"/>
+    <result property="regionName" column="regionName"/>
+</resultMap>
+
     <!-- ==================================================
          DETAIL01_VIEWCOUNT
          조회수 증가
@@ -32,9 +43,7 @@
         p.price                AS price,
         p.description          AS description,
 
-        /* 대표 이미지 */
-        p.main_image_url       AS mainImageUrl,
-
+     
         /* 통계 */
         p.view_count           AS viewCount,
         p.like_count           AS likeCount,
@@ -105,29 +114,51 @@ GROUP BY u.user_id, u.nickname
     </select>
 
 
-<!-- DETAIL01_SIMILAR_1
-     같은 소분류 기준 -->
-<select id="selectSimilarBySubCategory"
-        parameterType="map"
-        resultType="com.itwillbs.dto.ProductSimilarDTO">
 
-  SELECT
-      p.product_id          AS productId,
-      p.product_name        AS productName,
-      p.price               AS price,
-      p.main_image_url      AS thumbnailUrl,
-      p.region_display_name AS regionName
-  FROM products p
-  WHERE p.category_id = (
-      SELECT category_id
-      FROM products
-      WHERE product_id = #{productId}
-  )
-  AND p.product_id != #{productId}
-  ORDER BY p.created_at DESC
-  LIMIT #{limit}
+ <!-- ==================================================
+     DETAIL01_SIMILAR
+     비슷한 상품 조회 (카테고리 기준)
+================================================== -->
+<select id="selectSimilarProducts"
+        parameterType="map"
+        resultMap="ProductSimilarResultMap">
+
+    SELECT
+        t.product_id          AS product_id,
+        t.product_name        AS product_name,
+        t.price               AS price,
+        t.main_image_url      AS thumbnailUrl,
+        t.region_display_name AS regionName
+    FROM (
+        SELECT
+            p.*,
+            CASE
+                WHEN p.category_id = base.category_id THEN 1
+                WHEN c.parent_id = base.parent_id THEN 2
+                ELSE 99
+            END AS priority
+        FROM products p
+        JOIN categories c
+          ON p.category_id = c.category_id
+        JOIN (
+            SELECT
+                c2.category_id,
+                c2.parent_id
+            FROM products p2
+            JOIN categories c2
+              ON p2.category_id = c2.category_id
+            WHERE p2.product_id = #{productId}
+        ) base
+        WHERE p.product_id != #{productId}
+    ) t
+    WHERE t.priority &lt; 99
+    ORDER BY
+        t.priority ASC,
+        t.created_at DESC
+    LIMIT #{limit}
 
 </select>
+
 
     <!-- ==================================================
          DETAIL01_SIMILAR (fallback)

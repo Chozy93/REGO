@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.itwillbs.domain.ChatRoomVO;
+import com.itwillbs.entity.ChatRoom;
+import com.itwillbs.security.CustomUserDetails;
 import com.itwillbs.security.util.SecurityUtil;
 import com.itwillbs.service.ChatService;
 import com.itwillbs.view.ChatListViewVO;
@@ -107,6 +110,21 @@ public class ChatController {
         ChatRoomVO roomVO = chatService.getOrCreateRoom(productId, buyerId);
 
         return "redirect:/chat/list?roomId=" + roomVO.getRoomId();
+    }
+    
+    
+    @GetMapping("/dm/{userId}")
+    public String openAdminDm(
+            @PathVariable("userId") Long userId,
+            @AuthenticationPrincipal CustomUserDetails loginUser
+    ) {
+        Long adminId = loginUser.getUser().getUserId();
+
+        ChatRoom room =
+                chatService.getOrCreateAdminDmRoom(adminId, userId);
+
+        // ⚠️ 반드시 chat/list 로 진입
+        return "redirect:/chat/list?roomId=" + room.getRoomId();
     }
 
 

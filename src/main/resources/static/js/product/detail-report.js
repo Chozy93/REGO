@@ -1,106 +1,179 @@
 // detail-report.js
+$(function () {
 
-document.addEventListener("click", (e) => {
+  console.log("[REPORT][INIT] detail-report.js loaded");
 
   /* =========================
      신고 모달 열기
   ========================= */
-  const openBtn = e.target.closest("[data-action='open-report-modal']");
-  if (openBtn) {
+  $(document).on("click", "[data-action='open-report-modal']", function () {
 
-    const isLogin = openBtn.dataset.login === "true";
-    if (!isLogin) {
+    console.log("[REPORT][CLICK] open-report-modal");
+
+    const $btn = $(this);
+    console.log("[REPORT] login =", $btn.data("login"));
+    console.log("[REPORT] productId =", $btn.data("productId"));
+
+    if ($btn.data("login") !== true && $btn.data("login") !== "true") {
       alert("로그인이 필요합니다.");
       location.href = "/login";
       return;
     }
 
-    const modal = document.getElementById("reportModal");
-    modal?.classList.remove("is-hidden");
+    const $modal = $("#reportModal");
+    if ($modal.length === 0) {
+      console.log("[REPORT][ERROR] reportModal not found");
+      return;
+    }
 
-    modal.dataset.productId = openBtn.dataset.productId;
-    modal.dataset.triggerBtnId = "report-btn";
+    // 신고 대상 정보 저장
+    $modal.data("targetTypeCode", "PRODUCT");
+    $modal.data("targetId", $btn.data("productId"));
 
-    return;
-  }
+    console.log("[REPORT] modal.targetTypeCode =", $modal.data("targetTypeCode"));
+    console.log("[REPORT] modal.targetId =", $modal.data("targetId"));
+
+    $modal.removeClass("is-hidden");
+  });
 
   /* =========================
      모달 닫기
   ========================= */
-  const closeBtn = e.target.closest("[data-action='close-report-modal']");
-  if (closeBtn) {
-    document.getElementById("reportModal")
-      ?.classList.add("is-hidden");
-    return;
-  }
-
-  if (e.target.classList.contains("modal-backdrop")) {
-    document.getElementById("reportModal")
-      ?.classList.add("is-hidden");
-    return;
-  }
+  $(document).on(
+    "click",
+    "[data-action='close-report-modal'], .modal-backdrop",
+    function () {
+      console.log("[REPORT][CLICK] close modal");
+      closeReportModal();
+    }
+  );
 
   /* =========================
-     신고 접수
+     신고 접수 (AJAX)
   ========================= */
-  const submitBtn = e.target.closest("[data-action='submit-report']");
-  if (submitBtn) {
+  $(document).on("click", "[data-action='submit-report']", function () {
 
-    const modal = document.getElementById("reportModal");
+    console.log("[REPORT][CLICK] submit-report");
 
-    const reasonEl =
-      modal.querySelector("input[name='report-reason']:checked");
+    const $modal = $("#reportModal");
+    if ($modal.length === 0) {
+      console.log("[REPORT][ERROR] reportModal not found on submit");
+      return;
+    }
 
-    if (!reasonEl) {
+    const $reason = $modal.find("input[name='report-reason']:checked");
+    const $detail = $modal.find(".report-textarea");
+    const detailValue = $.trim($detail.val());
+
+    console.log("[REPORT] reason =", $reason.val());
+    console.log("[REPORT] detail =", detailValue);
+
+    if ($reason.length === 0) {
       alert("신고 사유를 선택해주세요.");
       return;
     }
 
-    const productId = modal.dataset.productId;
+    if (!detailValue) {
+      alert("신고 내용을 입력해주세요.");
+      $detail.focus();
+      return;
+    }
 
-    fetch(`/product/${productId}/report`, {
+    const payload = {
+      targetTypeCode: $modal.data("targetTypeCode"),
+      targetId: Number($modal.data("targetId")),
+      reasonCode: $reason.val(),
+      detail: detailValue
+    };
+
+    console.log("[REPORT][AJAX PAYLOAD]", payload);
+
+    $.ajax({
+      url: "/product/productReport",
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ reasonCode: reasonEl.value })
-    })
-      .then(res => res.json())
-      .then(result => {
+      contentType: "application/json",
+      data: JSON.stringify(payload),
+      success: function (result) {
+        console.log("[REPORT][AJAX SUCCESS]", result);
 
-        alert(result.message || "신고가 접수되었습니다.");
-
-        modal.classList.add("is-hidden");
-
-        const openBtn =
-          document.querySelector("[data-action='open-report-modal']");
-        if (openBtn) {
-          openBtn.textContent = "신고 완료";
-          openBtn.disabled = true;
-          openBtn.classList.add("is-disabled");
+        if (!result.success) {
+          alert(result.message || "신고 처리에 실패했습니다.");
+          return;
         }
-      })
-      .catch(() => {
+
+        alert("신고가 정상적으로 접수되었습니다.");
+
+        closeReportModal();
+
+        const $openBtn = $("[data-action='open-report-modal']");
+        if ($openBtn.length) {
+          $openBtn
+            .text("신고 완료")
+            .prop("disabled", true)
+            .addClass("is-disabled");
+        }
+      },
+      error: function (xhr, status, err) {
+        console.log("[REPORT][AJAX ERROR]", status, err, xhr.responseText);
         alert("신고 처리 중 오류가 발생했습니다.");
-      });
+      }
+    });
+  });
 
-    return;
+  /* =========================
+     버튼 활성화 제어
+  ========================= */
+  $(document).on(
+    "input change",
+    "input[name='report-reason'], .report-textarea",
+    function () {
+      toggleSubmitState();
+    }
+  );
+
+  /* =========================
+     공통 함수
+  ========================= */
+  function toggleSubmitState() {
+    const $modal = $("#reportModal");
+    if ($modal.length === 0) return;
+
+    const hasReason =
+      $modal.find("input[name='report-reason']:checked").length > 0;
+    const hasDetail =
+      $.trim($modal.find(".report-textarea").val()).length > 0;
+
+    const $submitBtn =
+      $modal.find("[data-action='submit-report']");
+
+    console.log("[REPORT] toggleSubmitState", { hasReason, hasDetail });
+
+    if (hasReason && hasDetail) {
+      $submitBtn.prop("disabled", false)
+                .removeClass("is-disabled");
+    } else {
+      $submitBtn.prop("disabled", true)
+                .addClass("is-disabled");
+    }
   }
-});
 
-/* =========================
-   신고 사유 선택 시 버튼 활성화
-========================= */
-document.addEventListener("change", (e) => {
-  if (e.target.name === "report-reason") {
+  function closeReportModal() {
+    console.log("[REPORT] closeReportModal");
 
-    const modal = document.getElementById("reportModal");
-    if (!modal) return;
+    const $modal = $("#reportModal");
+    if ($modal.length === 0) return;
 
-    const submitBtn =
-      modal.querySelector("[data-action='submit-report']");
-    if (!submitBtn) return;
+    $modal.addClass("is-hidden");
 
-    submitBtn.disabled = false;
-    submitBtn.classList.remove("is-disabled");
+    // 초기화
+    $modal.find("input[name='report-reason']")
+          .prop("checked", false);
+
+    $modal.find(".report-textarea").val("");
+
+    $modal.find("[data-action='submit-report']")
+          .prop("disabled", true)
+          .addClass("is-disabled");
   }
-});
 
+});
