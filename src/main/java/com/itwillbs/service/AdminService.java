@@ -206,5 +206,13 @@ public class AdminService {
     }
     
     
+    
+    // 신고 내역 조회
+    
+    public Report getReport(Long reportId) {
+        return reportRepository.findById(reportId)
+                .orElseThrow(() -> new IllegalArgumentException("신고 내역이 존재하지 않습니다. id=" + reportId));
+    }
+    
   
 }

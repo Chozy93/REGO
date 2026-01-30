@@ -22,3 +22,25 @@ function completeReport(id) {
     })
     .catch(err => console.error("네트워크 에러:", err));
 }
+
+
+let currentReportId = null;
+
+function openReportModal(reportId) {
+  currentReportId = reportId;
+
+  fetch(`/admin/reports/${reportId}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('modal-reason').innerText = data.reasonLabel;
+      document.getElementById('modal-detail').innerText = data.detail;
+      document.getElementById('modal-reporter').innerText = data.reporter;
+      document.getElementById('modal-target').innerText = data.target;
+
+      document.getElementById('reportModal').classList.remove('is-hidden');
+    });
+}
+
+function closeReportModal() {
+  document.getElementById('reportModal').classList.add('is-hidden');
+}

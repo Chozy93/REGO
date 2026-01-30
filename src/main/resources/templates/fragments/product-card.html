@@ -41,9 +41,10 @@
       <a th:href="@{/product/{id}(id=${card.id})}">
 
         <!-- 상품 이미지 -->
-        <img th:src="${card.img != null ? card.img : '/images/no-image.png'}"
-             alt="상품 이미지"
-             loading="lazy"/>
+		<img th:src="${card.img}"
+		     alt="상품 이미지"
+		     loading="lazy"
+		     onerror="this.onerror=null; this.src='/images/no-image.png';"/>
 
       </a>
     </div>

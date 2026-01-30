@@ -189,4 +189,17 @@
     ORDER BY r.created_at DESC
 </select>
 
+<select id="getReviewDetailByProductId" resultType="com.itwillbs.dto.ReviewDTO">
+    SELECT 
+        r.content,
+        r.rating,
+        u.nickname AS sellerNickname,
+        p.product_name AS productName,
+        (SELECT image_url FROM product_images WHERE product_id = p.product_id LIMIT 1) AS productImageUrl
+    FROM reviews r
+    JOIN products p ON r.product_id = p.product_id
+    JOIN users u ON r.seller_id = u.user_id
+    WHERE r.product_id = #{productId}
+</select>
+
 </mapper>
